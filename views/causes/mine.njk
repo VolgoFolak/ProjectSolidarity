@@ -1,0 +1,153 @@
+{# filepath: /views/causes/mine.njk #}
+{% extends "layout.njk" %}
+
+{% block title %}Mis Causas | Solidarity{% endblock %}
+
+{% block content %}
+<section class="causes-section">
+  <div class="section-header" style="display:flex;align-items:center;gap:1rem;margin-bottom:2rem;">
+    <i class="fas fa-hands-helping" style="font-size:2rem;color:var(--accent,#2dd4bf);"></i>
+    <h1 style="margin:0;">Mis Causas Solidarias</h1>
+  </div>
+  <div id="myCausesList" class="causes-list">
+    <div class="loading" style="text-align:center;color:#888;">Cargando tus causas...</div>
+  </div>
+  <div id="noCausesMsg" style="display:none;text-align:center;color:#888;margin-top:2rem;">
+    <i class="fas fa-info-circle"></i> Aún no has creado ninguna causa.
+  </div>
+</section>
+{% endblock %}
+
+{% block scripts %}
+{{ super() }}
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+
+document.addEventListener('DOMContentLoaded', async () => {
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) {
+    document.getElementById('myCausesList').innerHTML = '<div style="color:#e53e3e;text-align:center;">Debes iniciar sesión para ver tus causas.</div>';
+    return;
+  }
+
+  const { data: misCausas, error } = await supabase
+    .from('causes')
+    .select('*')
+    .eq('user_id', user.id)
+    .order('created_at', { ascending: false });
+
+  const list = document.getElementById('myCausesList');
+  list.innerHTML = '';
+
+  if (error) {
+    list.innerHTML = '<div style="color:#e53e3e;text-align:center;">Error al cargar tus causas.</div>';
+    return;
+  }
+
+  if (!misCausas || misCausas.length === 0) {
+    document.getElementById('noCausesMsg').style.display = 'block';
+    return;
+  }
+
+  misCausas.forEach(causa => {
+    const card = document.createElement('div');
+    card.className = 'cause-card';
+    card.innerHTML = `
+      <div class="cause-img-wrap">
+        <img src="${causa.photo_url || '/img/causa-default.jpg'}" alt="Foto de la causa" class="cause-img">
+      </div>
+      <div class="cause-info">
+        <h2 class="cause-title">${causa.title}</h2>
+        <div class="cause-meta">
+          <span class="cause-city"><i class="fas fa-map-marker-alt"></i> ${causa.city}, ${causa.country}</span>
+          <span class="cause-beneficiaries"><i class="fas fa-users"></i> ${causa.beneficiaries} beneficiarios</span>
+        </div>
+        <p class="cause-desc">${causa.description}</p>
+        <div class="cause-goal">
+          <span class="goal-label"><i class="fas fa-donate"></i> Meta:</span>
+          <span class="goal-amount">€${causa.goal}</span>
+        </div>
+        <div class="cause-points">
+          <i class="fas fa-star"></i> ${causa.points} puntos por colaborar
+        </div>
+        <div class="cause-date">
+          <i class="fas fa-calendar-alt"></i> Creada el ${new Date(causa.created_at).toLocaleDateString()}
+        </div>
+      </div>
+    `;
+    list.appendChild(card);
+  });
+});
+</script>
+<style>
+.causes-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2rem;
+  justify-content: flex-start;
+}
+.cause-card {
+  background: #fff;
+  border-radius: 14px;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.07);
+  overflow: hidden;
+  max-width: 350px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 1.5rem;
+}
+.cause-img-wrap {
+  width: 100%;
+  height: 180px;
+  background: #f8fafc;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.cause-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.cause-info {
+  padding: 1.2rem 1rem 1rem 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+.cause-title {
+  font-size: 1.2rem;
+  font-weight: 800;
+  color: var(--primary, #2dd4bf);
+  margin: 0 0 0.3rem 0;
+}
+.cause-meta {
+  font-size: 0.97rem;
+  color: #6b7280;
+  display: flex;
+  gap: 1.2rem;
+  margin-bottom: 0.3rem;
+}
+.cause-desc {
+  color: #444;
+  font-size: 1rem;
+  margin: 0.2rem 0 0.5rem 0;
+  min-height: 48px;
+}
+.cause-goal, .cause-points, .cause-date {
+  font-size: 0.98rem;
+  color: var(--accent, #4fc3a1);
+  margin-bottom: 0.2rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+.cause-goal .goal-label { color: #444; font-weight: 600; }
+.cause-goal .goal-amount { color: var(--primary, #2dd4bf); font-weight: 700; }
+@media (max-width: 900px) {
+  .causes-list { flex-direction: column; gap: 1.5rem; }
+  .cause-card { max-width: 100%; }
+}
+</style>
+{% endblock %}

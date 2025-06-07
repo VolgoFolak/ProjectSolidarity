@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Solidarity - Inicio</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <div class="app-logo">
+                    <i class="fas fa-hands-helping"></i>
+                    <h1>Solidarity</h1>
+                </div>
+            </div>
+            
+            <nav class="sidebar-nav">
+                <ul>
+                    <li class="active">
+                        <a href="/home">
+                            <i class="fas fa-home"></i>
+                            <span>Inicio</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/causes">
+                            <i class="fas fa-heart"></i>
+                            <span>Causas</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/tasks">
+                            <i class="fas fa-tasks"></i>
+                            <span>Tareas Solidarias</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/volunteer">
+                            <i class="fas fa-hands-helping"></i>
+                            <span>Voluntariados</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/impact">
+                            <i class="fas fa-chart-line"></i>
+                            <span>Mi Impacto</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/ranking">
+                            <i class="fas fa-trophy"></i>
+                            <span>Ranking</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+            
+            <div class="sidebar-footer">
+                <div class="user-profile">
+                    <div class="user-avatar">
+                        <img src="/images/default-avatar.jpg" alt="User Avatar">
+                    </div>
+                    <div class="user-info">
+                        <span class="user-name" id="sidebarUserName">Nombre Usuario</span>
+                        <span class="user-level">Nivel 2</span>
+                    </div>
+                </div>
+                <a href="/settings" class="settings-link">
+                    <i class="fas fa-cog"></i>
+                </a>
+            </div>
+        </aside>
+        
+        <!-- Main Content -->
+        <main class="main-content">
+            <header class="main-header">
+                <div class="header-left">
+                    <button class="menu-toggle">
+                        <i class="fas fa-bars"></i>
+                    </button>
+                    <h2 id="pageTitle">Inicio</h2>
+                </div>
+                <div class="header-right">
+                    <div class="notifications">
+                        <i class="fas fa-bell"></i>
+                        <span class="badge">3</span>
+                    </div>
+                    <div class="messages">
+                        <i class="fas fa-envelope"></i>
+                        <span class="badge">1</span>
+                    </div>
+                </div>
+            </header>
+            
+            <div class="content-wrapper">
+                <!-- Sección Take Action -->
+                <section class="section take-action">
+                    <div class="section-header">
+                        <h3>Take Action</h3>
+                        <a href="/tasks" class="see-all">Ver todas</a>
+                    </div>
+                    <div class="tasks-carousel" id="featuredTasks">
+                        <!-- Las tareas se cargarán dinámicamente aquí -->
+                    </div>
+                </section>
+                
+                <!-- Impact Score -->
+                <section class="impact-score-section">
+                    <div class="impact-score-card">
+                        <h4>Mi Impact Score</h4>
+                        <div class="score-display" id="impactScoreDisplay">750</div>
+                        <div class="progress-container">
+                            <div class="progress-bar">
+                                <div class="progress" style="width: 65%;"></div>
+                            </div>
+                            <div class="progress-info">
+                                <span>65% hacia el siguiente nivel</span>
+                            </div>
+                        </div>
+                        <div class="impact-stats">
+                            <div class="stat-item">
+                                <i class="fas fa-donate"></i>
+                                <span>$1,200 donados</span>
+                            </div>
+                            <div class="stat-item">
+                                <i class="fas fa-tasks"></i>
+                                <span>8 tareas completadas</span>
+                            </div>
+                            <div class="stat-item">
+                                <i class="fas fa-clock"></i>
+                                <span>25 horas de voluntariado</span>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+                
+                <!-- What's Happening Now -->
+                <section class="section whats-happening">
+                    <div class="section-header">
+                        <h3>What's Happening Now</h3>
+                        <a href="/news" class="see-all">Ver más</a>
+                    </div>
+                    <div class="news-carousel" id="newsCarousel">
+                        <!-- Las noticias se cargarán dinámicamente aquí -->
+                    </div>
+                </section>
+                
+                <!-- Progreso Personal -->
+                <section class="section personal-progress">
+                    <h3>Mi Progreso</h3>
+                    <div class="progress-grid">
+                        <div class="progress-item">
+                            <div class="progress-circle" data-value="75">
+                                <svg class="progress-ring" width="80" height="80">
+                                    <circle class="progress-ring-circle" stroke-width="8" fill="transparent" r="36" cx="40" cy="40"/>
+                                </svg>
+                                <div class="progress-text">75%</div>
+                            </div>
+                            <h4>Donaciones</h4>
+                        </div>
+                        <div class="progress-item">
+                            <div class="progress-circle" data-value="60">
+                                <svg class="progress-ring" width="80" height="80">
+                                    <circle class="progress-ring-circle" stroke-width="8" fill="transparent" r="36" cx="40" cy="40"/>
+                                </svg>
+                                <div class="progress-text">60%</div>
+                            </div>
+                            <h4>Tareas</h4>
+                        </div>
+                        <div class="progress-item">
+                            <div class="progress-circle" data-value="45">
+                                <svg class="progress-ring" width="80" height="80">
+                                    <circle class="progress-ring-circle" stroke-width="8" fill="transparent" r="36" cx="40" cy="40"/>
+                                </svg>
+                                <div class="progress-text">45%</div>
+                            </div>
+                            <h4>Voluntariado</h4>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </main>
+    </div>
+
+    <script src="/js/app.js"></script>
+</body>
+</html>
