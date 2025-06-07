@@ -1,0 +1,1174 @@
+{% extends "layout.njk" %}
+
+{% block title %}Solidarity - Comunidades{% endblock %}
+
+{% block head %}
+  {{ super() }}
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <style>
+    :root {
+      --primary: #4a6fa5;
+      --primary-dark: #166088;
+      --gray: #e2e8f0;
+      --white: #fff;
+      --accent: #4fc3a1;
+      --accent-dark: #3da58a;
+      --urgent: #e53e3e;
+    }
+
+    .main-container {
+      max-width: 1200px;
+      margin: 2rem auto;
+      padding: 0 2rem;
+    }
+
+    .section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 2rem;
+    }
+
+    .section-header h1 {
+      font-size: 2rem;
+      color: var(--primary);
+      font-weight: 700;
+    }
+
+    .search-container {
+      margin-bottom: 2rem;
+      display: flex;
+      align-items: center;
+      gap: 0.7rem;
+    }
+
+    .search-container input {
+      flex: 1;
+      padding: 0.6rem 1.2rem;
+      border-radius: 7px;
+      border: 1.5px solid var(--gray);
+      font-size: 1.05rem;
+      outline: none;
+      transition: border 0.2s;
+      background: #fff;
+    }
+
+    .search-container input:focus {
+      border-color: var(--primary);
+    }
+
+    .tabs {
+      display: flex;
+      border-bottom: 1px solid var(--gray);
+      margin-bottom: 2rem;
+    }
+
+    .tab {
+      padding: 0.75rem 1.5rem;
+      cursor: pointer;
+      position: relative;
+      font-weight: 500;
+      color: #6b7280;
+      background: none;
+      border: none;
+      outline: none;
+    }
+
+    .tab.active {
+      color: var(--primary);
+      font-weight: 600;
+    }
+
+    .tab.active::after {
+      content: '';
+      position: absolute;
+      bottom: -1px;
+      left: 0;
+      width: 100%;
+      height: 3px;
+      background: var(--primary);
+    }
+
+    /* Intro y destacados */
+    .teams-intro {
+      background: linear-gradient(135deg, #f0f7ff 0%, #e6f0fa 100%);
+      border-radius: 16px;
+      padding: 2.5rem;
+      margin-bottom: 3rem;
+      display: flex;
+      align-items: center;
+      gap: 2rem;
+      border: 1px solid var(--gray);
+    }
+
+    .teams-intro-icon {
+      font-size: 3.5rem;
+      color: var(--accent);
+    }
+
+    .teams-intro-content h2 {
+      font-size: 1.8rem;
+      color: var(--primary);
+      margin-bottom: 0.5rem;
+    }
+
+    .teams-intro-content p {
+      color: #4a5568;
+      line-height: 1.6;
+    }
+
+    .teams-highlights {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 1.5rem;
+      margin-bottom: 3rem;
+    }
+
+    .highlight-card {
+      background: white;
+      border-radius: 10px;
+      padding: 1.5rem;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+      border: 1px solid var(--gray);
+      transition: all 0.3s ease;
+    }
+
+    .highlight-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+      border-color: var(--accent);
+    }
+
+    .highlight-icon {
+      font-size: 1.8rem;
+      color: var(--accent);
+      margin-bottom: 1rem;
+    }
+
+    .highlight-title {
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: var(--primary);
+      margin-bottom: 0.5rem;
+    }
+
+    .highlight-desc {
+      color: #6b7280;
+      font-size: 0.95rem;
+      line-height: 1.5;
+    }
+
+    /* Modal y formulario */
+    .modal-bg {
+      display: none;
+      position: fixed;
+      top: 0; left: 0; width: 100vw; height: 100vh;
+      background: rgba(0,0,0,0.35);
+      z-index: 9999;
+      align-items: center;
+      justify-content: center;
+    }
+    .modal-bg.active { display: flex; }
+    .modal-content {
+      background: #fff;
+      border-radius: 18px;
+      max-width: 540px;
+      width: 95vw;
+      padding: 2.5rem 1.5rem 2rem 1.5rem;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.13);
+      position: relative;
+      animation: fadeIn 0.3s;
+      max-height: 90vh;
+      overflow-y: auto;
+    }
+    .close-modal {
+      position: absolute;
+      top: 1.1rem; right: 1.3rem;
+      background: none;
+      border: none;
+      font-size: 2rem;
+      color: #aaa;
+      cursor: pointer;
+      transition: color 0.2s;
+    }
+    .close-modal:hover { color: var(--primary, #4a6fa5); }
+    .create-team-title {
+      font-size: 1.5rem;
+      font-weight: 800;
+      color: var(--primary, #4a6fa5);
+      margin-bottom: 1.2rem;
+      text-align: center;
+    }
+    .team-form .form-group label { 
+      font-weight: 600; 
+      color: var(--primary, #4a6fa5); 
+      margin-bottom: 0.5rem;
+      display: block;
+    }
+    .team-form .form-group input,
+    .team-form .form-group textarea,
+    .team-form .form-group select {
+      width: 100%;
+      padding: 0.7rem 1rem;
+      border-radius: 8px;
+      border: 1px solid #e5e7eb;
+      margin-bottom: 0.2rem;
+      font-size: 1rem;
+      background: #f8fafc;
+      transition: border 0.2s;
+    }
+    .team-form .form-group input:focus,
+    .team-form .form-group textarea:focus,
+    .team-form .form-group select:focus {
+      border: 1.5px solid var(--accent, #4fc3a1);
+      outline: none;
+      background: #fff;
+    }
+    .team-form .form-group textarea {
+      min-height: 90px;
+      resize: vertical;
+    }
+    .form-inline-group {
+      display: flex;
+      gap: 1rem;
+    }
+    .form-inline-group .form-group { flex: 1; }
+    .preview-img {
+      width: 100%;
+      max-width: 320px;
+      height: 180px;
+      object-fit: cover;
+      border-radius: 10px;
+      margin-top: 0.5rem;
+      border: 1px solid #e5e7eb;
+      display: none;
+    }
+    .after-create {
+      margin-top: 2rem;
+      background: var(--primary-light, #e6f0fa);
+      color: #444;
+      border-radius: 10px;
+      padding: 1.5rem 1rem;
+      text-align: center;
+    }
+
+    /* Grid clásico de comunidades */
+    .teams-grid-classic {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+      gap: 2rem;
+    }
+    .team-card-classic {
+      background: white;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+      transition: all 0.3s ease;
+      border: 1px solid var(--gray);
+    }
+    .team-card-classic:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+    }
+    .team-image-classic {
+      height: 180px;
+      overflow: hidden;
+      position: relative;
+    }
+    .team-image-classic img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.3s ease;
+    }
+    .team-card-classic:hover .team-image-classic img {
+      transform: scale(1.05);
+    }
+    .team-badge-classic {
+      position: absolute;
+      top: 1rem;
+      right: 1rem;
+      background: rgba(255, 255, 255, 0.9);
+      padding: 0.3rem 0.8rem;
+      border-radius: 50px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      z-index: 2;
+    }
+    .team-badge-classic.points {
+      background: var(--primary);
+      color: white;
+      left: 1rem;
+      right: auto;
+    }
+    .team-badge-classic[style*="background:#ffe066"] {
+      background: #ffe066 !important;
+      color: #b8860b !important;
+    }
+    .team-badge-classic[style*="background:var(--gray)"] {
+      background: var(--gray) !important;
+      color: var(--primary-dark) !important;
+    }
+    .team-badge-classic[style*="background:#ffd600"] {
+      background: #ffd600 !important;
+      color: #a67c00 !important;
+    }
+    .team-content-classic {
+      padding: 1.5rem;
+    }
+    .team-content-classic h3 {
+      font-size: 1.3rem;
+      margin-bottom: 0.8rem;
+      color: #2d3748;
+    }
+    .team-content-classic p {
+      color: #6b7280;
+      margin-bottom: 1.5rem;
+      font-size: 0.95rem;
+      line-height: 1.6;
+    }
+    .team-meta-classic {
+      display: flex;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+      font-size: 0.85rem;
+      flex-wrap: wrap;
+    }
+    .meta-item-classic {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      color: #6b7280;
+    }
+    .meta-item-classic i {
+      color: var(--primary);
+    }
+    .members-count-classic {
+      display: inline-flex;
+      align-items: center;
+      background: #f0f9ff;
+      color: var(--primary);
+      padding: 0.3rem 0.8rem;
+      border-radius: 50px;
+      font-size: 0.85rem;
+      font-weight: 600;
+    }
+    .members-count-classic i {
+      margin-right: 0.3rem;
+    }
+    .team-progress-classic {
+      margin-bottom: 1.5rem;
+    }
+    .team-actions-classic {
+      display: flex;
+      gap: 0.8rem;
+    }
+
+    /* Barra de progreso y tags (si no están en tu style.css) */
+    /* Barra de progreso igual que causas */
+    .progress-bar {
+      width: 100%;
+      background: var(--gray);
+      border-radius: 4px;
+      height: 8px;
+      position: relative;
+      overflow: hidden;
+      margin-bottom: 0.5rem;
+      box-shadow: none;
+    }
+    .progress-fill {
+      height: 100%;
+      background: var(--primary);
+      border-radius: 4px;
+      transition: width 0.4s cubic-bezier(.4,1,.7,1);
+      color: #fff;
+      font-size: 0.95em;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      padding-right: 8px;
+      box-shadow: none;
+    }
+    .progress-info {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.9rem;
+      color: #6b7280;
+    }
+    .team-badge-classic[style*="background:#ffe600"] {
+      background: #ffe600 !important;
+      color: #b8860b !important;
+    }
+
+    .pagination {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 1.2rem;
+      margin: 3rem 0 1.5rem 0;
+    }
+    .pagination .btn {
+      min-width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      padding: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.15rem;
+    }
+    #pageInfo {
+      font-weight: 600;
+      color: var(--primary);
+      font-size: 1.1rem;
+      min-width: 38px;
+      text-align: center;
+      letter-spacing: 0.03em;
+    }
+
+    .team-tags-classic {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.3em;
+      margin-bottom: 0.7em;
+    }
+    .team-tag-classic {
+      background: #e6f0fa;
+      color: var(--primary);
+      border-radius: 50px;
+      padding: 0.22em 0.95em;
+      font-size: 0.92em;
+      font-weight: 600;
+      margin-bottom: 0.2em;
+      margin-right: 0.3em;
+      transition: background 0.2s, color 0.2s;
+      border: 1px solid #dbeafe;
+      letter-spacing: 0.01em;
+      white-space: nowrap;
+    }
+    .team-tag-classic.tag-more {
+      background: #ffe600;
+      color: #a67c00;
+      border: 1px solid #ffe600;
+    }
+
+    @media (max-width: 768px) {
+      .teams-intro {
+        flex-direction: column;
+        text-align: center;
+        padding: 1.5rem;
+      }
+      .teams-highlights {
+        grid-template-columns: 1fr;
+      }
+      .team-card-classic {
+        margin-bottom: 1.5rem;
+      }
+    }
+  </style>
+{% endblock %}
+
+{% block content %}
+  <!-- Modal para usuarios no logueados -->
+  <div class="modal-bg" id="loginModal">
+    <div class="modal-content">
+      <h3>Para crear una comunidad</h3>
+      <p>Debes ser un usuario registrado. ¿Deseas iniciar sesión o registrarte ahora?</p>
+      <div class="modal-buttons">
+        <a href="/login?return=/teams" class="btn btn-primary">Iniciar Sesión</a>
+        <a href="/register?return=/teams" class="btn btn-outline">Registrarse</a>
+        <button id="cancelModal" class="btn">Cancelar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal emergente para crear comunidad -->
+  <div id="createTeamModal" class="modal-bg">
+    <div class="modal-content">
+      <button class="close-modal" id="closeCreateTeamModal" title="Cerrar">&times;</button>
+      <div class="create-team-title">
+        <i class="fas fa-users"></i> Crear Nueva Comunidad
+      </div>
+      <form class="team-form" id="teamForm" autocomplete="off">
+        <div class="form-group">
+          <label for="teamName">Nombre de la comunidad</label>
+          <input type="text" id="teamName" name="teamName" placeholder="Ej: EcoBarrio Solidario" required>
+        </div>
+
+        <!-- Campo de foto/logo aquí -->
+        <div class="form-group">
+          <label for="teamPhoto">Foto/logo de la comunidad</label>
+          <input type="file" id="teamPhoto" name="teamPhoto" accept="image/*">
+          <img id="previewTeamImg" class="preview-img" alt="Vista previa de la foto" style="display:none;">
+        </div>
+
+        <div class="form-group">
+          <label for="teamDesc">Descripción</label>
+          <textarea id="teamDesc" name="teamDesc" placeholder="Describe el propósito y objetivos de tu comunidad..." required></textarea>
+        </div>
+
+        <div class="form-inline-group">
+          <div class="form-group">
+            <label for="teamCategory">Categoría</label>
+            <select id="teamCategory" name="teamCategory" required>
+              <option value="">Selecciona una categoría</option>
+              <option value="medio_ambiente">Medio Ambiente</option>
+              <option value="educacion">Educación</option>
+              <option value="salud">Salud</option>
+              <option value="animales">Animales</option>
+              <option value="comunidad">Comunidad</option>
+              <option value="otros">Otros</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="teamPrivacy">Privacidad</label>
+            <select id="teamPrivacy" name="teamPrivacy" required>
+              <option value="public">Pública (cualquiera puede unirse)</option>
+              <option value="private">Privada (solicitud requerida)</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-inline-group">
+          <div class="form-group">
+            <label for="teamCity">Ciudad</label>
+            <input type="text" id="teamCity" name="teamCity" placeholder="Ciudad">
+          </div>
+          <div class="form-group">
+            <label for="teamCountry">País</label>
+            <input type="text" id="teamCountry" name="teamCountry" placeholder="País">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="teamTags">Etiquetas (separadas por comas)</label>
+          <input type="text" id="teamTags" name="teamTags" placeholder="medio ambiente, reciclaje, barrio">
+        </div>
+
+        <!-- NUEVO: Número de beneficiarios -->
+        <div class="form-group">
+          <label for="teamBeneficiaries">Número de beneficiarios</label>
+          <input type="number" id="teamBeneficiaries" name="teamBeneficiaries" min="0" placeholder="Ej: 50">
+        </div>
+
+        <button type="submit" class="btn btn-primary" style="margin-top:1rem;">
+          <i class="fas fa-users"></i> Crear Comunidad
+        </button>
+      </form>
+
+      <div class="after-create" id="afterCreateTeam" style="display:none;">
+        <h3>¡Comunidad creada con éxito!</h3>
+        <p>¿Quieres invitar a otros miembros o configurar las primeras actividades?</p>
+        <a href="#" class="btn btn-accent" id="inviteMembersBtn">
+          <i class="fas fa-envelope"></i> Invitar miembros
+        </a>
+        <br>
+        <a href="/teams" class="btn btn-outline" style="margin-top:1rem;">
+          <i class="fas fa-arrow-left"></i> Volver a comunidades
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Contenido principal de la página de comunidades -->
+  <div class="main-container">
+    <!-- Sección introductoria -->
+    <div class="teams-intro">
+      <div class="teams-intro-icon">
+        <i class="fas fa-people-group"></i>
+      </div>
+      <div class="teams-intro-content">
+        <h2>Comunidades Solidarias</h2>
+        <p>Únete a grupos de personas que trabajan juntas para generar impacto positivo. Colabora en causas, tareas y retos compartidos, y multiplica tu capacidad de ayudar a quienes más lo necesitan.</p>
+      </div>
+    </div>
+    
+    <!-- Destacados -->
+    <div class="teams-highlights">
+      <div class="highlight-card">
+        <div class="highlight-icon"><i class="fas fa-layer-group"></i></div>
+        <div class="highlight-title">Multi-actividad</div>
+        <div class="highlight-desc">Cada comunidad gestiona múltiples acciones simultáneas: causas, tareas, retos y voluntariados.</div>
+      </div>
+      <div class="highlight-card">
+        <div class="highlight-icon"><i class="fas fa-comments"></i></div>
+        <div class="highlight-title">Coordinación</div>
+        <div class="highlight-desc">Organizaos mediante el chat interno, calendario compartido y tableros de progreso.</div>
+      </div>
+      <div class="highlight-card">
+        <div class="highlight-icon"><i class="fas fa-heart"></i></div>
+        <div class="highlight-title">Impacto colectivo</div>
+        <div class="highlight-desc">Suma tus puntos individuales al impacto total de la comunidad.</div>
+      </div>
+      <div class="highlight-card">
+        <div class="highlight-icon"><i class="fas fa-hands-helping"></i></div>
+        <div class="highlight-title">Beneficiarios</div>
+        <div class="highlight-desc">Visualiza el número total de personas y causas beneficiadas por vuestro equipo.</div>
+      </div>
+    </div>
+    
+    <!-- Cabecera con búsqueda y creación -->
+    <div class="section-header">
+      <h1>Explora Comunidades</h1>
+      <a href="#" id="create-team-btn" class="btn btn-primary">
+        <i class="fas fa-plus"></i> Crear Comunidad
+      </a>
+    </div>
+    
+    <div class="search-container">
+      <input type="text" id="search-input" placeholder="Buscar por nombre, descripción, etiquetas...">
+      <i class="fas fa-search" style="color:#4a6fa5;"></i>
+    </div>
+    
+    <!-- Tabs de categorías -->
+    <div class="tabs">
+      <button class="tab active" data-filter="all">Todas</button>
+      <button class="tab" data-filter="medio_ambiente">Medio Ambiente</button>
+      <button class="tab" data-filter="educacion">Educación</button>
+      <button class="tab" data-filter="salud">Salud</button>
+      <button class="tab" data-filter="animales">Animales</button>
+      <button class="tab" data-filter="comunidad">Comunidad</button>
+    </div>
+    
+    <!-- Grid de comunidades -->
+    <div class="teams-grid" id="teamsGrid">
+      <!-- Las comunidades se cargarán dinámicamente -->
+    </div>
+    
+    <!-- Paginación -->
+    <div class="pagination" id="pagination">
+      <button id="prevPage" class="btn btn-outline" disabled>
+        <i class="fas fa-chevron-left"></i>
+      </button>
+      <span id="pageInfo">1</span>
+      <button id="nextPage" class="btn btn-outline" disabled>
+        <i class="fas fa-chevron-right"></i>
+      </button>
+    </div>
+  </div>
+{% endblock %}
+
+{% block scripts %}
+  {{ super() }}
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      // Variables para paginación
+      let currentPage = 1;
+      const itemsPerPage = 9;
+      let allTeams = [];
+      let filteredTeams = [];
+      
+      // Inicializar
+      loadTeams();
+      
+      // Modal para crear equipo
+      document.getElementById('create-team-btn').addEventListener('click', async function(e) {
+        e.preventDefault();
+        const { data: { session } } = await supabase.auth.getSession();
+        if (session?.user) {
+          document.getElementById('createTeamModal').classList.add('active');
+          document.body.style.overflow = 'hidden';
+        } else {
+          document.getElementById('loginModal').classList.add('active');
+        }
+      });
+
+      // Cerrar modal de crear equipo
+      document.getElementById('closeCreateTeamModal').addEventListener('click', function() {
+        document.getElementById('createTeamModal').classList.remove('active');
+        document.body.style.overflow = '';
+        document.getElementById('teamForm').reset();
+        document.getElementById('previewTeamImg').style.display = 'none';
+        document.getElementById('teamForm').style.display = 'block';
+        document.getElementById('afterCreateTeam').style.display = 'none';
+      });
+
+      // Vista previa de imagen del equipo
+      document.getElementById('teamPhoto').addEventListener('change', function(e) {
+        const file = e.target.files[0];
+        const preview = document.getElementById('previewTeamImg');
+        if (file) {
+          const reader = new FileReader();
+          reader.onload = function(evt) {
+            preview.src = evt.target.result;
+            preview.style.display = 'block';
+          };
+          reader.readAsDataURL(file);
+        } else {
+          preview.src = '';
+          preview.style.display = 'none';
+        }
+      });
+
+      // Envío del formulario de creación de equipo
+      document.getElementById('teamForm').addEventListener('submit', async function(e) {
+        e.preventDefault();
+        const { data: { session } } = await supabase.auth.getSession();
+        if (!session?.user) {
+          alert('Debes iniciar sesión para crear una comunidad');
+          return;
+        }
+
+        const name = document.getElementById('teamName').value;
+        const description = document.getElementById('teamDesc').value;
+        const category = document.getElementById('teamCategory').value;
+        const privacy = document.getElementById('teamPrivacy').value;
+        const tags = document.getElementById('teamTags').value
+          .split(',')
+          .map(t => t.trim())
+          .filter(Boolean);
+        const city = document.getElementById('teamCity').value;
+        const country = document.getElementById('teamCountry').value;
+        const beneficiaries = parseInt(document.getElementById('teamBeneficiaries').value) || 0;
+
+        // 1. Geocodificar ciudad y país
+        let lat = null, lng = null;
+        if (city && country) {
+          try {
+            const response = await fetch(`https://nominatim.openstreetmap.org/search?city=${encodeURIComponent(city)}&country=${encodeURIComponent(country)}&format=json&limit=1`);
+            const geo = await response.json();
+            if (geo && geo.length > 0) {
+              lat = parseFloat(geo[0].lat);
+              lng = parseFloat(geo[0].lon);
+              document.getElementById('teamLat').value = lat;
+              document.getElementById('teamLng').value = lng;
+            }
+          } catch (err) {
+            console.warn('No se pudo obtener la geolocalización:', err);
+          }
+        }
+
+        const fileInput = document.getElementById('teamPhoto');
+        let photo = null;
+
+        try {
+          // Subir imagen si existe
+          if (fileInput.files && fileInput.files[0]) {
+            const file = fileInput.files[0];
+            const fileExt = file.name.split('.').pop();
+            const fileName = `${Date.now()}_${Math.random().toString(36).substring(2)}.${fileExt}`;
+            const filePath = `teams/${fileName}`;
+            const { error: uploadError } = await supabase.storage
+              .from('teams')
+              .upload(filePath, file);
+            if (uploadError) throw uploadError;
+            const { data: urlData } = supabase.storage
+              .from('teams')
+              .getPublicUrl(filePath);
+            photo = urlData.publicUrl;
+          }
+
+          // Crear el equipo
+          const { data, error } = await supabase
+            .from('teams')
+            .insert([{
+              name,
+              description,
+              category,
+              privacy,
+              tags,
+              photo,
+              creator_id: session.user.id, // <--- Aquí guardas el creador
+              created_at: new Date().toISOString(),
+              city,
+              country,
+              lat,
+              lng,
+              causes_count: 0,
+              tasks_count: 0,
+              challenges_count: 0,
+              volunteering_count: 0,
+              beneficiaries
+            }])
+            .select();
+
+          if (error) throw error;
+
+          // Después de crear el equipo:
+          await supabase
+            .from('team_members')
+            .insert([{
+              team_id: data[0].id,
+              user_id: session.user.id,
+              role: 'admin', // El creador es admin automáticamente
+              joined_at: new Date().toISOString()
+            }]);
+
+          // Mostrar mensaje de éxito
+          document.getElementById('teamForm').style.display = 'none';
+          document.getElementById('afterCreateTeam').style.display = 'block';
+          document.getElementById('inviteMembersBtn').href = `/teams/${data[0].id}/invite`;
+          loadTeams();
+
+        } catch (error) {
+          console.error('Error creating team:', error);
+          alert(`Error al crear la comunidad: ${error.message}`);
+        }
+      });
+
+      // Tabs de categorías
+      document.querySelectorAll('.tab').forEach(tab => {
+        tab.addEventListener('click', function() {
+          document.querySelector('.tab.active').classList.remove('active');
+          this.classList.add('active');
+          currentPage = 1; // Resetear a primera página
+          filterAndRenderTeams();
+        });
+      });
+
+      // Búsqueda
+      document.getElementById('search-input').addEventListener('input', function() {
+        currentPage = 1; // Resetear a primera página
+        filterAndRenderTeams();
+      });
+
+      // Paginación
+      document.getElementById('prevPage').addEventListener('click', function() {
+        if (currentPage > 1) {
+          currentPage--;
+          renderTeams();
+        }
+      });
+
+      document.getElementById('nextPage').addEventListener('click', function() {
+        const totalPages = Math.ceil(filteredTeams.length / itemsPerPage);
+        if (currentPage < totalPages) {
+          currentPage++;
+          renderTeams();
+        }
+      });
+
+      // Función para cargar equipos desde Supabase
+      async function loadTeams() {
+        try {
+          const { data: teams, error } = await supabase
+            .from('teams')
+            .select('*')
+            .order('created_at', { ascending: false });
+          
+          if (error) throw error;
+          
+          allTeams = teams || [];
+          filteredTeams = [...allTeams];
+          currentPage = 1;
+          renderTeams();
+          
+        } catch (error) {
+          console.error('Error loading teams:', error);
+          allTeams = [];
+          filteredTeams = [];
+          renderTeams();
+        }
+      }
+
+      // Función para cargar equipos del usuario
+      async function loadUserTeams() {
+        try {
+          // 1. Obtener los equipos donde el usuario es miembro
+          const { data: memberships, error: membershipsError } = await supabase
+            .from('team_members')
+            .select('team_id, role')
+            .eq('user_id', session.user.id);
+
+          if (membershipsError) throw membershipsError;
+
+          // 2. Obtener los equipos donde el usuario es el creador
+          const { data: createdTeams, error: createdTeamsError } = await supabase
+            .from('teams')
+            .select('*')
+            .eq('created_by', session.user.id); // Asegúrate de tener este campo en tu tabla teams
+
+          if (createdTeamsError) throw createdTeamsError;
+
+          // 3. Obtener los detalles de los equipos donde es miembro
+          const teamIds = memberships.map(m => m.team_id);
+          let { data: teams, error: teamsError } = await supabase
+            .from('teams')
+            .select('*')
+            .in('id', teamIds)
+            .order('created_at', { ascending: false });
+
+          if (teamsError) throw teamsError;
+
+          // 4. Combinar y eliminar duplicados (si el creador también es miembro)
+          let allTeams = [
+            ...teams.map(team => ({
+              ...team,
+              user_role: memberships.find(m => m.team_id === team.id)?.role,
+              is_admin: memberships.find(m => m.team_id === team.id)?.role === 'admin',
+              is_moderator: memberships.find(m => m.team_id === team.id)?.role === 'moderator'
+            })),
+            ...createdTeams
+              .filter(team => !teamIds.includes(team.id))
+              .map(team => ({
+                ...team,
+                user_role: 'founder',
+                is_admin: true,
+                is_moderator: false
+              }))
+          ]; // <-- CORRECTO
+
+          filteredTeams = [...allTeams];
+          currentPage = 1;
+          renderTeams();
+
+        } catch (error) {
+          console.error('Error loading user teams:', error);
+          showEmptyState();
+        }
+      }
+
+      // Función para filtrar equipos
+      function filterAndRenderTeams() {
+        const activeFilter = document.querySelector('.tab.active').getAttribute('data-filter');
+        const searchTerm = document.getElementById('search-input').value.toLowerCase();
+        
+        filteredTeams = allTeams.filter(team => {
+          // Filtrar por categoría
+          if (activeFilter !== 'all' && team.category !== activeFilter) {
+            return false;
+          }
+          
+          // Filtrar por búsqueda
+          if (searchTerm) {
+            const matchesName = team.name && team.name.toLowerCase().includes(searchTerm);
+            const matchesDesc = team.description && team.description.toLowerCase().includes(searchTerm);
+            const matchesTags = team.tags && team.tags.some(tag => tag && tag.toLowerCase().includes(searchTerm));
+            return matchesName || matchesDesc || matchesTags;
+          }
+          
+          return true;
+        });
+        
+        renderTeams();
+      }
+
+      // Función para renderizar equipos con paginación
+      function renderTeams() {
+        const startIdx = (currentPage - 1) * itemsPerPage;
+        const endIdx = startIdx + itemsPerPage;
+        const paginatedTeams = filteredTeams.slice(startIdx, endIdx);
+
+        const container = document.getElementById('teamsGrid');
+        container.className = 'teams-grid-classic';
+        container.innerHTML = '';
+
+        const RECAUDACION_META = 1000;
+
+        if (paginatedTeams.length === 0) {
+          container.innerHTML = `
+            <div class="empty-state">
+              <i class="fas fa-users-slash"></i>
+              <h3>No se encontraron comunidades</h3>
+              <p>No hay comunidades que coincidan con tu búsqueda.</p>
+              <button id="createTeamEmptyBtn" class="btn btn-primary">
+                <i class="fas fa-plus"></i> Crear primera comunidad
+              </button>
+            </div>
+          `;
+          document.getElementById('createTeamEmptyBtn').addEventListener('click', () => {
+            document.getElementById('create-team-btn').click();
+          });
+          document.getElementById('pagination').style.display = 'none';
+          return;
+        }
+
+        document.getElementById('pagination').style.display = 'flex';
+
+        paginatedTeams.forEach(team => {
+          const membersCount = team.members?.length || 1;
+          const tagsHtml = team.tags?.length
+            ? `<div class="team-tags-classic" style="margin-bottom:0.8em;">${team.tags.slice(0, 4).map(tag => `<span class="team-tag-classic">${tag}</span>`).join('')}${team.tags.length > 4 ? `<span class="team-tag-classic tag-more">+${team.tags.length - 4}</span>` : ''}</div>`
+            : '';
+
+          const isTrending = membersCount >= 20 || (team.impact || 0) >= 1000;
+          const recaudado = team.funds_raised || 0;
+          const meta = team.goal || 1000; // Usa el campo goal de la comunidad, o 1000 si no existe
+          const porcentaje = meta ? Math.min(100, Math.round((recaudado / meta) * 100)) : 0;
+
+          // Badge trending y privada: trending ocupa arriba derecha si no hay privada, si hay privada trending va debajo
+          let badgePrivada = team.privacy === 'private'
+            ? `<div class="team-badge-classic" style="top:1rem;right:1rem;background:var(--gray);color:var(--primary-dark);"><i class="fas fa-lock"></i> Privada</div>`
+            : '';
+          let badgeTrending = isTrending
+            ? `<div class="team-badge-classic" style="top:${team.privacy === 'private' ? '3.2rem' : '1rem'};right:1rem;background:#ffe600;color:#b8860b;"><i class="fas fa-arrow-trend-up"></i> Trending</div>`
+            : '';
+
+          const card = document.createElement('div');
+          card.className = 'team-card-classic';
+          card.innerHTML = `
+            <div class="team-image-classic">
+              <img src="${team.photo || 'https://via.placeholder.com/350x180?text=Comunidad'}" alt="${team.name}">
+              <div class="team-badge-classic points" style="top:1rem;left:1rem;right:auto;background:var(--primary);color:#fff;">
+                <i class="fas fa-bolt"></i> +${team.impact || 0} pts
+              </div>
+              ${badgePrivada}${badgeTrending}
+            </div>
+            <div class="team-content-classic">
+              <h3>${team.name}</h3>
+              <p>${team.description || 'Esta comunidad no tiene descripción aún.'}</p>
+              <div class="team-meta-classic" style="margin-bottom:1em;">
+                <div class="meta-item-classic"><i class="fas fa-layer-group"></i> ${getCategoryName(team.category)}</div>
+                <div class="meta-item-classic"><i class="fas fa-tasks"></i> ${team.activities_count || 0} actividades</div>
+                <div class="meta-item-classic"><i class="fas fa-heart"></i> ${team.beneficiaries || 0} beneficiarios</div>
+                <div class="meta-item-classic"><i class="fas fa-users"></i> ${membersCount} miembros</div>
+              </div>
+              ${tagsHtml}
+              <div class="team-progress-classic" style="margin-bottom:1.2em;">
+                <div class="progress-bar">
+                  <div class="progress-fill" style="width:${porcentaje}%;">
+                    ${porcentaje > 10 ? porcentaje + '%' : ''}
+                  </div>
+                </div>
+                <div class="progress-info">
+                  <span>${porcentaje}% completado</span>
+                  <span>${recaudado} € de ${meta} €</span>
+                </div>
+              </div>
+              <div class="team-actions-classic" style="margin-top:1.2em;">
+                <a href="/teams/${team.id}" class="btn btn-primary">
+                  Ver más
+                </a>
+                <button class="btn btn-accent join-team-btn" data-team-id="${team.id}">
+                  <i class="fas fa-user-plus"></i> Unirse
+                </button>
+              </div>
+            </div>
+          `;
+          container.appendChild(card);
+        });
+        
+        // Configurar botones de unirse
+        document.querySelectorAll('.join-team-btn').forEach(btn => {
+          btn.addEventListener('click', async function() {
+            const teamId = this.getAttribute('data-team-id');
+            const { data: { session } } = await supabase.auth.getSession();
+
+            if (!session?.user) {
+              document.getElementById('loginModal').classList.add('active');
+              return;
+            }
+
+            try {
+              const { error } = await supabase
+                .from('team_members')
+                .insert([{
+                  team_id: teamId,
+                  user_id: session.user.id,
+                  joined_at: new Date().toISOString(),
+                  role: 'member'
+                }]);
+              if (error) throw error;
+              alert('¡Solicitud enviada con éxito!');
+              this.innerHTML = '<i class="fas fa-check"></i> Solicitud enviada';
+              this.disabled = true;
+            } catch (error) {
+              console.error('Error joining team:', error);
+              alert('Error al unirse a la comunidad: ' + error.message);
+            }
+          });
+        });
+
+        updatePagination();
+      }
+      
+      // Función para actualizar controles de paginación
+      function updatePagination() {
+        const totalPages = Math.max(1, Math.ceil(filteredTeams.length / itemsPerPage));
+        document.getElementById('pageInfo').textContent = `${currentPage} / ${totalPages}`;
+        document.getElementById('prevPage').disabled = currentPage <= 1;
+        document.getElementById('nextPage').disabled = currentPage >= totalPages;
+      }
+      
+      // Función auxiliar para nombres de categoría
+      function getCategoryName(category) {
+        const categories = {
+          'medio_ambiente': 'Medio Ambiente',
+          'educacion': 'Educación',
+          'salud': 'Salud',
+          'animales': 'Animales',
+          'comunidad': 'Comunidad',
+          'otros': 'Otros'
+        };
+        return categories[category] || 'General';
+      }
+
+      // Crear causa asociada a una comunidad y actualizar contador
+      async function crearCausa({ title, description, teamId }) {
+        // 1. Crear la causa con el team_id
+        const { data, error } = await supabase
+          .from('causes')
+          .insert([{ title, description, team_id: teamId }]);
+        if (error) {
+          alert('Error al crear causa');
+          return;
+        }
+
+        // 2. Incrementar el contador solo en esa comunidad
+        await supabase.rpc('increment_team_counter', {
+          team_id_input: teamId,
+          field_name: 'causes_count'
+        });
+      }
+
+      // Crear tarea asociada a una comunidad y actualizar contador
+      async function crearTarea({ title, description, teamId }) {
+        // 1. Crear la tarea con el team_id
+        await supabase
+          .from('tasks')
+          .insert([{ title, description, team_id: teamId }]);
+        // 2. Incrementar el contador de tareas en esa comunidad
+        await supabase.rpc('increment_team_counter', {
+          team_id_input: teamId,
+          field_name: 'tasks_count'
+        });
+      }
+
+      // Crear reto asociado a una comunidad y actualizar contador
+      async function crearReto({ title, description, teamId }) {
+        // 1. Crear el reto con el team_id
+        await supabase
+          .from('challenges')
+          .insert([{ title, description, team_id: teamId }]);
+        // 2. Incrementar el contador de retos en esa comunidad
+        await supabase.rpc('increment_team_counter', {
+          team_id_input: teamId,
+          field_name: 'challenges_count'
+        });
+      }
+
+      // Crear voluntariado asociado a una comunidad y actualizar contador
+      async function crearVoluntariado({ title, description, teamId }) {
+        // 1. Crear el voluntariado con el team_id
+        await supabase
+          .from('volunteering')
+          .insert([{ title, description, team_id: teamId }]);
+        // 2. Incrementar el contador de voluntariados en esa comunidad
+        await supabase.rpc('increment_team_counter', {
+          team_id_input: teamId,
+          field_name: 'volunteering_count'
+        });
+      }
+
+      // Crear o actualizar el contador de beneficiarios en una comunidad
+      async function actualizarBeneficiarios(teamId, delta) {
+        // 1. Actualizar el campo beneficiaries de la comunidad
+        await supabase
+          .from('teams')
+          .update({ beneficiaries: supabase.raw(`beneficiaries + ${delta}`) })
+          .eq('id', teamId);
+
+        // 2. Llamar a la función RPC para actualizar el contador
+        await supabase.rpc('increment_team_counter', {
+          team_id_input: teamId,
+          field_name: 'beneficiaries'
+        });
+      }
+    });
+  </script>
+{% endblock %}

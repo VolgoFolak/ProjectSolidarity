@@ -1,0 +1,67 @@
+<footer>
+  <div class="footer-content" style="max-width:1200px;margin:0 auto;padding:2.5rem 1rem;display:flex;flex-wrap:wrap;gap:2.5rem;justify-content:space-between;">
+    <!-- Logo y descripción -->
+    <div style="flex:1 1 220px;min-width:220px;">
+      <div class="footer-logo" style="display:flex;align-items:center;gap:0.7rem;margin-bottom:1rem;">
+        <i class="fas fa-hands-helping" style="font-size:2rem;color:var(--primary);"></i>
+        <h3 style="font-size:1.5rem;font-weight:700;color:var(--primary);margin:0;">Solidarity</h3>
+      </div>
+      <div style="color:#6b7280;font-size:1rem;margin-bottom:1.2rem;">
+        Plataforma para transformar tu solidaridad en impacto real. Únete, participa y haz la diferencia en tu comunidad y el mundo.
+      </div>
+      <div class="social-links" style="display:flex;gap:1rem;">
+        <a href="#" aria-label="Twitter" style="color:var(--accent);font-size:1.3rem;"><i class="fab fa-twitter"></i></a>
+        <a href="#" aria-label="Facebook" style="color:var(--accent);font-size:1.3rem;"><i class="fab fa-facebook-f"></i></a>
+        <a href="#" aria-label="Instagram" style="color:var(--accent);font-size:1.3rem;"><i class="fab fa-instagram"></i></a>
+        <a href="#" aria-label="LinkedIn" style="color:var(--accent);font-size:1.3rem;"><i class="fab fa-linkedin"></i></a>
+      </div>
+    </div>
+    <!-- Enlaces útiles -->
+    <div style="flex:1 1 160px;min-width:160px;">
+      <h4 style="font-size:1.1rem;font-weight:600;margin-bottom:0.7rem;color:var(--primary);">Solidarity</h4>
+      <div class="footer-links" style="display:flex;flex-direction:column;gap:0.5rem;">
+        <a href="/about">Acerca de</a>
+      </div>
+    </div>
+    <!-- Recursos legales -->
+    <div style="flex:1 1 160px;min-width:160px;">
+      <h4 style="font-size:1.1rem;font-weight:600;margin-bottom:0.7rem;color:var(--primary);">Legal</h4>
+      <div style="display:flex;flex-direction:column;gap:0.5rem;">
+        <a href="/privacy">Política de Privacidad</a>
+        <a href="/terms">Términos y Condiciones</a>
+        <a href="/cookies">Política de Cookies</a>
+        <a href="/contact">Contacto</a>
+      </div>
+    </div>
+    <!-- Newsletter -->
+    <div style="flex:1 1 260px;min-width:260px;">
+      <h4 style="font-size:1.1rem;font-weight:600;margin-bottom:0.7rem;color:var(--primary);">Newsletter</h4>
+      <div style="color:#6b7280;font-size:0.98rem;margin-bottom:0.7rem;">
+        Recibe novedades, historias inspiradoras y oportunidades de acción directamente en tu correo.
+      </div>
+      <form id="newsletter-form" style="display:flex;gap:0.5rem;">
+        <input type="email" name="newsletter-email" placeholder="Tu email" required style="flex:1;padding:0.5rem 1rem;border-radius:50px;border:1px solid var(--gray);font-size:1rem;">
+        <button type="submit" class="btn btn-accent" style="border-radius:50px;padding:0.5rem 1.2rem;">Suscribirse</button>
+      </form>
+      <div id="newsletter-msg" style="font-size:0.95rem;color:var(--accent);margin-top:0.5rem;display:none;"></div>
+    </div>
+  </div>
+  <div class="footer-bottom" style="text-align:center;padding:1.2rem 0 0 0;margin-top:1.5rem;border-top:1px solid #e5e7eb;color:#6b7280;font-size:0.98rem;">
+    &copy; 2025 Solidarity. Todos los derechos reservados.
+  </div>
+</footer>
+
+<script>
+  // Newsletter simple feedback (no backend)
+  document.addEventListener('DOMContentLoaded', function() {
+    const form = document.getElementById('newsletter-form');
+    if (form) {
+      form.addEventListener('submit', function(e) {
+        e.preventDefault();
+        document.getElementById('newsletter-msg').textContent = "¡Gracias por suscribirte!";
+        document.getElementById('newsletter-msg').style.display = "block";
+        form.reset();
+      });
+    }
+  });
+</script>

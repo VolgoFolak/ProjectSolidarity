@@ -1,0 +1,488 @@
+{% extends "layout.njk" %}
+
+{% block title %}Registro | Solidarity{% endblock %}
+
+{% block head %}
+  {{ super() }}
+  <style>
+    .register-section {
+      max-width: 480px;
+      margin: 3rem auto 2rem auto;
+      background: #fff;
+      border-radius: 16px;
+      box-shadow: 0 2px 16px rgba(0,0,0,0.07);
+      padding: 2.5rem 2rem 2rem 2rem;
+    }
+    .register-header {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+    .register-header img {
+      height: 48px;
+      width: 48px;
+      border-radius: 12px;
+      background: #f8fafc;
+      object-fit: contain;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    }
+    .register-header h1 {
+      font-size: 2rem;
+      font-weight: 900;
+      color: var(--primary);
+      margin: 0;
+    }
+    .register-form label {
+      font-weight: 600;
+      color: var(--primary);
+      margin-bottom: 0.3rem;
+      display: block;
+    }
+    .register-form input,
+    .register-form select,
+    .register-form textarea {
+      width: 100%;
+      padding: 0.7rem 1rem;
+      border-radius: 8px;
+      border: 1px solid #e5e7eb;
+      margin-bottom: 1.1rem;
+      font-size: 1rem;
+      background: #f8fafc;
+      transition: border 0.2s;
+    }
+    .register-form input:focus,
+    .register-form select:focus,
+    .register-form textarea:focus {
+      border: 1.5px solid var(--accent);
+      outline: none;
+      background: #fff;
+    }
+    .register-form .interests-section {
+      margin-bottom: 1.5rem;
+    }
+    .register-form .interests-title {
+      font-weight: 600;
+      color: var(--primary);
+      margin-bottom: 0.5rem;
+      font-size: 1.08rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .register-form .interests-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem 0.5rem;
+      margin-bottom: 0.2rem;
+      justify-content: flex-start;
+    }
+    .register-form .interest-chip {
+      background: #f1f5f9;
+      color: var(--primary);
+      border-radius: 999px;
+      padding: 0.45rem 1.1rem;
+      font-size: 1rem;
+      cursor: pointer;
+      border: 1.5px solid #e5e7eb;
+      transition: background 0.2s, border 0.2s, color 0.2s;
+      user-select: none;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+    .register-form .interest-chip.selected {
+      background: var(--accent);
+      color: #fff;
+      border: 1.5px solid var(--primary);
+      font-weight: 600;
+    }
+    .register-form .photo-preview {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 1.2rem;
+    }
+    .register-form .photo-preview img {
+      width: 64px;
+      height: 64px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 2px solid var(--accent);
+      background: #f1f5f9;
+    }
+    .register-form .photo-preview label {
+      margin-bottom: 0;
+      font-weight: 400;
+      color: var(--primary);
+      cursor: pointer;
+    }
+    .register-form .btn {
+      width: 100%;
+      margin-top: 0.5rem;
+    }
+    .register-form .form-desc {
+      text-align: center;
+      color: #6b7280;
+      margin-bottom: 1.5rem;
+      font-size: 1.08rem;
+    }
+    .register-form .success-message {
+      background: #e6f7f1;
+      color: var(--primary);
+      border-radius: 8px;
+      padding: 1rem;
+      text-align: center;
+      margin-bottom: 1rem;
+      font-weight: 600;
+    }
+    .register-form .slogan-section {
+      margin-bottom: 1.2rem;
+    }
+    .register-form .slogan-section label {
+      font-weight: 600;
+      color: var(--primary);
+      margin-bottom: 0.3rem;
+      display: block;
+    }
+    .register-form .slogan-section input {
+      font-style: italic;
+    }
+    .social-register {
+      display: flex;
+      flex-direction: column;
+      gap: 0.7rem;
+      margin-bottom: 2rem;
+      margin-top: 0.5rem;
+    }
+    .social-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.7rem;
+      border-radius: 8px;
+      border: 1.5px solid #e5e7eb;
+      background: #f8fafc;
+      color: #222;
+      font-weight: 600;
+      font-size: 1rem;
+      padding: 0.7rem 0;
+      cursor: pointer;
+      transition: background 0.18s, border 0.18s;
+      text-decoration: none;
+    }
+    .social-btn:hover {
+      background: var(--primary-light, #e6f0fa);
+      border: 1.5px solid var(--primary);
+      color: var(--primary);
+    }
+    .social-btn img {
+      width: 22px;
+      height: 22px;
+      margin-right: 0.7rem;
+      border-radius: 4px;
+      background: #fff;
+      object-fit: contain;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+    }
+    .social-divider {
+      text-align: center;
+      color: #b0b0b0;
+      margin: 1.5rem 0 1.2rem 0;
+      font-size: 1rem;
+      position: relative;
+    }
+    .social-divider:before,
+    .social-divider:after {
+      content: "";
+      display: inline-block;
+      width: 35%;
+      height: 1px;
+      background: #e5e7eb;
+      vertical-align: middle;
+      margin: 0 0.7rem;
+    }
+    .register-form .mini-icon {
+      width: 20px;
+      height: 20px;
+      margin-right: 7px;
+      vertical-align: middle;
+      border-radius: 4px;
+      background: #f8fafc;
+      object-fit: contain;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+    }
+    @media (max-width: 600px) {
+      .register-section { padding: 1.2rem 0.5rem; }
+      .register-header img { height: 36px; width: 36px; }
+      .register-header h1 { font-size: 1.3rem; }
+    }
+  </style>
+{% endblock %}
+
+{% block content %}
+<section class="register-section">
+  <div class="register-header">
+    <span style="display:flex;align-items:center;justify-content:center;height:48px;width:48px;border-radius:12px;background:#f8fafc;box-shadow:0 2px 8px rgba(0,0,0,0.06);">
+      <i class="fas fa-hands-helping" style="font-size:2rem;color:var(--accent,#2dd4bf);"></i>
+    </span>
+    <h1>Únete a Solidarity</h1>
+  </div>
+  <div class="social-register">
+    <a href="/auth/google" class="social-btn gmail">
+      <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/google/google-original.svg" alt="Google logo">
+      Registrarse con Gmail
+    </a>
+    <a href="/auth/facebook" class="social-btn facebook">
+      <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/facebook/facebook-original.svg" alt="Facebook logo">
+      Registrarse con Facebook
+    </a>
+    <a href="/auth/twitter" class="social-btn twitter">
+      <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/twitter/twitter-original.svg" alt="Twitter logo">
+      Registrarse con Twitter
+    </a>
+  </div>
+  <form class="register-form" id="registerForm" enctype="multipart/form-data" autocomplete="off">
+    <div class="form-desc">
+      Crea tu cuenta y empieza a transformar el mundo. Personaliza tu perfil, elige tus intereses y conecta con la comunidad.
+    </div>
+    <label for="photo">Foto de perfil</label>
+    <div class="photo-preview">
+      <img id="photoPreview" src="https://randomuser.me/api/portraits/lego/1.jpg" alt="Foto de perfil">
+      <label for="photo" style="cursor:pointer;">
+        <i class="fas fa-camera"></i> Cambiar foto
+        <input type="file" id="photo" name="photo" accept="image/*" style="display:none;">
+      </label>
+    </div>
+    <label for="firstName">Nombre</label>
+    <input type="text" id="firstName" name="firstName" required placeholder="Tu nombre">
+
+    <label for="lastName">Apellido</label>
+    <input type="text" id="lastName" name="lastName" required placeholder="Tu apellido">
+
+    <label for="username">Nombre de usuario</label>
+    <input type="text" id="username" name="username" required placeholder="Ej: solidaridad123">
+
+    <label for="email">Correo electrónico</label>
+    <input type="email" id="email" name="email" required placeholder="tucorreo@email.com">
+
+    <label for="password">Contraseña</label>
+    <input type="password" id="password" name="password" required minlength="6" placeholder="Mínimo 6 caracteres">
+
+    <label for="country">País</label>
+    <select id="country" name="country" required>
+      <option value="">Selecciona tu país</option>
+      <option value="España">España</option>
+      <option value="México">México</option>
+      <option value="Argentina">Argentina</option>
+      <option value="Colombia">Colombia</option>
+      <option value="Chile">Chile</option>
+      <option value="Perú">Perú</option>
+      <option value="Uruguay">Uruguay</option>
+      <option value="Venezuela">Venezuela</option>
+      <option value="Bolivia">Bolivia</option>
+      <option value="Ecuador">Ecuador</option>
+      <option value="Costa Rica">Costa Rica</option>
+      <option value="Panamá">Panamá</option>
+      <option value="Otro">Otro</option>
+    </select>
+
+    <label for="birthdate">Fecha de nacimiento</label>
+    <input type="date" id="birthdate" name="birthdate" required>
+
+    <div class="slogan-section">
+      <label for="slogan">Slogan personal o frase motivacional</label>
+      <input type="text" id="slogan" name="slogan" maxlength="80" placeholder="Ej: ¡Pequeñas acciones, grandes cambios!">
+    </div>
+
+    <div class="interests-section">
+      <div class="interests-title">
+        <i class="fas fa-heart"></i> Intereses principales
+      </div>
+      <div class="interests-list" id="interestsList">
+        <span class="interest-chip" data-value="medio ambiente">
+          <img src="https://cdn-icons-png.flaticon.com/512/2909/2909769.png" class="mini-icon" alt="Medio ambiente">Medio ambiente
+        </span>
+        <span class="interest-chip" data-value="educación">
+          <img src="https://cdn-icons-png.flaticon.com/512/3135/3135755.png" class="mini-icon" alt="Educación">Educación
+        </span>
+        <span class="interest-chip" data-value="inclusión">
+          <img src="https://cdn-icons-png.flaticon.com/512/1077/1077012.png" class="mini-icon" alt="Inclusión">Inclusión
+        </span>
+        <span class="interest-chip" data-value="salud">
+          <img src="https://cdn-icons-png.flaticon.com/512/833/833472.png" class="mini-icon" alt="Salud">Salud
+        </span>
+        <span class="interest-chip" data-value="animales">
+          <img src="https://cdn-icons-png.flaticon.com/512/616/616408.png" class="mini-icon" alt="Animales">Animales
+        </span>
+        <span class="interest-chip" data-value="tecnología">
+          <img src="https://cdn-icons-png.flaticon.com/512/2721/2721297.png" class="mini-icon" alt="Tecnología">Tecnología
+        </span>
+        <span class="interest-chip" data-value="arte">
+          <img src="https://cdn-icons-png.flaticon.com/512/3595/3595455.png" class="mini-icon" alt="Arte">Arte
+        </span>
+        <span class="interest-chip" data-value="deporte">
+          <img src="https://cdn-icons-png.flaticon.com/512/1041/1041916.png" class="mini-icon" alt="Deporte">Deporte
+        </span>
+        <span class="interest-chip" data-value="derechos humanos">
+          <img src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" class="mini-icon" alt="Derechos Humanos">Derechos Humanos
+        </span>
+        <span class="interest-chip" data-value="pobreza">
+          <img src="https://cdn-icons-png.flaticon.com/512/2917/2917995.png" class="mini-icon" alt="Pobreza">Pobreza
+        </span>
+        <span class="interest-chip" data-value="igualdad de género">
+          <img src="https://cdn-icons-png.flaticon.com/512/3135/3135789.png" class="mini-icon" alt="Igualdad de género">Igualdad de género
+        </span>
+        <span class="interest-chip" data-value="cultura">
+          <img src="https://cdn-icons-png.flaticon.com/512/3135/3135768.png" class="mini-icon" alt="Cultura">Cultura
+        </span>
+        <span class="interest-chip" data-value="innovación">
+          <img src="https://cdn-icons-png.flaticon.com/512/3135/3135773.png" class="mini-icon" alt="Innovación">Innovación
+        </span>
+        <span class="interest-chip" data-value="emprendimiento">
+          <img src="https://cdn-icons-png.flaticon.com/512/3135/3135792.png" class="mini-icon" alt="Emprendimiento">Emprendimiento
+        </span>
+        <span class="interest-chip" data-value="alimentación">
+          <img src="https://cdn-icons-png.flaticon.com/512/1046/1046857.png" class="mini-icon" alt="Alimentación">Alimentación
+        </span>
+        <span class="interest-chip" data-value="energía">
+          <img src="https://cdn-icons-png.flaticon.com/512/1046/1046876.png" class="mini-icon" alt="Energía">Energía
+        </span>
+        <span class="interest-chip" data-value="voluntariado">
+          <img src="https://cdn-icons-png.flaticon.com/512/3135/3135766.png" class="mini-icon" alt="Voluntariado">Voluntariado
+        </span>
+      </div>
+      <div style="font-size:0.97rem;color:#6b7280;margin-top:0.2rem;">
+        Selecciona uno o varios intereses para personalizar tu experiencia.
+      </div>
+    </div>
+
+    <label for="bio">Sobre ti</label>
+    <textarea id="bio" name="bio" rows="2" maxlength="200" placeholder="Cuéntanos algo sobre ti..."></textarea>
+
+    <button type="submit" class="btn btn-accent btn-lg">
+      <i class="fas fa-user-plus"></i> Crear cuenta
+    </button>
+  </form>
+  <div id="registerSuccess" class="success-message" style="display:none;">
+    ¡Registro exitoso! Te hemos enviado un correo de bienvenida. Revisa tu bandeja de entrada.
+  </div>
+
+  <!-- Modal de éxito de registro -->
+  <div id="registerModal" style="display:none; position:fixed; top:0; left:0; width:100vw; height:100vh; background:rgba(0,0,0,0.35); z-index:9999; align-items:center; justify-content:center;">
+    <div style="background:#fff; border-radius:16px; max-width:350px; margin:auto; padding:2rem 1.5rem; box-shadow:0 8px 32px rgba(0,0,0,0.13); text-align:center; position:relative;">
+      <span style="font-size:2.5rem; color:var(--accent,#2dd4bf); display:block; margin-bottom:1rem;">
+        <i class="fas fa-envelope-open-text"></i>
+      </span>
+      <h2 style="color:var(--primary); font-weight:800; margin-bottom:0.7rem;">¡Registro iniciado!</h2>
+      <p style="color:#444; font-size:1.08rem;">
+        Si tu correo es válido, recibirás un email de confirmación.<br>
+        Revisa tu bandeja de entrada y la carpeta de spam.<br>
+        <span style="color:#888; font-size:0.97rem;">No cierres esta ventana hasta confirmar tu correo.</span>
+      </p>
+      <button onclick="document.getElementById('registerModal').style.display='none';" style="margin-top:1.2rem; background:var(--accent,#2dd4bf); color:#fff; border:none; border-radius:8px; padding:0.7rem 1.5rem; font-size:1.1rem; font-weight:600; cursor:pointer;">
+        Entendido
+      </button>
+    </div>
+  </div>
+</section>
+{% endblock %}
+
+{% block scripts %}
+  {{ super() }}
+  <script>
+    // Foto de perfil preview
+document.getElementById('photo').addEventListener('change', function(e) {
+  const file = e.target.files[0];
+  if (file) {
+    const reader = new FileReader();
+    reader.onload = function(evt) {
+      document.getElementById('photoPreview').src = evt.target.result;
+    };
+    reader.readAsDataURL(file);
+  }
+});
+
+// Intereses selección
+const interestsList = document.getElementById('interestsList');
+let selectedInterests = [];
+interestsList.addEventListener('click', function(e) {
+  const chip = e.target.closest('.interest-chip');
+  if (chip) {
+    chip.classList.toggle('selected');
+    const value = chip.getAttribute('data-value');
+    if (chip.classList.contains('selected')) {
+      selectedInterests.push(value);
+    } else {
+      selectedInterests = selectedInterests.filter(i => i !== value);
+    }
+  }
+});
+
+// Registro real con Supabase
+document.getElementById('registerForm').addEventListener('submit', async function(e) {
+  e.preventDefault();
+
+  // Recoge los datos del formulario
+  const email = document.getElementById('email').value.trim();
+  const password = document.getElementById('password').value;
+  const firstName = document.getElementById('firstName').value.trim();
+  const lastName = document.getElementById('lastName').value.trim();
+  const username = document.getElementById('username').value.trim();
+  const birthdate = document.getElementById('birthdate').value;
+  const country = document.getElementById('country').value;
+  const slogan = document.getElementById('slogan').value.trim();
+  const bio = document.getElementById('bio').value.trim();
+  const interests = selectedInterests;
+  const photoFile = document.getElementById('photo').files[0];
+
+  // 1. Registra el usuario en Supabase Auth
+  const { data: signUpData, error: signUpError } = await supabase.auth.signUp({ email, password });
+  if (signUpError) {
+    alert(signUpError.message || 'No se pudo registrar');
+    return;
+  }
+
+  // 2. Sube la foto si existe
+  let photo_url = null;
+  if (photoFile) {
+    const fileExt = photoFile.name.split('.').pop();
+    const fileName = `${Date.now()}-${Math.random().toString(36).substr(2, 9)}.${fileExt}`;
+    const filePath = `avatars/${fileName}`;
+    const { error: uploadError } = await supabase.storage
+      .from('avatars')
+      .upload(filePath, photoFile, { upsert: true });
+    if (!uploadError) {
+      const { data: publicUrlData } = supabase.storage.from('avatars').getPublicUrl(filePath);
+      photo_url = publicUrlData.publicUrl;
+    }
+  }
+
+  // 3. Inserta el perfil en la tabla profiles con el mismo id que el usuario de Auth
+  const userId = signUpData.user?.id;
+  if (userId) {
+    await supabase
+      .from('profiles')
+      .insert([{
+        id: userId,
+        email,
+        first_name: firstName,
+        last_name: lastName,
+        username,
+        birthdate,
+        country,
+        slogan,
+        bio,
+        interests,
+        photo_url
+      }]);
+  }
+
+  // 4. Muestra mensaje de éxito
+  document.getElementById('registerSuccess').style.display = 'block';
+  document.getElementById('registerModal').style.display = 'flex';
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+});
+  </script>
+{% endblock %}
