@@ -410,13 +410,17 @@
           <input type="text" id="title" name="title" placeholder="Ej: Agua limpia para todos" required>
         </div>
         <div class="form-group">
+          <label for="short_description">Descripción corta (máx. 3 líneas)</label>
+          <textarea id="short_description" name="short_description" maxlength="180" placeholder="Resumen breve para mostrar en la tarjeta..." required></textarea>
+        </div>
+        <div class="form-group">
+          <label for="description">Descripción exhaustiva</label>
+          <textarea id="description" name="description" placeholder="Describe la causa, el objetivo, contexto, cómo se usará la ayuda..." required></textarea>
+        </div>
+        <div class="form-group">
           <label for="photo">Foto principal</label>
           <input type="file" id="photo" name="photo" accept="image/*">
           <img id="previewImg" class="preview-img" alt="Vista previa de la foto" style="display:none;">
-        </div>
-        <div class="form-group">
-          <label for="description">Descripción</label>
-          <textarea id="description" name="description" placeholder="Describe la causa, el objetivo y cómo se usará la ayuda..." required></textarea>
         </div>
         <div class="form-inline-group">
           <div class="form-group">
@@ -462,6 +466,16 @@
         <a href="/causes" class="btn btn-outline" style="margin-top:1rem;">
           <i class="fas fa-arrow-left"></i> Volver a causas
         </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal para detalles de causa -->
+  <div id="causeModal" class="modal" style="display:none; position:fixed; z-index:9999; left:0; top:0; width:100vw; height:100vh; background:rgba(0,0,0,0.35); align-items:center; justify-content:center;">
+    <div class="modal-content" style="background:#fff; border-radius:18px; max-width:480px; width:95vw; padding:2.5rem; box-shadow:0 8px 32px rgba(74,111,165,0.13); position:relative;">
+      <button id="closeModal" style="position:absolute; top:1rem; right:1rem; background:none; border:none; font-size:1.5em; color:#4a6fa5; cursor:pointer;">&times;</button>
+      <div id="modalBody">
+        <!-- Aquí se cargan los detalles de la causa -->
       </div>
     </div>
   </div>
@@ -580,6 +594,7 @@ document.addEventListener('DOMContentLoaded', async function() {
     e.preventDefault();
     // Recoge los datos del formulario
     const title = document.getElementById('title').value.trim();
+    const short_description = document.getElementById('short_description').value.trim();
     const description = document.getElementById('description').value.trim();
     const goal = parseFloat(document.getElementById('goal').value);
     const beneficiaries = parseInt(document.getElementById('beneficiaries').value, 10);
@@ -620,6 +635,7 @@ document.addEventListener('DOMContentLoaded', async function() {
       .from('causes')
       .insert([{
         title,
+        short_description,
         description,
         goal,
         beneficiaries,
@@ -683,13 +699,14 @@ async function loadCausesFromSupabase(filter = "all", searchTerm = "") {
     card.className = 'cause-card';
     card.innerHTML = `
       <div class="cause-image">
-        <img src="${cause.photo_url || '/img/causa-default.jpg'}" alt="${cause.title}" onerror="this.src='/img/causa-default.jpg'">
+        <img src="${cause.photo_url || '/img/causa-default.jpg'}" alt="${cause.title}" 
+  onerror="if (!this._defaulted) { this._defaulted = true; this.src='/img/causa-default.jpg'; }">
         ${urgentBadge}
         ${pointsBadge}
       </div>
       <div class="cause-content">
         <h3>${cause.title}</h3>
-        <p>${cause.description}</p>
+        <p>${cause.short_description || ''}</p>
         <div class="cause-meta">
           <div class="meta-item"><i class="fas fa-map-marker-alt"></i> ${location}</div>
           <div class="meta-item"><i class="fas fa-users"></i> ${cause.donors || 0} donantes</div>
@@ -707,13 +724,14 @@ async function loadCausesFromSupabase(filter = "all", searchTerm = "") {
           </div>
         </div>
         <div class="cause-actions">
-          <a href="/causes/${cause.id}" class="btn btn-primary">Ver más</a>
+          <button class="btn btn-primary view-cause-btn" data-cause-id="${cause.id}">Ver más</button>
           <a href="#" class="btn btn-accent">Donar</a>
         </div>
       </div>
     `;
     causesList.appendChild(card);
   });
+  window.causes = causes; // Añade esto después de obtener las causas
 }
 
 // Geocodificación automática al cambiar ciudad o país
@@ -743,5 +761,37 @@ async function geocodeCityCountry() {
 
 document.getElementById('city').addEventListener('change', geocodeCityCountry);
 document.getElementById('country').addEventListener('change', geocodeCityCountry);
+
+// Ver detalles de causa
+document.addEventListener('click', async function(e) {
+  if (e.target.classList.contains('view-cause-btn')) {
+    const causeId = e.target.getAttribute('data-cause-id');
+    // Busca los datos de la causa (puedes tenerlos en memoria o pedirlos a Supabase)
+    const cause = window.causes.find(c => c.id == causeId);
+    // Si no, puedes hacer una petición a Supabase para traer los detalles por ID
+
+    // Rellena el modal con los datos
+    document.getElementById('modalBody').innerHTML = `
+      <h2 style="color:#4a6fa5;">${cause.title}</h2>
+      <img src="${cause.photo_url || '/img/causa-default.jpg'}" alt="Imagen de la causa" style="width:100%;max-height:220px;object-fit:cover;border-radius:12px;margin-bottom:1em;">
+      <p><b>Resumen:</b> ${cause.short_description || ''}</p>
+      <p><b>Descripción completa:</b> ${cause.description}</p>
+      <p><b>Creador:</b> ${cause.creator_name || 'Anónimo'}</p>
+      <p><b>Beneficiarios:</b> ${cause.beneficiaries || 'No especificado'}</p>
+      <p><b>Fecha de creación:</b> ${new Date(cause.created_at).toLocaleDateString()}</p>
+    `;
+    document.getElementById('causeModal').style.display = 'flex';
+  }
+});
+
+// Cerrar el modal
+document.getElementById('closeModal').onclick = function() {
+  document.getElementById('causeModal').style.display = 'none';
+};
+
+// Opcional: cerrar al hacer click fuera del modal
+document.getElementById('causeModal').onclick = function(e) {
+  if (e.target === this) this.style.display = 'none';
+};
 </script>
 {% endblock %}

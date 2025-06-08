@@ -465,3 +465,26 @@ header {
     padding: 4rem 1.5rem;
   }
 }
+
+@media (max-width: 991px) {
+  .nav-links {
+    display: flex;
+    flex-direction: column;
+    position: fixed;
+    top: 0;
+    right: 0;
+    height: 100vh;
+    width: 80vw;
+    max-width: 340px;
+    background: #fff;
+    box-shadow: -2px 0 16px rgba(74,111,165,0.10);
+    transform: translateX(100%);
+    transition: transform 0.3s cubic-bezier(.77,0,.18,1);
+    z-index: 999;
+    padding: 2.5rem 1.5rem 1.5rem 1.5rem;
+    gap: 1.5rem;
+  }
+  .nav-links.active {
+    transform: translateX(0);
+  }
+}
