@@ -1,16 +1,17 @@
 document.addEventListener('DOMContentLoaded', async () => {
+  // Autenticación (ajusta según tu lógica)
   const { data: { user } } = await supabase.auth.getUser();
   const authButtons = document.getElementById('auth-buttons');
   const userMenu = document.getElementById('user-menu');
+
   if (user) {
-    // Consulta el perfil del usuario
     const { data: perfil } = await supabase
       .from('profiles')
       .select('username, photo_url')
       .eq('id', user.id)
       .single();
 
-    document.getElementById('user-avatar').src = perfil?.photo_url || '/images/default-avatar.png';
+    document.getElementById('user-avatar').src = perfil?.photo_url || '/img/default-user.png';
     document.getElementById('user-name').textContent = perfil?.username || user.email;
     authButtons.style.display = 'none';
     userMenu.style.display = 'flex';
@@ -19,7 +20,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     userMenu.style.display = 'none';
   }
 
-  // Usa el id correcto
+  // Logout
   const logoutBtn = document.getElementById('logout-btn-link');
   if (logoutBtn) {
     logoutBtn.onclick = async (e) => {
@@ -28,32 +29,27 @@ document.addEventListener('DOMContentLoaded', async () => {
       window.location.reload();
     };
   }
-});
 
-document.addEventListener('DOMContentLoaded', () => {
+  // Menú móvil hamburguesa
   const toggle = document.getElementById('mobile-menu-toggle');
-  const navLinks = document.getElementById('nav-links');
-  const overlay = document.getElementById('nav-overlay');
-  if (toggle && navLinks && overlay) {
+  const navContainer = document.querySelector('.nav-links-container');
+
+  if (toggle && navContainer) {
     toggle.addEventListener('click', () => {
-      navLinks.classList.toggle('active');
       toggle.classList.toggle('active');
-      overlay.classList.toggle('active');
+      navContainer.classList.toggle('active');
       document.body.classList.toggle('no-scroll');
     });
-    overlay.addEventListener('click', () => {
-      navLinks.classList.remove('active');
-      toggle.classList.remove('active');
-      overlay.classList.remove('active');
-      document.body.classList.remove('no-scroll');
-    });
-    navLinks.querySelectorAll('a').forEach(link => {
-      link.addEventListener('click', () => {
-        navLinks.classList.remove('active');
-        toggle.classList.remove('active');
-        overlay.classList.remove('active');
-        document.body.classList.remove('no-scroll');
-      });
-    });
   }
+
+  // Cerrar menú al hacer clic en un enlace
+  document.querySelectorAll('.nav-links a').forEach(link => {
+    link.addEventListener('click', () => {
+      if (toggle && navContainer) {
+        toggle.classList.remove('active');
+        navContainer.classList.remove('active');
+        document.body.classList.remove('no-scroll');
+      }
+    });
+  });
 });

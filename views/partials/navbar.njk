@@ -3,8 +3,13 @@
     <i class="fas fa-hands-helping logo-icon"></i>
     <span class="logo-text">Solidarity</span>
   </a>
-  
-  <div class="nav-links">
+  <!-- Botón hamburguesa SOLO visible en móvil -->
+  <button class="menu-toggle" id="mobile-menu-toggle" aria-label="Menú">
+    <span class="menu-bar"></span>
+    <span class="menu-bar"></span>
+    <span class="menu-bar"></span>
+  </button>
+  <div class="nav-links" id="nav-links">
     <a href="/">Home</a>
     <div class="dropdown">
       <a href="/takeaction" class="dropbtn btn-accent">
@@ -45,4 +50,6 @@
       <a href="#" id="logout-btn-link"><i class="fas fa-sign-out-alt icon-logout"></i> Cerrar sesión</a>
     </div>
   </div>
+
+  <div class="nav-overlay" id="nav-overlay"></div>
 </nav>
