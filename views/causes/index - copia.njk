@@ -185,13 +185,6 @@
         transition: border 0.2s;
         background: #fff;
     }
-    // Animación para notificaciones
-    @keyframes fadeInOut {
-      0% { opacity: 0; transform: translateX(-50%) translateY(20px); }
-      15% { opacity: 1; transform: translateX(-50%) translateY(0); }
-      85% { opacity: 1; transform: translateX(-50%) translateY(0); }
-      100% { opacity: 0; transform: translateX(-50%) translateY(-20px); }
-    }
     .causes-search input:focus {
         border-color: var(--primary);
     }
@@ -388,26 +381,186 @@
         }
     }
 
+    /* Nuevos estilos para el modal de causa */
+    .modal-cause-details {
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+    .modal-cause-header {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      padding-bottom: 1rem;
+      border-bottom: 1px solid #e5e7eb;
+    }
+    .modal-cause-header h2 {
+      color: var(--primary);
+      font-size: 1.8rem;
+      margin: 0;
+    }
+    .modal-cause-category {
+      background: var(--accent);
+      color: white;
+      padding: 0.3rem 0.8rem;
+      border-radius: 50px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      align-self: flex-start;
+    }
+    .modal-cause-main {
+      display: grid;
+      grid-template-columns: 1fr 1.5fr;
+      gap: 1.5rem;
+    }
+    .modal-cause-image {
+      border-radius: 12px;
+      overflow: hidden;
+      height: 240px;
+    }
+    .modal-cause-image img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    .modal-cause-info {
+      display: flex;
+      flex-direction: column;
+      gap: 1.2rem;
+    }
+    .modal-cause-progress {
+      background: #f8fafc;
+      padding: 1rem;
+      border-radius: 10px;
+    }
+    .modal-cause-meta {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 0.8rem;
+      font-size: 0.95rem;
+    }
+    .modal-cause-meta div {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      color: #6b7280;
+    }
+    .modal-cause-meta i {
+      color: var(--primary);
+      width: 1.2rem;
+      text-align: center;
+    }
+    .modal-cause-shortdesc,
+    .modal-cause-desc {
+      padding: 1rem;
+      background: #f8fafc;
+      border-radius: 10px;
+      font-size: 0.95rem;
+      line-height: 1.6;
+    }
+    .modal-cause-shortdesc b,
+    .modal-cause-desc b {
+      color: var(--primary);
+    }
+    .modal-cause-actions {
+      display: flex;
+      gap: 1rem;
+      margin-top: 0.5rem;
+    }
+    .modal-cause-linked {
+      margin-top: 1.5rem;
+      padding-top: 1.5rem;
+      border-top: 1px solid #e5e7eb;
+    }
+    .modal-cause-linked h4 {
+      color: var(--primary);
+      margin-bottom: 1rem;
+      font-size: 1.2rem;
+    }
+    .linked-items {
+      display: flex;
+      flex-direction: column;
+      gap: 0.8rem;
+    }
+    .linked-item {
+      display: flex;
+      align-items: center;
+      gap: 0.7rem;
+      padding: 0.8rem 1rem;
+      background: #f8fafc;
+      border-radius: 8px;
+      font-size: 0.95rem;
+      transition: background 0.2s;
+    }
+    .linked-item:hover {
+      background: #e6f0fa;
+    }
+    .linked-item i {
+      color: var(--accent);
+    }
+    .linked-loading {
+      color: #6b7280;
+      text-align: center;
+      padding: 1rem;
+    }
+
     /* Modal de Causa */
+    .modal {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0,0,0,0.35);
+        z-index: 1000;
+        justify-content: center;
+        align-items: center;
+    }
+    .modal-content {
+        background: #fff;
+        border-radius: 18px;
+        max-width: 740px;
+        width: 95vw;
+        padding: 2rem;
+        box-shadow: 0 8px 32px rgba(74,111,165,0.13);
+        position: relative;
+        max-height: 90vh;
+        overflow-y: auto;
+    }
+    #closeModal {
+      position: absolute;
+      top: 1.5rem;
+      right: 1.5rem;
+      background: none;
+      border: none;
+      font-size: 1.8rem;
+      color: #6b7280;
+      cursor: pointer;
+      transition: color 0.2s;
+    }
+    #closeModal:hover {
+      color: var(--primary);
+    }
     .modal-cause-container {
       font-family: 'Poppins', sans-serif;
       color: #2d3748;
     }
-    .modal-cause-header {
-      display: flex;
-      gap: 2rem;
-      margin-bottom: 2rem;
-    }
-    @media (max-width: 768px) {
-      .modal-cause-header { flex-direction: column; }
+    .modal-cause-header { margin-bottom: 1.8rem; }
+    .modal-cause-title {
+      font-size: 2rem;
+      font-weight: 700;
+      color: var(--primary);
+      margin-bottom: 0.5rem;
+      line-height: 1.3;
     }
     .modal-cause-image-wrapper {
-      flex: 1;
-      min-width: 300px;
-      height: 280px;
+      width: 100%;
+      height: 320px;
       border-radius: 12px;
       overflow: hidden;
       position: relative;
+      margin-bottom: 1.5rem;
       box-shadow: 0 4px 12px rgba(0,0,0,0.08);
     }
     .modal-cause-image {
@@ -419,7 +572,7 @@
     .modal-cause-badge {
       position: absolute;
       top: 1.5rem;
-      right: 1.5rem;
+      left: 1.5rem;
       background: rgba(255,255,255,0.95);
       padding: 0.5rem 1rem;
       border-radius: 50px;
@@ -435,23 +588,11 @@
       background: var(--urgent);
       color: white;
     }
-    .modal-cause-info {
-      flex: 1.5;
-      display: flex;
-      flex-direction: column;
-    }
-    .modal-cause-title {
-      font-size: 1.8rem;
-      font-weight: 700;
-      color: var(--primary);
-      margin-bottom: 1rem;
-      line-height: 1.3;
-    }
     .modal-cause-progress-container {
       background: #f8fafc;
       padding: 1.5rem;
       border-radius: 12px;
-      margin-bottom: 1.5rem;
+      margin-bottom: 2rem;
       border: 1px solid #e5e7eb;
     }
     .progress-info {
@@ -463,9 +604,9 @@
     }
     .modal-cause-meta-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-      gap: 1.2rem;
-      margin-bottom: 1.5rem;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 1.5rem;
+      margin-bottom: 2rem;
     }
     .meta-item {
       display: flex;
@@ -479,18 +620,7 @@
       width: 1.5rem;
       text-align: center;
     }
-    .points-notice {
-      background: #f0f9ff;
-      border-left: 4px solid var(--accent);
-      padding: 1rem;
-      border-radius: 0 8px 8px 0;
-      margin: 1rem 0;
-      font-size: 0.95rem;
-      display: flex;
-      align-items: center;
-      gap: 0.7rem;
-    }
-    .modal-cause-content { margin-top: 1.5rem; }
+    .modal-cause-content { margin-bottom: 2rem; }
     .content-section { margin-bottom: 2rem; }
     .content-title {
       font-size: 1.3rem;
@@ -506,15 +636,23 @@
       color: #4b5563;
       font-size: 1.05rem;
     }
+    .points-notice {
+      background: #f0f9ff;
+      border-left: 4px solid var(--accent);
+      padding: 1rem;
+      border-radius: 0 8px 8px 0;
+      margin: 1.5rem 0;
+      font-size: 0.95rem;
+    }
     .modal-cause-actions {
       display: flex;
       gap: 1rem;
-      margin-top: 1.5rem;
+      margin-top: 2rem;
       flex-wrap: wrap;
     }
     .action-btn {
       flex: 1;
-      min-width: 180px;
+      min-width: 200px;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -524,8 +662,6 @@
       font-weight: 600;
       font-size: 1.05rem;
       transition: all 0.2s ease;
-      border: none;
-      cursor: pointer;
     }
     .action-btn:hover {
       transform: translateY(-2px);
@@ -545,7 +681,7 @@
       border: 1px solid var(--primary-light);
     }
     .share-section {
-      margin-top: 2rem;
+      margin-top: 3rem;
       padding-top: 2rem;
       border-top: 1px solid #e5e7eb;
     }
@@ -584,11 +720,10 @@
       align-items: center;
       gap: 0.7rem;
       padding: 0.8rem 1.5rem;
-      border-radius: 8px;
+      border-radius: 50px;
       font-weight: 600;
       color: white;
       transition: all 0.2s;
-      text-decoration: none;
     }
     .share-btn:hover {
       transform: translateY(-2px);
@@ -598,6 +733,18 @@
     .share-btn-twitter { background: #1da1f2; }
     .share-btn-whatsapp { background: #25d366; }
     .share-btn-link { background: var(--primary); }
+    @media (max-width: 768px) {
+      .modal-cause-title { font-size: 1.6rem; }
+      .modal-cause-image-wrapper { height: 240px; }
+      .modal-cause-actions { flex-direction: column; }
+      .action-btn { width: 100%; }
+    }
+    @keyframes fadeInOut {
+      0% { opacity: 0; transform: translateX(-50%) translateY(20px); }
+      15% { opacity: 1; transform: translateX(-50%) translateY(0); }
+      85% { opacity: 1; transform: translateX(-50%) translateY(0); }
+      100% { opacity: 0; transform: translateX(-50%) translateY(-20px); }
+    }
   </style>
 {% endblock %}
 
@@ -690,7 +837,7 @@
 
   <!-- Modal de Causa -->
   <div id="causeModal" class="modal" style="display:none; position:fixed; z-index:9999; left:0; top:0; width:100vw; height:100vh; background:rgba(0,0,0,0.35); align-items:center; justify-content:center;">
-    <div class="modal-content" style="background:#fff; border-radius:18px; max-width:800px; width:95vw; padding:2rem; box-shadow:0 8px 32px rgba(74,111,165,0.13); position:relative; max-height:90vh; overflow-y:auto;">
+    <div class="modal-content" style="background:#fff; border-radius:18px; max-width:740px; width:95vw; padding:2rem; box-shadow:0 8px 32px rgba(74,111,165,0.13); position:relative; max-height:90vh; overflow-y:auto;">
       <button id="closeModal" style="position:absolute; top:1.5rem; right:1.5rem; background:none; border:none; font-size:1.8rem; color:#6b7280; cursor:pointer; transition:color 0.2s;" onmouseover="this.style.color='#4a6fa5'" onmouseout="this.style.color='#6b7280'">&times;</button>
       <div id="modalBody" style="padding:0.5rem;">
         <!-- Contenido dinámico -->
@@ -984,21 +1131,229 @@ document.getElementById('country').addEventListener('change', geocodeCityCountry
 document.addEventListener('click', async function(e) {
   if (e.target.classList.contains('view-cause-btn')) {
     const causeId = e.target.getAttribute('data-cause-id');
-    showCauseModal(causeId); // <-- Usa la función completa
+    const cause = window.causes.find(c => c.id == causeId);
+    const progress = cause.goal ? Math.min(Math.round((cause.raised / cause.goal) * 100), 100) : 0;
+    const createdDate = new Date(cause.created_at).toLocaleDateString('es-ES', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric'
+    });
+
+    // Rellena el modal con los datos
+    document.getElementById('modalBody').innerHTML = `
+      <div class="modal-cause-details">
+        <div class="modal-cause-header">
+          <h2>${cause.title}</h2>
+          <span class="modal-cause-category">
+            <i class="fas fa-hands-helping"></i> Causa Solidaria
+          </span>
+        </div>
+        
+        <div class="modal-cause-image-container">
+          <img class="modal-cause-image" src="${cause.photo_url || '/img/causa-default.jpg'}" 
+               alt="Imagen de la causa ${cause.title}"
+               onerror="this.src='/img/causa-default.jpg'">
+          
+          <div class="modal-cause-badges">
+            ${cause.urgent ? `
+            <div class="modal-cause-badge urgent">
+              <i class="fas fa-exclamation-circle"></i> Urgente
+            </div>` : ''}
+            
+            <div class="modal-cause-badge points">
+              <i class="fas fa-star"></i> +${cause.points || 0} Puntos
+            </div>
+          </div>
+        </div>
+        
+        <div class="modal-cause-progress-container">
+          <div class="progress-bar">
+            <div class="progress-fill" style="width: ${progress}%"></div>
+          </div>
+          <div class="progress-info">
+            <span>${progress}% completado</span>
+            <span>${cause.raised || 0} € de ${cause.goal || 0} €</span>
+          </div>
+        </div>
+        
+        <div class="modal-cause-meta">
+          <div class="modal-cause-meta-item">
+            <i class="fas fa-map-marker-alt"></i>
+            <span>${cause.city || 'Sin ubicación'}${cause.country ? ', ' + cause.country : ''}</span>
+          </div>
+          
+          <div class="modal-cause-meta-item">
+            <i class="fas fa-users"></i>
+            <span>${cause.donors || 0} donantes</span>
+          </div>
+          
+          <div class="modal-cause-meta-item">
+            <i class="fas fa-heart"></i>
+            <span>${cause.beneficiaries || 0} beneficiarios</span>
+          </div>
+          
+          <div class="modal-cause-meta-item">
+            <i class="fas fa-calendar-alt"></i>
+            <span>${createdDate}</span>
+          </div>
+        </div>
+        
+        <div class="modal-cause-content">
+          <div class="modal-cause-section">
+            <h3><i class="fas fa-align-left"></i> Descripción</h3>
+            <p>${cause.description || 'No hay descripción disponible para esta causa.'}</p>
+          </div>
+        </div>
+        
+        <div class="modal-cause-actions">
+          <a href="#" class="btn btn-primary" style="display:flex; align-items:center; justify-content:center; gap:0.7rem;">
+            <i class="fas fa-donate"></i> Donar ahora
+          </a>
+          <a href="#" class="btn btn-accent" style="display:flex; align-items:center; justify-content:center; gap:0.7rem;">
+            <i class="fas fa-hands-helping"></i> Colaborar
+          </a>
+        </div>
+        
+        <div class="modal-cause-share">
+          <h3><i class="fas fa-share-alt"></i> Comparte esta causa</h3>
+          
+          <div class="share-content">
+            <div class="share-title">¡Únete a esta causa solidaria!</div>
+            <div class="share-text">
+              "${cause.short_description || 'Ayuda a hacer realidad este proyecto solidario'}"<br><br>
+              Cada contribución cuenta y nos acerca más a la meta de ${cause.goal || 0}€ para ayudar a ${cause.beneficiaries || 0} personas.
+            </div>
+            
+            <div class="share-meta">
+              <div class="share-meta-item">
+                <i class="fas fa-bullseye"></i> ${progress}% alcanzado
+              </div>
+              <div class="share-meta-item">
+                <i class="fas fa-users"></i> ${cause.donors || 0} colaboradores
+              </div>
+              ${cause.urgent ? `
+              <div class="share-meta-item">
+                <i class="fas fa-exclamation-circle"></i> Necesidad urgente
+              </div>` : ''}
+            </div>
+          </div>
+          
+          <div class="share-buttons">
+            <a href="#" class="share-button facebook" onclick="shareOnPlatform('facebook', '${cause.title}', '${window.location.origin}/causes/${cause.id}')">
+              <i class="fab fa-facebook-f"></i> Facebook
+            </a>
+            <a href="#" class="share-button twitter" onclick="shareOnPlatform('twitter', '${cause.title}', '${window.location.origin}/causes/${cause.id}')">
+              <i class="fab fa-twitter"></i> Twitter
+            </a>
+            <a href="#" class="share-button whatsapp" onclick="shareOnPlatform('whatsapp', '${cause.title}', '${window.location.origin}/causes/${cause.id}')">
+              <i class="fab fa-whatsapp"></i> WhatsApp
+            </a>
+            <a href="#" class="share-button link" onclick="copyCauseLink('${window.location.origin}/causes/${cause.id}')">
+              <i class="fas fa-link"></i> Copiar enlace
+            </a>
+          </div>
+        </div>
+        
+        <div class="modal-cause-linked">
+          <h3><i class="fas fa-link"></i> Acciones relacionadas</h3>
+          <div class="linked-items" id="linked-items">
+            <div class="linked-loading">Cargando tareas y actividades relacionadas...</div>
+          </div>
+        </div>
+      </div>
+    `;
+
+    // Cargar elementos vinculados
+    loadLinkedItems(cause.id);
+    
+    // Mostrar modal
+    document.getElementById('causeModal').style.display = 'flex';
+    document.body.style.overflow = 'hidden';
   }
 });
 
-// Cerrar el modal
-document.getElementById('closeModal').onclick = function() {
+// Función para compartir en plataformas específicas
+function shareOnPlatform(platform, title, url) {
+  let shareUrl = '';
+  const text = `Únete a esta causa solidaria: "${title}" - Cada contribución cuenta!`;
+  
+  switch(platform) {
+    case 'facebook':
+      shareUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`;
+      break;
+    case 'twitter':
+      shareUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent(url)}`;
+      break;
+    case 'whatsapp':
+      shareUrl = `https://wa.me/?text=${encodeURIComponent(text + ' ' + url)}`;
+      break;
+    default:
+      return;
+  }
+  
+  window.open(shareUrl, '_blank', 'width=600,height=400');
+}
+
+// Función para copiar enlace
+function copyCauseLink(url) {
+  navigator.clipboard.writeText(url).then(() => {
+    // Mostrar notificación de copiado
+    const notification = document.createElement('div');
+    notification.style.position = 'fixed';
+    notification.style.bottom = '20px';
+    notification.style.left = '50%';
+    notification.style.transform = 'translateX(-50%)';
+    notification.style.backgroundColor = 'var(--accent)';
+    notification.style.color = 'white';
+    notification.style.padding = '10px 20px';
+    notification.style.borderRadius = '50px';
+    notification.style.boxShadow = '0 4px 12px rgba(0,0,0,0.15)';
+    notification.style.zIndex = '10000';
+    notification.style.animation = 'fadeInOut 2.5s ease-in-out';
+    notification.innerText = '¡Enlace copiado al portapapeles!';
+    
+    document.body.appendChild(notification);
+    
+    setTimeout(() => {
+      notification.remove();
+    }, 2500);
+  }).catch(err => {
+    console.error('Error al copiar:', err);
+    prompt('Por favor, copia este enlace:', url);
+  });
+}
+
+// Cerrar modal y restaurar scroll
+document.getElementById('closeModal').addEventListener('click', function() {
   document.getElementById('causeModal').style.display = 'none';
-};
+  document.body.style.overflow = '';
+});
 
-// Opcional: cerrar al hacer click fuera del modal
-document.getElementById('causeModal').onclick = function(e) {
-  if (e.target === this) this.style.display = 'none';
-};
+// Cerrar al hacer clic fuera del contenido
+document.getElementById('causeModal').addEventListener('click', function(e) {
+  if (e.target === this) {
+    this.style.display = 'none';
+    document.body.style.overflow = '';
+  }
+});
 
-// Función para mostrar el modal con los detalles de la causa
+// Puedes mantener tu función loadLinkedItems aquí
+function loadLinkedItems(causeId) {
+  const container = document.getElementById('linked-items');
+  if (container) {
+    container.innerHTML = '<div class="linked-loading">No hay acciones vinculadas aún.</div>';
+  }
+}
+
+// Ejemplo de funciones para donar/colaborar (puedes personalizar)
+function donateToCause(causeId) {
+  alert('Funcionalidad de donación próximamente.');
+}
+function volunteerForCause(causeId) {
+  alert('Funcionalidad de voluntariado próximamente.');
+}
+
+// Mostrar el modal con los detalles de la causa
 async function showCauseModal(causeId) {
   const cause = window.causes.find(c => c.id == causeId);
   const progress = cause.goal ? Math.min(Math.round((cause.raised / cause.goal) * 100), 100) : 0;
@@ -1010,197 +1365,67 @@ async function showCauseModal(causeId) {
 
   document.getElementById('modalBody').innerHTML = `
     <div class="modal-cause-container">
-      <!-- Título principal centrado, más espacio abajo -->
-      <h1 class="modal-cause-title" style="font-size:2rem; font-weight:800; color:var(--primary); margin-bottom:2.7rem; text-align:center; width:100%;">${cause.title}</h1>
-      <div class="modal-cause-header" style="display:flex; gap:2.5rem; margin-bottom:2.7rem;">
-        <div class="modal-cause-image-wrapper" style="flex:1; min-width:320px; height:300px; border-radius:12px; overflow:hidden; position:relative; box-shadow:0 4px 12px rgba(0,0,0,0.08);">
-          <!-- Badge arriba a la izquierda, verde -->
-          <div class="modal-cause-badge" style="top:1.2rem; left:1.2rem; right:auto; background:var(--accent); color:white; position:absolute;">
-            <i class="fas fa-hands-helping"></i> Causa Solidaria
-          </div>
-          <img class="modal-cause-image" src="${cause.photo_url || '/img/causa-default.jpg'}" 
-               alt="Imagen de la causa ${cause.title}"
-               style="width:100%;height:100%;object-fit:cover;"
-               onerror="this.src='/img/causa-default.jpg'">
-          ${cause.urgent ? `
-          <div class="modal-cause-badge urgent" style="right:1.2rem; left:auto; top:1.2rem; background:var(--urgent); color:white;">
-            <i class="fas fa-exclamation-circle"></i> Urgente
-          </div>` : ''}
+      <div class="modal-cause-header">
+        <h1 class="modal-cause-title">${cause.title}</h1>
+      </div>
+      <div class="modal-cause-image-wrapper">
+        <img class="modal-cause-image" src="${cause.photo_url || '/img/causa-default.jpg'}" 
+             alt="Imagen de la causa ${cause.title}"
+             onerror="this.src='/img/causa-default.jpg'">
+        ${cause.urgent ? `
+        <div class="modal-cause-badge urgent">
+          <i class="fas fa-exclamation-circle"></i> Urgente
+        </div>` : ''}
+      </div>
+      <div class="modal-cause-progress-container">
+        <div class="progress-bar">
+          <div class="progress-fill" style="width: ${progress}%"></div>
         </div>
-        <!-- Info a la derecha de la foto -->
-        <div class="modal-cause-info" style="flex:1.5; display:flex; flex-direction:column; justify-content:flex-start;">
-          <div class="modal-cause-progress-container" style="background:#f8fafc; padding:1.2rem; border-radius:12px; margin-bottom:1.2rem; border:1px solid #e5e7eb;">
-            <div class="progress-bar">
-              <div class="progress-fill" style="width: ${progress}%"></div>
-            </div>
-            <div class="progress-info">
-              <span>${progress}% completado</span>
-              <span>${cause.raised || 0} € de ${cause.goal || 0} €</span>
-            </div>
-          </div>
-          <!-- Meta compacta en dos columnas -->
-          <div class="modal-cause-meta-grid" style="display:grid; grid-template-columns:1fr 1fr; gap:0.7rem 1.2rem; margin-bottom:1.2rem;">
-            <div class="meta-item">
-              <span class="meta-icon"><i class="fas fa-map-marker-alt"></i></span>
-              <span>${cause.city || 'Sin ubicación'}${cause.country ? ', ' + cause.country : ''}</span>
-            </div>
-            <div class="meta-item">
-              <span class="meta-icon"><i class="fas fa-users"></i></span>
-              <span>${cause.donors || 0} donantes</span>
-            </div>
-            <div class="meta-item">
-              <span class="meta-icon"><i class="fas fa-heart"></i></span>
-              <span>${cause.beneficiaries || 0} beneficiarios</span>
-            </div>
-            <div class="meta-item">
-              <span class="meta-icon"><i class="fas fa-calendar-alt"></i></span>
-              <span>${createdDate}</span>
-            </div>
-          </div>
-          <div class="points-notice" style="background:#f0f9ff; border-left:4px solid var(--accent); padding:0.8rem; border-radius:0 8px 8px 0; font-size:0.97rem; display:flex; align-items:center; gap:0.7rem;">
-            <i class="fas fa-star" style="color: var(--accent);"></i>
-            Cada euro donado recibirá <strong>${cause.points || 20} puntos</strong> de impacto
-          </div>
+        <div class="progress-info">
+          <span>${progress}% completado</span>
+          <span>${cause.raised || 0} € de ${cause.goal || 0} €</span>
         </div>
       </div>
-      <!-- Resumen y descripción debajo, con más espacio entre bloques -->
-      <div class="modal-cause-content" style="margin-top:0;">
-        <div class="content-section" style="margin-bottom:2.2rem;">
-          <h3 class="content-title" style="font-size:1.2rem; font-weight:600; color:var(--primary); margin-bottom:0.9rem; display:flex; align-items:center; gap:0.7rem;">
+      <div class="points-notice">
+        <i class="fas fa-star" style="color: var(--accent);"></i> Cada euro donado recibirá <strong>${cause.points || 20} puntos</strong> de impacto.
+      </div>
+      <div class="modal-cause-meta-grid">
+        <div class="meta-item">
+          <span class="meta-icon"><i class="fas fa-map-marker-alt"></i></span>
+          <span>${cause.city || 'Sin ubicación'}${cause.country ? ', ' + cause.country : ''}</span>
+        </div>
+        <div class="meta-item">
+          <span class="meta-icon"><i class="fas fa-users"></i></span>
+          <span>${cause.donors || 0} donantes</span>
+        </div>
+        <div class="meta-item">
+          <span class="meta-icon"><i class="fas fa-heart"></i></span>
+          <span>${cause.beneficiaries || 0} beneficiarios</span>
+        </div>
+        <div class="meta-item">
+          <span class="meta-icon"><i class="fas fa-calendar-alt"></i></span>
+          <span>${createdDate}</span>
+        </div>
+      </div>
+      <div class="modal-cause-content">
+        <div class="content-section">
+          <h3 class="content-title">
             <i class="fas fa-align-left"></i> Resumen
           </h3>
-          <p class="content-text" style="line-height:1.7; color:#4b5563; font-size:1.05rem; margin-left:0; margin-right:0; text-align:justify;">${cause.short_description || 'No hay resumen disponible para esta causa.'}</p>
+          <p class="content-text">${cause.short_description || 'No hay resumen disponible para esta causa.'}</p>
         </div>
-        <div class="content-section" style="margin-bottom:2.2rem;">
-          <h3 class="content-title" style="font-size:1.2rem; font-weight:600; color:var(--primary); margin-bottom:0.9rem; display:flex; align-items:center; gap:0.7rem;">
+        <div class="content-section">
+          <h3 class="content-title">
             <i class="fas fa-info-circle"></i> Descripción completa
           </h3>
-          <p class="content-text" style="line-height:1.7; color:#4b5563; font-size:1.05rem; margin-left:0; margin-right:0; text-align:justify;">${cause.description || 'No hay descripción detallada disponible para esta causa.'}</p>
+          <p class="content-text">${cause.description || 'No hay descripción detallada disponible para esta causa.'}</p>
         </div>
       </div>
-      <!-- Botones abajo, con más espacio arriba -->
-      <div class="cause-actions" style="display:flex; gap:0.8rem; margin-top:2.2rem;">
-        <button class="btn btn-primary" style="flex:1;" onclick="donateToCause('${cause.id}')">
+      <div class="modal-cause-actions">
+        <button class="action-btn action-btn-primary" onclick="donateToCause('${cause.id}')">
           <i class="fas fa-donate"></i> Donar ahora
         </button>
-        <button class="btn btn-accent" style="flex:1;" onclick="volunteerForCause('${cause.id}')">
+        <button class="action-btn action-btn-accent" onclick="volunteerForCause('${cause.id}')">
           <i class="fas fa-hands-helping"></i> Colaborar
         </button>
-        <button class="btn btn-outline" style="flex:1;" onclick="showShareOptions('${cause.id}')">
-          <i class="fas fa-share-alt"></i> Compartir
-        </button>
-      </div>
-      <div class="share-section" id="shareSection"></div>
-    </div>
-  `;
-
-  document.getElementById('causeModal').style.display = 'flex';
-  document.body.style.overflow = 'hidden';
-}
-
-// Función para mostrar opciones de compartir
-function showShareOptions(causeId) {
-  const cause = window.causes.find(c => c.id == causeId);
-  const shareSection = document.getElementById('shareSection');
-  shareSection.innerHTML = `
-    <h3 class="share-title">
-      <i class="fas fa-share-alt"></i> Ayuda a difundir esta causa
-    </h3>
-    <div class="share-content">
-      <p class="share-text">
-        <span class="share-highlight">"${cause.short_description || 'Únete a esta importante causa solidaria'}"</span><br><br>
-        Cada contribución nos acerca más a la meta de <strong>${cause.goal || 0}€</strong> para ayudar a <strong>${cause.beneficiaries || 0} personas</strong>.
-      </p>
-      <div class="share-buttons">
-        <a href="#" class="share-btn share-btn-facebook" onclick="shareOnSocial('facebook', '${cause.id}')">
-          <i class="fab fa-facebook-f"></i> Facebook
-        </a>
-        <a href="#" class="share-btn share-btn-twitter" onclick="shareOnSocial('twitter', '${cause.id}')">
-          <i class="fab fa-twitter"></i> Twitter
-        </a>
-        <a href="#" class="share-btn share-btn-whatsapp" onclick="shareOnSocial('whatsapp', '${cause.id}')">
-          <i class="fab fa-whatsapp"></i> WhatsApp
-        </a>
-        <a href="#" class="share-btn share-btn-link" onclick="copyCauseLink('${cause.id}')">
-          <i class="fas fa-link"></i> Copiar enlace
-        </a>
-      </div>
-    </div>
-  `;
-  shareSection.scrollIntoView({ behavior: 'smooth' });
-}
-
-// Función para compartir en redes sociales
-function shareOnSocial(platform, causeId) {
-  const cause = window.causes.find(c => c.id == causeId);
-  const url = `${window.location.origin}/causes/${cause.id}`;
-  const text = `Únete a esta causa: "${cause.title}" - ${cause.short_description || 'Ayuda a hacer la diferencia!'} ${url}`;
-  let shareUrl;
-  switch(platform) {
-    case 'facebook':
-      shareUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}&quote=${encodeURIComponent(text)}`;
-      break;
-    case 'twitter':
-      shareUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}`;
-      break;
-    case 'whatsapp':
-      shareUrl = `https://wa.me/?text=${encodeURIComponent(text)}`;
-      break;
-    default:
-      return;
-  }
-  window.open(shareUrl, '_blank', 'width=600,height=400');
-}
-
-// Función para copiar enlace de la causa
-function copyCauseLink(causeId) {
-  const url = `${window.location.origin}/causes/${causeId}`;
-  navigator.clipboard.writeText(url).then(() => {
-    showNotification('¡Enlace copiado!', 'success');
-  }).catch(() => {
-    prompt('Por favor, copia este enlace:', url);
-  });
-}
-
-// Función para mostrar notificación
-function showNotification(message, type) {
-  const notification = document.createElement('div');
-  notification.textContent = message;
-  notification.style.position = 'fixed';
-  notification.style.bottom = '20px';
-  notification.style.left = '50%';
-  notification.style.transform = 'translateX(-50%)';
-  notification.style.padding = '12px 24px';
-  notification.style.borderRadius = '8px';
-  notification.style.backgroundColor = type === 'success' ? '#4fc3a1' : '#e53e3e';
-  notification.style.color = 'white';
-  notification.style.boxShadow = '0 4px 12px rgba(0,0,0,0.15)';
-  notification.style.zIndex = '10000';
-  notification.style.animation = 'fadeInOut 2.5s ease-in-out';
-  document.body.appendChild(notification);
-  setTimeout(() => {
-    notification.remove();
-  }, 2500);
-}
-
-// Cerrar modal y restaurar scroll
-document.getElementById('closeModal').addEventListener('click', function() {
-  document.getElementById('causeModal').style.display = 'none';
-  document.body.style.overflow = '';
-});
-document.getElementById('causeModal').addEventListener('click', function(e) {
-  if (e.target === this) {
-    this.style.display = 'none';
-    document.body.style.overflow = '';
-  }
-});
-
-// Ejemplo de funciones para donar/colaborar (puedes personalizar)
-function donateToCause(causeId) {
-  alert('Funcionalidad de donación próximamente.');
-}
-function volunteerForCause(causeId) {
-  alert('Funcionalidad de voluntariado próximamente.');
-}
-</script>
-{% endblock %}
+       

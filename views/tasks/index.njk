@@ -458,6 +458,24 @@
     </div>
   </div>
 
+  <!-- Modal de Tarea -->
+  <div id="taskModal" class="modal" style="display:none; position:fixed; z-index:9999; left:0; top:0; width:100vw; height:100vh; background:rgba(0,0,0,0.35); align-items:center; justify-content:center;">
+    <div class="modal-content" style="background:#fff; border-radius:18px; max-width:800px; width:95vw; padding:2rem; box-shadow:0 8px 32px rgba(74,111,165,0.13); position:relative; max-height:90vh; overflow-y:auto;">
+      <button id="closeTaskModal" style="position:absolute; top:1.5rem; right:1.5rem; background:none; border:none; font-size:1.8rem; color:#6b7280; cursor:pointer; transition:color 0.2s;" onmouseover="this.style.color='#4a6fa5'" onmouseout="this.style.color='#6b7280'">&times;</button>
+      <div id="taskModalBody" style="padding:0.5rem;">
+        <!-- Contenido dinámico -->
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal de Causa (reutilizable) -->
+  <div id="causeModal" class="modal-bg">
+    <div class="modal-content" id="causeModalContent" style="max-width:500px;">
+      <button class="close-modal" id="closeCauseModal" title="Cerrar">&times;</button>
+      <div id="causeModalBody"></div>
+    </div>
+  </div>
+
   <!-- Contenido principal de la página de tareas -->
   <div class="main-container">
     <div class="tasks-header">
@@ -682,6 +700,10 @@ async function loadTasksFromSupabase(filter = "all", searchTerm = "") {
     tasksList.innerHTML = '<div style="color:#6b7280;text-align:center;padding:2rem;grid-column:1/-1;">No se encontraron tareas.</div>';
     return;
   }
+  
+  // Guardar las tareas en una variable global para acceder desde el modal
+  window.tasks = tasks;
+  
   tasks.forEach(task => {
     const urgentBadge = task.is_urgent ? `<div class="task-badge urgent"><i class="fas fa-exclamation-circle"></i> Urgente</div>` : "";
     const pointsBadge = `<div class="task-badge points"><i class="fas fa-star"></i> +${task.points || 0} pts</div>`;
@@ -696,7 +718,7 @@ async function loadTasksFromSupabase(filter = "all", searchTerm = "") {
       </div>
       <div class="task-content">
         <h3>${task.title}</h3>
-        <p>${task.description}</p>
+        <p>${task.description.substring(0, 100)}${task.description.length > 100 ? '...' : ''}</p>
         ${task.cause_id ? `<div class="linked-cause"><i class="fas fa-link"></i> Vinculado a causa #${task.cause_id}</div>` : ''}
         <div class="task-meta">
           <div class="meta-item"><i class="fas fa-map-marker-alt"></i> ${location}</div>
@@ -715,12 +737,371 @@ async function loadTasksFromSupabase(filter = "all", searchTerm = "") {
           </div>
         </div>
         <div class="task-actions">
-          <a href="/tasks/${task.id}" class="btn btn-primary">Ver más</a>
-          <a href="#" class="btn btn-accent">Participar</a>
+          <button class="btn btn-primary view-task-btn" data-task-id="${task.id}">Ver más</button>
+          <button class="btn btn-accent participate-btn" data-task-id="${task.id}">Participar</button>
         </div>
       </div>
     `;
     tasksList.appendChild(card);
+  });
+  
+  // Agregar event listeners para los botones de ver más
+  document.querySelectorAll('.view-task-btn').forEach(btn => {
+    btn.addEventListener('click', function(e) {
+      e.preventDefault();
+      const taskId = this.getAttribute('data-task-id');
+      showTaskModal(taskId);
+    });
+  });
+  
+  // Agregar event listeners para los botones de participar
+  document.querySelectorAll('.participate-btn').forEach(btn => {
+    btn.addEventListener('click', function(e) {
+      e.preventDefault();
+      const taskId = this.getAttribute('data-task-id');
+      participateInTask(taskId);
+    });
+  });
+}
+
+// Función para mostrar el modal con los detalles de la tarea
+async function showTaskModal(taskId) {
+  const { data: task, error } = await supabase
+    .from('tasks')
+    .select('*')
+    .eq('id', taskId)
+    .single();
+
+  if (error) {
+    alert('Error al cargar la tarea: ' + error.message);
+    return;
+  }
+
+  // Si tu tarea tiene un campo "goal" y "raised" como en causas, usa esos para la barra de progreso
+  // Si no, puedes dejarlo en 0/goal o adaptar según tu modelo
+  const progress = task.goal
+    ? Math.min(Math.round((task.raised / task.goal) * 100), 100)
+    : 0;
+
+  const createdDate = new Date(task.created_at).toLocaleDateString('es-ES', {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric'
+  });
+
+  const endDate = task.end_date ? new Date(task.end_date).toLocaleDateString('es-ES', {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric'
+  }) : 'Sin fecha límite';
+
+  // Obtener información de la causa vinculada si existe
+  let causeInfo = '';
+  if (task.cause_id) {
+    const { data: cause } = await supabase
+      .from('causes')
+      .select('title, photo_url')
+      .eq('id', task.cause_id)
+      .single();
+    
+    if (cause) {
+      causeInfo = `
+        <div class="linked-cause-section" style="margin-bottom:1.5rem;">
+          <h3 class="content-title" style="font-size:1.2rem; font-weight:600; color:var(--primary); margin-bottom:0.9rem; display:flex; align-items:center; gap:0.7rem;">
+            <i class="fas fa-link"></i> Vinculado a la causa
+          </h3>
+          <div style="display:flex; align-items:center; gap:1rem; background:#f8fafc; padding:1rem; border-radius:8px; border:1px solid #e5e7eb;">
+            <img src="${cause.photo_url || '/img/causa-default.jpg'}" 
+                 alt="Imagen de la causa vinculada"
+                 style="width:80px; height:80px; object-fit:cover; border-radius:6px;"
+                 onerror="this.src='/img/causa-default.jpg'">
+            <div>
+              <strong style="color:var(--primary);">${cause.title}</strong>
+              <p style="margin-top:0.3rem; font-size:0.9rem; color:#6b7280;">Causa #${task.cause_id}</p>
+              <a href="/causes/${task.cause_id}" class="btn btn-sm" style="margin-top:0.5rem; padding:0.3rem 0.8rem; font-size:0.85rem;"
+                 onclick="showCauseModal('${task.cause_id}'); return false;">
+                <i class="fas fa-external-link-alt"></i> Ver causa
+              </a>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+  }
+
+  document.getElementById('taskModalBody').innerHTML = `
+    <div class="modal-task-container">
+      <!-- Título principal centrado, más espacio abajo -->
+      <h1 class="modal-task-title" style="font-size:2rem; font-weight:800; color:var(--primary); margin-bottom:2.7rem; text-align:center; width:100%;">${task.title}</h1>
+      <div class="modal-task-header" style="display:flex; gap:2.5rem; margin-bottom:2.7rem;">
+        <div class="modal-task-image-wrapper" style="flex:1; min-width:320px; height:300px; border-radius:12px; overflow:hidden; position:relative; box-shadow:0 4px 12px rgba(0,0,0,0.08);">
+          <!-- Badge arriba a la izquierda, verde y redondeado igual que causas -->
+          <div class="modal-cause-badge" style="top:1.2rem; left:1.2rem; right:auto; background:var(--accent); color:white; position:absolute; border-radius:50px; padding:0.5rem 1rem; font-size:0.9rem; font-weight:600; display:flex; align-items:center; gap:0.6rem; box-shadow:0 2px 8px rgba(0,0,0,0.1); z-index:2;">
+            <i class="fas fa-tasks"></i> Tarea Solidaria
+          </div>
+          <img class="modal-task-image" src="${task.photo_url || '/img/task-default.jpg'}" 
+               alt="Imagen de la tarea ${task.title}"
+               style="width:100%;height:100%;object-fit:cover;"
+               onerror="this.src='/img/task-default.jpg'">
+          ${task.is_urgent ? `
+          <div class="modal-cause-badge urgent" style="right:1.2rem; left:auto; top:1.2rem; background:var(--urgent); color:white; border-radius:50px; padding:0.5rem 1rem; font-size:0.9rem; font-weight:600; display:flex; align-items:center; gap:0.6rem; box-shadow:0 2px 8px rgba(0,0,0,0.1); z-index:2;">
+            <i class="fas fa-exclamation-circle"></i> Urgente
+          </div>` : ''}
+        </div>
+        <!-- Info a la derecha de la foto -->
+        <div class="modal-task-info" style="flex:1.5; display:flex; flex-direction:column; justify-content:flex-start;">
+          <!-- Barra de progreso igual que causas -->
+          <div class="modal-cause-progress-container" style="background:#f8fafc; padding:1.5rem; border-radius:12px; margin-bottom:1.5rem; border:1px solid #e5e7eb;">
+            <div class="progress-bar">
+              <div class="progress-fill" style="width: ${progress}%"></div>
+            </div>
+            <div class="progress-info">
+              <span>${progress}% completado</span>
+              <span>${task.raised || 0} € de ${task.goal || 0} €</span>
+            </div>
+          </div>
+          <!-- Meta compacta en dos columnas -->
+          <div class="modal-task-meta-grid" style="display:grid; grid-template-columns:1fr 1fr; gap:0.7rem 1.2rem; margin-bottom:1.2rem;">
+            <div class="meta-item">
+              <span class="meta-icon"><i class="fas fa-map-marker-alt"></i></span>
+              <span>${task.city || 'Sin ubicación'}${task.country ? ', ' + task.country : ''}</span>
+            </div>
+            <div class="meta-item">
+              <span class="meta-icon"><i class="fas fa-users"></i></span>
+              <span>${task.participants || 0} participantes</span>
+            </div>
+            <div class="meta-item">
+              <span class="meta-icon"><i class="fas fa-heart"></i></span>
+              <span>${task.beneficiaries || 0} beneficiarios</span>
+            </div>
+            <div class="meta-item">
+              <span class="meta-icon"><i class="fas fa-calendar-alt"></i></span>
+              <span>${endDate}</span>
+            </div>
+          </div>
+          <div class="points-notice" style="background:#f0f9ff; border-left:4px solid var(--accent); padding:0.8rem; border-radius:0 8px 8px 0; font-size:0.97rem; display:flex; align-items:center; gap:0.7rem;">
+            <i class="fas fa-star" style="color: var(--accent);"></i>
+            Participar en esta tarea otorgará <strong>${task.points || 20} puntos</strong> de impacto
+          </div>
+        </div>
+      </div>
+      ${causeInfo}
+      <!-- Resumen y descripción debajo, con más espacio entre bloques -->
+      <div class="modal-task-content" style="margin-top:0;">
+        <div class="content-section" style="margin-bottom:2.2rem;">
+          <h3 class="content-title" style="font-size:1.2rem; font-weight:600; color:var(--primary); margin-bottom:0.9rem; display:flex; align-items:center; gap:0.7rem;">
+            <i class="fas fa-align-left"></i> Descripción
+          </h3>
+          <p class="content-text" style="line-height:1.7; color:#4b5563; font-size:1.05rem; margin-left:0; margin-right:0; text-align:justify;">${task.description || 'No hay descripción disponible para esta tarea.'}</p>
+        </div>
+        <div class="content-section" style="margin-bottom:2.2rem;">
+          <h3 class="content-title" style="font-size:1.2rem; font-weight:600; color:var(--primary); margin-bottom:0.9rem; display:flex; align-items:center; gap:0.7rem;">
+            <i class="fas fa-info-circle"></i> Detalles adicionales
+          </h3>
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem;">
+            <div>
+              <p style="font-weight:600; color:#4b5563; margin-bottom:0.3rem;">Fecha de creación</p>
+              <p style="color:#6b7280;">${createdDate}</p>
+            </div>
+            <div>
+              <p style="font-weight:600; color:#4b5563; margin-bottom:0.3rem;">Estado</p>
+              <p style="color:#6b7280;">${task.is_completed ? 'Completada' : 'En progreso'}</p>
+            </div>
+            <div>
+              <p style="font-weight:600; color:#4b5563; margin-bottom:0.3rem;">Prioridad</p>
+              <p style="color:#6b7280;">${task.is_urgent ? 'Alta prioridad' : 'Prioridad normal'}</p>
+            </div>
+            <div>
+              <p style="font-weight:600; color:#4b5563; margin-bottom:0.3rem;">Tipo</p>
+              <p style="color:#6b7280;">${task.type || 'Tarea general'}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- Botones abajo, con más espacio arriba -->
+      <div class="task-actions" style="display:flex; gap:0.8rem; margin-top:2.2rem;">
+        <button class="btn btn-primary" style="flex:1;" onclick="participateInTask('${task.id}')">
+          <i class="fas fa-hand-holding-heart"></i> Participar
+        </button>
+        <button class="btn btn-accent" style="flex:1;" onclick="showShareOptionsTask('${task.id}')">
+          <i class="fas fa-share-alt"></i> Compartir
+        </button>
+      </div>
+      <div class="share-section" id="shareSectionTask"></div>
+    </div>
+  `;
+
+  document.getElementById('taskModal').style.display = 'flex';
+  document.body.style.overflow = 'hidden';
+}
+
+// Función para mostrar opciones de compartir para tareas (idéntico a causas)
+function showShareOptionsTask(taskId) {
+  const task = window.tasks.find(t => t.id == taskId);
+  const shareSection = document.getElementById('shareSectionTask');
+  shareSection.innerHTML = `
+    <h3 class="share-title">
+      <i class="fas fa-share-alt"></i> Ayuda a difundir esta tarea
+    </h3>
+    <div class="share-content">
+      <p class="share-text">
+        <span class="share-highlight">"${task.description ? task.description.substring(0, 120) + '...' : 'Únete a esta importante tarea solidaria'}"</span><br><br>
+        Cada participante nos acerca más a la meta de ayudar a <strong>${task.beneficiaries || 0} personas</strong>.
+      </p>
+      <div class="share-buttons">
+        <a href="#" class="share-btn share-btn-facebook" onclick="shareOnSocialTask('facebook', '${task.id}')">
+          <i class="fab fa-facebook-f"></i> Facebook
+        </a>
+        <a href="#" class="share-btn share-btn-twitter" onclick="shareOnSocialTask('twitter', '${task.id}')">
+          <i class="fab fa-twitter"></i> Twitter
+        </a>
+        <a href="#" class="share-btn share-btn-whatsapp" onclick="shareOnSocialTask('whatsapp', '${task.id}')">
+          <i class="fab fa-whatsapp"></i> WhatsApp
+        </a>
+        <a href="#" class="share-btn share-btn-link" onclick="copyTaskLink('${task.id}')">
+          <i class="fas fa-link"></i> Copiar enlace
+        </a>
+      </div>
+    </div>
+  `;
+  shareSection.scrollIntoView({ behavior: 'smooth' });
+}
+
+// Función para compartir tareas en redes sociales
+function shareOnSocialTask(platform, taskId) {
+  const task = window.tasks.find(t => t.id == taskId);
+  const url = `${window.location.origin}/tasks/${task.id}`;
+  const text = `Únete a esta tarea: "${task.title}" - ${task.description ? task.description.substring(0, 100) + '...' : 'Ayuda a hacer la diferencia!'} ${url}`;
+  let shareUrl;
+  switch(platform) {
+    case 'facebook':
+      shareUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}&quote=${encodeURIComponent(text)}`;
+      break;
+    case 'twitter':
+      shareUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}`;
+      break;
+    case 'whatsapp':
+      shareUrl = `https://wa.me/?text=${encodeURIComponent(text)}`;
+      break;
+    default:
+      return;
+  }
+  window.open(shareUrl, '_blank', 'width=600,height=400');
+}
+
+// Función para copiar enlace de la tarea
+function copyTaskLink(taskId) {
+  const url = `${window.location.origin}/tasks/${taskId}`;
+  navigator.clipboard.writeText(url).then(() => {
+    showNotification('¡Enlace copiado!', 'success');
+  }).catch(() => {
+    prompt('Por favor, copia este enlace:', url);
+  });
+}
+
+// Cerrar modal y restaurar scroll
+document.getElementById('closeTaskModal').addEventListener('click', function() {
+  document.getElementById('taskModal').style.display = 'none';
+  document.body.style.overflow = '';
+});
+document.getElementById('taskModal').addEventListener('click', function(e) {
+  if (e.target === this) {
+    this.style.display = 'none';
+    document.body.style.overflow = '';
+  }
+});
+
+// Ejemplo de función para participar en tarea
+function participateInTask(taskId) {
+  alert('Funcionalidad de participación próximamente.');
+}
+
+// Modifica loadTasksFromSupabase para usar el modal y listeners
+async function loadTasksFromSupabase(filter = "all", searchTerm = "") {
+  currentFilter = filter;
+  let query = supabase
+    .from('tasks')
+    .select('*')
+    .order('created_at', { ascending: false });
+
+  if (filter !== "all") {
+    query = query.eq('category', filter);
+  }
+  if (searchTerm && searchTerm.trim() !== "") {
+    query = query.or(`title.ilike.%${searchTerm}%,description.ilike.%${searchTerm}%,city.ilike.%${searchTerm}%,country.ilike.%${searchTerm}%`);
+  }
+  const { data: tasks, error } = await query;
+  const tasksList = document.getElementById('tasksList');
+  if (error) {
+    tasksList.innerHTML = '<div style="color:#e53e3e;text-align:center;">Error al cargar las tareas.</div>';
+    return;
+  }
+  tasksList.innerHTML = '';
+  if (!tasks || tasks.length === 0) {
+    tasksList.innerHTML = '<div style="color:#6b7280;text-align:center;padding:2rem;grid-column:1/-1;">No se encontraron tareas.</div>';
+    return;
+  }
+  
+  // Guardar las tareas en una variable global para acceder desde el modal
+  window.tasks = tasks;
+  
+  tasks.forEach(task => {
+    const urgentBadge = task.is_urgent ? `<div class="task-badge urgent"><i class="fas fa-exclamation-circle"></i> Urgente</div>` : "";
+    const pointsBadge = `<div class="task-badge points"><i class="fas fa-star"></i> +${task.points || 0} pts</div>`;
+    const location = task.city && task.country ? `${task.city}, ${task.country}` : "";
+    const card = document.createElement('div');
+    card.className = 'task-card';
+    card.innerHTML = `
+      <div class="task-image">
+        <img src="${task.photo_url || '/img/task-default.jpg'}" alt="${task.title}" onerror="this.src='/img/task-default.jpg'">
+        ${urgentBadge}
+        ${pointsBadge}
+      </div>
+      <div class="task-content">
+        <h3>${task.title}</h3>
+        <p>${task.description.substring(0, 100)}${task.description.length > 100 ? '...' : ''}</p>
+        ${task.cause_id ? `<div class="linked-cause"><i class="fas fa-link"></i> Vinculado a causa #${task.cause_id}</div>` : ''}
+        <div class="task-meta">
+          <div class="meta-item"><i class="fas fa-map-marker-alt"></i> ${location}</div>
+          <div class="meta-item"><i class="fas fa-users"></i> ${task.participants || 0} participantes</div>
+          <div class="beneficiaries-count">
+            <i class="fas fa-heart"></i> Beneficia a ${task.beneficiaries || 0} personas
+          </div>
+        </div>
+        <div class="task-progress">
+          <div class="progress-bar">
+            <div class="progress-fill" style="width: ${Math.min(Math.round((task.participants / task.beneficiaries) * 100), 100)}%"></div>
+          </div>
+          <div class="progress-info">
+            <span>${task.participants || 0} participantes</span>
+            <span>Meta: ${task.beneficiaries || 0}</span>
+          </div>
+        </div>
+        <div class="task-actions">
+          <button class="btn btn-primary view-task-btn" data-task-id="${task.id}">Ver más</button>
+          <button class="btn btn-accent participate-btn" data-task-id="${task.id}">Participar</button>
+        </div>
+      </div>
+    `;
+    tasksList.appendChild(card);
+  });
+  
+  // Agregar event listeners para los botones de ver más
+  document.querySelectorAll('.view-task-btn').forEach(btn => {
+    btn.addEventListener('click', function(e) {
+      e.preventDefault();
+      const taskId = this.getAttribute('data-task-id');
+      showTaskModal(taskId);
+    });
+  });
+  
+  // Agregar event listeners para los botones de participar
+  document.querySelectorAll('.participate-btn').forEach(btn => {
+    btn.addEventListener('click', function(e) {
+      e.preventDefault();
+      const taskId = this.getAttribute('data-task-id');
+      participateInTask(taskId);
+    });
   });
 }
 
@@ -785,5 +1166,38 @@ async function geocodeCityCountry() {
 
 document.getElementById('city').addEventListener('change', geocodeCityCountry);
 document.getElementById('country').addEventListener('change', geocodeCityCountry);
+
+// Función para mostrar el modal de causa
+async function showCauseModal(causeId) {
+  const { data: cause, error } = await supabase
+    .from('causes')
+    .select('*')
+    .eq('id', causeId)
+    .single();
+
+  if (error || !cause) {
+    alert('No se pudo cargar la causa.');
+    return;
+  }
+
+  document.getElementById('causeModalBody').innerHTML = `
+    <h2 style="color:var(--primary);margin-bottom:1rem;">${cause.title}</h2>
+    <img src="${cause.photo_url || '/img/causa-default.jpg'}" alt="${cause.title}" style="width:100%;max-width:320px;border-radius:8px;margin-bottom:1rem;">
+    <p style="color:#4b5563;">${cause.description || 'Sin descripción.'}</p>
+  `;
+  document.getElementById('causeModal').classList.add('active');
+  document.body.style.overflow = 'hidden';
+}
+
+document.getElementById('closeCauseModal').onclick = function() {
+  document.getElementById('causeModal').classList.remove('active');
+  document.body.style.overflow = '';
+};
+document.getElementById('causeModal').onclick = function(e) {
+  if (e.target === this) {
+    this.classList.remove('active');
+    document.body.style.overflow = '';
+  }
+};
 </script>
 {% endblock %}

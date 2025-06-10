@@ -611,6 +611,43 @@
         justify-content: flex-end;
       }
     }
+
+    .teams-tabs {
+      display: flex;
+      border-bottom: 1.5px solid var(--gray);
+      margin-bottom: 2rem;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+    }
+
+    .teams-tab {
+      background: none;
+      border: none;
+      outline: none;
+      padding: 0.75rem 1.5rem;
+      font-size: 1rem;
+      color: #6b7280;
+      cursor: pointer;
+      font-weight: 500;
+      border-radius: 8px 8px 0 0;
+      transition: color 0.2s, background 0.2s;
+      position: relative;
+    }
+
+    .teams-tab.active {
+      color: var(--primary);
+      background: #f8fafc;
+      font-weight: 700;
+    }
+
+    .teams-tab.active::after {
+      content: '';
+      position: absolute;
+      left: 0; right: 0; bottom: -1.5px;
+      height: 3px;
+      background: var(--primary);
+      border-radius: 2px 2px 0 0;
+    }
   </style>
 {% endblock %}
 
@@ -685,8 +722,8 @@
           <input type="email" id="inviteEmail" placeholder="Correo electrónico del usuario a invitar">
           <select id="inviteRole" class="form-control">
             <option value="member">Miembro</option>
-            <option value="moderator">Moderador</option>
-            <option value="admin">Administrador</option>
+            <option value="coordinator">Coordinador</option>
+            <option value="founder">Fundador</option>
           </select>
           <button class="btn btn-primary" id="sendInviteBtn" style="margin-top: 1rem;">
             <i class="fas fa-paper-plane"></i> Enviar Invitación
@@ -814,21 +851,11 @@
     <!-- Tabs para filtrar -->
     <div class="tabs">
       <button class="tab active" data-filter="all">Todas</button>
-      <button class="tab" data-filter="admin">Como Admin</button>
-      <button class="tab" data-filter="moderator">Como Moderador</button>
-      <button class="tab" data-filter="member">Como Miembro</button>
-      <button class="tab" data-filter="only-member">Solo miembro</button>
-      <button class="tab" data-filter="requests">Solicitudes</button>
+      <button class="tab" data-filter="founder">Founder</button>
+      <button class="tab" data-filter="coordinator">Coordinator</button>
+      <button class="tab" data-filter="member">Miembro</button>
+      <button class="tab" data-filter="pending">Requests</button>
     </div>
-    
-    <!-- Ejemplo de menú -->
-    <ul class="teams-filter">
-      <li data-filter="todas" class="active">Todas</li>
-      <li data-filter="admin">Admin</li>
-      <li data-filter="coordinador">Coordinador</li>
-      <li data-filter="miembros">Miembros</li>
-      <li data-filter="solicitudes">Solicitudes</li>
-    </ul>
     
     <!-- Grid de comunidades -->
     <div class="teams-grid-classic" id="teamsGrid">
@@ -960,7 +987,7 @@
       // Función para cargar los equipos del usuario
       async function loadUserTeams() {
         try {
-          // 1. Obtener los equipos donde el usuario es miembro (cualquier rol)
+          // 1. Obtener todos los memberships del usuario (cualquier rol)
           const { data: memberships, error: membershipsError } = await supabase
             .from('team_members')
             .select('team_id, role')
@@ -981,31 +1008,41 @@
           let { data: teams, error: teamsError } = await supabase
             .from('teams')
             .select('*')
-            .in('id', teamIds)
+            .in('id', teamIds.length ? teamIds : [-1]) // Si no hay equipos, evita error
             .order('created_at', { ascending: false });
 
           if (teamsError) throw teamsError;
 
           // 4. Combinar y eliminar duplicados (si el creador también es miembro)
+          // Si eres creador y miembro, toma el membership real (no pongas founder por defecto)
+          const allTeamIds = new Set();
           allTeams = [
             ...teams.map(team => {
               const membership = memberships.find(m => m.team_id === team.id);
+              allTeamIds.add(team.id);
+              const role = membership ? membership.role : (team.creator_id === session.user.id ? 'founder' : 'member');
               return {
                 ...team,
-                user_role: membership?.role || 'founder',
-                is_admin: membership?.role === 'admin' || membership?.role === 'founder',
-                is_moderator: membership?.role === 'moderator'
+                user_role: role,
+                is_admin: role === 'founder' || role === 'coordinator' || role === 'admin',
+                is_moderator: role === 'coordinator' || role === 'admin',
+                is_founder: role === 'founder'
               };
             }),
             ...createdTeams
-              .filter(team => !teamIds.includes(team.id))
+              .filter(team => !allTeamIds.has(team.id))
               .map(team => ({
                 ...team,
                 user_role: 'founder',
                 is_admin: true,
-                is_moderator: false
+                is_moderator: false,
+                is_founder: true
               }))
-          ]
+          ];
+
+          // DEBUG: Verifica los datos que llegan
+          // console.log(allTeams);
+
           filteredTeams = [...allTeams];
           currentPage = 1;
           renderTeams();
@@ -1039,17 +1076,15 @@
       function filterAndRenderTeams() {
         const activeFilter = document.querySelector('.tab.active').getAttribute('data-filter');
         const searchTerm = document.getElementById('search-input').value.toLowerCase();
-        
+
         filteredTeams = allTeams.filter(team => {
-          // Filtrar por rol
           if (activeFilter !== 'all') {
-            if (activeFilter === 'admin' && team.user_role !== 'admin') return false;
-            if (activeFilter === 'moderator' && team.user_role !== 'moderator') return false;
-            if (activeFilter === 'member' && ['member', 'moderator', 'admin', 'founder'].includes(team.user_role)) return true;
-            if (activeFilter === 'only-member' && team.user_role === 'member') return true;
-            if (activeFilter === 'requests' && team.user_role !== 'pending') return false;
+            if (activeFilter === 'founder' && team.user_role !== 'founder') return false;
+            if (activeFilter === 'coordinator' && team.user_role !== 'coordinator' && team.user_role !== 'admin') return false;
+            if (activeFilter === 'member' && team.user_role !== 'member') return false;
+            if (activeFilter === 'pending' && team.user_role !== 'pending') return false;
           }
-          
+
           // Filtrar por búsqueda
           if (searchTerm) {
             const matchesName = team.name && team.name.toLowerCase().includes(searchTerm);
@@ -1057,10 +1092,10 @@
             const matchesTags = team.tags && team.tags.some(tag => tag && tag.toLowerCase().includes(searchTerm));
             return matchesName || matchesDesc || matchesTags;
           }
-          
+
           return true;
         });
-        
+
         renderTeams();
       }
       
@@ -1100,15 +1135,17 @@
           
           // Badge de rol del usuario
           const roleBadgeClass = {
-            'admin': 'role-badge admin',
-            'moderator': 'role-badge moderator',
+            'founder': 'role-badge admin',
+            'coordinator': 'role-badge moderator',
+            'admin': 'role-badge moderator',
             'member': 'role-badge member',
             'pending': 'role-badge member'
           }[team.user_role] || 'role-badge member';
           
           const roleBadgeText = {
-            'admin': 'Administrador',
-            'moderator': 'Moderador',
+            'founder': 'Fundador',
+            'coordinator': 'Coordinador',
+            'admin': 'Coordinador',
             'member': 'Miembro',
             'pending': 'Solicitud pendiente'
           }[team.user_role] || 'Miembro';
@@ -1653,7 +1690,7 @@
             preview.style.display = 'block';
           };
           reader.readAsDataURL(file);
-        } else {
+       
           preview.src = '';
           preview.style.display = 'none';
         }
@@ -1755,7 +1792,7 @@
         renderTeams(teams);
       }
 
-      // Función para obtener el usuario actual y su perfil
+      // Función para obtener el usuario current y su perfil
       async function fetchCurrentUser() {
         const { data: { user }, error } = await supabase.auth.getUser();
         if (error || !user) return null;
@@ -1768,8 +1805,6 @@
 
         return profileError ? null : profile;
       }
-
-      const filtradas = filterCommunities(todasLasComunidades, session.user.id);
     });
   </script>
 {% endblock %}
