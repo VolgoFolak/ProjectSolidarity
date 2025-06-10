@@ -1,56 +1,38 @@
 document.addEventListener('DOMContentLoaded', async () => {
-  // --- Autenticación y usuario ---
   const { data: { user } } = await supabase.auth.getUser();
-
-  const updateAuthUI = (isLoggedIn, userData) => {
-    const authContainers = document.querySelectorAll('#auth-buttons, #mobile-auth-buttons');
-    const userMenus = document.querySelectorAll('#user-menu, #mobile-user-menu');
-
-    authContainers.forEach(container => {
-      container.style.display = isLoggedIn ? 'none' : 'flex';
-    });
-
-    userMenus.forEach(menu => {
-      menu.style.display = isLoggedIn ? 'flex' : 'none';
-
-      if (isLoggedIn && userData) {
-        const avatar = menu.querySelector('.user-avatar');
-        const name = menu.querySelector('.user-name');
-        if (avatar) avatar.src = userData.photo_url || '/images/default-avatar.png';
-        if (name) name.textContent = userData.username || userData.email;
-      }
-    });
-  };
-
+  const authButtons = document.getElementById('auth-buttons');
+  const userMenu = document.getElementById('user-menu');
   if (user) {
+    // Consulta el perfil del usuario
     const { data: perfil } = await supabase
       .from('profiles')
       .select('username, photo_url')
       .eq('id', user.id)
       .single();
 
-    updateAuthUI(true, {
-      photo_url: (perfil && perfil.photo_url) ? perfil.photo_url : '/images/default-avatar.png',
-      username: (perfil && perfil.username) ? perfil.username : user.email,
-      email: user.email
-    });
+    document.getElementById('user-avatar').src = perfil?.photo_url || '/images/default-avatar.png';
+    document.getElementById('user-name').textContent = perfil?.username || user.email;
+    authButtons.style.display = 'none';
+    userMenu.style.display = 'flex';
   } else {
-    updateAuthUI(false);
+    authButtons.style.display = 'flex';
+    userMenu.style.display = 'none';
   }
 
-  // Logout para ambas versiones
-  const logoutButtons = document.querySelectorAll('#logout-btn-link, #mobile-logout-btn-link');
-  logoutButtons.forEach(button => {
-    button.onclick = async (e) => {
+  // Usa el id correcto
+  const logoutBtn = document.getElementById('logout-btn-link');
+  if (logoutBtn) {
+    logoutBtn.onclick = async (e) => {
       e.preventDefault();
       await supabase.auth.signOut();
       window.location.reload();
     };
-  });
+  }
+});
 
-  // --- Menú hamburguesa y overlay SOLO para móvil ---
+document.addEventListener('DOMContentLoaded', () => {
   const toggle = document.getElementById('mobile-menu-toggle');
-  const navLinks = document.getElementById('mobile-nav-links');
+  const navLinks = document.getElementById('nav-links');
   const overlay = document.getElementById('nav-overlay');
   if (toggle && navLinks && overlay) {
     toggle.addEventListener('click', () => {
@@ -72,42 +54,6 @@ document.addEventListener('DOMContentLoaded', async () => {
         overlay.classList.remove('active');
         document.body.classList.remove('no-scroll');
       });
-    });
-  }
-
-  // --- Dropdowns móviles ---
-  const dropdowns = navLinks ? navLinks.querySelectorAll('.dropdown') : [];
-  dropdowns.forEach(dropdown => {
-    const dropbtn = dropdown.querySelector('.dropbtn');
-    if (dropbtn) {
-      dropbtn.addEventListener('click', (e) => {
-        if (window.innerWidth <= 991) {
-          e.preventDefault();
-          dropdown.classList.toggle('active');
-        }
-      });
-    }
-  });
-
-  // --- Menú usuario móvil ---
-  const mobileUserTrigger = document.getElementById('mobile-user-trigger');
-  const mobileUserMenu = document.getElementById('mobile-user-menu');
-  if (mobileUserTrigger && mobileUserMenu) {
-    mobileUserTrigger.addEventListener('click', () => {
-      if (window.innerWidth <= 991) {
-        mobileUserMenu.classList.toggle('active');
-      }
-    });
-  }
-
-  // --- Menú usuario desktop ---
-  const userTrigger = document.getElementById('user-trigger');
-  const userMenu = document.getElementById('user-menu');
-  if (userTrigger && userMenu) {
-    userTrigger.addEventListener('click', () => {
-      if (window.innerWidth > 991) {
-        userMenu.classList.toggle('active');
-      }
     });
   }
 });
