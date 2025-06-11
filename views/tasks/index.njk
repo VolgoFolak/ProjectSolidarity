@@ -306,6 +306,14 @@
         font-weight: 600;
         margin-bottom: 1rem;
     }
+    .linked-cause img {
+      width: 22px;
+      height: 22px;
+      object-fit: cover;
+      border-radius: 50%;
+      border: 1px solid #e5e7eb;
+      margin-right: 0.4em;
+    }
     .task-progress {
         margin-bottom: 1.5rem;
     }
@@ -701,6 +709,13 @@ async function loadTasksFromSupabase(filter = "all", searchTerm = "") {
     return;
   }
   
+  // 1. Carga todas las causas una sola vez antes de renderizar las tareas
+  const { data: causes } = await supabase.from('causes').select('id, title, photo_url');
+  const causesMap = {};
+  if (causes) {
+    causes.forEach(c => causesMap[c.id] = c);
+  }
+
   // Guardar las tareas en una variable global para acceder desde el modal
   window.tasks = tasks;
   
@@ -708,6 +723,17 @@ async function loadTasksFromSupabase(filter = "all", searchTerm = "") {
     const urgentBadge = task.is_urgent ? `<div class="task-badge urgent"><i class="fas fa-exclamation-circle"></i> Urgente</div>` : "";
     const pointsBadge = `<div class="task-badge points"><i class="fas fa-star"></i> +${task.points || 0} pts</div>`;
     const location = task.city && task.country ? `${task.city}, ${task.country}` : "";
+    let causeHtml = '';
+    if (task.cause_id && causesMap[task.cause_id]) {
+      const cause = causesMap[task.cause_id];
+      causeHtml = `
+        <div class="linked-cause" style="display:flex;align-items:center;gap:0.5rem;">
+          <i class="fas fa-link" style="color:var(--primary);"></i>
+          <img src="${cause.photo_url || '/img/causa-default.jpg'}" alt="${cause.title}" style="width:22px;height:22px;object-fit:cover;border-radius:50%;border:1px solid #e5e7eb;">
+          <span style="color:var(--primary);font-weight:600;">${cause.title}</span>
+        </div>
+      `;
+    }
     const card = document.createElement('div');
     card.className = 'task-card';
     card.innerHTML = `
@@ -719,7 +745,7 @@ async function loadTasksFromSupabase(filter = "all", searchTerm = "") {
       <div class="task-content">
         <h3>${task.title}</h3>
         <p>${task.description.substring(0, 100)}${task.description.length > 100 ? '...' : ''}</p>
-        ${task.cause_id ? `<div class="linked-cause"><i class="fas fa-link"></i> Vinculado a causa #${task.cause_id}</div>` : ''}
+        ${causeHtml}
         <div class="task-meta">
           <div class="meta-item"><i class="fas fa-map-marker-alt"></i> ${location}</div>
           <div class="meta-item"><i class="fas fa-users"></i> ${task.participants || 0} participantes</div>
@@ -1042,6 +1068,13 @@ async function loadTasksFromSupabase(filter = "all", searchTerm = "") {
     return;
   }
   
+  // 1. Carga todas las causas una sola vez antes de renderizar las tareas
+  const { data: causes } = await supabase.from('causes').select('id, title, photo_url');
+  const causesMap = {};
+  if (causes) {
+    causes.forEach(c => causesMap[c.id] = c);
+  }
+
   // Guardar las tareas en una variable global para acceder desde el modal
   window.tasks = tasks;
   
@@ -1049,6 +1082,17 @@ async function loadTasksFromSupabase(filter = "all", searchTerm = "") {
     const urgentBadge = task.is_urgent ? `<div class="task-badge urgent"><i class="fas fa-exclamation-circle"></i> Urgente</div>` : "";
     const pointsBadge = `<div class="task-badge points"><i class="fas fa-star"></i> +${task.points || 0} pts</div>`;
     const location = task.city && task.country ? `${task.city}, ${task.country}` : "";
+    let causeHtml = '';
+    if (task.cause_id && causesMap[task.cause_id]) {
+      const cause = causesMap[task.cause_id];
+      causeHtml = `
+        <div class="linked-cause" style="display:flex;align-items:center;gap:0.5rem;">
+          <i class="fas fa-link" style="color:var(--primary);"></i>
+          <img src="${cause.photo_url || '/img/causa-default.jpg'}" alt="${cause.title}" style="width:22px;height:22px;object-fit:cover;border-radius:50%;border:1px solid #e5e7eb;">
+          <span style="color:var(--primary);font-weight:600;">${cause.title}</span>
+        </div>
+      `;
+    }
     const card = document.createElement('div');
     card.className = 'task-card';
     card.innerHTML = `
@@ -1060,7 +1104,7 @@ async function loadTasksFromSupabase(filter = "all", searchTerm = "") {
       <div class="task-content">
         <h3>${task.title}</h3>
         <p>${task.description.substring(0, 100)}${task.description.length > 100 ? '...' : ''}</p>
-        ${task.cause_id ? `<div class="linked-cause"><i class="fas fa-link"></i> Vinculado a causa #${task.cause_id}</div>` : ''}
+        ${causeHtml}
         <div class="task-meta">
           <div class="meta-item"><i class="fas fa-map-marker-alt"></i> ${location}</div>
           <div class="meta-item"><i class="fas fa-users"></i> ${task.participants || 0} participantes</div>
