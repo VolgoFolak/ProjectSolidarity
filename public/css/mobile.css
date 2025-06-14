@@ -1,83 +1,49 @@
 /* ===== MOBILE FIRST ===== */
 @media (max-width: 768px) {
-  /* Body y estructura */
-  body {
-    padding-bottom: 60px !important; /* Espacio para bottom-bar */
-    overflow-x: hidden;
-  }
-
-  /* Bottom Navigation Bar */
-  .bottom-nav {
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    display: flex;
-    background: white;
-    box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
-    z-index: 1000;
-    padding: 8px 0;
-  }
-
-  /* Ocultar elementos desktop */
-  .desktop-only {
-    display: none !important;
-  }
-  
-  /* Mostrar elementos móvil */
-  .mobile-only {
-    display: block !important;
-  }
-  
-  /* Ajustes específicos para móvil */
+  /* Alineación header */
   .navbar {
+    display: flex;
+    align-items: center;
     padding: 0 15px !important;
     height: 60px;
   }
   
+  .navbar-inner {
+    display: flex;
+    align-items: center;
+    width: 100%;
+  }
+  
   .mobile-menu-btn {
-    display: block !important;
-    font-size: 1.8rem;
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    margin-right: 15px;
     background: none;
     border: none;
     color: var(--primary);
-    margin-right: 15px;
+    font-size: 1.8rem;
+    cursor: pointer;
   }
-
-  .nav-item {
+  
+  .logo {
     display: flex;
-    flex-direction: column;
     align-items: center;
-    text-decoration: none;
-    color: #888;
-    font-size: 0.7rem;
-    flex: 1;
+    flex-grow: 1;
   }
-
-  .nav-item.active {
-    color: var(--primary);
+  
+  .logo .logo-icon {
+    font-size: 1.8rem;
   }
-
-  .nav-icon {
-    font-size: 1.4rem;
-    margin-bottom: 3px;
+  
+  .logo .logo-text {
+    font-size: 1.2rem;
+    margin-left: 10px;
   }
-
-  /* Header simplificado */
-  .navbar {
-    padding: 10px 15px !important;
-    height: 60px;
-  }
-
-  .logo-text {
-    font-size: 1.2rem !important;
-  }
-
-  .desktop-only {
-    display: none !important;
-  }
-
-  /* Menú lateral móvil */
+  
+  /* Menú lateral */
   .mobile-menu {
     position: fixed;
     top: 0;
@@ -87,22 +53,31 @@
     background: white;
     z-index: 1100;
     transition: transform 0.3s ease;
-    box-shadow: 2px 0 10px rgba(0,0,0,0.1);
-    padding-top: 60px;
+    box-shadow: 2px 0 15px rgba(0,0,0,0.1);
+    padding-top: 20px;
     overflow-y: auto;
   }
-
+  
   .mobile-menu.active {
     transform: translateX(280px);
   }
-
+  
   .mobile-menu a {
-    display: block;
+    display: flex;
+    align-items: center;
     padding: 15px 20px;
-    border-bottom: 1px solid #f0f0f0;
     color: var(--dark);
+    font-size: 1.1rem;
+    border-bottom: 1px solid #f5f5f5;
   }
-
+  
+  .mobile-menu a i {
+    width: 30px;
+    margin-right: 12px;
+    font-size: 1.2rem;
+    color: var(--primary);
+  }
+  
   .mobile-menu-overlay {
     display: none;
     position: fixed;
@@ -113,67 +88,62 @@
     background: rgba(0,0,0,0.5);
     z-index: 1099;
   }
-
+  
   .mobile-menu-overlay.active {
     display: block;
   }
-
-  /* Grids optimizados */
-  .actions-grid, 
-  .communities-grid,
-  .causes-grid {
-    grid-template-columns: 1fr !important;
-    gap: 15px !important;
-    padding: 0 10px !important;
-  }
-
-  /* Cards optimizadas */
-  .card {
-    border-radius: 12px;
-    margin-bottom: 15px;
-    box-shadow: 0 4px 8px rgba(0,0,0,0.05);
-  }
-
-  /* Forms móviles */
-  input, textarea, select {
-    font-size: 16px !important; /* Evita zoom en iOS */
-  }
-
-  /* Tipografía móvil */
-  h1 { font-size: 1.8rem !important; }
-  h2 { font-size: 1.5rem !important; }
-  h3 { font-size: 1.3rem !important; }
   
-  /* Espaciados ajustados */
-  .section {
-    padding: 1.5rem 1rem !important;
+  /* Bottom bar */
+  .bottom-nav {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    display: flex;
+    background: white;
+    box-shadow: 0 -2px 12px rgba(0,0,0,0.1);
+    z-index: 1000;
+    padding: 8px 0;
   }
   
-  /* Botones táctiles */
-  .btn {
-    padding: 14px 20px !important;
-    min-width: 120px;
-    font-size: 1.1rem !important;
+  .nav-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    flex: 1;
+    color: #777;
+    font-size: 0.75rem;
+    text-decoration: none;
   }
-
-  /* Menú hamburguesa */
-  .mobile-menu-btn {
-    display: block !important;
-    background: none;
-    border: none;
-    font-size: 1.8rem;
+  
+  .nav-item.active {
     color: var(--primary);
+  }
+  
+  .nav-icon {
+    font-size: 1.4rem;
+    margin-bottom: 3px;
+  }
+  
+  /* Ajustes de contenido */
+  .main-content {
+    padding-top: 70px !important;
+    padding-bottom: 60px !important;
+  }
+  
+  /* Activar scroll solo en contenido */
+  body.no-scroll {
+    overflow: hidden;
+  }
+  
+  body.no-scroll .main-content {
+    overflow: hidden;
   }
 }
 
 @media (min-width: 769px) {
-  /* Ocultar elementos móvil en desktop */
   .mobile-only {
     display: none !important;
-  }
-  
-  /* Mostrar elementos desktop */
-  .desktop-only {
-    display: flex !important; /* Mantener flex en desktop */
   }
 }

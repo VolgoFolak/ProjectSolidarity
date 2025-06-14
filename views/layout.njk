@@ -17,14 +17,33 @@
   {% block head %}{% endblock %}
 </head>
 <body>
-  <!-- Header existente -->
+  <!-- Header -->
   <header>{% include 'partials/navbar.njk' %}</header>
 
-  <!-- Menú lateral móvil - SOLO MÓVIL -->
+  <!-- Menú lateral móvil - FIXED ID -->
   <div id="mobile-menu" class="mobile-menu mobile-only">
-    <!-- ... mismo contenido ... -->
+    <a href="/"><i class="fas fa-home"></i> Inicio</a>
+    <a href="/causes"><i class="fas fa-heart"></i> Causas</a>
+    <a href="/tasks"><i class="fas fa-tasks"></i> Tareas</a>
+    <a href="/challenges"><i class="fas fa-trophy"></i> Retos</a>
+    <a href="/volunteering"><i class="fas fa-hands-helping"></i> Voluntariado</a>
+    <a href="/teams"><i class="fas fa-users"></i> Equipos</a>
+    <a href="/maps"><i class="fas fa-map"></i> Mapa</a>
+    <a href="/ranking"><i class="fas fa-trophy"></i> Ranking</a>
+    <a href="/profile"><i class="fas fa-user"></i> Perfil</a>
+    
+    <div class="mobile-auth">
+      {% if user %}
+        <a href="/profile"><i class="fas fa-user-circle"></i> Mi Cuenta</a>
+        <a href="#" id="mobile-logout"><i class="fas fa-sign-out-alt"></i> Cerrar Sesión</a>
+      {% else %}
+        <a href="/login"><i class="fas fa-sign-in-alt"></i> Iniciar Sesión</a>
+        <a href="/register"><i class="fas fa-user-plus"></i> Registrarse</a>
+      {% endif %}
+    </div>
   </div>
-  <div class="mobile-menu-overlay mobile-only"></div>
+  
+  <div id="mobile-menu-overlay" class="mobile-menu-overlay mobile-only"></div>
 
   <!-- Contenido principal -->
   <main class="main-content">
@@ -33,22 +52,31 @@
 
   <!-- Bottom-bar SOLO MÓVIL -->
   <nav class="bottom-nav mobile-only">
-    <!-- ... mismo contenido ... -->
+    <a href="/" class="nav-item">
+      <i class="fas fa-home nav-icon"></i>
+      <span>Inicio</span>
+    </a>
+    <a href="/causes" class="nav-item">
+      <i class="fas fa-heart nav-icon"></i>
+      <span>Causas</span>
+    </a>
+    <a href="/tasks" class="nav-item">
+      <i class="fas fa-tasks nav-icon"></i>
+      <span>Tareas</span>
+    </a>
+    <a href="/impact" class="nav-item">
+      <i class="fas fa-chart-line nav-icon"></i>
+      <span>Impacto</span>
+    </a>
+    <a href="/profile" class="nav-item">
+      <i class="fas fa-user nav-icon"></i>
+      <span>Perfil</span>
+    </a>
   </nav>
 
   <!-- Scripts -->
+  <script src="/js/navbar.js"></script>
+  <script src="/js/mobile.js"></script>
   {% block scripts %}{% endblock %}
-  <script>
-    // Detección precisa de dispositivo
-    function isMobile() {
-      return window.innerWidth <= 768;
-    }
-    // Solo cargar mobile.js en móvil
-    if(isMobile()) {
-      const script = document.createElement('script');
-      script.src = '/js/mobile.js';
-      document.body.appendChild(script);
-    }
-  </script>
 </body>
 </html>

@@ -5,14 +5,14 @@
       <i class="fas fa-bars"></i>
     </button>
     
-    <!-- Logo visible en ambos -->
+    <!-- Logo - Ajustado para alineación -->
     <a href="/" class="logo">
       <i class="fas fa-hands-helping logo-icon"></i>
       <span class="logo-text">Solidarity</span>
     </a>
     
     <!-- Menú desktop SOLO ESCRITORIO -->
-    <div class="nav-links desktop-only">
+    <div class="nav-links desktop-only" id="desktop-nav">
       <a href="/">Home</a>
       <div class="dropdown">
         <a href="/takeaction" class="dropbtn btn-accent">
@@ -38,7 +38,7 @@
         <a href="/logout" class="btn btn-primary">Cerrar Sesión</a>
       </div>
     {% else %}
-      <div id="auth-buttons" class="desktop-only">
+      <div id="auth-buttons" class="auth-buttons desktop-only">
         <a href="/login" class="btn btn-outline">Iniciar Sesión</a>
         <a href="/register" class="btn btn-primary">Registrarse</a>
       </div>
