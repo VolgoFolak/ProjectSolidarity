@@ -5,7 +5,7 @@
       <i class="fas fa-bars"></i>
     </button>
     
-    <!-- Logo - Ajustado para alineación -->
+    <!-- Logo -->
     <a href="/" class="logo">
       <i class="fas fa-hands-helping logo-icon"></i>
       <span class="logo-text">Solidarity</span>
@@ -32,16 +32,26 @@
     </div>
 
     <!-- Auth desktop SOLO ESCRITORIO -->
-    {% if user %}
-      <div id="user-menu" class="desktop-only">
-        <a href="/profile" class="btn btn-outline"><i class="fas fa-user"></i> {{ user.name or 'Mi Cuenta' }}</a>
-        <a href="/logout" class="btn btn-primary">Cerrar Sesión</a>
+    <div id="auth-buttons" class="auth-buttons desktop-only">
+      <a href="/login" class="btn btn-outline">Iniciar Sesión</a>
+      <a href="/register" class="btn btn-primary">Registrarse</a>
+    </div>
+
+    <!-- Menú usuario desktop SOLO ESCRITORIO -->
+    <div id="user-menu" class="desktop-only" style="display:none;">
+      <div id="user-trigger">
+        <img id="user-avatar" src="{{ user.photo_url or '/img/default-user.png' }}" alt="Foto de perfil" class="user-avatar">
+        <span id="user-name" class="user-name"></span>
+        <i class="fas fa-caret-down dropdown-icon"></i>
       </div>
-    {% else %}
-      <div id="auth-buttons" class="auth-buttons desktop-only">
-        <a href="/login" class="btn btn-outline">Iniciar Sesión</a>
-        <a href="/register" class="btn btn-primary">Registrarse</a>
+      <div id="user-dropdown" class="user-dropdown-content">
+        <a href="/profile"><i class="fas fa-user icon-profile"></i> Mi Perfil</a>
+        <a href="/teams/myteams"><i class="fas fa-users" style="color: #8e44ad;"></i> Mis Comunidades</a>
+        <a href="/messages"><i class="fas fa-envelope icon-messages"></i> Mensajes</a>
+        <a href="/settings"><i class="fas fa-cog icon-settings"></i> Configuración</a>
+        <a href="/help"><i class="fas fa-question-circle icon-help"></i> Ayuda</a>
+        <a href="#" id="logout-btn-link"><i class="fas fa-sign-out-alt icon-logout"></i> Cerrar sesión</a>
       </div>
-    {% endif %}
+    </div>
   </div>
 </nav>
