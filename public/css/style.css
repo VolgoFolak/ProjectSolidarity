@@ -482,14 +482,24 @@ header {
 }
 
 @media (max-width: 768px) {
-  /* Ocultar elementos desktop */
-  .desktop-only {
+  /* Ocultar menú desktop en móvil */
+  .nav-links {
     display: none !important;
+  }
+  
+  /* Asegurar que el contenido no queda oculto */
+  .main-content {
+    padding-top: 80px !important;
+    padding-bottom: 80px !important;
   }
   
   /* Mostrar elementos móvil */
   .mobile-only {
-    display: block !important;
+    display: block;
+  }
+  
+  .desktop-only {
+    display: none !important;
   }
   
   /* Ajustes específicos para móvil */
@@ -581,5 +591,34 @@ header {
   }
   .nav-links.active {
     transform: translateX(0);
+  }
+}
+
+/* style.css - Ajustes finales */
+@media (max-width: 768px) {
+  /* Ocultar menú desktop en móvil */
+  .nav-links {
+    display: none !important;
+  }
+  
+  /* Asegurar que el contenido no queda oculto */
+  .main-content {
+    padding-top: 80px !important;
+    padding-bottom: 80px !important;
+  }
+}
+
+/* Clases de visibilidad */
+.mobile-only {
+  display: none;
+}
+
+@media (max-width: 768px) {
+  .mobile-only {
+    display: block;
+  }
+  
+  .desktop-only {
+    display: none !important;
   }
 }

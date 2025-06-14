@@ -1,87 +1,50 @@
 // mobile.js
 document.addEventListener('DOMContentLoaded', function() {
-  // Toggle del menú móvil
+  // Elementos del menú móvil
   const menuButton = document.querySelector('.mobile-menu-btn');
   const mobileMenu = document.getElementById('mobile-menu');
-  const overlay = document.querySelector('.mobile-menu-overlay');
+  const overlay = document.getElementById('mobile-menu-overlay');
   
+  // Función para abrir/cerrar menú
+  function toggleMenu() {
+    const isActive = mobileMenu.classList.toggle('active');
+    overlay.classList.toggle('active', isActive);
+    document.body.classList.toggle('no-scroll', isActive);
+  }
+  
+  // Evento del botón menú
   if (menuButton) {
-    menuButton.addEventListener('click', function() {
-      mobileMenu.classList.toggle('active');
-      overlay.classList.toggle('active');
-      document.body.classList.toggle('no-scroll');
-    });
+    menuButton.addEventListener('click', toggleMenu);
   }
-
-  // Cerrar menú al hacer clic en overlay
+  
+  // Evento del overlay
   if (overlay) {
-    overlay.addEventListener('click', function() {
-      mobileMenu.classList.remove('active');
-      overlay.classList.remove('active');
-      document.body.classList.remove('no-scroll');
+    overlay.addEventListener('click', toggleMenu);
+  }
+  
+  // Cerrar menú al hacer clic en enlaces
+  document.querySelectorAll('#mobile-menu a').forEach(item => {
+    item.addEventListener('click', toggleMenu);
+  });
+  
+  // Cargar tarjetas dinámicas
+  if (typeof loadActivities === 'function') {
+    loadActivities();
+  } else {
+    console.log("loadActivities no está definido");
+    // Cargar tarjetas por defecto si no hay función
+    document.querySelectorAll('.activity-card').forEach(card => {
+      card.style.display = 'block';
     });
   }
-
-  // Cerrar menú al seleccionar item
-  document.querySelectorAll('.mobile-menu a').forEach(item => {
-    item.addEventListener('click', () => {
-      mobileMenu.classList.remove('active');
-      overlay.classList.remove('active');
-      document.body.classList.remove('no-scroll');
+  
+  // Optimizar tarjetas para touch
+  document.querySelectorAll('.card, .activity-card').forEach(card => {
+    card.addEventListener('click', function(e) {
+      if (!e.target.matches('button, a, .btn')) {
+        const link = this.querySelector('a');
+        if (link) link.click();
+      }
     });
   });
 });
-
-/* mobile.css */
-@media (max-width: 768px) {
-  /* Ocultar elementos desktop */
-  .desktop-only {
-    display: none !important;
-  }
-  
-  /* Mostrar elementos móvil */
-  .mobile-only {
-    display: block !important;
-  }
-  
-  /* Ajustes específicos para móvil */
-  .navbar {
-    padding: 0 15px !important;
-    height: 60px;
-  }
-  
-  .mobile-menu-btn {
-    display: block !important;
-    font-size: 1.8rem;
-    background: none;
-    border: none;
-    color: var(--primary);
-    margin-right: 15px;
-  }
-  
-  .bottom-nav {
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    display: flex;
-    background: white;
-    box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
-    z-index: 1000;
-    padding: 8px 0;
-  }
-
-  /* ... resto de estilos móvil ... */
-}
-
-@media (min-width: 769px) {
-  /* Ocultar elementos móvil en desktop */
-  .mobile-only {
-    display: none !important;
-  }
-  
-  /* Mostrar elementos desktop */
-  .desktop-only {
-    display: flex !important; /* Mantener flex en desktop */
-  }
-}

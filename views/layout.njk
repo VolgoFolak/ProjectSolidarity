@@ -1,27 +1,16 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <title>{% block title %}Solidarity{% endblock %}</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Plataforma colaborativa para impulsar la solidaridad y el impacto social">
-  
-  <!-- Favicon (ajusta la ruta si es necesario) -->
-  <link rel="icon" href="/images/favicon.ico" type="image/x-icon">
-  
-  <!-- CSS -->
+  <!-- ... meta tags existentes ... -->
   <link rel="stylesheet" href="/css/style.css">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-  
-  <!-- Bloques para extensiones -->
-  {% block head %}{% endblock %}
+  <link rel="stylesheet" href="/css/mobile.css"> <!-- Asegúrate que esta línea está -->
 </head>
 <body>
   <!-- Header -->
   <header>{% include 'partials/navbar.njk' %}</header>
 
-  <!-- Menú lateral móvil - FIXED ID -->
-  <div id="mobile-menu" class="mobile-menu mobile-only">
+  <!-- Menú lateral móvil (SOLO MÓVIL) -->
+  <div id="mobile-menu" class="mobile-only">
     <a href="/"><i class="fas fa-home"></i> Inicio</a>
     <a href="/causes"><i class="fas fa-heart"></i> Causas</a>
     <a href="/tasks"><i class="fas fa-tasks"></i> Tareas</a>
@@ -42,17 +31,16 @@
       {% endif %}
     </div>
   </div>
-  
-  <div id="mobile-menu-overlay" class="mobile-menu-overlay mobile-only"></div>
+  <div id="mobile-menu-overlay" class="mobile-only"></div>
 
   <!-- Contenido principal -->
   <main class="main-content">
     {% block content %}{% endblock %}
   </main>
 
-  <!-- Bottom-bar SOLO MÓVIL -->
+  <!-- Bottom-bar (SOLO MÓVIL) -->
   <nav class="bottom-nav mobile-only">
-    <a href="/" class="nav-item">
+    <a href="/home" class="nav-item">
       <i class="fas fa-home nav-icon"></i>
       <span>Inicio</span>
     </a>
@@ -74,9 +62,19 @@
     </a>
   </nav>
 
-  <!-- Scripts -->
+  <!-- Scripts base -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script>
+    const supabaseUrl = 'https://cyftasxlrzuynzbrfgkd.supabase.co';
+    const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImN5ZnRhc3hscnp1eW56YnJmZ2tkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDgwMzUzMTksImV4cCI6MjA2MzYxMTMxOX0.I56ZqFTfLgdwWlcozMVncGNGBZ4A2_5VpAbHeNmtDhA';
+    const supabase = window.supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
+  </script>
+  
+  <!-- Scripts propios -->
   <script src="/js/navbar.js"></script>
-  <script src="/js/mobile.js"></script>
+  <script src="/js/mobile.js"></script> <!-- Añadido aquí -->
+  
+  <!-- Scripts de bloque -->
   {% block scripts %}{% endblock %}
 </body>
 </html>

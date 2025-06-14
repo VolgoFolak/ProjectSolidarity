@@ -1,11 +1,25 @@
-/* ===== MOBILE FIRST ===== */
+/* ===== MOBILE STYLES (max-width: 768px) ===== */
 @media (max-width: 768px) {
-  /* Alineación header */
+  /* Reset básico */
+  body {
+    padding-top: 60px !important;
+    padding-bottom: 60px !important;
+    overflow-x: hidden;
+  }
+  
+  /* Header móvil */
   .navbar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 60px;
+    padding: 0 15px !important;
+    z-index: 1000;
+    background: white;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
     display: flex;
     align-items: center;
-    padding: 0 15px !important;
-    height: 60px;
   }
   
   .navbar-inner {
@@ -34,17 +48,18 @@
     flex-grow: 1;
   }
   
-  .logo .logo-icon {
-    font-size: 1.8rem;
+  .logo-icon {
+    font-size: 1.8rem !important;
+    color: var(--primary) !important;
   }
   
-  .logo .logo-text {
-    font-size: 1.2rem;
+  .logo-text {
+    font-size: 1.2rem !important;
     margin-left: 10px;
   }
   
-  /* Menú lateral */
-  .mobile-menu {
+  /* Menú lateral móvil */
+  #mobile-menu {
     position: fixed;
     top: 0;
     left: -280px;
@@ -54,31 +69,32 @@
     z-index: 1100;
     transition: transform 0.3s ease;
     box-shadow: 2px 0 15px rgba(0,0,0,0.1);
-    padding-top: 20px;
+    padding-top: 70px;
     overflow-y: auto;
   }
   
-  .mobile-menu.active {
+  #mobile-menu.active {
     transform: translateX(280px);
   }
   
-  .mobile-menu a {
+  #mobile-menu a {
     display: flex;
     align-items: center;
-    padding: 15px 20px;
+    padding: 15px 25px;
     color: var(--dark);
     font-size: 1.1rem;
     border-bottom: 1px solid #f5f5f5;
+    text-decoration: none;
   }
   
-  .mobile-menu a i {
+  #mobile-menu a i {
     width: 30px;
     margin-right: 12px;
     font-size: 1.2rem;
     color: var(--primary);
   }
   
-  .mobile-menu-overlay {
+  #mobile-menu-overlay {
     display: none;
     position: fixed;
     top: 0;
@@ -89,11 +105,11 @@
     z-index: 1099;
   }
   
-  .mobile-menu-overlay.active {
+  #mobile-menu-overlay.active {
     display: block;
   }
   
-  /* Bottom bar */
+  /* Bottom Navigation Bar */
   .bottom-nav {
     position: fixed;
     bottom: 0;
@@ -126,24 +142,39 @@
     margin-bottom: 3px;
   }
   
-  /* Ajustes de contenido */
+  /* Contenido principal */
   .main-content {
-    padding-top: 70px !important;
-    padding-bottom: 60px !important;
+    padding-top: 20px;
+    padding-bottom: 20px;
+  }
+  
+  /* Ocultar elementos desktop */
+  .desktop-only {
+    display: none !important;
   }
   
   /* Activar scroll solo en contenido */
   body.no-scroll {
     overflow: hidden;
   }
-  
-  body.no-scroll .main-content {
-    overflow: hidden;
-  }
 }
 
+/* ===== DESKTOP STYLES ===== */
 @media (min-width: 769px) {
   .mobile-only {
+    display: none !important;
+  }
+  
+  .bottom-nav {
+    display: none !important;
+  }
+  
+  .mobile-menu-btn {
+    display: none !important;
+  }
+  
+  #mobile-menu,
+  #mobile-menu-overlay {
     display: none !important;
   }
 }
