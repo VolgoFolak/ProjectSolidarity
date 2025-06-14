@@ -1,0 +1,78 @@
+// Evento global para el botón "Unirse"
+document.addEventListener('click', async (e) => {
+  const joinBtn = e.target.closest('.join-team-btn');
+  if (!joinBtn || joinBtn.disabled) return;
+
+  const teamId = joinBtn.dataset.teamId;
+  const { data: { session } } = await supabase.auth.getSession();
+
+  if (!session?.user) {
+    document.getElementById('loginModal').classList.add('active');
+    return;
+  }
+
+  // Bloquear UI para evitar dobles clics
+  const originalText = joinBtn.innerHTML;
+  joinBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+  joinBtn.disabled = true;
+
+  try {
+    // 1. Intentar insertar la membresía directamente
+    const { error: insertError } = await supabase
+      .from('team_members')
+      .insert({
+        team_id: teamId,
+        user_id: session.user.id,
+        role: 'member',
+        joined_at: new Date().toISOString()
+      });
+
+    // Si ya es miembro (error 23505), no incrementes el contador
+    if (insertError && insertError.code === '23505') {
+      // Ya es miembro, solo actualiza UI y contador real
+    } else if (insertError) {
+      throw insertError;
+    } else {
+      // Solo si la inserción fue exitosa, incrementa el contador en la base de datos
+      const { error: updateError } = await supabase
+        .rpc('increment_team_counter', {
+          team_id_input: teamId,
+          field_name: 'members_count'
+        });
+      if (updateError) throw updateError;
+    }
+
+    // 2. Obtener el valor real actualizado desde Supabase
+    const { data: updatedTeam, error: fetchError } = await supabase
+      .from('teams')
+      .select('members_count')
+      .eq('id', teamId)
+      .single();
+
+    if (fetchError) throw fetchError;
+
+    // 3. Actualizar el contador en todas las tarjetas de este equipo
+    document.querySelectorAll(`.team-card-classic[data-team-id="${teamId}"] .members-count-classic`).forEach(el => {
+      el.textContent = updatedTeam.members_count;
+    });
+
+    // 4. Cambiar el botón a "Miembro"
+    joinBtn.innerHTML = '<i class="fas fa-user-check"></i> Miembro';
+    joinBtn.classList.remove('btn-accent');
+    joinBtn.classList.add('btn-outline');
+    joinBtn.disabled = true;
+
+  } catch (error) {
+    console.error('Error al unirse:', error);
+    joinBtn.innerHTML = originalText;
+    joinBtn.disabled = false;
+    alert(error.message || 'Error al unirse a la comunidad');
+  }
+});
+
+console.log('Enviando datos a Supabase:', datos);
+// Después de la respuesta:
+console.log('Respuesta de Supabase:', respuesta, 'Error:', error);
+
+// Añadir logs en los callbacks de eventos (por ejemplo, al hacer clic en un botón o enviar un formulario):
+console.log('Formulario enviado');
