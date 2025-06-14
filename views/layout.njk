@@ -17,195 +17,38 @@
   {% block head %}{% endblock %}
 </head>
 <body>
-  <!-- Navbar -->
-  <header>
-    {% include "partials/navbar.njk" %}
-  </header>
+  <!-- Header existente -->
+  <header>{% include 'partials/navbar.njk' %}</header>
+
+  <!-- Menú lateral móvil - SOLO MÓVIL -->
+  <div id="mobile-menu" class="mobile-menu mobile-only">
+    <!-- ... mismo contenido ... -->
+  </div>
+  <div class="mobile-menu-overlay mobile-only"></div>
 
   <!-- Contenido principal -->
   <main class="main-content">
     {% block content %}{% endblock %}
   </main>
 
-  <!-- Footer -->
-  {% include "partials/footer.njk" %}
+  <!-- Bottom-bar SOLO MÓVIL -->
+  <nav class="bottom-nav mobile-only">
+    <!-- ... mismo contenido ... -->
+  </nav>
 
-  <!-- Scripts base: SOLO UNA VEZ -->
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script>
-    const supabaseUrl = 'https://cyftasxlrzuynzbrfgkd.supabase.co';
-    const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImN5ZnRhc3hscnp1eW56YnJmZ2tkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDgwMzUzMTksImV4cCI6MjA2MzYxMTMxOX0.I56ZqFTfLgdwWlcozMVncGNGBZ4A2_5VpAbHeNmtDhA';
-    const supabase = window.supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
-  </script>
-  <script src="/js/navbar.js"></script>
-  <script src="/js/impactpoints.js"></script>
-  <!-- y cualquier otro script que use supabase -->
-
-  <!-- Bloques para scripts específicos -->
+  <!-- Scripts -->
   {% block scripts %}{% endblock %}
-
-  <!-- Notificaciones (ejemplo) -->
-  <div id="notifications" class="notifications-container"></div>
-
-  <!-- Modal de bienvenida tras login -->
-  <div id="welcomeModal" style="display:none; position:fixed; top:0; left:0; width:100vw; height:100vh; background:rgba(0,0,0,0.35); z-index:9999; align-items:center; justify-content:center;">
-    <div style="background:#fff; border-radius:18px; max-width:370px; margin:auto; padding:2.2rem 1.7rem; box-shadow:0 8px 32px rgba(0,0,0,0.13); text-align:center; position:relative;">
-      <span style="font-size:2.7rem; color:#2dd4bf; display:block; margin-bottom:1rem;">
-        <i class="fas fa-fire"></i>
-      </span>
-      <h2 style="color:#2dd4bf; font-weight:900; margin-bottom:0.7rem;">¡Bienvenido/a de nuevo!</h2>
-      <p style="color:#444; font-size:1.13rem;">
-        ¡Nos alegra verte en Solidarity!<br>
-        <strong>Hoy es un gran día para ayudar, inspirar y transformar el mundo.</strong>
-      </p>
-      <p style="color:#888; font-size:0.97rem; margin-top:1em;">
-        ¿Listo/a para dejar tu huella positiva?<br>
-        ¡Explora, conecta y actúa!
-      </p>
-      <button onclick="document.getElementById('welcomeModal').style.display='none';" style="margin-top:1.5rem; background:#2dd4bf; color:#fff; border:none; border-radius:8px; padding:0.8rem 1.7rem; font-size:1.1rem; font-weight:700; cursor:pointer;">
-        ¡Vamos allá!
-      </button>
-    </div>
-  </div>
   <script>
-    function isTrending(activity) {
-      if (activity.type === 'cause') {
-        return (activity.beneficiaries || 0) + (activity.raised || 0) > 100;
-      }
-      if (activity.type === 'task') {
-        return (activity.beneficiaries || 0) > 50;
-      }
-      if (activity.type === 'volunteering') {
-        return (activity.volunteers_needed || 0) > 30;
-      }
-      if (activity.type === 'challenge') {
-        // Trending si es reciente (últimos 7 días)
-        const created = new Date(activity.created_at);
-        const now = new Date();
-        const diffDays = (now - created) / (1000 * 60 * 60 * 24);
-        return diffDays < 7;
-      }
-      return false;
+    // Detección precisa de dispositivo
+    function isMobile() {
+      return window.innerWidth <= 768;
     }
-
-    // Renderizado de actividades
-    const grid = document.getElementById('activities-grid');
-    const activitiesToShow = []; // Suponiendo que esta variable contiene las actividades a mostrar
-
-    grid.innerHTML = activitiesToShow.map(activity => {
-      const typeLabels = {
-        cause: 'Causa',
-        task: 'Tarea',
-        challenge: 'Reto',
-        volunteering: 'Voluntariado'
-      };
-
-      // Badge tipo
-      const badge = `<div class="activity-badge ${activity.type}">
-        <i class="fas ${activity.icon}"></i> ${typeLabels[activity.type] || 'Otro'}
-      </div>`;
-
-      // Badge trending
-      const trendingBadge = isTrending(activity)
-        ? `<div class="activity-badge trending"><i class="fas fa-fire"></i> Trending</div>`
-        : '';
-
-      // Causa
-      if (activity.type === 'cause') {
-        const meta = activity.goal || 1000;
-        const recaudado = activity.raised || 0;
-        const porcentaje = meta ? Math.min(100, Math.round((recaudado / meta) * 100)) : 0;
-        return `
-          <div class="activity-card" data-type="cause">
-            ${badge}
-            ${trendingBadge}
-            <div class="activity-image" style="background-image: url('${activity.photo_url || '/img/causa-default.jpg'}')"></div>
-            <div class="activity-content">
-              <div class="activity-header">${activity.title || 'Sin título'}</div>
-              <div class="activity-meta">
-                <span><i class="fas fa-map-marker-alt"></i> ${activity.city || 'Sin ubicación'}${activity.country ? ', ' + activity.country : ''}</span>
-                <span><i class="fas fa-calendar-alt"></i> ${activity.formattedDate}</span>
-              </div>
-              <div class="activity-impact">
-                <span><i class="fas fa-users"></i> ${activity.beneficiaries || 0} beneficiarios</span>
-              </div>
-              <div class="activity-impact">
-                <span><i class="fas fa-euro-sign"></i> ${recaudado} € de ${meta} €</span>
-              </div>
-              <div class="progress-bar" style="margin: 0.5em 0 0.7em 0;">
-                <div class="progress-fill" style="width:${porcentaje}%;background:#4fc3a1;height:8px;border-radius:4px;"></div>
-              </div>
-              <div style="font-size:0.92em;color:#6b7280;">${porcentaje}% recaudado</div>
-            </div>
-            <a href="/causes/${activity.id}" class="activity-link">Ver detalles</a>
-          </div>
-        `;
-      }
-      // Tarea
-      if (activity.type === 'task') {
-        return `
-          <div class="activity-card" data-type="task">
-            ${badge}
-            ${trendingBadge}
-            <div class="activity-image" style="background-image: url('${activity.photo_url || '/img/task-default.jpg'}')"></div>
-            <div class="activity-content">
-              <div class="activity-header">${activity.title || 'Sin título'}</div>
-              <div class="activity-meta">
-                <span><i class="fas fa-map-marker-alt"></i> ${activity.city || 'Sin ubicación'}${activity.country ? ', ' + activity.country : ''}</span>
-                <span><i class="fas fa-calendar-alt"></i> ${activity.formattedDate}</span>
-              </div>
-              <div class="activity-impact">
-                <span><i class="fas fa-users"></i> ${activity.beneficiaries || 0} beneficiarios</span>
-              </div>
-            </div>
-            <a href="/tasks/${activity.id}" class="activity-link">Ver detalles</a>
-          </div>
-        `;
-      }
-      // Reto
-      if (activity.type === 'challenge') {
-        return `
-          <div class="activity-card" data-type="challenge">
-            ${badge}
-            ${trendingBadge}
-            <div class="activity-image" style="background-image: url('${activity.photo_url || '/img/challenge-default.jpg'}')"></div>
-            <div class="activity-content">
-              <div class="activity-header">${activity.title || 'Sin título'}</div>
-              <div class="activity-meta">
-                <span><i class="fas fa-map-marker-alt"></i> ${activity.city || 'Sin ubicación'}${activity.country ? ', ' + activity.country : ''}</span>
-                <span><i class="fas fa-calendar-alt"></i> ${activity.formattedDate}</span>
-              </div>
-              <div class="activity-impact">
-                <span><i class="fas fa-bullseye"></i> Impacto: 50 pts</span>
-              </div>
-            </div>
-            <a href="/challenges/${activity.id}" class="activity-link">Ver detalles</a>
-          </div>
-        `;
-      }
-      // Voluntariado
-      if (activity.type === 'volunteering') {
-        return `
-          <div class="activity-card" data-type="volunteering">
-            ${badge}
-            ${trendingBadge}
-            <div class="activity-image" style="background-image: url('${activity.photo_url || '/img/volunteer-default.jpg'}')"></div>
-            <div class="activity-content">
-              <div class="activity-header">${activity.title || 'Sin título'}</div>
-              <div class="activity-meta">
-                <span><i class="fas fa-map-marker-alt"></i> ${activity.city || 'Sin ubicación'}${activity.country ? ', ' + activity.country : ''}</span>
-                <span><i class="fas fa-calendar-alt"></i> ${activity.formattedDate}</span>
-              </div>
-              <div class="activity-impact">
-                <span><i class="fas fa-users"></i> ${activity.volunteers_needed || 0} voluntarios necesarios</span>
-              </div>
-            </div>
-            <a href="/volunteering/${activity.id}" class="activity-link">Ver detalles</a>
-          </div>
-        `;
-      }
-      return '';
-    }).join('');
+    // Solo cargar mobile.js en móvil
+    if(isMobile()) {
+      const script = document.createElement('script');
+      script.src = '/js/mobile.js';
+      document.body.appendChild(script);
+    }
   </script>
 </body>
 </html>
