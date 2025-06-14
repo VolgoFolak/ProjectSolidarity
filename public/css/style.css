@@ -519,6 +519,15 @@ header {
     padding: 8px 0;
   }
 
+  /* Garantizar que navbar.js no afecte móvil */
+  #nav-links {
+    display: none !important;
+  }
+  
+  #mobile-menu-overlay {
+    display: none;
+  }
+
   /* ... resto de estilos móvil ... */
 }
 
