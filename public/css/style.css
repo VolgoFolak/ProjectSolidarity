@@ -19,11 +19,14 @@
 }
 
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
+@import url('otra-hoja.css');
 
 body {
   background: var(--light);
   color: var(--darker);
   line-height: 1.6;
+  font-family: 'Roboto', sans-serif;
 }
 
 /* Header */
@@ -545,4 +548,24 @@ header {
   .nav-links.active {
     transform: translateX(0);
   }
+}
+
+/* ===== DESKTOP STYLES ===== */
+@media (min-width: 769px) {
+  .mobile-only {
+    display: none !important;
+  }
+  
+  .bottom-nav {
+    display: none !important;
+  }
+  
+  .mobile-menu-btn {
+    display: none !important;
+  }
+}
+
+/* No scroll cuando menú está abierto */
+body.no-scroll {
+  overflow: hidden;
 }

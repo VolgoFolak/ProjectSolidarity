@@ -1010,7 +1010,6 @@
 
           const card = document.createElement('div');
           card.className = 'team-card-classic';
-          card.setAttribute('data-team-id', team.id);
           card.innerHTML = `
             <div class="team-image-classic">
               <img src="${team.photo || 'https://via.placeholder.com/350x180?text=Comunidad'}" alt="${team.name}">
@@ -1065,7 +1064,16 @@
             this.disabled = true;
 
             try {
-              // Intentar insertar membresía directamente
+              // 1. Insertar membresía (solo si no existe)
+              const { data: existing, error: checkError } = await supabase
+                .from('team_members')
+                .select('id')
+                .eq('team_id', teamId)
+                .eq('user_id', session.user.id);
+
+              if (checkError) throw checkError;
+              if (existing && existing.length > 0) throw new Error('Ya eres miembro');
+
               const { error: insertError } = await supabase
                 .from('team_members')
                 .insert({
@@ -1074,35 +1082,34 @@
                   role: 'member'
                 });
 
-              // Si hay error de clave duplicada, lo tratamos como "ya es miembro"
-              if (insertError && insertError.code === '23505') {
-                // Ya es miembro, solo actualiza UI y contador
-              } else if (insertError) {
-                throw insertError;
-              } else {
-                // Si insertó bien, incrementa el contador
-                const { error: updateError } = await supabase
-                  .rpc('increment_team_counter', {
-                    team_id_input: teamId,
-                    field_name: 'members_count'
-                  });
-                if (updateError) throw updateError;
-              }
+              if (insertError) throw insertError;
 
-              // En ambos casos, lee el contador real y actualiza UI
+              // 2. Actualizar contador en la base de datos (RPC)
+              const { error: updateError } = await supabase
+                .rpc('increment_team_counter', {
+                  team_id_input: teamId,
+                  field_name: 'members_count'
+                });
+
+              if (updateError) throw updateError;
+
+              // 3. Leer el número real de miembros desde Supabase
               const { data: teamData, error: fetchError } = await supabase
                 .from('teams')
                 .select('members_count')
                 .eq('id', teamId)
                 .single();
+
               if (fetchError) throw fetchError;
 
+              // 4. Actualizar el número en la tarjeta SOLO con el valor real
               const card = this.closest('.team-card-classic');
               const countElement = card.querySelector('.members-count-classic');
               if (countElement) {
                 countElement.textContent = teamData.members_count;
               }
 
+              // 5. Cambiar el botón a "Miembro" y desactivar
               this.innerHTML = '<i class="fas fa-user-check"></i> Miembro';
               this.classList.remove('btn-accent');
               this.classList.add('btn-outline');
@@ -1439,7 +1446,7 @@
 
       document.addEventListener('click', async (e) => {
         const joinBtn = e.target.closest('.join-team-btn');
-        if (!joinBtn || joinBtn.disabled) return;
+        if (!joinBtn) return;
 
         const teamId = joinBtn.dataset.teamId;
         const { data: { session } } = await supabase.auth.getSession();
@@ -1449,39 +1456,44 @@
           return;
         }
 
-        // Bloquear UI para evitar dobles clics
-        const originalText = joinBtn.innerHTML;
+        // Bloquear UI
         joinBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
         joinBtn.disabled = true;
 
         try {
-          // 1. Intentar insertar la membresía directamente
+          // 1. Verificar membresía real en Supabase
+          const { count, error: checkError } = await supabase
+            .from('team_members')
+            .select('*', { count: 'exact', head: true })
+            .eq('team_id', teamId)
+            .eq('user_id', session.user.id);
+
+          console.log('Check membership:', { count, checkError });
+          if (checkError) throw checkError;
+          if (count > 0) throw new Error('Ya eres miembro');
+
+          // 2. Insertar membresía real en Supabase
           const { error: insertError } = await supabase
             .from('team_members')
             .insert({
               team_id: teamId,
               user_id: session.user.id,
-              role: 'member',
-              joined_at: new Date().toISOString()
+              role: 'member'
             });
 
-          // Si ya es miembro (error 23505), no incrementes el contador
-          if (insertError && insertError.code === '23505') {
-            // Ya es miembro, solo actualiza UI y contador real
-          } else if (insertError) {
-            throw insertError;
-          } else {
-            // Solo si la inserción fue exitosa, incrementa el contador en la base de datos
-            const { error: updateError } = await supabase
-              .rpc('increment_team_counter', {
-                team_id_input: teamId,
-                field_name: 'members_count'
-              });
-            if (updateError) throw updateError;
-          }
+          if (insertError) throw insertError;
 
-          // 2. Obtener el valor real actualizado desde Supabase
-          const { data: updatedTeam, error: fetchError } = await supabase
+          // 3. Actualizar contador en la base de datos (RPC)
+          const { error: updateError } = await supabase
+            .rpc('increment_team_counter', {
+              team_id_input: teamId,
+              field_name: 'members_count'
+            });
+
+          if (updateError) throw updateError;
+
+          // 4. Leer el contador real desde Supabase
+          const { data: teamData, error: fetchError } = await supabase
             .from('teams')
             .select('members_count')
             .eq('id', teamId)
@@ -1489,20 +1501,23 @@
 
           if (fetchError) throw fetchError;
 
-          // 3. Actualizar el contador en todas las tarjetas de este equipo
-          document.querySelectorAll(`.team-card-classic[data-team-id="${teamId}"] .members-count-classic`).forEach(el => {
-            el.textContent = updatedTeam.members_count;
-          });
+          // Actualiza el contador en la tarjeta SOLO con el valor real de Supabase
+          const card = joinBtn.closest('.team-card-classic');
+          const countElement = card.querySelector('.members-count-classic') ||
+                               card.querySelector('.meta-item-classic:nth-child(4)');
+          if (countElement) {
+            countElement.textContent = `${teamData.members_count} miembros`;
+          }
 
-          // 4. Cambiar el botón a "Miembro"
+          // Tras unirse correctamente:
           joinBtn.innerHTML = '<i class="fas fa-user-check"></i> Miembro';
           joinBtn.classList.remove('btn-accent');
           joinBtn.classList.add('btn-outline');
           joinBtn.disabled = true;
 
         } catch (error) {
-          console.error('Error al unirse:', error);
-          joinBtn.innerHTML = originalText;
+          console.error('Error joining team:', error);
+          joinBtn.innerHTML = '<i class="fas fa-user-plus"></i> Unirse';
           joinBtn.disabled = false;
           alert(error.message || 'Error al unirse');
         }
@@ -1512,9 +1527,7 @@
       window.addEventListener('beforeunload', () => {
         if (window.teamChannels) {
           Object.values(window.teamChannels).forEach(channel => {
-            if (channel?.unsubscribe) {
-              channel.unsubscribe();
-            }
+            if (channel) supabase.removeChannel(channel);
           });
           window.teamChannels = {};
         }
