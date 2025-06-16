@@ -6,10 +6,14 @@ const fs = require('fs');
 const multer = require('multer');
 const nunjucks = require('nunjucks');
 const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
+const { createClient } = require('@supabase/supabase-js');
 const app = express();
 const PORT = 3000;
 
 const USERS_FILE = path.join(__dirname, 'users.json');
+
+// Configuración de Supabase
+const supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_KEY);
 
 // Middleware para parsear JSON
 app.use(express.json());
@@ -92,7 +96,13 @@ app.post('/login', (req, res) => {
         user = users.find(u => u.email === email && u.password === password);
     }
     if (user) {
-        req.session.user = { name: user.name, photo: user.photo || '', username: user.username, email: user.email };
+        req.session.user = { 
+            id: user.id || user.username, // Usamos username como ID temporal
+            name: user.name, 
+            photo: user.photo || '', 
+            username: user.username, 
+            email: user.email 
+        };
         res.json({ ok: true, user: req.session.user });
     } else {
         res.status(401).json({ ok: false, error: 'Credenciales incorrectas' });
@@ -168,6 +178,154 @@ app.get('/ranking', (req, res) => {
 });
 app.get('/takeaction', (req, res) => {
     res.render('takeaction/index.njk');
+});
+
+// --- RUTAS DEL SISTEMA DE MENSAJERÍA ---
+app.get('/messages', (req, res) => {
+    res.render('messages/index.njk');
+});
+
+app.get('/messages/:conversationId', (req, res) => {
+    res.render('messages/conversation.njk');
+});
+
+app.get('/messages/new', (req, res) => {
+    res.render('messages/new.njk');
+});
+
+// --- API para mensajes ---
+app.get('/api/conversations', async (req, res) => {
+    if (!req.session.user) return res.status(401).json({ error: 'No autenticado' });
+    
+    try {
+        const { data, error } = await supabase
+            .from('conversations')
+            .select(`
+                id,
+                created_at,
+                last_message: messages!conversations_last_message_id_fkey (content, created_at),
+                participants: conversation_participants!inner (
+                    profile: profiles!conversation_participants_profile_id_fkey (id, username, photo_url)
+                )
+            `)
+            .neq('participants.profile.id', req.session.user.id)
+            .order('last_message.created_at', { ascending: false });
+        
+        if (error) throw error;
+        res.json(data);
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+});
+
+app.get('/api/messages/:conversationId', async (req, res) => {
+    if (!req.session.user) return res.status(401).json({ error: 'No autenticado' });
+    
+    try {
+        const { data, error } = await supabase
+            .from('messages')
+            .select('id, content, created_at, sender:profiles!messages_sender_id_fkey (id, username)')
+            .eq('conversation_id', req.params.conversationId)
+            .order('created_at', { ascending: true });
+        
+        if (error) throw error;
+        res.json(data);
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+});
+
+app.post('/api/messages', async (req, res) => {
+    if (!req.session.user) return res.status(401).json({ error: 'No autenticado' });
+    
+    const { conversation_id, content } = req.body;
+    try {
+        const { data, error } = await supabase
+            .from('messages')
+            .insert({
+                conversation_id,
+                sender_id: req.session.user.id,
+                content
+            })
+            .select('id')
+            .single();
+        
+        if (error) throw error;
+        
+        // Actualizar última conversación
+        await supabase
+            .from('conversations')
+            .update({ last_message_id: data.id })
+            .eq('id', conversation_id);
+        
+        res.json(data);
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+});
+
+app.post('/api/conversations', async (req, res) => {
+    if (!req.session.user) return res.status(401).json({ error: 'No autenticado' });
+    
+    const { recipient_id, content } = req.body;
+    try {
+        // Crear nueva conversación
+        const { data: conversation, error: convError } = await supabase
+            .from('conversations')
+            .insert({})
+            .select('id')
+            .single();
+        
+        if (convError) throw convError;
+        
+        // Añadir participantes
+        await supabase.from('conversation_participants').insert([
+            { conversation_id: conversation.id, profile_id: req.session.user.id },
+            { conversation_id: conversation.id, profile_id: recipient_id }
+        ]);
+        
+        // Crear mensaje inicial
+        const { data: message, error: msgError } = await supabase
+            .from('messages')
+            .insert({
+                conversation_id: conversation.id,
+                sender_id: req.session.user.id,
+                content
+            })
+            .select('id')
+            .single();
+        
+        if (msgError) throw msgError;
+        
+        // Actualizar conversación con el primer mensaje
+        await supabase
+            .from('conversations')
+            .update({ last_message_id: message.id })
+            .eq('id', conversation.id);
+        
+        res.json(conversation);
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+});
+
+app.get('/api/users', async (req, res) => {
+    if (!req.session.user) return res.status(401).json({ error: 'No autenticado' });
+    
+    const searchTerm = req.query.search || '';
+    try {
+        const { data, error } = await supabase
+            .from('profiles')
+            .select('id, username, photo_url')
+            .ilike('username', `%${searchTerm}%`)
+            .neq('id', req.session.user.id)
+            .limit(5);
+        
+        if (error) throw error;
+        res.json(data);
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
 });
 
 // --- Ruta para 404 ---

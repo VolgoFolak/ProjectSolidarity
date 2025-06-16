@@ -698,6 +698,100 @@
     #teamModal #teamModalBody {
       padding: 0.5rem;
     }
+
+    /* Nueva sección de formularios */
+    .solidarity-form {
+      padding: 1.2rem 0 0 0;
+    }
+    .form-section-title {
+      color: var(--primary);
+      font-size: 1.25rem;
+      font-weight: 700;
+      margin-bottom: 1.2rem;
+      display: flex;
+      align-items: center;
+      gap: 0.7rem;
+    }
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.2rem 2.2rem;
+    }
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
+    }
+    .form-group-full {
+      grid-column: 1 / -1;
+    }
+    .form-group label {
+      color: var(--primary);
+      font-weight: 600;
+      font-size: 1rem;
+      margin-bottom: 0.2rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .form-group input[type="text"],
+    .form-group input[type="number"],
+    .form-group select,
+    .form-group textarea {
+      padding: 0.7rem 1rem;
+      border-radius: 8px;
+      border: 1.5px solid var(--gray);
+      font-size: 1rem;
+      background: #f8fafc;
+      color: #2d3748;
+      transition: border 0.2s;
+    }
+    .form-group input[type="text"]:focus,
+    .form-group input[type="number"]:focus,
+    .form-group select:focus,
+    .form-group textarea:focus {
+      border: 1.5px solid var(--primary);
+      outline: none;
+    }
+    .form-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      margin-top: 2rem;
+      justify-content: flex-end;
+    }
+    @media (max-width: 700px) {
+      .form-grid {
+        grid-template-columns: 1fr;
+      }
+      .form-actions {
+        flex-direction: column;
+        align-items: stretch;
+      }
+    }
+
+    /* Estilos adicionales para el modal de administración */
+    .admin-modal-content h2,
+    .admin-modal-content h3,
+    .admin-modal-content h4,
+    .admin-modal-content .form-section-title,
+    .admin-modal-content label {
+      color: var(--primary);
+      font-weight: 700;
+    }
+    .admin-modal-content h2 {
+      font-size: 2rem;
+      margin-bottom: 1.2rem;
+    }
+    .admin-modal-content h3 {
+      font-size: 1.2rem;
+      margin-top: 2rem;
+      margin-bottom: 1rem;
+    }
+    .admin-modal-content h4 {
+      font-size: 1.05rem;
+      margin-bottom: 0.5rem;
+    }
   </style>
 {% endblock %}
 
@@ -782,26 +876,15 @@
       </div>
       
       <div class="admin-tab-content" id="settingsTab">
-        <form id="teamSettingsForm">
-          <div class="form-group">
-            <label for="editTeamName">Nombre de la comunidad</label>
-            <input type="text" id="editTeamName" name="editTeamName" required>
-          </div>
-          
-          <div class="form-group">
-            <label for="editTeamDesc">Descripción</label>
-            <textarea id="editTeamDesc" name="editTeamDesc" rows="4" required></textarea>
-          </div>
-          
-          <div class="form-group">
-            <label for="editTeamPhoto">Foto/logo de la comunidad</label>
-            <input type="file" id="editTeamPhoto" name="editTeamPhoto" accept="image/*">
-            <img id="editTeamPhotoPreview" style="max-width: 200px; margin-top: 1rem; display: none;">
-          </div>
-          
-          <div class="form-inline-group">
+        <form id="teamSettingsForm" class="solidarity-form">
+          <h3 class="form-section-title"><i class="fas fa-cog"></i> Configuración de la comunidad</h3>
+          <div class="form-grid">
             <div class="form-group">
-              <label for="editTeamCategory">Categoría</label>
+              <label for="editTeamName"><i class="fas fa-users"></i> Nombre de la comunidad</label>
+              <input type="text" id="editTeamName" name="editTeamName" required>
+            </div>
+            <div class="form-group">
+              <label for="editTeamCategory"><i class="fas fa-layer-group"></i> Categoría</label>
               <select id="editTeamCategory" name="editTeamCategory" required>
                 <option value="medio_ambiente">Medio Ambiente</option>
                 <option value="educacion">Educación</option>
@@ -812,27 +895,47 @@
               </select>
             </div>
             <div class="form-group">
-              <label for="editTeamPrivacy">Privacidad</label>
+              <label for="editTeamPrivacy"><i class="fas fa-lock"></i> Privacidad</label>
               <select id="editTeamPrivacy" name="editTeamPrivacy" required>
                 <option value="public">Pública</option>
                 <option value="private">Privada</option>
               </select>
             </div>
+            <div class="form-group">
+              <label for="editTeamGoal"><i class="fas fa-euro-sign"></i> Meta de recaudación (€)</label>
+              <input type="number" id="editTeamGoal" name="editTeamGoal" min="0">
+            </div>
+            <div class="form-group">
+              <label for="editTeamTags"><i class="fas fa-tags"></i> Etiquetas (separadas por comas)</label>
+              <input type="text" id="editTeamTags" name="editTeamTags">
+            </div>
+            <div class="form-group form-group-full">
+              <label for="editTeamDesc"><i class="fas fa-align-left"></i> Descripción</label>
+              <textarea id="editTeamDesc" name="editTeamDesc" rows="4" required></textarea>
+            </div>
+            <div class="form-group form-group-full">
+              <label for="editTeamPhoto"><i class="fas fa-image"></i> Foto/logo de la comunidad</label>
+              <input type="file" id="editTeamPhoto" name="editTeamPhoto" accept="image/*">
+              <img id="editTeamPhotoPreview" style="max-width: 200px; margin-top: 1rem; display: none; border-radius: 12px;">
+            </div>
           </div>
-          
-          <div class="form-group">
-            <label for="editTeamTags">Etiquetas (separadas por comas)</label>
-            <input type="text" id="editTeamTags" name="editTeamTags">
+          <div class="form-actions">
+            <button type="submit" class="btn btn-primary">
+              <i class="fas fa-save"></i> Guardar Cambios
+            </button>
+            <button type="button" class="btn btn-accent" id="createCauseBtnModal">
+              <i class="fas fa-heart"></i> Crear Causa
+            </button>
+            <button type="button" class="btn btn-accent" id="createTaskBtnModal">
+              <i class="fas fa-tasks"></i> Crear Tarea
+            </button>
+            <button type="button" class="btn btn-primary" id="createChallengeBtnModal">
+              <i class="fas fa-trophy"></i> Crear Reto
+            </button>
+            <button type="button" class="btn btn-primary" id="createVolunteeringBtnModal">
+              <i class="fas fa-hands-helping"></i> Crear Voluntariado
+            </button>
           </div>
-          
-          <div class="form-group">
-            <label for="editTeamGoal">Meta de recaudación (€)</label>
-            <input type="number" id="editTeamGoal" name="editTeamGoal" min="0">
-          </div>
-          
-          <button type="submit" class="btn btn-primary">
-            <i class="fas fa-save"></i> Guardar Cambios
-          </button>
         </form>
       </div>
       
@@ -1258,45 +1361,91 @@
 
       // --- FUNCIONES MODAL Y COMPLEMENTARIAS ---
 
-      function openAdminModal(team) {
+      async function openAdminModal(team) {
         currentAdminTeam = team;
         document.getElementById('adminModalTitle').textContent = `Administrar ${team.name}`;
         document.getElementById('adminModal').classList.add('active');
         document.body.style.overflow = 'hidden';
 
-        // Actualizar datos en el modal
-        document.getElementById('membersCount').textContent = team.members_count || 0;
-        document.getElementById('activitiesCount').textContent = team.activities_count || 0;
-        document.getElementById('impactPoints').textContent = team.impact || 0;
-        document.getElementById('beneficiariesCount').textContent = team.beneficiaries || 0;
+        // Miembros (cuenta exacta)
+        const { count: membersCount, error: membersError } = await supabase
+          .from('team_members')
+          .select('user_id', { count: 'exact', head: true })
+          .eq('team_id', team.id)
+          .neq('role', 'pending');
+        document.getElementById('membersCount').textContent = membersError ? (team.members_count || 0) : membersCount;
 
-        // Configurar progreso
+        // Actividades
+        const { count: activitiesCount, error: activitiesError } = await supabase
+          .from('activities')
+          .select('id', { count: 'exact', head: true })
+          .eq('team_id', team.id);
+        document.getElementById('activitiesCount').textContent =
+          (activitiesError || typeof activitiesCount === 'undefined') ? (team.activities_count || 0) : activitiesCount;
+
+        // Beneficiarios
+        const { count: beneficiariesCount, error: beneficiariesError } = await supabase
+          .from('beneficiaries')
+          .select('id', { count: 'exact', head: true })
+          .eq('team_id', team.id);
+        document.getElementById('beneficiariesCount').textContent = beneficiariesError ? (team.beneficiaries || 0) : beneficiariesCount;
+
+        // Puntos de impacto (suma de campo "impact" en activities)
+        const { data: impactData, error: impactError } = await supabase
+          .from('activities')
+          .select('impact')
+          .eq('team_id', team.id);
+        let impactPoints = 0;
+        if (!impactError && impactData) {
+          impactPoints = impactData.reduce((sum, act) => sum + (act.impact || 0), 0);
+        } else {
+          impactPoints = team.impact || 0;
+        }
+        document.getElementById('impactPoints').textContent = impactPoints;
+
+        // Progreso de recaudación
         const recaudado = team.funds_raised || 0;
-        const meta = team.goal || 1000;
+        const meta = team.goal || 0;
         const porcentaje = meta ? Math.min(100, Math.round((recaudado / meta) * 100)) : 0;
-        document.getElementById('communityProgress').style.width = `${porcentaje}%`;
+        document.getElementById('communityProgress').style.width = porcentaje + '%';
         document.getElementById('progressPercent').textContent = `${porcentaje}% completado`;
         document.getElementById('progressAmount').textContent = `${recaudado} € de ${meta} €`;
+
+        // Cargar datos en el formulario de configuración
+        document.getElementById('editTeamName').value = team.name || '';
+        document.getElementById('editTeamDesc').value = team.description || '';
+        document.getElementById('editTeamCategory').value = team.category || 'otros';
+        document.getElementById('editTeamPrivacy').value = team.privacy || 'public';
+        document.getElementById('editTeamTags').value = (team.tags || []).join(', ');
+        document.getElementById('editTeamGoal').value = team.goal || '';
+        if (team.photo) {
+          document.getElementById('editTeamPhotoPreview').src = team.photo;
+          document.getElementById('editTeamPhotoPreview').style.display = 'block';
+        } else {
+          document.getElementById('editTeamPhotoPreview').style.display = 'none';
+        }
       }
 
+      // 1. Define la función primero
       async function loadTeamMembers(teamId) {
         try {
           // 1. Obtener los miembros
           const { data: members, error: membersError } = await supabase
             .from('team_members')
             .select('user_id, role')
-            .eq('team_id', team.id)
+            .eq('team_id', teamId)
             .neq('role', 'pending');
 
           if (membersError) {
             console.error('Error cargando miembros:', membersError);
+            return;
           }
 
           // 2. Añadir el founder si no está
           let membersList = members ? [...members] : [];
-          if (team.creator_id && !membersList.some(m => m.user_id === team.creator_id)) {
+          if (currentAdminTeam.creator_id && !membersList.some(m => m.user_id === currentAdminTeam.creator_id)) {
             membersList.unshift({
-              user_id: team.creator_id,
+              user_id: currentAdminTeam.creator_id,
               role: 'founder'
             });
           }
@@ -1317,7 +1466,7 @@
             }
           }
 
-          // 4. Renderizar miembros (siempre muestra la sección)
+          // 4. Renderizar miembros
           const membersHtml = `
             <div style="margin-top:1.5rem;">
               <h4 style="color:var(--primary);font-size:1.05rem;margin-bottom:0.5rem;">
@@ -1347,489 +1496,40 @@
         }
       }
 
-      async function loadRecentActivities(teamId) {
-        try {
-          const { data: activities, error } = await supabase
-            .from('activities')
-            .select('*')
-            .eq('team_id', teamId)
-            .order('created_at', { ascending: false })
-            .limit(5);
-
-          if (error) throw error;
-
-          const activitiesContainer = document.getElementById('recentActivities');
-          activitiesContainer.innerHTML = '';
-
-          if (!activities || activities.length === 0) {
-            activitiesContainer.innerHTML = '<p>No hay actividades recientes.</p>';
-            return;
-          }
-
-          activities.forEach(activity => {
-            const activityElement = document.createElement('div');
-            activityElement.className = 'activity-item';
-            activityElement.innerHTML = `
-              <h4>${activity.title}</h4>
-              <p>${activity.description}</p>
-              <small>${new Date(activity.created_at).toLocaleDateString()}</small>
-            `;
-            activitiesContainer.appendChild(activityElement);
-          });
-        } catch (error) {
-          console.error('Error loading recent activities:', error);
-        }
-      }
-
-      // 1. Define la función renderTeamModal en el ámbito global del script
-      async function renderTeamModal(teamId, isAdmin = false) {
-        // Asegura que el modal existe
-        let modal = document.getElementById('teamModal');
-        let content = document.getElementById('teamModalContent');
-        if (!modal || !content) {
-          // Si no existe, créalo
-          modal = document.createElement('div');
-          modal.id = 'teamModal';
-          modal.className = 'admin-modal';
-          modal.innerHTML = `<div class="admin-modal-content" id="teamModalContent"></div>`;
-          document.body.appendChild(modal);
-          content = document.getElementById('teamModalContent');
-        }
-
-        // Muestra el modal y bloquea el scroll
-        modal.classList.add('active');
-        document.body.style.overflow = 'hidden';
-        content.innerHTML = `<div style="text-align:center;padding:2rem;"><i class="fas fa-spinner fa-spin fa-2x"></i></div>`;
-
-        // Carga los datos del equipo
-        try {
-          const { data: team, error: teamError } = await supabase
-            .from('teams')
-            .select('*')
-            .eq('id', teamId)
-            .single();
-          if (teamError || !team) {
-            content.innerHTML = `<p style="color:var(--urgent);">Error al cargar la comunidad.</p>`;
-            return;
-          }
-
-          // Carga los miembros
-          const { data: members, error: membersError } = await supabase
-            .from('team_members')
-            .select('profiles:user_id (full_name, avatar_url), role')
-            .eq('team_id', team.id)
-            .neq('role', 'pending');
-
-          if (membersError) {
-            console.error('Error cargando miembros:', membersError);
-          }
-
-          const membersHtml = members && members.length ? `
-            <div style="margin-top:1.5rem;">
-              <h4 style="color:var(--primary);font-size:1.05rem;margin-bottom:0.5rem;">
-                <i class="fas fa-users"></i> Miembros (${members.length})
-              </h4>
-              <div style="display:flex;flex-wrap:wrap;gap:0.7rem;">
-                ${members.map(m => `
-                  <div style="display:flex;align-items:center;gap:0.4rem;">
-                    <img src="${m.profiles?.avatar_url || 'https://via.placeholder.com/32'}" alt="${m.profiles?.full_name || 'Usuario'}" style="width:32px;height:32px;border-radius:50%;object-fit:cover;">
-                    <span style="font-size:0.98rem;color:#4a6fa5;">${m.profiles?.full_name || 'Usuario'}</span>
-                    <span class="role-badge ${m.role === 'founder' ? 'admin' : m.role}">
-                      ${m.role === 'founder' ? 'Fundador' : m.role.charAt(0).toUpperCase() + m.role.slice(1)}
-                    </span>
-                  </div>
-                `).join('')}
-              </div>
-            </div>
-          ` : '';
-
-          // Acciones rápidas solo si isAdmin
-          const quickActions = isAdmin ? `
-            <h3 style="margin-top:2rem;">Acciones rápidas</h3>
-            <div class="team-actions-classic" style="margin-top:1rem;">
-              <button class="btn btn-primary" id="createCauseBtn">
-                <i class="fas fa-heart"></i> Crear Causa
-              </button>
-              <button class="btn btn-accent" id="createTaskBtn">
-                <i class="fas fa-tasks"></i> Crear Tarea
-              </button>
-              <button class="btn btn-primary" id="createChallengeBtn">
-                <i class="fas fa-trophy"></i> Crear Reto
-              </button>
-              <button class="btn btn-accent" id="createVolunteeringBtn">
-                <i class="fas fa-hands-helping"></i> Crear Voluntariado
-              </button>
-            </div>
-          ` : `
-            <h3 style="margin-top:2rem;">Detalles de la comunidad</h3>
-          `;
-
-          // Render principal del modal
-          content.innerHTML = `
-            <button class="close-admin-modal" id="closeTeamModalBtn">&times;</button>
-            <div style="display:flex;align-items:center;gap:1.5rem;">
-              <img src="${team.photo || 'https://via.placeholder.com/120x120?text=Comunidad'}" alt="${team.name}" style="width:120px;height:120px;border-radius:16px;object-fit:cover;border:2px solid var(--gray);">
-              <div>
-                <h2 style="color:var(--primary);font-size:2rem;font-weight:700;margin-bottom:0.3em;">${team.name}</h2>
-                <div style="color:#4a5568;font-size:1.1rem;margin-bottom:0.7em;">${team.description || 'Esta comunidad no tiene descripción.'}</div>
-                <div style="display:flex;gap:1.2em;flex-wrap:wrap;">
-                  <span class="team-tag-classic">${getCategoryName(team.category)}</span>
-                  <span class="team-tag-classic" style="background:${team.privacy === 'private' ? 'var(--gray)' : '#e6f0fa'};color:${team.privacy === 'private' ? 'var(--primary-dark)' : 'var(--primary)'};">
-                    <i class="fas fa-${team.privacy === 'private' ? 'lock' : 'globe'}"></i> ${team.privacy === 'private' ? 'Privada' : 'Pública'}
-                  </span>
-                  ${(team.tags || []).slice(0, 3).map(tag => `<span class="team-tag-classic">${tag}</span>`).join('')}
-                </div>
-              </div>
-            </div>
-            <div style="margin-top:1.5rem;">
-              <div class="progress-bar">
-                <div class="progress-fill" style="width:${team.goal ? Math.min(100, Math.round((team.funds_raised || 0) / team.goal * 100)) : 0}%;"></div>
-              </div>
-              <div class="progress-info">
-                <span>${team.funds_raised || 0} € de ${team.goal || 0} €</span>
-              </div>
-            </div>
-            ${quickActions}
-          `;
-
-          // Acciones rápidas: redirección a páginas de creación
-          if (isAdmin) {
-            document.getElementById('createCauseBtn').onclick = () =>
-              window.location.href = `/causes/create?team_id=${team.id}`;
-            document.getElementById('createTaskBtn').onclick = () =>
-              window.location.href = `/tasks/create?team_id=${team.id}`;
-            document.getElementById('createChallengeBtn').onclick = () =>
-              window.location.href = `/challenges/create?team_id=${team.id}`;
-            document.getElementById('createVolunteeringBtn').onclick = () =>
-              window.location.href = `/volunteering/create?team_id=${team.id}`;
-          }
-
-          // Cerrar modal
-          document.getElementById('closeTeamModalBtn').onclick = () => {
-            modal.classList.remove('active');
-            document.body.style.overflow = '';
-          };
-          // Cerrar modal al hacer click fuera del contenido
-          modal.onclick = (e) => {
-            if (e.target === modal) {
-              modal.classList.remove('active');
-              document.body.style.overflow = '';
-            }
-          };
-
-        } catch (err) {
-          content.innerHTML = `<p style="color:var(--urgent);">Error al cargar la comunidad.</p>`;
-        }
-      }
-
-      // 2. Después de renderizar las tarjetas, añade los listeners:
-      document.querySelectorAll('.view-team-btn').forEach(btn => {
-        btn.addEventListener('click', function() {
-          renderTeamModal(this.getAttribute('data-team-id'), false);
-        });
-      });
-      document.querySelectorAll('.admin-team-btn').forEach(btn => {
-        btn.addEventListener('click', function() {
-          renderTeamModal(this.getAttribute('data-team-id'), true);
-        });
-      });
-
-      // 3. Helper para categoría (debe estar en el ámbito global)
-      function getCategoryName(category) {
-        const categories = {
-          'medio_ambiente': 'Medio Ambiente',
-          'educacion': 'Educación',
-          'salud': 'Salud',
-          'animales': 'Animales',
-          'comunidad': 'Comunidad',
-          'otros': 'Otros'
+      // Guardar cambios en Supabase
+      document.getElementById('teamSettingsForm').onsubmit = async function(e) {
+        e.preventDefault();
+        const updatedTeam = {
+          name: document.getElementById('editTeamName').value,
+          description: document.getElementById('editTeamDesc').value,
+          category: document.getElementById('editTeamCategory').value,
+          privacy: document.getElementById('editTeamPrivacy').value,
+          tags: document.getElementById('editTeamTags').value.split(',').map(t => t.trim()).filter(Boolean),
+          goal: Number(document.getElementById('editTeamGoal').value) || null,
         };
-        return categories[category] || 'General';
-      }
 
-      // Helper para nombres de categoría
-      function getCategoryName(category) {
-        const categories = {
-          'medio_ambiente': 'Medio Ambiente',
-          'educacion': 'Educación',
-          'salud': 'Salud',
-          'animales': 'Animales',
-          'comunidad': 'Comunidad',
-          'otros': 'Otros'
-        };
-        return categories[category] || 'General';
-      }
+        // Subida de imagen omitida para claridad
 
-      // Modal de detalle de comunidad (idéntico a index.njk)
-      async function showTeamModal(teamId) {
-        // 1. Cargar la comunidad
-        const { data: team, error } = await supabase
+        // DEBUG: muestra el usuario y el equipo
+        console.log('Intentando update', currentAdminTeam, session.user.id, updatedTeam);
+
+        const { data, error } = await supabase
           .from('teams')
-          .select('*')
-          .eq('id', teamId)
-          .single();
+          .update(updatedTeam)
+          .eq('id', currentAdminTeam.id)
+          .select();
 
-        if (error || !team) {
-          alert('Error al cargar la comunidad');
-          return;
+        if (error) {
+          alert('Error al guardar los cambios: ' + error.message);
+        } else if (!data || !data.length) {
+          alert('No se guardaron cambios. ¿Tienes permisos de edición?');
+        } else {
+          alert('¡Cambios guardados!');
+          await loadUserTeams();
+          document.getElementById('adminModal').classList.remove('active');
+          document.body.style.overflow = '';
         }
-
-        // 2. Cargar miembros (user_id y role)
-        const { data: members, error: membersError } = await supabase
-          .from('team_members')
-          .select('user_id, role')
-          .eq('team_id', team.id)
-          .neq('role', 'pending');
-
-        if (membersError) {
-          console.error('Error cargando miembros:', membersError);
-        }
-
-        // 3. Añadir founder si no está
-        let membersList = members ? [...members] : [];
-        if (team.creator_id && !membersList.some(m => m.user_id === team.creator_id)) {
-          membersList.unshift({
-            user_id: team.creator_id,
-            role: 'founder'
-          });
-        }
-
-        // 4. Cargar perfiles de todos los miembros
-        let profilesMap = {};
-        if (membersList.length) {
-          const userIds = membersList.map(m => m.user_id);
-          const { data: profiles, error: profilesError } = await supabase
-            .from('profiles')
-            .select('id, username, photo_url')
-            .in('id', userIds);
-
-          if (profilesError) {
-            console.error('Error cargando perfiles:', profilesError);
-          } else {
-            profilesMap = Object.fromEntries(profiles.map(p => [p.id, p]));
-          }
-        }
-
-        // 5. Renderizar miembros (siempre muestra la sección)
-        const membersHtml = `
-          <div style="margin-top:1.5rem;">
-            <h4 style="color:var(--primary);font-size:1.05rem;margin-bottom:0.5rem;">
-              <i class="fas fa-users"></i> Miembros (${membersList.length})
-            </h4>
-            <div style="display:flex;flex-wrap:wrap;gap:0.7rem;">
-              ${membersList.map(m => {
-                const profile = profilesMap[m.user_id] || {};
-                return `
-                  <div style="display:flex;align-items:center;gap:0.4rem;">
-                    <img src="${profile.photo_url ? profile.photo_url : 'https://ui-avatars.com/api/?name=' + encodeURIComponent(profile.username || 'Usuario')}" alt="${profile.username || 'Usuario'}" style="width:32px;height:32px;border-radius:50%;object-fit:cover;">
-                    <span style="font-size:0.98rem;color:#4a6fa5;">${profile.username || 'Usuario'}</span>
-                    <span class="role-badge ${m.role === 'founder' ? 'admin' : m.role}">
-                      ${m.role === 'founder' ? 'Fundador' : m.role.charAt(0).toUpperCase() + m.role.slice(1)}
-                    </span>
-                  </div>
-                `;
-              }).join('')}
-            </div>
-          </div>
-        `;
-
-        // 6. Prepara datos
-        const createdDate = new Date(team.created_at).toLocaleDateString('es-ES', {
-          year: 'numeric',
-          month: 'long',
-          day: 'numeric'
-        });
-        const recaudado = team.funds_raised || 0;
-        const meta = team.goal || 1000;
-        const porcentaje = meta ? Math.min(100, Math.round((recaudado / meta) * 100)) : 0;
-        const beneficiaries = team.beneficiaries || 0;
-        const membersCount = team.members_count || membersList.length || 1;
-        const impact = team.impact || 0;
-        const category = getCategoryName ? getCategoryName(team.category) : (team.category || '');
-        const privacy = team.privacy === 'private' ? 'Privada' : 'Pública';
-
-        // 7. Renderiza el modal
-        document.getElementById('teamModalBody').innerHTML = `
-          <div class="modal-task-container" style="padding:0;">
-            <h1 class="modal-task-title" style="font-size:2rem; font-weight:800; color:var(--primary); margin-bottom:1.2rem; text-align:center; width:100%;">${team.name}</h1>
-            <div style="display:flex; flex-wrap:wrap; gap:2.2rem; margin-bottom:1.5rem;">
-              <div style="flex:1; min-width:320px; max-width:350px; position:relative;">
-                <img src="${team.photo || 'https://via.placeholder.com/350x180?text=Comunidad'}" alt="Imagen de la comunidad" style="width:100%;height:200px;object-fit:cover;border-radius:12px;box-shadow:0 4px 12px rgba(0,0,0,0.08);">
-                <div style="position:absolute;top:1rem;left:1rem;background:var(--primary);color:#fff;padding:0.4rem 1rem;border-radius:50px;font-size:0.9rem;font-weight:600;display:flex;align-items:center;gap:0.6rem;">
-                  <i class="fas fa-users"></i> Comunidad
-                </div>
-                ${team.privacy === 'private' ? `
-                <div style="position:absolute;top:1rem;right:1rem;background:var(--gray);color:var(--primary-dark);padding:0.4rem 1rem;border-radius:50px;font-size:0.9rem;font-weight:600;display:flex;align-items:center;gap:0.6rem;">
-                  <i class="fas fa-lock"></i> Privada
-                </div>` : ''}
-              </div>
-              <div style="flex:2;min-width:260px;display:flex;flex-direction:column;gap:1.2rem;justify-content:flex-start;">
-                <div class="modal-cause-progress-container" style="background:#f8fafc;padding:1.2rem 1.2rem 1rem 1.2rem;border-radius:12px;margin-bottom:0.5rem;border:1px solid #e5e7eb;">
-                  <div class="progress-bar">
-                    <div class="progress-fill" style="width: ${porcentaje}%; background: var(--primary);"></div>
-                  </div>
-                  <div class="progress-info" style="display:flex; justify-content:space-between; margin-top:0.8rem; font-size:0.95rem; color:#6b7280;">
-                    <span>${porcentaje}% completado</span>
-                    <span>${team.funds_raised || 0} € de ${team.goal || 0} €</span>
-                  </div>
-                </div>
-                <div class="modal-cause-meta-grid" style="display:grid; grid-template-columns:1fr 1fr; gap:0.7rem 1.2rem; margin-bottom:1.2rem;">
-                  <div class="meta-item" style="display:flex;align-items:center;gap:0.8rem;font-size:0.95rem;">
-                    <span class="meta-icon" style="color:var(--primary);font-size:1.1rem;width:1.5rem;text-align:center;"><i class="fas fa-layer-group"></i></span>
-                    <span>${team.category || 'Sin categoría'}</span>
-                  </div>
-                  <div class="meta-item" style="display:flex;align-items:center;gap:0.8rem;font-size:0.95rem;">
-                    <span class="meta-icon" style="color:var(--primary);font-size:1.1rem;width:1.5rem;text-align:center;"><i class="fas fa-users"></i></span>
-                    <span>${team.members_count || membersList.length || 1} miembros</span>
-                  </div>
-                  <div class="meta-item" style="display:flex;align-items:center;gap:0.8rem;font-size:0.95rem;">
-                    <span class="meta-icon" style="color:var(--primary);font-size:1.1rem;width:1.5rem;text-align:center;"><i class="fas fa-heart"></i></span>
-                    <span>${team.beneficiaries || 0} beneficiarios</span>
-                  </div>
-                  <div class="meta-item" style="display:flex;align-items:center;gap:0.8rem;font-size:0.95rem;">
-                    <span class="meta-icon" style="color:var(--primary);font-size:1.1rem;width:1.5rem;text-align:center;"><i class="fas fa-calendar-alt"></i></span>
-                    <span>${createdDate}</span>
-                  </div>
-                </div>
-                <div class="points-notice" style="background:#f0f9ff; border-left:4px solid var(--accent); padding:0.8rem; border-radius:0 8px 8px 0; font-size:0.97rem; display:flex; align-items:center; gap:0.7rem;color:var(--primary);">
-                  <i class="fas fa-bolt" style="color:var(--accent);"></i>
-                  Participar en esta comunidad otorga <strong>${team.impact || 0} puntos</strong> de impacto
-                </div>
-              </div>
-            </div>
-            <div style="margin-bottom:1.2rem;">
-              <div class="content-section" style="margin-bottom:1.7rem;">
-                <h3 class="content-title" style="font-size:1.1rem;font-weight:600;color:var(--primary);margin-bottom:0.5rem;display:flex;align-items:center;gap:0.7rem;">
-                  <i class="fas fa-quote-left"></i> Resumen
-                </h3>
-                <p class="content-text" style="line-height:1.6;color:#4b5563;font-size:1.05rem;margin-left:0;margin-right:0;text-align:justify;">${team.summary || 'Sin resumen.'}</p>
-              </div>
-              <div class="content-section" style="margin-bottom:2.2rem;">
-                <h3 class="content-title" style="font-size:1.1rem;font-weight:600;color:var(--primary);margin-bottom:0.5rem;display:flex;align-items:center;gap:0.7rem;">
-                  <i class="fas fa-align-left"></i> Descripción
-                </h3>
-                <p class="content-text" style="line-height:1.7;color:#4b5563;font-size:1.05rem;margin-left:0;margin-right:0;text-align:justify;">${team.description || 'Esta comunidad no tiene descripción.'}</p>
-                ${membersHtml}
-              </div>
-              <div class="content-section" style="margin-bottom:2.2rem;">
-                <h3 class="content-title" style="font-size:1.1rem;font-weight:600;color:var(--primary);margin-bottom:0.5rem;display:flex;align-items:center;gap:0.7rem;">
-                  <i class="fas fa-info-circle"></i> Detalles adicionales
-                </h3>
-                <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;">
-                  <div>
-                    <p style="font-weight:600;color:var(--primary);margin-bottom:0.3rem;">Privacidad</p>
-                    <p style="color:#6b7280;">${privacy}</p>
-                  </div>
-                  <div>
-                    <p style="font-weight:600;color:var(--primary);margin-bottom:0.3rem;">Meta de recaudación</p>
-                    <p style="color:#6b7280;">${meta} €</p>
-                  </div>
-                  <div>
-                    <p style="font-weight:600;color:var(--primary);margin-bottom:0.3rem;">ID</p>
-                    <p style="color:#6b7280;">${team.id}</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="task-actions" style="display:flex;gap:0.8rem;margin-top:2.2rem;">
-              <button class="btn btn-primary" style="flex:1;" id="joinTeamBtn">
-                <i class="fas fa-user-plus"></i> Unirse
-              </button>
-              <button class="btn btn-accent" style="flex:1;" id="shareTeamBtn">
-                <i class="fas fa-share-alt"></i> Compartir
-              </button>
-            </div>
-            <div class="share-section" id="shareSectionTeam"></div>
-          </div>
-        `;
-
-        document.getElementById('teamModal').classList.add('active');
-        document.body.style.overflow = 'hidden';
-
-        // Botón Unirse
-        document.getElementById('joinTeamBtn').onclick = async function() {
-          const { data: { session } } = await supabase.auth.getSession();
-          if (!session?.user) {
-            alert('Debes iniciar sesión para unirte a la comunidad.');
-            return;
-          }
-          alert('¡Solicitud de unión enviada! (Aquí puedes poner tu lógica real)');
-        };
-
-        // Botón Compartir
-        document.getElementById('shareTeamBtn').onclick = function() {
-          showShareOptionsTeam(team.id, team);
-        };
-      }
-
-      // Compartir comunidad (idéntico a index.njk)
-      function showShareOptionsTeam(teamId, teamObj) {
-        let team = teamObj;
-        if (!team) return;
-        const shareSection = document.getElementById('shareSectionTeam');
-        shareSection.innerHTML = `
-          <h3 class="share-title" style="color:var(--primary);font-size:1.1rem;">
-            <i class="fas fa-share-alt"></i> Ayuda a difundir esta comunidad
-          </h3>
-          <div class="share-content">
-            <p class="share-text" style="color:#4b5563;">
-              <span class="share-highlight" style="color:var(--primary);font-weight:600;">"${team.summary ? team.summary : 'Únete a nosotros y sé parte del cambio.'}"</span>
-              <br>
-              Comparte este enlace: <span id="shareableLink" style="color:var(--primary);font-weight:600;">${window.location.origin}/teams/${teamId}</span>
-            </p>
-            <div class="share-buttons" style="display:flex;gap:0.8rem;margin-top:1rem;">
-              <button class="btn btn-primary" id="copyLinkBtnTeam">
-                <i class="fas fa-link"></i> Copiar enlace
-              </button>
-              <button class="btn btn-accent" id="whatsappShareBtnTeam">
-                <i class="fab fa-whatsapp"></i> Compartir en WhatsApp
-              </button>
-              <button class="btn btn-info" id="twitterShareBtnTeam">
-                <i class="fab fa-twitter"></i> Compartir en Twitter
-              </button>
-              <button class="btn btn-danger" id="facebookShareBtnTeam">
-                <i class="fab fa-facebook-f"></i> Compartir en Facebook
-              </button>
-            </div>
-          </div>
-        `;
-
-        // Copiar enlace
-        document.getElementById('copyLinkBtnTeam').onclick = function() {
-          const link = document.getElementById('shareableLink');
-          navigator.clipboard.writeText(link.textContent).then(() => {
-            alert('Enlace copiado al portapapeles');
-          }).catch(err => {
-            console.error('Error al copiar el enlace: ', err);
-            alert('Error al copiar el enlace. Por favor, intenta nuevamente.');
-          });
-        };
-
-        // Compartir en WhatsApp
-        document.getElementById('whatsappShareBtnTeam').onclick = function() {
-          const message = `¡Únete a nuestra comunidad en Solidarity! ${team.summary} ${window.location.origin}/teams/${team.id}`;
-          const whatsappUrl = `https://api.whatsapp.com/send?text=${encodeURIComponent(message)}`;
-          window.open(whatsappUrl, '_blank');
-        };
-
-        // Compartir en Twitter
-        document.getElementById('twitterShareBtnTeam').onclick = function() {
-          const tweet = `¡Únete a nuestra comunidad en Solidarity! ${team.summary} ${window.location.origin}/teams/${team.id}`;
-          const twitterUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(tweet)}`;
-          window.open(twitterUrl, '_blank');
-        };
-
-        // Compartir en Facebook
-        document.getElementById('facebookShareBtnTeam').onclick = function() {
-          const fbShareUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(window.location.origin + '/teams/' + team.id)}`;
-          window.open(fbShareUrl, '_blank');
-        };
-      }
-
-      // Función para obtener el enlace compartible (idéntico a index.njk)
-      function getShareableLink(teamId) {
-        return `${window.location.origin}/teams/${teamId}`;
-      }
+      };
     }); // Fin del DOMContentLoaded
 
     // Permite cerrar el modal "Ver más" con la cruz o haciendo clic fuera
@@ -1852,5 +1552,17 @@
         };
       }
     });
+
+    function getCategoryName(category) {
+      const categories = {
+        'medio_ambiente': 'Medio Ambiente',
+        'educacion': 'Educación',
+        'salud': 'Salud',
+        'animales': 'Animales',
+        'comunidad': 'Comunidad',
+        'otros': 'Otros'
+      };
+      return categories[category] || 'General';
+    }
   </script>
 {% endblock %}

@@ -458,6 +458,61 @@ header {
 .share-btn-whatsapp { background: #25d366; }
 .share-btn-link { background: var(--primary, #4a6fa5); }
 
+/* Estilos del menú de administración */
+.admin-menu-modal {
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 4px 24px rgba(74,111,165,0.10);
+  padding: 1.5rem 1.2rem;
+  margin: 1.2rem 0;
+  font-family: inherit;
+}
+
+.admin-menu-title {
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: var(--primary, #4a6fa5);
+  margin-bottom: 1.1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.admin-menu-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.admin-menu-link {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  padding: 0.7rem 1rem;
+  border-radius: 8px;
+  color: var(--primary, #4a6fa5);
+  font-size: 1rem;
+  font-weight: 500;
+  text-decoration: none;
+  transition: background 0.15s, color 0.15s;
+  margin-bottom: 0.2rem;
+}
+
+.admin-menu-link:hover {
+  background: var(--accent, #eaf3fb);
+  color: var(--primary-dark, #3a5a8a);
+}
+
+.admin-menu-link-danger {
+  color: #e53e3e;
+  font-weight: 600;
+}
+
+.admin-menu-link-danger:hover {
+  background: #ffeaea;
+  color: #b91c1c;
+}
+
 /* Responsive Design */
 @media (max-width: 992px) {
   .hero-content {
@@ -482,74 +537,30 @@ header {
 }
 
 @media (max-width: 768px) {
-  /* Ocultar menú desktop en móvil */
-  .nav-links {
-    display: none !important;
-  }
-  
-  /* Asegurar que el contenido no queda oculto */
-  .main-content {
-    padding-top: 80px !important;
-    padding-bottom: 80px !important;
-  }
-  
-  /* Mostrar elementos móvil */
-  .mobile-only {
-    display: block;
-  }
-  
-  .desktop-only {
-    display: none !important;
-  }
-  
-  /* Ajustes específicos para móvil */
   .navbar {
-    padding: 0 15px !important;
-    height: 60px;
-  }
-  
-  .mobile-menu-btn {
-    display: block !important;
-    font-size: 1.8rem;
-    background: none;
-    border: none;
-    color: var(--primary);
-    margin-right: 15px;
-  }
-  
-  .bottom-nav {
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    display: flex;
-    background: white;
-    box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
-    z-index: 1000;
-    padding: 8px 0;
+    flex-direction: column;
+    gap: 1.5rem;
   }
 
-  /* Garantizar que navbar.js no afecte móvil */
-  #nav-links {
-    display: none !important;
-  }
-  
-  #mobile-menu-overlay {
-    display: none;
+  .nav-links {
+    gap: 1.5rem;
   }
 
-  /* ... resto de estilos móvil ... */
-}
-
-@media (min-width: 769px) {
-  /* Ocultar elementos móvil en desktop */
-  .mobile-only {
-    display: none !important;
+  .hero h1 {
+    font-size: 2.2rem;
   }
-  
-  /* Mostrar elementos desktop */
-  .desktop-only {
-    display: flex !important; /* Mantener flex en desktop */
+
+  .hero-buttons {
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .btn {
+    width: 100%;
+  }
+
+  .section-header h2 {
+    font-size: 2rem;
   }
 }
 
@@ -591,34 +602,5 @@ header {
   }
   .nav-links.active {
     transform: translateX(0);
-  }
-}
-
-/* style.css - Ajustes finales */
-@media (max-width: 768px) {
-  /* Ocultar menú desktop en móvil */
-  .nav-links {
-    display: none !important;
-  }
-  
-  /* Asegurar que el contenido no queda oculto */
-  .main-content {
-    padding-top: 80px !important;
-    padding-bottom: 80px !important;
-  }
-}
-
-/* Clases de visibilidad */
-.mobile-only {
-  display: none;
-}
-
-@media (max-width: 768px) {
-  .mobile-only {
-    display: block;
-  }
-  
-  .desktop-only {
-    display: none !important;
   }
 }
