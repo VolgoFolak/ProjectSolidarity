@@ -1,0 +1,372 @@
+{% extends "layout.njk" %}
+
+{% block title %}Nuevo mensaje | Solidarity{% endblock %}
+
+{% block head %}
+{{ super() }}
+<style>
+  .new-message-container {
+    max-width: 600px;
+    margin: 2rem auto;
+    padding: 0 1rem;
+  }
+  
+  .recipient-selector {
+    margin-bottom: 1.5rem;
+  }
+  
+  .user-search {
+    position: relative;
+  }
+  
+  .search-input {
+    width: 100%;
+    padding: 0.8rem 1rem;
+    border: 1px solid var(--gray);
+    border-radius: 8px;
+    font-size: 1rem;
+  }
+  
+  .search-results {
+    position: absolute;
+    width: 100%;
+    background: white;
+    border: 1px solid var(--gray);
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    max-height: 300px;
+    overflow-y: auto;
+    z-index: 10;
+    display: none;
+  }
+  
+  .user-result {
+    display: flex;
+    align-items: center;
+    padding: 0.8rem;
+    cursor: pointer;
+    border-bottom: 1px solid #f0f0f0;
+  }
+  
+  .user-result:hover {
+    background: #f9f9f9;
+  }
+  
+  .user-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-right: 1rem;
+  }
+  
+  .message-content {
+    margin-bottom: 1.5rem;
+  }
+  
+  textarea {
+    width: 100%;
+    min-height: 150px;
+    padding: 1rem;
+    border: 1px solid var(--gray);
+    border-radius: 8px;
+    font-family: inherit;
+    font-size: 1rem;
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="new-message-container">
+  <h1>Nuevo mensaje</h1>
+  
+  <div class="recipient-selector">
+    <label for="user-search" style="font-weight:600;">Para:</label>
+    <div class="user-search" style="margin-bottom:0.5rem;">
+      <input type="text" class="search-input" id="user-search" placeholder="Buscar usuario por nombre..." autocomplete="off" aria-label="Buscar usuario">
+      <div class="search-results" id="search-results" role="listbox" aria-label="Resultados de búsqueda"></div>
+    </div>
+    <div id="selected-user" style="display:none; margin-top:0.5rem;">
+      <div class="user-result" style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;">
+        <img id="selected-avatar" src="" class="user-avatar" alt="Avatar usuario seleccionado">
+        <div>
+          <div id="selected-username" style="font-weight:600;"></div>
+          <input type="hidden" id="recipient-id" name="recipient-id">
+        </div>
+        <!-- El botón para quitar destinatario se añade por JS -->
+      </div>
+    </div>
+    <div id="recipient-help" style="font-size:0.97em;color:#6b7280;margin-top:0.3rem;">
+      Busca y selecciona un usuario para enviarle un mensaje privado.
+    </div>
+  </div>
+  
+  <div class="message-content">
+    <label for="message-content" style="font-weight:600;">Mensaje:</label>
+    <textarea id="message-content" placeholder="Escribe tu mensaje aquí..." aria-label="Mensaje"></textarea>
+  </div>
+  
+  <button id="send-message" class="btn btn-primary" style="width:100%;max-width:220px;">
+    <i class="fas fa-paper-plane"></i> Enviar mensaje
+  </button>
+
+  <div id="conversationContainer"></div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+{{ super() }}
+<script>
+document.addEventListener('DOMContentLoaded', async () => {
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) return;
+
+  const searchInput = document.getElementById('user-search');
+  const searchResults = document.getElementById('search-results');
+  const selectedUser = document.getElementById('selected-user');
+  const selectedAvatar = document.getElementById('selected-avatar');
+  const selectedUsername = document.getElementById('selected-username');
+  const recipientId = document.getElementById('recipient-id');
+  const sendButton = document.getElementById('send-message');
+  const messageContent = document.getElementById('message-content');
+
+  let isSending = false;
+
+  // Cerrar resultados al hacer click fuera
+  document.addEventListener('click', (e) => {
+    if (!searchResults.contains(e.target) && e.target !== searchInput) {
+      searchResults.style.display = 'none';
+    }
+  });
+
+  // Buscar usuarios
+  searchInput.addEventListener('input', async (e) => {
+    const searchTerm = e.target.value.trim();
+    searchResults.innerHTML = '';
+    if (searchTerm.length < 2) {
+      searchResults.style.display = 'none';
+      return;
+    }
+    searchResults.innerHTML = `<div style="padding:1rem;text-align:center;color:#888;"><i class="fas fa-spinner fa-spin"></i> Buscando...</div>`;
+    searchResults.style.display = 'block';
+
+    const { data: users, error } = await supabase
+      .from('profiles')
+      .select('id, username, photo_url')
+      .ilike('username', `%${searchTerm}%`)
+      .neq('id', user.id)
+      .limit(5);
+
+    if (error) {
+      searchResults.innerHTML = `<div style="padding:1rem;text-align:center;color:#e53e3e;">Error al buscar usuarios</div>`;
+      return;
+    }
+
+    if (!users.length) {
+      searchResults.innerHTML = `<div style="padding:1rem;text-align:center;color:#888;">No se encontraron usuarios</div>`;
+      return;
+    }
+
+    searchResults.innerHTML = '';
+    users.forEach(u => {
+      const userEl = document.createElement('div');
+      userEl.className = 'user-result';
+      userEl.tabIndex = 0;
+      userEl.innerHTML = `
+        <img src="${u.photo_url || '/img/default-user.png'}" alt="${u.username}" class="user-avatar">
+        <div>${u.username}</div>
+      `;
+      userEl.addEventListener('click', () => selectRecipient(u));
+      userEl.addEventListener('keydown', (ev) => {
+        if (ev.key === 'Enter') selectRecipient(u);
+      });
+      searchResults.appendChild(userEl);
+    });
+  });
+
+  function selectRecipient(u) {
+    selectedAvatar.src = u.photo_url || '/img/default-user.png';
+    selectedUsername.textContent = u.username;
+    recipientId.value = u.id;
+    selectedUser.style.display = 'block';
+    searchResults.style.display = 'none';
+    searchInput.value = '';
+    // Añadir botón para quitar destinatario
+    if (!document.getElementById('remove-recipient')) {
+      const removeBtn = document.createElement('button');
+      removeBtn.id = 'remove-recipient';
+      removeBtn.type = 'button';
+      removeBtn.className = 'btn btn-outline';
+      removeBtn.style.marginLeft = '1rem';
+      removeBtn.innerHTML = '<i class="fas fa-times"></i>';
+      removeBtn.title = 'Quitar destinatario';
+      removeBtn.onclick = () => {
+        selectedUser.style.display = 'none';
+        recipientId.value = '';
+      };
+      selectedUser.querySelector('.user-result').appendChild(removeBtn);
+    }
+  }
+
+  // Enviar mensaje
+  sendButton.addEventListener('click', async () => {
+    if (isSending) return;
+    const recipient = recipientId.value;
+    const content = messageContent.value.trim();
+
+    if (!recipient || !content) {
+      alert('Por favor selecciona un destinatario y escribe un mensaje');
+      return;
+    }
+
+    isSending = true;
+    sendButton.disabled = true;
+    sendButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Enviando...';
+
+    try {
+      // Buscar si ya existe conversación entre ambos
+      const { data: existing, error: existErr } = await supabase
+        .rpc('find_conversation_between', { user1: user.id, user2: recipient });
+
+      let conversationId;
+      if (existErr) {
+        throw existErr;
+      }
+      if (existing && existing.length) {
+        conversationId = existing[0].id;
+      } else {
+        // Crear nueva conversación
+        const { data: conversation, error: convError } = await supabase
+          .from('conversations')
+          .insert({})
+          .select('id')
+          .single();
+        if (convError) throw convError;
+        conversationId = conversation.id;
+        // Añadir participantes
+        await supabase.from('conversation_participants').insert([
+          { conversation_id: conversationId, profile_id: user.id },
+          { conversation_id: conversationId, profile_id: recipient }
+        ]);
+      }
+
+      // Crear mensaje
+      const { error: msgError } = await supabase
+        .from('messages')
+        .insert({
+          conversation_id: conversationId,
+          sender_id: user.id,
+          content: content
+        });
+      if (msgError) throw msgError;
+
+      window.location.href = `/messages/${conversationId}`;
+    } catch (err) {
+      alert('Error al enviar el mensaje. Intenta de nuevo.');
+      console.error(err);
+    } finally {
+      isSending = false;
+      sendButton.disabled = false;
+      sendButton.innerHTML = 'Enviar mensaje';
+    }
+  });
+
+  // Accesibilidad: Enter en input busca, Ctrl+Enter envía
+  messageContent.addEventListener('keydown', (e) => {
+    if (e.ctrlKey && e.key === 'Enter') sendButton.click();
+  });
+});
+
+async function loadOrCreateConversation(participantIds) {
+  const container = document.getElementById('conversationContainer');
+  container.innerHTML = '<div>Cargando conversación...</div>';
+
+  try {
+    // 1. Buscar si ya existe una conversación con esos participantes
+    let { data: conversations, error } = await supabase
+      .from('conversations')
+      .select('id, participants:conversation_participants(profile:profiles!conversation_participants_profile_id_fkey(id,username,photo_url))')
+      // Aquí deberías filtrar por los participantes, esto es solo un ejemplo
+      .limit(1);
+
+    let conversation;
+    if (error) throw error;
+
+    if (conversations && conversations.length > 0) {
+      conversation = conversations[0];
+    } else {
+      // 2. Si no existe, crea una nueva conversación
+      const { data: newConv, error: createError } = await supabase
+        .from('conversations')
+        .insert({})
+        .select()
+        .single();
+      if (createError) throw createError;
+      conversation = newConv;
+
+      // 3. Añade los participantes
+      for (const userId of participantIds) {
+        await supabase.from('conversation_participants').insert({
+          conversation_id: conversation.id,
+          profile_id: userId
+        });
+      }
+      // Recarga la conversación con los participantes
+      const { data: updatedConv } = await supabase
+        .from('conversations')
+        .select('id, participants:conversation_participants(profile:profiles!conversation_participants_profile_id_fkey(id,username,photo_url))')
+        .eq('id', conversation.id)
+        .single();
+      conversation = updatedConv;
+    }
+
+    // Renderiza la conversación
+    if (!conversation) {
+      container.innerHTML = `<div style="color:#e53e3e;">No se pudo cargar la conversación.</div>`;
+      return;
+    }
+
+    const users = (conversation.participants || []).map(p =>
+      `<span style="color:#4a6fa5;">${p.profile?.username || 'Usuario'}</span>`
+    ).join(', ');
+
+    container.innerHTML = `
+      <div style="border:1.5px solid #e2e8f0; border-radius:10px; padding:1.5rem; margin:2rem 0;">
+        <h3 style="color:#4a6fa5;">Conversación</h3>
+        <div><strong>Participantes:</strong> ${users}</div>
+        <div id="messagesList" style="margin-top:1.5rem; min-height:80px;">(Aquí irán los mensajes)</div>
+        <form id="sendMessageForm" style="margin-top:1.2rem; display:flex; gap:0.7rem;">
+          <input type="text" id="messageInput" placeholder="Escribe un mensaje..." style="flex:1; padding:0.7rem; border-radius:8px; border:1px solid #e2e8f0;">
+          <button type="submit" class="btn btn-primary">Enviar</button>
+        </form>
+      </div>
+    `;
+
+    // Aquí puedes cargar los mensajes y manejar el envío
+    document.getElementById('sendMessageForm').onsubmit = async function(e) {
+      e.preventDefault();
+      const text = document.getElementById('messageInput').value.trim();
+      if (!text) return;
+      // Envía el mensaje a Supabase
+      await supabase.from('messages').insert({
+        conversation_id: conversation.id,
+        content: text,
+        // Añade el user_id si lo tienes
+      });
+      document.getElementById('messageInput').value = '';
+      // Recarga los mensajes aquí si quieres
+    };
+
+  } catch (err) {
+    container.innerHTML = `<div style="color:#e53e3e;">No se pudo cargar la conversación.</div>`;
+  }
+}
+
+// Llama a la función con los IDs de los participantes (por ejemplo, el usuario actual y el destinatario)
+document.addEventListener('DOMContentLoaded', function() {
+  // Reemplaza esto con los IDs reales de los participantes
+  const participantIds = [/* userId1, userId2 */];
+  loadOrCreateConversation(participantIds);
+});
+</script>
+{% endblock %}

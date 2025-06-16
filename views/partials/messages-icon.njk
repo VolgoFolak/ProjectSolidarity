@@ -1,0 +1,48 @@
+<!-- Icono de mensajes con contador de notificaciones -->
+<a href="/messages" class="nav-link messages-link">
+  <i class="fas fa-envelope"></i>
+  <span class="badge" id="unread-count">0</span>
+</a>
+
+<style>
+.messages-link {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.messages-link .badge {
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  background: var(--accent);
+  color: white;
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.7rem;
+}
+</style>
+
+<script>
+// Actualizar contador de mensajes no leídos
+async function updateUnreadCount() {
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) return;
+  
+  const { count } = await supabase
+    .from('messages')
+    .select('*', { count: 'exact' })
+    .eq('receiver_id', user.id)
+    .eq('read', false);
+    
+  document.getElementById('unread-count').textContent = count || 0;
+}
+
+// Llamar al cargar y cada minuto
+updateUnreadCount();
+setInterval(updateUnreadCount, 60000);
+</script>

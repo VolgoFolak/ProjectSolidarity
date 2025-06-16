@@ -557,6 +557,13 @@
       <div class="legend-item"><span class="legend-color volunteering"></span> Voluntariados</div>
     </div>
   </div>
+
+  <!-- Botón para enviar mensaje si no es tu propio perfil -->
+  {% if user.id != currentUser.id %}
+    <a href="/messages/new?to={{ user.id }}" class="btn btn-outline">
+      <i class="fas fa-envelope"></i> Enviar mensaje
+    </a>
+  {% endif %}
 </div>
 {% endblock %}
 

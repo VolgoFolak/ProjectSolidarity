@@ -648,6 +648,150 @@
       background: var(--primary);
       border-radius: 2px 2px 0 0;
     }
+
+    /* Modal de ver más comunidad */
+    #teamModal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.7);
+      z-index: 1001;
+      justify-content: center;
+      align-items: center;
+    }
+
+    #teamModal.active {
+      display: flex;
+    }
+
+    #teamModal .modal-content {
+      background: #fff;
+      border-radius: 18px;
+      max-width: 800px;
+      width: 95vw;
+      padding: 2rem;
+      box-shadow: 0 8px 32px rgba(74,111,165,0.13);
+      position: relative;
+      max-height: 90vh;
+      overflow-y: auto;
+    }
+
+    #teamModal .close-admin-modal {
+      position: absolute;
+      top: 1.5rem;
+      right: 1.5rem;
+      background: none;
+      border: none;
+      font-size: 1.8rem;
+      color: #6b7280;
+      cursor: pointer;
+      transition: color 0.2s;
+    }
+
+    #teamModal .close-admin-modal:hover {
+      color: #4a6fa5;
+    }
+
+    #teamModal #teamModalBody {
+      padding: 0.5rem;
+    }
+
+    /* Nueva sección de formularios */
+    .solidarity-form {
+      padding: 1.2rem 0 0 0;
+    }
+    .form-section-title {
+      color: var(--primary);
+      font-size: 1.25rem;
+      font-weight: 700;
+      margin-bottom: 1.2rem;
+      display: flex;
+      align-items: center;
+      gap: 0.7rem;
+    }
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.2rem 2.2rem;
+    }
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
+    }
+    .form-group-full {
+      grid-column: 1 / -1;
+    }
+    .form-group label {
+      color: var(--primary);
+      font-weight: 600;
+      font-size: 1rem;
+      margin-bottom: 0.2rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .form-group input[type="text"],
+    .form-group input[type="number"],
+    .form-group select,
+    .form-group textarea {
+      padding: 0.7rem 1rem;
+      border-radius: 8px;
+      border: 1.5px solid var(--gray);
+      font-size: 1rem;
+      background: #f8fafc;
+      color: #2d3748;
+      transition: border 0.2s;
+    }
+    .form-group input[type="text"]:focus,
+    .form-group input[type="number"]:focus,
+    .form-group select:focus,
+    .form-group textarea:focus {
+      border: 1.5px solid var(--primary);
+      outline: none;
+    }
+    .form-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      margin-top: 2rem;
+      justify-content: flex-end;
+    }
+    @media (max-width: 700px) {
+      .form-grid {
+        grid-template-columns: 1fr;
+      }
+      .form-actions {
+        flex-direction: column;
+        align-items: stretch;
+      }
+    }
+
+    /* Estilos adicionales para el modal de administración */
+    .admin-modal-content h2,
+    .admin-modal-content h3,
+    .admin-modal-content h4,
+    .admin-modal-content .form-section-title,
+    .admin-modal-content label {
+      color: var(--primary);
+      font-weight: 700;
+    }
+    .admin-modal-content h2 {
+      font-size: 2rem;
+      margin-bottom: 1.2rem;
+    }
+    .admin-modal-content h3 {
+      font-size: 1.2rem;
+      margin-top: 2rem;
+      margin-bottom: 1rem;
+    }
+    .admin-modal-content h4 {
+      font-size: 1.05rem;
+      margin-bottom: 0.5rem;
+    }
   </style>
 {% endblock %}
 
@@ -732,26 +876,15 @@
       </div>
       
       <div class="admin-tab-content" id="settingsTab">
-        <form id="teamSettingsForm">
-          <div class="form-group">
-            <label for="editTeamName">Nombre de la comunidad</label>
-            <input type="text" id="editTeamName" name="editTeamName" required>
-          </div>
-          
-          <div class="form-group">
-            <label for="editTeamDesc">Descripción</label>
-            <textarea id="editTeamDesc" name="editTeamDesc" rows="4" required></textarea>
-          </div>
-          
-          <div class="form-group">
-            <label for="editTeamPhoto">Foto/logo de la comunidad</label>
-            <input type="file" id="editTeamPhoto" name="editTeamPhoto" accept="image/*">
-            <img id="editTeamPhotoPreview" style="max-width: 200px; margin-top: 1rem; display: none;">
-          </div>
-          
-          <div class="form-inline-group">
+        <form id="teamSettingsForm" class="solidarity-form">
+          <h3 class="form-section-title"><i class="fas fa-cog"></i> Configuración de la comunidad</h3>
+          <div class="form-grid">
             <div class="form-group">
-              <label for="editTeamCategory">Categoría</label>
+              <label for="editTeamName"><i class="fas fa-users"></i> Nombre de la comunidad</label>
+              <input type="text" id="editTeamName" name="editTeamName" required>
+            </div>
+            <div class="form-group">
+              <label for="editTeamCategory"><i class="fas fa-layer-group"></i> Categoría</label>
               <select id="editTeamCategory" name="editTeamCategory" required>
                 <option value="medio_ambiente">Medio Ambiente</option>
                 <option value="educacion">Educación</option>
@@ -762,27 +895,47 @@
               </select>
             </div>
             <div class="form-group">
-              <label for="editTeamPrivacy">Privacidad</label>
+              <label for="editTeamPrivacy"><i class="fas fa-lock"></i> Privacidad</label>
               <select id="editTeamPrivacy" name="editTeamPrivacy" required>
                 <option value="public">Pública</option>
                 <option value="private">Privada</option>
               </select>
             </div>
+            <div class="form-group">
+              <label for="editTeamGoal"><i class="fas fa-euro-sign"></i> Meta de recaudación (€)</label>
+              <input type="number" id="editTeamGoal" name="editTeamGoal" min="0">
+            </div>
+            <div class="form-group">
+              <label for="editTeamTags"><i class="fas fa-tags"></i> Etiquetas (separadas por comas)</label>
+              <input type="text" id="editTeamTags" name="editTeamTags">
+            </div>
+            <div class="form-group form-group-full">
+              <label for="editTeamDesc"><i class="fas fa-align-left"></i> Descripción</label>
+              <textarea id="editTeamDesc" name="editTeamDesc" rows="4" required></textarea>
+            </div>
+            <div class="form-group form-group-full">
+              <label for="editTeamPhoto"><i class="fas fa-image"></i> Foto/logo de la comunidad</label>
+              <input type="file" id="editTeamPhoto" name="editTeamPhoto" accept="image/*">
+              <img id="editTeamPhotoPreview" style="max-width: 200px; margin-top: 1rem; display: none; border-radius: 12px;">
+            </div>
           </div>
-          
-          <div class="form-group">
-            <label for="editTeamTags">Etiquetas (separadas por comas)</label>
-            <input type="text" id="editTeamTags" name="editTeamTags">
+          <div class="form-actions">
+            <button type="submit" class="btn btn-primary">
+              <i class="fas fa-save"></i> Guardar Cambios
+            </button>
+            <button type="button" class="btn btn-accent" id="createCauseBtnModal">
+              <i class="fas fa-heart"></i> Crear Causa
+            </button>
+            <button type="button" class="btn btn-accent" id="createTaskBtnModal">
+              <i class="fas fa-tasks"></i> Crear Tarea
+            </button>
+            <button type="button" class="btn btn-primary" id="createChallengeBtnModal">
+              <i class="fas fa-trophy"></i> Crear Reto
+            </button>
+            <button type="button" class="btn btn-primary" id="createVolunteeringBtnModal">
+              <i class="fas fa-hands-helping"></i> Crear Voluntariado
+            </button>
           </div>
-          
-          <div class="form-group">
-            <label for="editTeamGoal">Meta de recaudación (€)</label>
-            <input type="number" id="editTeamGoal" name="editTeamGoal" min="0">
-          </div>
-          
-          <button type="submit" class="btn btn-primary">
-            <i class="fas fa-save"></i> Guardar Cambios
-          </button>
         </form>
       </div>
       
@@ -797,6 +950,16 @@
         <div id="recentActivities">
           <!-- Las actividades se cargarán aquí dinámicamente -->
         </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal de ver más comunidad -->
+  <div id="teamModal" class="modal-bg">
+    <div class="modal-content" style="background:#fff; border-radius:18px; max-width:800px; width:95vw; padding:2rem; box-shadow:0 8px 32px rgba(74,111,165,0.13); position:relative; max-height:90vh; overflow-y:auto;">
+      <button id="closeTeamModal" style="position:absolute; top:1.5rem; right:1.5rem; background:none; border:none; font-size:1.8rem; color:#6b7280; cursor:pointer; transition:color 0.2s;" onmouseover="this.style.color='#4a6fa5'" onmouseout="this.style.color='#6b7280'">&times;</button>
+      <div id="teamModalBody" style="padding:0.5rem;">
+        <!-- Contenido dinámico -->
       </div>
     </div>
   </div>
@@ -939,11 +1102,11 @@
       async function loadUserTeams() {
         try {
           // 1. Obtener todos los memberships del usuario
-          const { data: memberships, error: membershipsError } = await supabase
+          const { data: memberships } = await supabase
             .from('team_members')
             .select('team_id, role')
-            .eq('user_id', userId);
-          if (membershipsError) throw membershipsError;
+            .eq('user_id', userId)
+            .neq('role', 'pending');
 
           // 2. Obtener los equipos donde el usuario es el creador
           const { data: createdTeams, error: createdTeamsError } = await supabase
@@ -954,7 +1117,7 @@
 
           // 3. Obtener los detalles de los equipos donde es miembro
           const teamIds = memberships.map(m => m.team_id);
-          let { data: teams, error: teamsError } = await supabase
+          const { data: teams, error: teamsError } = await supabase
             .from('teams')
             .select('*')
             .in('id', teamIds.length ? teamIds : ['00000000-0000-0000-0000-000000000000'])
@@ -1061,10 +1224,13 @@
           const tagsHtml = team.tags?.length
             ? `<div class="team-tags-classic">${team.tags.slice(0, 4).map(tag => `<span class="team-tag-classic">${tag}</span>`).join('')}${team.tags.length > 4 ? `<span class="team-tag-classic tag-more">+${team.tags.length - 4}</span>` : ''}</div>`
             : '';
+
           const isTrending = membersCount >= 20 || (team.impact || 0) >= 1000;
           const recaudado = team.funds_raised || 0;
           const meta = team.goal || 1000;
           const porcentaje = meta ? Math.min(100, Math.round((recaudado / meta) * 100)) : 0;
+
+          // Badge de rol del usuario
           const roleBadgeClass = {
             'founder': 'role-badge admin',
             'coordinator': 'role-badge moderator',
@@ -1072,6 +1238,7 @@
             'member': 'role-badge member',
             'pending': 'role-badge member'
           }[team.user_role] || 'role-badge member';
+
           const roleBadgeText = {
             'founder': 'Fundador',
             'coordinator': 'Coordinador',
@@ -1079,13 +1246,17 @@
             'member': 'Miembro',
             'pending': 'Solicitud pendiente'
           }[team.user_role] || 'Miembro';
+
           const roleBadge = `<span class="${roleBadgeClass}"><i class="fas fa-${team.user_role === 'admin' ? 'crown' : team.user_role === 'moderator' ? 'star' : 'user'}"></i> ${roleBadgeText}</span>`;
+
+          // Badge trending y privada
           let badgePrivada = team.privacy === 'private'
             ? `<div class="team-badge-classic" style="top:1rem;right:1rem;background:var(--gray);color:var(--primary-dark);"><i class="fas fa-lock"></i> Privada</div>`
             : '';
           let badgeTrending = isTrending
             ? `<div class="team-badge-classic" style="top:${team.privacy === 'private' ? '3.2rem' : '1rem'};right:1rem;background:#ffe600;color:#b8860b;"><i class="fas fa-arrow-trend-up"></i> Trending</div>`
             : '';
+
           const card = document.createElement('div');
           card.className = 'team-card-classic';
           card.innerHTML = `
@@ -1111,9 +1282,7 @@
               ${tagsHtml}
               <div class="team-progress-classic">
                 <div class="progress-bar">
-                  <div class="progress-fill" style="width:${porcentaje}%;">
-                    ${porcentaje > 10 ? porcentaje + '%' : ''}
-                  </div>
+                  <div class="progress-fill" style="width:${porcentaje}%;">${porcentaje > 10 ? porcentaje + '%' : ''}</div>
                 </div>
                 <div class="progress-info">
                   <span>${porcentaje}% completado</span>
@@ -1121,9 +1290,9 @@
                 </div>
               </div>
               <div class="team-actions-classic">
-                <a href="/teams/${team.id}" class="btn btn-primary">
-                  Ver más
-                </a>
+                <button class="btn btn-primary btn-vermas-team" data-team-id="${team.id}">
+                  <i class="fas fa-eye"></i> Ver más
+                </button>
                 ${team.user_role === 'pending' ? `
                   <button class="btn btn-outline" disabled>
                     <i class="fas fa-clock"></i> Pendiente
@@ -1143,7 +1312,14 @@
           container.appendChild(card);
         });
 
-        // Botones de administrar
+        // Listeners para los botones "Ver más"
+        document.querySelectorAll('.btn-vermas-team').forEach(btn => {
+          btn.addEventListener('click', function() {
+            showTeamModal(this.getAttribute('data-team-id'));
+          });
+        });
+
+        // Listeners para los botones "Administrar"
         document.querySelectorAll('.admin-team-btn').forEach(btn => {
           btn.addEventListener('click', function() {
             const teamId = this.getAttribute('data-team-id');
@@ -1175,6 +1351,7 @@
         updatePagination();
       }
 
+      updatePagination();
       function updatePagination() {
         const totalPages = Math.max(1, Math.ceil(filteredTeams.length / itemsPerPage));
         document.getElementById('pageInfo').textContent = `${currentPage} / ${totalPages}`;
@@ -1182,107 +1359,203 @@
         document.getElementById('nextPage').disabled = currentPage >= totalPages;
       }
 
-      function getCategoryName(category) {
-        const categories = {
-          'medio_ambiente': 'Medio Ambiente',
-          'educacion': 'Educación',
-          'salud': 'Salud',
-          'animales': 'Animales',
-          'comunidad': 'Comunidad',
-          'otros': 'Otros'
-        };
-        return categories[category] || 'General';
-      }
-
       // --- FUNCIONES MODAL Y COMPLEMENTARIAS ---
 
-      function openAdminModal(team) {
+      async function openAdminModal(team) {
         currentAdminTeam = team;
         document.getElementById('adminModalTitle').textContent = `Administrar ${team.name}`;
         document.getElementById('adminModal').classList.add('active');
         document.body.style.overflow = 'hidden';
+        // Miembros
+        const { count: membersCount, error: membersError } = await supabase
+          .from('team_members')
+          .select('user_id', { count: 'exact', head: true })
+          .eq('team_id', team.id)
+          .neq('role', 'pending');
+        document.getElementById('membersCount').textContent = membersError ? (team.members_count || 0) : membersCount;
 
-        // Actualizar datos en el modal
-        document.getElementById('membersCount').textContent = team.members_count || 0;
-        document.getElementById('activitiesCount').textContent = team.activities_count || 0;
-        document.getElementById('impactPoints').textContent = team.impact || 0;
-        document.getElementById('beneficiariesCount').textContent = team.beneficiaries || 0;
+        // Actividades
+        const { count: activitiesCount, error: activitiesError } = await supabase
+          .from('activities')
+          .select('id', { count: 'exact', head: true })
+          .eq('team_id', team.id);
 
-        // Configurar progreso
-        const recaudado = team.funds_raised || 0;
-        const meta = team.goal || 1000;
-        const porcentaje = meta ? Math.min(100, Math.round((recaudado / meta) * 100)) : 0;
-        document.getElementById('communityProgress').style.width = `${porcentaje}%`;
-        document.getElementById('progressPercent').textContent = `${porcentaje}% completado`;
-        document.getElementById('progressAmount').textContent = `${recaudado} € de ${meta} €`;
+        document.getElementById('activitiesCount').textContent =
+          (activitiesError || typeof activitiesCount === 'undefined') ? (team.activities_count || 0) : activitiesCount;
+
+        // Beneficiarios
+        const { count: beneficiariesCount, error: beneficiariesError } = await supabase
+          .from('beneficiaries')
+          .select('id', { count: 'exact', head: true })
+          .eq('team_id', team.id);
+        document.getElementById('beneficiariesCount').textContent = beneficiariesError ? (team.beneficiaries || 0) : beneficiariesCount;
+
+        // Puntos de impacto (ejemplo: suma de campo "impact" en activities)
+        const { data: impactData, error: impactError } = await supabase
+          .from('activities')
+          .select('impact')
+          .eq('team_id', team.id);
+        let impactPoints = 0;
+        if (!impactError && impactData) {
+          impactPoints = impactData.reduce((sum, act) => sum + (act.impact || 0), 0);
+        } else {
+          impactPoints = team.impact || 0;
+        }
+        document.getElementById('impactPoints').textContent = impactPoints;
+
+        // ...el resto de tu código para cargar el formulario...
       }
 
+      // 1. Define la función primero
       async function loadTeamMembers(teamId) {
         try {
-          const { data: members, error } = await supabase
+          // 1. Obtener los miembros
+          const { data: members, error: membersError } = await supabase
             .from('team_members')
-            .select('user:profiles(id, name, avatar_url), role')
-            .eq('team_id', teamId);
+            .select('user_id, role')
+            .eq('team_id', teamId)
+            .neq('role', 'pending');
 
-          if (error) throw error;
+          if (membersError) {
+            console.error('Error cargando miembros:', membersError);
+            return;
+          }
 
-          const membersList = document.getElementById('membersList');
-          membersList.innerHTML = '';
+          // 2. Añadir el founder si no está
+          let membersList = members ? [...members] : [];
+          if (currentAdminTeam.creator_id && !membersList.some(m => m.user_id === currentAdminTeam.creator_id)) {
+            membersList.unshift({
+              user_id: currentAdminTeam.creator_id,
+              role: 'founder'
+            });
+          }
 
-          members.forEach(member => {
-            const memberItem = document.createElement('div');
-            memberItem.className = 'member-item';
-            memberItem.innerHTML = `
-              <div class="member-info">
-                <img src="${member.user.avatar_url || '/default-avatar.png'}" class="member-avatar" alt="${member.user.name}">
-                <span class="member-name">${member.user.name}</span>
+          // 3. Obtener los perfiles de todos los miembros
+          let profilesMap = {};
+          if (membersList.length) {
+            const userIds = membersList.map(m => m.user_id);
+            const { data: profiles, error: profilesError } = await supabase
+              .from('profiles')
+              .select('id, username, photo_url')
+              .in('id', userIds);
+
+            if (profilesError) {
+              console.error('Error cargando perfiles:', profilesError);
+            } else {
+              profilesMap = Object.fromEntries(profiles.map(p => [p.id, p]));
+            }
+          }
+
+          // 4. Renderizar miembros
+          const membersHtml = `
+            <div style="margin-top:1.5rem;">
+              <h4 style="color:var(--primary);font-size:1.05rem;margin-bottom:0.5rem;">
+                <i class="fas fa-users"></i> Miembros (${membersList.length})
+              </h4>
+              <div style="display:flex;flex-wrap:wrap;gap:0.7rem;">
+                ${membersList.map(m => {
+                  const profile = profilesMap[m.user_id] || {};
+                  return `
+                    <div style="display:flex;align-items:center;gap:0.4rem;">
+                      <img src="${profile.photo_url ? profile.photo_url : 'https://ui-avatars.com/api/?name=' + encodeURIComponent(profile.username || 'Usuario')}" alt="${profile.username || 'Usuario'}" style="width:32px;height:32px;border-radius:50%;object-fit:cover;">
+                      <span style="font-size:0.98rem;color:#4a6fa5;">${profile.username || 'Usuario'}</span>
+                      <span class="role-badge ${m.role === 'founder' ? 'admin' : m.role}">
+                        ${m.role === 'founder' ? 'Fundador' : m.role.charAt(0).toUpperCase() + m.role.slice(1)}
+                      </span>
+                    </div>
+                  `;
+                }).join('')}
               </div>
-              <div class="member-actions">
-                <span class="role-badge ${member.role === 'founder' ? 'admin' : member.role === 'coordinator' ? 'moderator' : 'member'}">
-                  ${member.role === 'founder' ? 'Fundador' : member.role === 'coordinator' ? 'Coordinador' : 'Miembro'}
-                </span>
-              </div>
-            `;
-            membersList.appendChild(memberItem);
-          });
+            </div>
+          `;
+
+          const membersListContainer = document.getElementById('membersList');
+          membersListContainer.innerHTML = membersHtml;
         } catch (error) {
           console.error('Error loading team members:', error);
         }
       }
 
-      async function loadRecentActivities(teamId) {
-        try {
-          const { data: activities, error } = await supabase
-            .from('activities')
-            .select('*')
-            .eq('team_id', teamId)
-            .order('created_at', { ascending: false })
-            .limit(5);
+      // Guardar cambios en Supabase
+      document.getElementById('teamSettingsForm').onsubmit = async function(e) {
+        e.preventDefault();
+        const updatedTeam = {
+          name: document.getElementById('editTeamName').value,
+          description: document.getElementById('editTeamDesc').value,
+          category: document.getElementById('editTeamCategory').value,
+          privacy: document.getElementById('editTeamPrivacy').value,
+          tags: document.getElementById('editTeamTags').value.split(',').map(t => t.trim()).filter(Boolean),
+          goal: Number(document.getElementById('editTeamGoal').value) || null,
+        };
 
-          if (error) throw error;
-
-          const activitiesContainer = document.getElementById('recentActivities');
-          activitiesContainer.innerHTML = '';
-
-          if (!activities || activities.length === 0) {
-            activitiesContainer.innerHTML = '<p>No hay actividades recientes.</p>';
+        // Subida de imagen a Supabase Storage si hay nueva foto
+        const photoInput = document.getElementById('editTeamPhoto');
+        if (photoInput.files && photoInput.files[0]) {
+          const file = photoInput.files[0];
+          const fileExt = file.name.split('.').pop();
+          const filePath = `teams/${currentAdminTeam.id}/logo.${fileExt}`;
+          let { error: uploadError } = await supabase.storage
+            .from('team-photos')
+            .upload(filePath, file, { upsert: true });
+          if (!uploadError) {
+            const { data } = supabase.storage.from('team-photos').getPublicUrl(filePath);
+            updatedTeam.photo = data.publicUrl;
+          } else {
+            alert('Error subiendo la imagen: ' + uploadError.message);
             return;
           }
-
-          activities.forEach(activity => {
-            const activityElement = document.createElement('div');
-            activityElement.className = 'activity-item';
-            activityElement.innerHTML = `
-              <h4>${activity.title}</h4>
-              <p>${activity.description}</p>
-              <small>${new Date(activity.created_at).toLocaleDateString()}</small>
-            `;
-            activitiesContainer.appendChild(activityElement);
-          });
-        } catch (error) {
-          console.error('Error loading recent activities:', error);
         }
-      }
+
+        const { data, error } = await supabase
+          .from('teams')
+          .update(updatedTeam)
+          .eq('id', currentAdminTeam.id)
+          .select();
+
+        if (error) {
+          alert('Error al guardar los cambios: ' + error.message);
+        } else if (!data || !data.length) {
+          alert('No se guardaron cambios. ¿Tienes permisos de edición?');
+        } else {
+          alert('¡Cambios guardados!');
+          await loadUserTeams();
+          document.getElementById('adminModal').classList.remove('active');
+          document.body.style.overflow = '';
+        }
+      };
     }); // Fin del DOMContentLoaded
+
+    // Permite cerrar el modal "Ver más" con la cruz o haciendo clic fuera
+    document.addEventListener('DOMContentLoaded', function() {
+      const teamModal = document.getElementById('teamModal');
+      const closeTeamModal = document.getElementById('closeTeamModal');
+      if (closeTeamModal) {
+        closeTeamModal.onclick = function() {
+          teamModal.classList.remove('active');
+          document.body.style.overflow = '';
+        };
+      }
+     
+      if (teamModal) {
+        teamModal.onclick = function(e) {
+          if (e.target === teamModal) {
+            teamModal.classList.remove('active');
+            document.body.style.overflow = '';
+          }
+        };
+      }
+    });
+
+    function getCategoryName(category) {
+      const categories = {
+        'medio_ambiente': 'Medio Ambiente',
+        'educacion': 'Educación',
+        'salud': 'Salud',
+        'animales': 'Animales',
+        'comunidad': 'Comunidad',
+        'otros': 'Otros'
+      };
+      return categories[category] || 'General';
+    }
   </script>
 {% endblock %}
