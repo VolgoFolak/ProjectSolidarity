@@ -1253,7 +1253,27 @@
         const category = getCategoryName(team.category);
         const privacy = team.privacy === 'private' ? 'Privada' : 'Pública';
 
-        // 3. Renderiza el modal (estructura igual que tareas)
+        // 2.1 Cargar miembros de la comunidad con perfil
+        const { data: members, error: membersError } = await supabase
+          .from('team_members')
+          .select(`
+            id,
+            role,
+            joined_at,
+            profiles:user_id (
+              id,
+              username,
+              photo_url
+            )
+          `)
+          .eq('team_id', teamId)
+          .order('joined_at', { ascending: true });
+
+        if (membersError) {
+          console.error('Error cargando miembros:', membersError);
+        }
+
+        // 3. Renderiza el modal (añade la sección de miembros después de la descripción)
         document.getElementById('teamModalBody').innerHTML = `
           <div class="modal-task-container" style="padding:0;">
             <h1 class="modal-task-title" style="font-size:2rem; font-weight:800; color:var(--primary); margin-bottom:1.2rem; text-align:center; width:100%;">${team.name}</h1>
@@ -1300,8 +1320,43 @@
               <h3 class="content-title" style="font-size:1.1rem;font-weight:600;color:var(--primary);margin-bottom:0.5rem;display:flex;align-items:center;gap:0.7rem;">
                 <i class="fas fa-align-left"></i> Descripción
               </h3>
-              <p class="content-text" style="line-height:1.7;color:#4b5563;font-size:1.05rem;margin-left:0;margin-right:0;text-align:justify;">${team.description || 'Esta comunidad no tiene descripción.'}</p>
+              <p class="content-text" style="line-height:1.7;color:#4b5563;font-size:1.05rem;margin-left:0;margin-right:0;text-align:justify;">
+                ${team.description || 'Esta comunidad no tiene descripción.'}
+              </p>
             </div>
+
+            <!-- SECCIÓN DE MIEMBROS AQUÍ -->
+            <div class="content-section" style="margin-bottom:2.2rem;">
+              <h3 class="content-title" style="font-size:1.1rem;font-weight:600;color:var(--primary);margin-bottom:1rem;display:flex;align-items:center;gap:0.7rem;">
+                <i class="fas fa-users"></i> Miembros (${members?.length || 0})
+              </h3>
+              <div class="members-grid" style="display:grid;grid-template-columns:repeat(auto-fill, minmax(140px, 1fr));gap:1.2rem;">
+                ${
+                  members && members.length > 0
+                    ? members.map(member => `
+                      <div class="member-card" style="display:flex;flex-direction:column;align-items:center;gap:0.5rem;">
+                        <img src="${member.profiles?.photo_url || 'https://ui-avatars.com/api/?name=' + encodeURIComponent(member.profiles?.username || 'U') + '&background=4a6fa5&color=fff&size=64'}"
+                             alt="${member.profiles?.username || 'Usuario'}"
+                             style="width:60px;height:60px;border-radius:50%;object-fit:cover;border:2px solid #e2e8f0;">
+                        <div style="text-align:center;">
+                          <div style="font-weight:600;font-size:0.95rem;">
+                            ${member.profiles?.username || 'Usuario'}
+                          </div>
+                          <div style="font-size:0.85rem;color:#6b7280;">
+                            ${member.role === 'admin' ? 'Administrador' : member.role === 'moderator' ? 'Moderador' : 'Miembro'}
+                          </div>
+                        </div>
+                      </div>
+                    `).join('')
+                    : `<div style="text-align:center;color:#6b7280;grid-column:1/-1;padding:1rem;">
+                        Esta comunidad aún no tiene miembros
+                      </div>`
+                }
+              </div>
+            </div>
+            <!-- FIN SECCIÓN DE MIEMBROS -->
+
+            <!-- Detalles adicionales -->
             <div class="content-section" style="margin-bottom:2.2rem;">
               <h3 class="content-title" style="font-size:1.1rem;font-weight:600;color:var(--primary);margin-bottom:0.5rem;display:flex;align-items:center;gap:0.7rem;">
                 <i class="fas fa-info-circle"></i> Detalles adicionales
@@ -1321,6 +1376,7 @@
                 </div>
               </div>
             </div>
+
             <div class="task-actions" style="display:flex;gap:0.8rem;margin-top:2.2rem;">
               <button class="btn btn-primary" style="flex:1;" id="joinTeamBtn">
                 <i class="fas fa-user-plus"></i> Unirse
