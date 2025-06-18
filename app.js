@@ -152,6 +152,9 @@ app.get('/volunteering', (req, res) => {
 app.get('/profile', (req, res) => {
     res.render('profile/index.njk');
 });
+app.get('/editprofile', (req, res) => {
+    res.render('profile/editprofile.njk');
+});
 app.get('/causes/create', (req, res) => {
     res.render('causes/create.njk');
 });
@@ -394,6 +397,37 @@ app.post('/donate', async (req, res) => {
     res.json({ url: session.url });
   } catch (err) {
     res.status(400).json({ error: err.message });
+  }
+});
+
+app.post('/api/impact-points', async (req, res) => {
+  if (!req.session.user) return res.status(401).json({ error: 'No autenticado' });
+  const userId = req.session.user.id;
+  const { points } = req.body;
+  if (!points) return res.status(400).json({ error: 'Puntos no especificados' });
+
+  try {
+    const { data: profile, error } = await supabase
+      .from('profiles')
+      .select('impact_points, weekly_points')
+      .eq('id', userId)
+      .single();
+    if (error || !profile) return res.status(400).json({ error: 'Perfil no encontrado' });
+
+    const newImpactPoints = (profile.impact_points || 0) + points;
+    const newWeeklyPoints = (profile.weekly_points || 0) + points;
+    const { error: updateError } = await supabase
+      .from('profiles')
+      .update({
+        impact_points: newImpactPoints,
+        weekly_points: newWeeklyPoints
+      })
+      .eq('id', userId);
+    if (updateError) return res.status(400).json({ error: 'No se pudo actualizar' });
+
+    res.json({ ok: true, impact_points: newImpactPoints, weekly_points: newWeeklyPoints });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
   }
 });
 

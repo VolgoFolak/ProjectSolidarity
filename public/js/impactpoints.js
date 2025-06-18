@@ -2,71 +2,46 @@ const IMPACT_POINTS = {
   register: 100,
   daily_login: 5,
   weekly_streak: 50,
-  post_activity: 50, // causa, tarea, reto, voluntariado
+  post_activity: 50,
   share: 5,
   per_euro_donated: 5
 };
 
-// Suma puntos al usuario
-async function addImpactPoints(userId, points) {
-  if (!userId || !points) return;
-  const { data: profile, error } = await supabase
-    .from('profiles')
-    .select('impact_points, weekly_points')
-    .eq('id', userId)
-    .single();
-  if (error || !profile) return;
-  const newImpactPoints = (profile.impact_points || 0) + points;
-  const newWeeklyPoints = (profile.weekly_points || 0) + points;
-  await supabase
-    .from('profiles')
-    .update({
-      impact_points: newImpactPoints,
-      weekly_points: newWeeklyPoints
-    })
-    .eq('id', userId);
+// Suma puntos al usuario llamando a tu backend
+async function addImpactPoints(points) {
+  await fetch('/api/impact-points', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ points })
+  });
 }
 
-// 1. Al registrarse
-async function onUserRegister(userId) {
-  await addImpactPoints(userId, IMPACT_POINTS.register);
+// Ejemplo de uso:
+async function onUserRegister() {
+  await addImpactPoints(IMPACT_POINTS.register);
 }
-
-// 2. Al hacer login diario
-async function onUserDailyLogin(userId) {
-  await addImpactPoints(userId, IMPACT_POINTS.daily_login);
+async function onUserDailyLogin() {
+  await addImpactPoints(IMPACT_POINTS.daily_login);
   // Aquí puedes añadir lógica para streak semanal
-  // Ejemplo: si es el 7º día seguido, suma bonus
-  const streak = await getLoginStreak(userId);
+  const streak = await getLoginStreak();
   if (streak && streak % 7 === 0) {
-    await addImpactPoints(userId, IMPACT_POINTS.weekly_streak);
+    await addImpactPoints(IMPACT_POINTS.weekly_streak);
   }
 }
-
-// 3. Al publicar causa, tarea, reto o voluntariado
-async function onPostActivity(userId) {
-  await addImpactPoints(userId, IMPACT_POINTS.post_activity);
+async function onPostActivity() {
+  await addImpactPoints(IMPACT_POINTS.post_activity);
 }
-
-// 4. Al unirse a una actividad (puntos variables)
-async function onJoinActivity(userId, activityPoints) {
-  await addImpactPoints(userId, activityPoints);
+async function onJoinActivity(activityPoints) {
+  await addImpactPoints(activityPoints);
 }
-
-// 5. Por cada euro donado
-async function onDonate(userId, euros) {
+async function onDonate(euros) {
   const points = euros * IMPACT_POINTS.per_euro_donated;
-  await addImpactPoints(userId, points);
+  await addImpactPoints(points);
 }
-
-// 6. Por compartir en redes
-async function onShare(userId) {
-  await addImpactPoints(userId, IMPACT_POINTS.share);
+async function onShare() {
+  await addImpactPoints(IMPACT_POINTS.share);
 }
-
-// Ejemplo de función para obtener el streak de login semanal (debes implementarla según tu lógica)
-async function getLoginStreak(userId) {
-  // Aquí deberías consultar una tabla de logins diarios y calcular el streak
-  // Por ahora, devuelve 7 para simular un bonus semanal
+async function getLoginStreak() {
+  // Implementa esto en el backend si lo necesitas realmente
   return 7;
 }

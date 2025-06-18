@@ -1366,7 +1366,8 @@
         document.getElementById('adminModalTitle').textContent = `Administrar ${team.name}`;
         document.getElementById('adminModal').classList.add('active');
         document.body.style.overflow = 'hidden';
-        // Miembros
+
+        // Miembros (cuenta exacta)
         const { count: membersCount, error: membersError } = await supabase
           .from('team_members')
           .select('user_id', { count: 'exact', head: true })
@@ -1379,7 +1380,6 @@
           .from('activities')
           .select('id', { count: 'exact', head: true })
           .eq('team_id', team.id);
-
         document.getElementById('activitiesCount').textContent =
           (activitiesError || typeof activitiesCount === 'undefined') ? (team.activities_count || 0) : activitiesCount;
 
@@ -1390,7 +1390,7 @@
           .eq('team_id', team.id);
         document.getElementById('beneficiariesCount').textContent = beneficiariesError ? (team.beneficiaries || 0) : beneficiariesCount;
 
-        // Puntos de impacto (ejemplo: suma de campo "impact" en activities)
+        // Puntos de impacto (suma de campo "impact" en activities)
         const { data: impactData, error: impactError } = await supabase
           .from('activities')
           .select('impact')
@@ -1403,7 +1403,27 @@
         }
         document.getElementById('impactPoints').textContent = impactPoints;
 
-        // ...el resto de tu código para cargar el formulario...
+        // Progreso de recaudación
+        const recaudado = team.funds_raised || 0;
+        const meta = team.goal || 0;
+        const porcentaje = meta ? Math.min(100, Math.round((recaudado / meta) * 100)) : 0;
+        document.getElementById('communityProgress').style.width = porcentaje + '%';
+        document.getElementById('progressPercent').textContent = `${porcentaje}% completado`;
+        document.getElementById('progressAmount').textContent = `${recaudado} € de ${meta} €`;
+
+        // Cargar datos en el formulario de configuración
+        document.getElementById('editTeamName').value = team.name || '';
+        document.getElementById('editTeamDesc').value = team.description || '';
+        document.getElementById('editTeamCategory').value = team.category || 'otros';
+        document.getElementById('editTeamPrivacy').value = team.privacy || 'public';
+        document.getElementById('editTeamTags').value = (team.tags || []).join(', ');
+        document.getElementById('editTeamGoal').value = team.goal || '';
+        if (team.photo) {
+          document.getElementById('editTeamPhotoPreview').src = team.photo;
+          document.getElementById('editTeamPhotoPreview').style.display = 'block';
+        } else {
+          document.getElementById('editTeamPhotoPreview').style.display = 'none';
+        }
       }
 
       // 1. Define la función primero
@@ -1488,23 +1508,10 @@
           goal: Number(document.getElementById('editTeamGoal').value) || null,
         };
 
-        // Subida de imagen a Supabase Storage si hay nueva foto
-        const photoInput = document.getElementById('editTeamPhoto');
-        if (photoInput.files && photoInput.files[0]) {
-          const file = photoInput.files[0];
-          const fileExt = file.name.split('.').pop();
-          const filePath = `teams/${currentAdminTeam.id}/logo.${fileExt}`;
-          let { error: uploadError } = await supabase.storage
-            .from('team-photos')
-            .upload(filePath, file, { upsert: true });
-          if (!uploadError) {
-            const { data } = supabase.storage.from('team-photos').getPublicUrl(filePath);
-            updatedTeam.photo = data.publicUrl;
-          } else {
-            alert('Error subiendo la imagen: ' + uploadError.message);
-            return;
-          }
-        }
+        // Subida de imagen omitida para claridad
+
+        // DEBUG: muestra el usuario y el equipo
+        console.log('Intentando update', currentAdminTeam, session.user.id, updatedTeam);
 
         const { data, error } = await supabase
           .from('teams')

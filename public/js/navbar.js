@@ -10,7 +10,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       .eq('id', user.id)
       .single();
 
-    document.getElementById('user-avatar').src = perfil?.photo_url || '/images/default-avatar.png';
+    document.getElementById('user-avatar').src = perfil?.photo_url || '/img/default-avatar.jpg';
     document.getElementById('user-name').textContent = perfil?.username || user.email;
     authButtons.style.display = 'none';
     userMenu.style.display = 'flex';

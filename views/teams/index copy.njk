@@ -578,6 +578,7 @@
       <button id="closeTeamModal" style="position:absolute; top:1.5rem; right:1.5rem; background:none; border:none; font-size:1.8rem; color:#6b7280; cursor:pointer; transition:color 0.2s;" onmouseover="this.style.color='#4a6fa5'" onmouseout="this.style.color='#6b7280'">&times;</button>
       <div id="teamModalBody" style="padding:0.5rem;">
         <!-- Contenido dinámico -->
+        <div id="teamMembersSection"></div>
       </div>
     </div>
   </div>
@@ -1224,7 +1225,19 @@
         }
       });
 
-      // Función para mostrar el modal de detalle de comunidad
+      // Cerrar modal de ver más
+      document.getElementById('closeTeamModal').onclick = function() {
+        document.getElementById('teamModal').classList.remove('active');
+        document.body.style.overflow = '';
+      };
+      document.getElementById('teamModal').onclick = function(e) {
+        if (e.target === this) {
+          this.classList.remove('active');
+          document.body.style.overflow = '';
+        }
+      };
+
+      // Modal de detalle de comunidad (igual que tasks/challenges)
       async function showTeamModal(teamId) {
         // 1. Carga la comunidad
         const { data: team, error } = await supabase
@@ -1321,6 +1334,7 @@
                 </div>
               </div>
             </div>
+            <div id="teamMembersSection"></div>
             <div class="task-actions" style="display:flex;gap:0.8rem;margin-top:2.2rem;">
               <button class="btn btn-primary" style="flex:1;" id="joinTeamBtn">
                 <i class="fas fa-user-plus"></i> Unirse
@@ -1332,9 +1346,6 @@
             <div class="share-section" id="shareSectionTeam"></div>
           </div>
         `;
-
-        document.getElementById('teamModal').classList.add('active');
-        document.body.style.overflow = 'hidden';
 
         // Botón Unirse
         document.getElementById('joinTeamBtn').onclick = async function() {
@@ -1350,19 +1361,58 @@
         document.getElementById('shareTeamBtn').onclick = function() {
           showShareOptionsTeam(team.id, team);
         };
+
+        // Cargar miembros
+        loadTeamMembersForModal(teamId);
       }
 
-      // Cerrar modal de ver más
-      document.getElementById('closeTeamModal').onclick = function() {
-        document.getElementById('teamModal').classList.remove('active');
-        document.body.style.overflow = '';
-      };
-      document.getElementById('teamModal').onclick = function(e) {
-        if (e.target === this) {
-          this.classList.remove('active');
-          document.body.style.overflow = '';
+      async function loadTeamMembersForModal(teamId) {
+        // 1. Obtener los miembros (excepto pending)
+        const { data: members, error: membersError } = await supabase
+          .from('team_members')
+          .select('user_id, role')
+          .eq('team_id', teamId)
+          .neq('role', 'pending');
+
+        if (membersError) {
+          document.getElementById('teamMembersSection').innerHTML = '<p>Error cargando miembros.</p>';
+          return;
         }
-      };
+
+        // 2. Obtener perfiles
+        let profilesMap = {};
+        if (members.length) {
+          const userIds = members.map(m => m.user_id);
+          const { data: profiles, error: profilesError } = await supabase
+            .from('profiles')
+            .select('id, username, photo_url')
+            .in('id', userIds);
+
+          if (!profilesError) {
+            profilesMap = Object.fromEntries(profiles.map(p => [p.id, p]));
+          }
+        }
+
+        // 3. Renderizar miembros
+        const membersHtml = `
+          <h3 style="margin-top:2rem;margin-bottom:1rem;color:var(--primary);"><i class="fas fa-users"></i> Miembros</h3>
+          <div style="display:flex;flex-wrap:wrap;gap:0.7rem;">
+            ${members.map(m => {
+              const profile = profilesMap[m.user_id] || {};
+              return `
+                <div style="display:flex;align-items:center;gap:0.4rem;background:#f7fafc;padding:0.4rem 0.8rem;border-radius:8px;">
+                  <img src="${profile.photo_url ? profile.photo_url : 'https://ui-avatars.com/api/?name=' + encodeURIComponent(profile.username || 'Usuario')}" alt="${profile.username || 'Usuario'}" style="width:32px;height:32px;border-radius:50%;object-fit:cover;">
+                  <span style="font-size:0.98rem;color:#4a6fa5;">${profile.username || 'Usuario'}</span>
+                  <span class="role-badge ${m.role === 'founder' ? 'admin' : m.role}" style="margin-left:0.5rem;">
+                    ${m.role === 'founder' ? 'Fundador' : m.role.charAt(0).toUpperCase() + m.role.slice(1)}
+                  </span>
+                </div>
+              `;
+            }).join('')}
+          </div>
+        `;
+        document.getElementById('teamMembersSection').innerHTML = membersHtml;
+      }
 
       // Compartir comunidad (idéntico a tareas, botones con fondo de color y letras blancas)
       function showShareOptionsTeam(teamId, teamObj) {
