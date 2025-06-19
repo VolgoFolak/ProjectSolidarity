@@ -8,11 +8,17 @@ const IMPACT_POINTS = {
 };
 
 // Suma puntos al usuario llamando a tu backend
-async function addImpactPoints(points) {
+async function addImpactPoints(points, { weekly = false, communityId = null } = {}) {
+  const user = await supabase.auth.getUser();
   await fetch('/api/impact-points', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ points })
+    body: JSON.stringify({
+      userId: user.data.user.id,
+      points,
+      weekly,
+      communityId
+    })
   });
 }
 
