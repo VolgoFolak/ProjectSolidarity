@@ -507,7 +507,14 @@ async function fetchRankingData() {
     .order('weekly_points', { ascending: false })
     .limit(100);
 
-  return { usersHistorico, usersDinamico };
+  if (errorHistorico) {
+    console.error('Error cargando ranking histórico:', errorHistorico.message);
+  }
+  if (errorDinamico) {
+    console.error('Error cargando ranking dinámico:', errorDinamico.message);
+  }
+
+  return { usersHistorico: usersHistorico || [], usersDinamico: usersDinamico || [] };
 }
 
 function getLeague(points) {
@@ -521,7 +528,10 @@ function getLeague(points) {
 function renderIndividualRanking(users, type = "historico", currentUserId = null) {
   const tbody = document.getElementById('individual-ranking');
   tbody.innerHTML = '';
-  if (!Array.isArray(users)) return;
+  if (!Array.isArray(users) || users.length === 0) {
+    tbody.innerHTML = `<tr><td colspan="5" style="text-align:center;color:#888;">No hay datos para mostrar.</td></tr>`;
+    return;
+  }
   users.forEach((user, index) => {
     const points = type === "dinamico"
       ? (user.weekly_points ?? 0)
@@ -531,10 +541,10 @@ function renderIndividualRanking(users, type = "historico", currentUserId = null
     const actions = user.actions_count ?? 0;
     tbody.innerHTML += `
       <tr${user.id === currentUserId ? ' style="background:#e6f7f1;"' : ''}>
-        <td><span class="rank">${index + 1}</span></td>
+        <td><span class="rank${index < 3 ? ` rank-${index + 1}` : ''}">${index + 1}</span></td>
         <td>
           <div class="user-cell">
-            <img src="${avatar}" class="user-avatar-sm">
+            <img src="${avatar}" class="user-avatar-sm" alt="Avatar">
             <span>${name}</span>
           </div>
         </td>
@@ -591,7 +601,7 @@ function renderUserLeague(user) {
   const nextLevel = (Math.floor(points / 1000) + 1) * 1000;
   const progress = Math.min(100, ((points % 1000) / 1000) * 100);
   progressBar.style.width = `${progress}%`;
-  progressLabel.textContent = ''; // Elimina el texto dentro de la barra
+  progressLabel.textContent = '';
 
   userProgress.innerHTML =
     points >= 4000
@@ -599,25 +609,13 @@ function renderUserLeague(user) {
       : `Te faltan <strong>${nextLevel - points}</strong> puntos para ascender de liga.`;
 }
 
-// Cuenta atrás vistosa hasta el próximo domingo a medianoche
+// Cuenta atrás hasta el próximo domingo a medianoche
 function updateCountdown() {
   const now = new Date();
-  // Domingo = 0, pero getDay() devuelve 0 para domingo, 1 para lunes, etc.
   let daysUntilSunday = (7 - now.getDay()) % 7;
-  if (daysUntilSunday === 0 && (now.getHours() >= 24 || (now.getHours() === 0 && now.getMinutes() === 0 && now.getSeconds() === 0))) {
-    daysUntilSunday = 7;
-  }
-  // Próximo domingo a medianoche
   const nextSunday = new Date(now);
   nextSunday.setDate(now.getDate() + daysUntilSunday);
   nextSunday.setHours(0, 0, 0, 0);
-
-  // Si hoy es domingo pero aún no es medianoche, apunta a la próxima medianoche
-  if (daysUntilSunday === 0 && now < nextSunday) {
-    // ya está bien
-  } else if (daysUntilSunday === 0) {
-    nextSunday.setDate(nextSunday.getDate() + 7);
-  }
 
   const diff = nextSunday - now;
   const totalSeconds = Math.floor(diff / 1000);
@@ -626,7 +624,6 @@ function updateCountdown() {
   const minutes = Math.floor((totalSeconds % (60 * 60)) / 60);
   const seconds = totalSeconds % 60;
 
-  // Formato vistoso
   document.getElementById('next-update').innerHTML =
     `<span style="color:#4a6fa5;font-weight:700;font-size:1.1em;">
       ${days}d&nbsp;${hours}h&nbsp;${minutes}m&nbsp;${seconds}s
@@ -635,7 +632,6 @@ function updateCountdown() {
 setInterval(updateCountdown, 1000);
 updateCountdown();
 
-// Función para obtener el usuario currente y su perfil
 async function fetchCurrentUser() {
   const { data: { user }, error } = await supabase.auth.getUser();
   if (error || !user) return null;
@@ -654,7 +650,7 @@ document.addEventListener('DOMContentLoaded', async function() {
   const currentUserId = currentUser?.id;
   const { usersHistorico, usersDinamico } = await fetchRankingData();
   renderIndividualRanking(usersHistorico, "historico", currentUserId);
-  renderUserLeague(currentUser); // <-- PASA EL USUARIO, NO EL ARRAY
+  renderUserLeague(currentUser);
 
   document.querySelectorAll('.subranking-tab').forEach(tab => {
     tab.addEventListener('click', function() {
@@ -681,12 +677,10 @@ document.addEventListener('DOMContentLoaded', async function() {
     tab.addEventListener('click', function () {
       document.querySelectorAll('.ranking-tab').forEach(t => t.classList.remove('active'));
       this.classList.add('active');
-      // Oculta todas las secciones
       document.getElementById('individual-table').style.display = 'none';
       document.getElementById('comunidades-table').style.display = 'none';
       document.getElementById('subranking-tabs').style.display = 'none';
 
-      // Muestra la sección correspondiente
       const tabType = this.getAttribute('data-tab');
       if (tabType === "individual") {
         document.getElementById('individual-table').style.display = '';
@@ -726,15 +720,5 @@ function showLeague(leagueNumber) {
   });
   document.querySelector(`.league-${leagueNumber}`).classList.add('active');
 }
-
-const typeLabels = {
-  cause: 'Causa',
-  task: 'Tarea',
-  challenge: 'Reto',
-  volunteering: 'Voluntariado'
-};
-const badge = `<div class="activity-badge ${activity.type}">
-  <i class="fas ${activity.icon}"></i> ${typeLabels[activity.type] || 'Otro'}
-</div>`;
 </script>
 {% endblock %}

@@ -189,7 +189,7 @@
   font-size: 1.01rem;
   margin-top: 0.2rem;
   display: flex;
-  gap: 1.2rem;
+  gap: 1
   flex-wrap: wrap;
   justify-content: center;
 }
@@ -490,6 +490,14 @@
         <div class="label">Donado</div>
       </div>
     </div>
+    <!-- Tarjeta de comunidades -->
+    <div class="stats-card">
+      <div class="stats-icon"><i class="fas fa-users"></i></div>
+      <div class="stats-content">
+        <div class="number" id="communities-counter">0</div>
+        <div class="label">Comunidades</div>
+      </div>
+    </div>
   </div>
 
   <!-- Barra de progreso de impacto -->
@@ -564,6 +572,12 @@
       <i class="fas fa-envelope"></i> Enviar mensaje
     </a>
   {% endif %}
+
+  <!-- Sección de comunidades -->
+  <div class="section-header" style="margin-top:2.5em;">
+    <h3>Tus comunidades</h3>
+  </div>
+  <div class="teams-grid" id="profileCommunitiesGrid"></div>
 </div>
 {% endblock %}
 
@@ -680,14 +694,12 @@
         if (!profileError && profile) {
           document.querySelector('.profile-photo').src = profile.photo_url || '/img/avatar-default.jpg';
           document.querySelector('.profile-info h2').textContent = `${profile.first_name || ''} ${profile.last_name || ''}`.trim();
-          
           if (profile.country) {
             document.querySelector('.profile-location').innerHTML = `
               <i class="fas fa-map-marker-alt"></i> 
               ${[profile.city, profile.country].filter(Boolean).join(', ')}
             `;
           }
-          
           document.querySelector('.profile-bio').textContent = profile.bio || '';
         }
 
@@ -704,31 +716,46 @@
           supabase.from('volunteering').select('id,title,description,city,country,lat,lng,photo_url,volunteers_needed,created_at').eq('user_id', user.id)
         ]);
 
-        // Procesar resultados
         const causes = Array.isArray(causesPromise.value?.data) ? causesPromise.value.data : [];
         const tasks = Array.isArray(tasksPromise.value?.data) ? tasksPromise.value.data : [];
         const challenges = Array.isArray(challengesPromise.value?.data) ? challengesPromise.value.data : [];
         const volunteering = Array.isArray(volunteeringPromise.value?.data) ? volunteeringPromise.value.data : [];
 
         // 3b. Cargar comunidades del usuario (miembro)
-        const { data: memberCommunities } = await supabase
-          .from('communities_members')
-          .select('community_id')
+        const { data: memberTeams } = await supabase
+          .from('team_members')
+          .select('team_id')
           .eq('user_id', user.id);
 
         // 3c. Cargar comunidades creadas por el usuario
-        const { data: createdCommunities } = await supabase
-          .from('communities')
-          .select('id,name,description,photo_url')
+        const { data: createdTeams } = await supabase
+          .from('teams')
+          .select('id,name,description,photo')
           .eq('creator_id', user.id);
+
+        // Obtener detalles de los teams donde es miembro (si hay)
+        let memberTeamsDetails = [];
+        if (memberTeams && memberTeams.length > 0) {
+          const teamIds = memberTeams.map(m => m.team_id).filter(Boolean);
+          if (teamIds.length > 0) {
+            const { data: teamsData } = await supabase
+              .from('teams')
+              .select('id,name,description,photo')
+              .in('id', teamIds);
+            memberTeamsDetails = teamsData || [];
+          }
+        }
 
         // Unir y eliminar duplicados por id
         const allCommunities = [
-          ...(memberCommunities?.map(c => c.community) || []),
-          ...(createdCommunities || [])
+          ...(memberTeamsDetails || []),
+          ...(createdTeams || [])
         ].filter((c, i, arr) => c && arr.findIndex(x => x.id === c.id) === i);
 
-        // Renderizar comunidades
+        // Actualizar contador de comunidades
+        animateCounter('communities-counter', allCommunities.length);
+
+        // Renderizar comunidades (si tienes un grid específico, si no, ignora esta función)
         function renderCommunities() {
           const grid = document.getElementById('communities-grid');
           if (!grid) return;
@@ -740,7 +767,7 @@
           }
           grid.innerHTML = allCommunities.map(c => `
             <div class="activity-card">
-              <div class="activity-image" style="background-image: url('${c.photo_url || '/img/community-default.jpg'}')">
+              <div class="activity-image" style="background-image: url('${c.photo || '/img/community-default.jpg'}')">
                 <span class="community-badge">
                   <i class="fas fa-users"></i> Comunidad
                 </span>
@@ -805,50 +832,47 @@
           }))
         ].sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
 
-        console.log('Actividades para el mapa:', allActivities);
-        allActivities.forEach(a => console.log(a.title, a.lat, a.lng));
-
-        // 6. Renderizar actividades
+        // 6. Renderizar actividades (igual que antes)
         function renderActivities(filter = 'all', sort = 'recent') {
           const grid = document.getElementById('activities-grid');
           if (!grid) return;
 
           let activitiesToShow = [...allActivities];
 
-          // Si el filtro es "community", muestra solo comunidades
-          if (filter === 'community') {
-            if (!allCommunities || allCommunities.length === 0) {
-              grid.innerHTML = `
-                <div class="no-activities" style="grid-column:1/-1; text-align:center; padding:2.5em 1em;">
-                  <i class="fas fa-users" style="font-size:2.5em; color:#4a6fa5; margin-bottom:0.5em;"></i>
-                  <h4 style="color:#4a6fa5; font-size:1.3em; margin-bottom:0.3em;">Aún no formas parte de ninguna comunidad</h4>
-                  <p style="color:#6b7280; font-size:1em;">Únete a una comunidad para conectar con personas afines y participar en proyectos colectivos.</p>
-                </div>
-              `;
-              return;
-            }
-            grid.innerHTML = allCommunities.map(c => `
-              <div class="activity-card">
-                <div class="activity-image" style="background-image: url('${c.photo_url || '/img/community-default.jpg'}')">
-                  <span class="community-badge">
-                    <i class="fas fa-users"></i> Comunidad
-                  </span>
-                </div>
-                <div class="activity-content">
-                  <h3 class="activity-header">${c.name || 'Sin nombre'}</h3>
-                  <p>${c.description || 'Sin descripción'}</p>
-                </div>
-                <a href="/communities/${c.id}" class="activity-link">Ver más</a>
-              </div>
-            `).join('');
-            return;
+          // Incluir comunidades en el tab "Todas"
+          if (filter === 'all') {
+            activitiesToShow = [
+              ...allActivities,
+              ...allCommunities.map(c => ({
+                type: 'community',
+                id: c.id,
+                name: c.name,
+                description: c.description,
+                photo: c.photo
+              }))
+            ];
+          } else if (filter === 'community') {
+            activitiesToShow = allCommunities.map(c => ({
+              type: 'community',
+              id: c.id,
+              name: c.name,
+              description: c.description,
+              photo: c.photo
+            }));
+          } else {
+            activitiesToShow = activitiesToShow.filter(a => a.type === filter);
           }
 
-          // En "Todas", no mostrar mensaje si no hay comunidades
-          if (filter === 'all') {
-            // No filtrar nada, muestra todo lo que haya en allActivities (incluidas comunidades si existen)
-          } else if (filter !== 'all') {
-            activitiesToShow = activitiesToShow.filter(a => a.type === filter);
+          // Mensaje bonito si no hay actividades
+          if (activitiesToShow.length === 0) {
+            grid.innerHTML = `
+              <div class="no-activities" style="grid-column:1/-1; text-align:center; padding:2.5em 1em;">
+                <i class="fas fa-smile-beam" style="font-size:2.5em; color:#4fc3a1; margin-bottom:0.5em;"></i>
+                <h4 style="color:#4a6fa5; font-size:1.3em; margin-bottom:0.3em;">¡Aún no tienes actividades!</h4>
+                <p style="color:#6b7280; font-size:1em;">Participa en causas, tareas, retos, voluntariados o únete a una comunidad para empezar a sumar impacto.</p>
+              </div>
+            `;
+            return;
           }
 
           grid.innerHTML = activitiesToShow.map(activity => {
@@ -969,7 +993,7 @@
             if (activity.type === 'community') {
               return `
                 <div class="activity-card">
-                  <div class="activity-image" style="background-image: url('${activity.photo_url || '/img/community-default.jpg'}')">
+                  <div class="activity-image" style="background-image: url('${activity.photo || '/img/community-default.jpg'}')">
                     <span class="community-badge">
                       <i class="fas fa-users"></i> Comunidad
                     </span>
@@ -978,22 +1002,13 @@
                     <h3 class="activity-header">${activity.name || 'Sin nombre'}</h3>
                     <p>${activity.description || 'Sin descripción'}</p>
                   </div>
-                  <a href="/communities/${activity.id}" class="activity-link">Ver más</a>
+                  <a href="/communities/${activity.id}" class="activity-link">Ver detalles</a>
                 </div>
               `;
             }
 
             return '';
           }).join('');
-
-          if (activitiesToShow.length === 0) {
-            grid.innerHTML = `
-              <div class="no-activities" style="grid-column:1/-1;">
-                <i class="fas fa-inbox"></i>
-                <p>No hay actividades para mostrar</p>
-              </div>
-            `;
-          }
         }
 
         // Event listeners para filtros
@@ -1129,5 +1144,95 @@
         }
       }
     });
+
+    function renderProfileCommunities() {
+      const container = document.getElementById('profileCommunitiesGrid');
+      if (!container) return;
+      container.innerHTML = '';
+
+      if (!allCommunities || allCommunities.length === 0) {
+        container.innerHTML = `
+          <div class="empty-state">
+            <i class="fas fa-users-slash"></i>
+            <h3>No formas parte de ninguna comunidad</h3>
+            <p>Únete o crea una comunidad para empezar a colaborar con otros usuarios.</p>
+            <a href="/teams" class="btn btn-primary">
+              <i class="fas fa-users"></i> Explorar comunidades
+            </a>
+          </div>
+        `;
+        return;
+      }
+
+      allCommunities.forEach(team => {
+        const membersCount = team.members_count || 0;
+        const tagsHtml = team.tags?.length
+          ? `<div class="team-tags-classic" style="margin-bottom:0.8em;">${team.tags.slice(0, 4).map(tag => `<span class="team-tag-classic">${tag}</span>`).join('')}${team.tags.length > 4 ? `<span class="team-tag-classic tag-more">+${team.tags.length - 4}</span>` : ''}</div>`
+          : '';
+        const isTrending = membersCount >= 20 || (team.impact || 0) >= 1000;
+        const recaudado = team.funds_raised || 0;
+        const meta = team.goal || 1000;
+        const porcentaje = meta ? Math.min(100, Math.round((recaudado / meta) * 100)) : 0;
+        let badgePrivada = team.privacy === 'private'
+          ? `<div class="team-badge-classic" style="top:1rem;right:1rem;background:var(--gray);color:var(--primary-dark);"><i class="fas fa-lock"></i> Privada</div>`
+          : '';
+        let badgeTrending = isTrending
+          ? `<div class="team-badge-classic" style="top:${team.privacy === 'private' ? '3.2rem' : '1rem'};right:1rem;background:#ffe600;color:#b8860b;"><i class="fas fa-arrow-trend-up"></i> Trending</div>`
+          : '';
+
+        const card = document.createElement('div');
+        card.className = 'team-card-classic';
+        card.setAttribute('data-team-id', team.id);
+        card.innerHTML = `
+          <div class="team-image-classic">
+            <img src="${team.photo || 'https://via.placeholder.com/350x180?text=Comunidad'}" alt="${team.name}">
+            <div class="team-badge-classic points" style="top:1rem;left:1rem;right:auto;background:var(--primary);color:#fff;">
+              <i class="fas fa-bolt"></i> +${team.impact || 0} pts
+            </div>
+            ${badgePrivada}${badgeTrending}
+          </div>
+          <div class="team-content-classic">
+            <h3>${team.name}</h3>
+            <p>${team.summary || 'Esta comunidad no tiene resumen aún.'}</p>
+            <div class="team-meta-classic" style="margin-bottom:1em;">
+              <div class="meta-item-classic"><i class="fas fa-layer-group"></i> ${getCategoryName(team.category)}</div>
+              <div class="meta-item-classic"><i class="fas fa-tasks"></i> ${team.activities_count || 0} actividades</div>
+              <div class="meta-item-classic"><i class="fas fa-heart"></i> ${team.beneficiaries || 0} beneficiarios</div>
+              <div class="meta-item-classic"><i class="fas fa-users"></i> <span class="members-count-classic">${membersCount}</span> miembros</div>
+            </div>
+            ${tagsHtml}
+            <div class="team-progress-classic" style="margin-bottom:1.2em;">
+              <div class="progress-bar">
+                <div class="progress-fill" style="width:${porcentaje}%;">${porcentaje > 10 ? porcentaje + '%' : ''}</div>
+              </div>
+              <div class="progress-info">
+                <span>${porcentaje}% completado</span>
+                <span>${recaudado} € de ${meta} €</span>
+              </div>
+            </div>
+            <div class="team-actions-classic" style="margin-top:1.2em;">
+              <a href="/teams/${team.id}" class="btn btn-primary">
+                <i class="fas fa-eye"></i> Ver más
+              </a>
+            </div>
+          </div>
+        `;
+        container.appendChild(card);
+      });
+    }
+
+    // Llama a la función después de calcular allCommunities
+    renderProfileCommunities();
+
+    function getCategoryName(category) {
+      const categories = {
+        'medio_ambiente': 'Medio Ambiente',
+        'educacion': 'Educación',
+        'salud': 'Salud',
+        'animales': 'Animales',
+        'comunidad': 'Comunidad',
+      };
+      return categories[category] || category;
+    }
   </script>
 {% endblock %}

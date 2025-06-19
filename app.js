@@ -401,34 +401,38 @@ app.post('/donate', async (req, res) => {
 });
 
 app.post('/api/impact-points', async (req, res) => {
-  if (!req.session.user) return res.status(401).json({ error: 'No autenticado' });
-  const userId = req.session.user.id;
-  const { points } = req.body;
-  if (!points) return res.status(400).json({ error: 'Puntos no especificados' });
+  const { userId, points, communityId, weekly } = req.body;
 
-  try {
-    const { data: profile, error } = await supabase
+  // Suma puntos globales
+  let updateObj = { impact_points: supabase.rpc('add_points', { user_id: userId, points }) };
+
+  // Suma puntos semanales si corresponde
+  if (weekly) {
+    updateObj.weekly_points = supabase.rpc('add_weekly_points', { user_id: userId, points });
+  }
+
+  // Suma puntos de comunidad si corresponde
+  if (communityId) {
+    // Obtén el perfil actual
+    const { data: profile } = await supabase
       .from('profiles')
-      .select('impact_points, weekly_points')
+      .select('community_points')
       .eq('id', userId)
       .single();
-    if (error || !profile) return res.status(400).json({ error: 'Perfil no encontrado' });
 
-    const newImpactPoints = (profile.impact_points || 0) + points;
-    const newWeeklyPoints = (profile.weekly_points || 0) + points;
-    const { error: updateError } = await supabase
-      .from('profiles')
-      .update({
-        impact_points: newImpactPoints,
-        weekly_points: newWeeklyPoints
-      })
-      .eq('id', userId);
-    if (updateError) return res.status(400).json({ error: 'No se pudo actualizar' });
+    let communityPoints = profile?.community_points || {};
+    communityPoints[communityId] = (communityPoints[communityId] || 0) + points;
 
-    res.json({ ok: true, impact_points: newImpactPoints, weekly_points: newWeeklyPoints });
-  } catch (err) {
-    res.status(500).json({ error: err.message });
+    updateObj.community_points = communityPoints;
   }
+
+  // Actualiza el perfil
+  await supabase
+    .from('profiles')
+    .update(updateObj)
+    .eq('id', userId);
+
+  res.json({ success: true });
 });
 
 app.listen(PORT, () => {
