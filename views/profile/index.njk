@@ -445,6 +445,58 @@
 .activities-section {
   margin-bottom: 1cm;
 }
+
+.communities-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+  margin-bottom: 2rem;
+}
+.community-row {
+  display: flex;
+  align-items: center;
+  background: #f8fafc;
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(76,163,161,0.07);
+  padding: 1rem 1.5rem;
+  gap: 1.2rem;
+  min-height: 80px;
+}
+.community-row img {
+  width: 64px;
+  height: 64px;
+  border-radius: 8px;
+  object-fit: cover;
+  background: #e2e8f0;
+  flex-shrink: 0;
+}
+.community-row-content {
+  flex: 1;
+  min-width: 0;
+}
+.community-row-title {
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: #4a6fa5;
+  margin-bottom: 0.2em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.community-row-summary {
+  color: #6b7280;
+  font-size: 0.98rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.community-row-actions {
+  margin-left: 1.2rem;
+}
+.community-row-actions .btn {
+  font-size: 0.97rem;
+  padding: 0.45em 1.2em;
+}
   </style>
 {% endblock %}
 
@@ -577,7 +629,7 @@
   <div class="section-header" style="margin-top:2.5em;">
     <h3>Tus comunidades</h3>
   </div>
-  <div class="teams-grid" id="profileCommunitiesGrid"></div>
+  <div class="communities-list" id="communities-list"></div>
 </div>
 {% endblock %}
 
@@ -757,26 +809,35 @@
 
         // Renderizar comunidades (si tienes un grid específico, si no, ignora esta función)
         function renderCommunities() {
-          const grid = document.getElementById('communities-grid');
-          if (!grid) return;
+          const container = document.getElementById('communities-list');
+          if (!container) return;
+
           if (!allCommunities || allCommunities.length === 0) {
-            grid.innerHTML = `<div class="no-activities" style="grid-column:1/-1;">
-              <i class="fas fa-users"></i>
-              </div>`;
+            container.innerHTML = `
+              <div style="text-align:center; color:#6b7280; padding:2em 0;">
+                <i class="fas fa-users-slash" style="font-size:2.5em; color:#4a6fa5;"></i>
+                <h4 style="margin-top:0.5em;">Aún no formas parte de ninguna comunidad</h4>
+                <p>Únete o crea una para empezar a colaborar.</p>
+                <a href="/teams" class="btn btn-primary" style="margin-top:1em;">
+                  <i class="fas fa-users"></i> Explorar comunidades
+                </a>
+              </div>
+            `;
             return;
           }
-          grid.innerHTML = allCommunities.map(c => `
-            <div class="activity-card">
-              <div class="activity-image" style="background-image: url('${c.photo || '/img/community-default.jpg'}')">
-                <span class="community-badge">
-                  <i class="fas fa-users"></i> Comunidad
-                </span>
+
+          container.innerHTML = allCommunities.map(c => `
+            <div class="community-row">
+              <img src="${c.photo || '/img/community-default.jpg'}" alt="${c.name}">
+              <div class="community-row-content">
+                <div class="community-row-title">${c.name || 'Sin nombre'}</div>
+                <div class="community-row-summary">${c.description || 'Sin descripción'}</div>
               </div>
-              <div class="activity-content">
-                <h3 class="activity-header">${c.name || 'Sin nombre'}</h3>
-                <p>${c.description || 'Sin descripción'}</p>
+              <div class="community-row-actions">
+                <a href="/communities/${c.id}" class="btn btn-outline" style="font-size:0.9rem;">
+                  <i class="fas fa-eye"></i> Ver comunidad
+                </a>
               </div>
-              <a href="/communities/${c.id}" class="activity-link">Ver detalles</a>
             </div>
           `).join('');
         }
@@ -1145,94 +1206,48 @@
       }
     });
 
-    function renderProfileCommunities() {
-      const container = document.getElementById('profileCommunitiesGrid');
-      if (!container) return;
-      container.innerHTML = '';
+   function renderProfileCommunities() {
+  const container = document.getElementById('profileCommunitiesGrid');
+  if (!container) return;
+  container.innerHTML = '';
 
-      if (!allCommunities || allCommunities.length === 0) {
-        container.innerHTML = `
-          <div class="empty-state">
-            <i class="fas fa-users-slash"></i>
-            <h3>No formas parte de ninguna comunidad</h3>
-            <p>Únete o crea una comunidad para empezar a colaborar con otros usuarios.</p>
-            <a href="/teams" class="btn btn-primary">
-              <i class="fas fa-users"></i> Explorar comunidades
-            </a>
-          </div>
-        `;
-        return;
-      }
+  if (!allCommunities || allCommunities.length === 0) {
+    container.innerHTML = `
+      <div class="empty-state">
+        <i class="fas fa-users-slash"></i>
+        <h3>No formas parte de ninguna comunidad</h3>
+        <p>Únete o crea una comunidad para empezar a colaborar con otros usuarios.</p>
+        <a href="/teams" class="btn btn-primary">
+          <i class="fas fa-users"></i> Explorar comunidades
+        </a>
+      </div>
+    `;
+    return;
+  }
 
-      allCommunities.forEach(team => {
-        const membersCount = team.members_count || 0;
-        const tagsHtml = team.tags?.length
-          ? `<div class="team-tags-classic" style="margin-bottom:0.8em;">${team.tags.slice(0, 4).map(tag => `<span class="team-tag-classic">${tag}</span>`).join('')}${team.tags.length > 4 ? `<span class="team-tag-classic tag-more">+${team.tags.length - 4}</span>` : ''}</div>`
-          : '';
-        const isTrending = membersCount >= 20 || (team.impact || 0) >= 1000;
-        const recaudado = team.funds_raised || 0;
-        const meta = team.goal || 1000;
-        const porcentaje = meta ? Math.min(100, Math.round((recaudado / meta) * 100)) : 0;
-        let badgePrivada = team.privacy === 'private'
-          ? `<div class="team-badge-classic" style="top:1rem;right:1rem;background:var(--gray);color:var(--primary-dark);"><i class="fas fa-lock"></i> Privada</div>`
-          : '';
-        let badgeTrending = isTrending
-          ? `<div class="team-badge-classic" style="top:${team.privacy === 'private' ? '3.2rem' : '1rem'};right:1rem;background:#ffe600;color:#b8860b;"><i class="fas fa-arrow-trend-up"></i> Trending</div>`
-          : '';
+  allCommunities.forEach(team => {
+    const membersCount = team.members_count || 0;
+    const tagsHtml = team.tags?.length
+      ? `<div class="team-tags-classic" style="margin-bottom:0.8em;">${team.tags.slice(0, 4).map(tag => `<span class="team-tag-classic">${tag}</span>`).join('')}${team.tags.length > 4 ? `<span class="team-tag-classic tag-more">+${team.tags.length - 4}</span>` : ''}</div>`
+      : '';
+    const isTrending = membersCount >= 20 || (team.impact || 0) >= 1000;
+    const recaudado = team.funds_raised || 0;
+    const meta = team.goal || 1000;
+    // ... tu renderizado aquí ...
+  }); // <-- cierre del forEach
 
-        const card = document.createElement('div');
-        card.className = 'team-card-classic';
-        card.setAttribute('data-team-id', team.id);
-        card.innerHTML = `
-          <div class="team-image-classic">
-            <img src="${team.photo || 'https://via.placeholder.com/350x180?text=Comunidad'}" alt="${team.name}">
-            <div class="team-badge-classic points" style="top:1rem;left:1rem;right:auto;background:var(--primary);color:#fff;">
-              <i class="fas fa-bolt"></i> +${team.impact || 0} pts
-            </div>
-            ${badgePrivada}${badgeTrending}
-          </div>
-          <div class="team-content-classic">
-            <h3>${team.name}</h3>
-            <p>${team.summary || 'Esta comunidad no tiene resumen aún.'}</p>
-            <div class="team-meta-classic" style="margin-bottom:1em;">
-              <div class="meta-item-classic"><i class="fas fa-layer-group"></i> ${getCategoryName(team.category)}</div>
-              <div class="meta-item-classic"><i class="fas fa-tasks"></i> ${team.activities_count || 0} actividades</div>
-              <div class="meta-item-classic"><i class="fas fa-heart"></i> ${team.beneficiaries || 0} beneficiarios</div>
-              <div class="meta-item-classic"><i class="fas fa-users"></i> <span class="members-count-classic">${membersCount}</span> miembros</div>
-            </div>
-            ${tagsHtml}
-            <div class="team-progress-classic" style="margin-bottom:1.2em;">
-              <div class="progress-bar">
-                <div class="progress-fill" style="width:${porcentaje}%;">${porcentaje > 10 ? porcentaje + '%' : ''}</div>
-              </div>
-              <div class="progress-info">
-                <span>${porcentaje}% completado</span>
-                <span>${recaudado} € de ${meta} €</span>
-              </div>
-            </div>
-            <div class="team-actions-classic" style="margin-top:1.2em;">
-              <a href="/teams/${team.id}" class="btn btn-primary">
-                <i class="fas fa-eye"></i> Ver más
-              </a>
-            </div>
-          </div>
-        `;
-        container.appendChild(card);
-      });
-    }
+} // <-- cierre de la función
 
-    // Llama a la función después de calcular allCommunities
-    renderProfileCommunities();
-
-    function getCategoryName(category) {
-      const categories = {
-        'medio_ambiente': 'Medio Ambiente',
-        'educacion': 'Educación',
-        'salud': 'Salud',
-        'animales': 'Animales',
-        'comunidad': 'Comunidad',
-      };
-      return categories[category] || category;
-    }
+// Fuera de la función:
+function getCategoryName(category) {
+  const categories = {
+    'medio_ambiente': 'Medio Ambiente',
+    'educacion': 'Educación',
+    'salud': 'Salud',
+    'animales': 'Animales',
+    'comunidad': 'Comunidad',
+  };
+  return categories[category] || category;
+}
   </script>
 {% endblock %}

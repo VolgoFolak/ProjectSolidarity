@@ -1026,7 +1026,9 @@
                 <div class="meta-item-classic"><i class="fas fa-layer-group"></i> ${getCategoryName(team.category)}</div>
                 <div class="meta-item-classic"><i class="fas fa-tasks"></i> ${team.activities_count || 0} actividades</div>
                 <div class="meta-item-classic"><i class="fas fa-heart"></i> ${team.beneficiaries || 0} beneficiarios</div>
-                <div class="meta-item-classic"><i class="fas fa-users"></i> <span class="members-count-classic">${membersCount}</span> miembros</div>
+                <div class="meta-item-classic">
+                  <i class="fas fa-users"></i> <span class="members-count-classic">${membersCount}</span> miembros
+                </div>
               </div>
               ${tagsHtml}
               <div class="team-progress-classic" style="margin-bottom:1.2em;">
@@ -1049,74 +1051,6 @@
           container.appendChild(card);
         });
         
-        // Configurar botones de unirse
-        document.querySelectorAll('.join-team-btn').forEach(btn => {
-          btn.addEventListener('click', async function() {
-            const teamId = this.getAttribute('data-team-id');
-            const { data: { session } } = await supabase.auth.getSession();
-
-            if (!session?.user) {
-              document.getElementById('loginModal').classList.add('active');
-              return;
-            }
-
-            // Bloquear UI
-            this.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
-            this.disabled = true;
-
-            try {
-              // Intentar insertar membresía directamente
-              const { error: insertError } = await supabase
-                .from('team_members')
-                .insert({
-                  team_id: teamId,
-                  user_id: session.user.id,
-                  role: 'member'
-                });
-
-              // Si hay error de clave duplicada, lo tratamos como "ya es miembro"
-              if (insertError && insertError.code === '23505') {
-                // Ya es miembro, solo actualiza UI y contador
-              } else if (insertError) {
-                throw insertError;
-              } else {
-                // Si insertó bien, incrementa el contador
-                const { error: updateError } = await supabase
-                  .rpc('increment_team_counter', {
-                    team_id_input: teamId,
-                    field_name: 'members_count'
-                  });
-                if (updateError) throw updateError;
-              }
-
-              // En ambos casos, lee el contador real y actualiza UI
-              const { data: teamData, error: fetchError } = await supabase
-                .from('teams')
-                .select('members_count')
-                .eq('id', teamId)
-                .single();
-              if (fetchError) throw fetchError;
-
-              const card = this.closest('.team-card-classic');
-              const countElement = card.querySelector('.members-count-classic');
-              if (countElement) {
-                countElement.textContent = teamData.members_count;
-              }
-
-              this.innerHTML = '<i class="fas fa-user-check"></i> Miembro';
-              this.classList.remove('btn-accent');
-              this.classList.add('btn-outline');
-              this.disabled = true;
-
-            } catch (error) {
-              console.error('Error joining team:', error);
-              this.innerHTML = '<i class="fas fa-user-plus"></i> Unirse';
-              this.disabled = false;
-              alert(error.message || 'Error al unirse');
-            }
-          });
-        });
-
         updatePagination();
       }
       
@@ -1151,12 +1085,7 @@
           alert('Error al crear causa');
           return;
         }
-
-        // 2. Incrementar el contador solo en esa comunidad
-        await supabase.rpc('increment_team_counter', {
-          team_id_input: teamId,
-          field_name: 'causes_count'
-        });
+        // Ya no se llama a la función RPC para el contador
       }
 
       // Crear tarea asociada a una comunidad y actualizar contador
@@ -1165,11 +1094,7 @@
         await supabase
           .from('tasks')
           .insert([{ title, description, team_id: teamId }]);
-        // 2. Incrementar el contador de tareas en esa comunidad
-        await supabase.rpc('increment_team_counter', {
-          team_id_input: teamId,
-          field_name: 'tasks_count'
-        });
+        // Ya no se llama a la función RPC para el contador
       }
 
       // Crear reto asociado a una comunidad y actualizar contador
@@ -1178,11 +1103,7 @@
         await supabase
           .from('challenges')
           .insert([{ title, description, team_id: teamId }]);
-        // 2. Incrementar el contador de retos en esa comunidad
-        await supabase.rpc('increment_team_counter', {
-          team_id_input: teamId,
-          field_name: 'challenges_count'
-        });
+        // Ya no se llama a la función RPC para el contador
       }
 
       // Crear voluntariado asociado a una comunidad y actualizar contador
@@ -1191,11 +1112,7 @@
         await supabase
           .from('volunteering')
           .insert([{ title, description, team_id: teamId }]);
-        // 2. Incrementar el contador de voluntariados en esa comunidad
-        await supabase.rpc('increment_team_counter', {
-          team_id_input: teamId,
-          field_name: 'volunteering_count'
-        });
+        // Ya no se llama a la función RPC para el contador
       }
 
       // Crear o actualizar el contador de beneficiarios en una comunidad
@@ -1205,12 +1122,7 @@
           .from('teams')
           .update({ beneficiaries: supabase.raw(`beneficiaries + ${delta}`) })
           .eq('id', teamId);
-
-        // 2. Llamar a la función RPC para actualizar el contador
-        await supabase.rpc('increment_team_counter', {
-          team_id_input: teamId,
-          field_name: 'beneficiaries'
-        });
+        // Ya no se llama a la función RPC para el contador
       }
 
       // Abrir modal de ver más comunidad
@@ -1496,7 +1408,7 @@
       document.addEventListener('click', async (e) => {
         const joinBtn = e.target.closest('.join-team-btn');
         if (!joinBtn || joinBtn.disabled) return;
-
+        console.log('Click en Unirse detectado', joinBtn); // <-- Añadido para depuración
         const teamId = joinBtn.dataset.teamId;
         const { data: { session } } = await supabase.auth.getSession();
 
@@ -1521,19 +1433,11 @@
               joined_at: new Date().toISOString()
             });
 
-          // Si ya es miembro (error 23505), no incrementes el contador
+          // Si ya es miembro (error 23505), solo actualiza UI y contador real
           if (insertError && insertError.code === '23505') {
-            // Ya es miembro, solo actualiza UI y contador real
+            // Ya es miembro
           } else if (insertError) {
             throw insertError;
-          } else {
-            // Solo si la inserción fue exitosa, incrementa el contador en la base de datos
-            const { error: updateError } = await supabase
-              .rpc('increment_team_counter', {
-                team_id_input: teamId,
-                field_name: 'members_count'
-              });
-            if (updateError) throw updateError;
           }
 
           // 2. Obtener el valor real actualizado desde Supabase
@@ -1547,7 +1451,7 @@
 
           // 3. Actualizar el contador en todas las tarjetas de este equipo
           document.querySelectorAll(`.team-card-classic[data-team-id="${teamId}"] .members-count-classic`).forEach(el => {
-            el.textContent = updatedTeam.members_count;
+             el.textContent = updatedTeam.members_count;
           });
 
           // 4. Cambiar el botón a "Miembro"
