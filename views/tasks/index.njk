@@ -370,6 +370,30 @@
             flex-direction: column;
         }
     }
+    /* NUEVOS ESTILOS PARA LA SECCIÓN DE INTRODUCCIÓN A LAS TAREAS */
+    .tasks-intro {
+      background: linear-gradient(135deg, #f0f9ff 0%, #e6f0fa 100%);
+      border-radius: 12px;
+      padding: 2rem;
+      margin-bottom: 2rem;
+      border: 1px solid #e2e8f0;
+    }
+    .tasks-intro h2 {
+      font-size: 1.8rem;
+      color: #166088;
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+    }
+    .tasks-intro h2 i {
+      color: #4fc3a1;
+    }
+    .tasks-intro p {
+      color: #4a6fa5;
+      font-size: 1.1rem;
+      line-height: 1.6;
+    }
   </style>
 {% endblock %}
 
@@ -481,6 +505,21 @@
     <div class="modal-content" id="causeModalContent" style="max-width:500px;">
       <button class="close-modal" id="closeCauseModal" title="Cerrar">&times;</button>
       <div id="causeModalBody"></div>
+    </div>
+  </div>
+
+  <!-- Sección de introducción a las tareas solidarias (espaciado igual que retos y volunteering) -->
+  <div class="main-container">
+    <div class="tasks-intro">
+      <div class="tasks-intro-content">
+        <h2>
+          <i class="fas fa-list-check"></i>
+          ¡Haz tareas solidarias y suma impacto real!
+        </h2>
+        <p>
+          Participa en tareas, ayuda a organizaciones y personas, gana puntos de impacto y desbloquea logros. Cada tarea completada es un paso más hacia un mundo mejor. ¡Tu acción cuenta!
+        </p>
+      </div>
     </div>
   </div>
 

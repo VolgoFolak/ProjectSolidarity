@@ -145,6 +145,7 @@
         font-size: 2rem;
         color: var(--primary);
         font-weight: 700;
+        margin-bottom: 0;
     }
     .volunteering-search {
         margin-bottom: 2rem;
@@ -489,6 +490,31 @@
         font-size: 0.9rem;
       }
     }
+
+    /* NUEVOS ESTILOS PARA LA SECCIÓN DE INTRODUCCIÓN A VOLUNTARIADOS */
+    .volunteering-intro {
+      background: linear-gradient(135deg, #f0f9ff 0%, #e6f0fa 100%);
+      border-radius: 12px;
+      padding: 2rem;
+      margin-bottom: 2rem;
+      border: 1px solid #e2e8f0;
+    }
+    .volunteering-intro h2 {
+      font-size: 1.8rem;
+      color: #166088;
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+    }
+    .volunteering-intro h2 i {
+      color: #4fc3a1;
+    }
+    .volunteering-intro p {
+      color: #4a6fa5;
+      font-size: 1.1rem;
+      line-height: 1.6;
+    }
   </style>
 {% endblock %}
 
@@ -640,8 +666,25 @@
 
   <!-- Contenido principal de la página de voluntariados -->
   <div class="main-container">
+
+    <!-- Volunteering Intro Section: LLAMADA A LA ACCIÓN -->
+    <div class="volunteering-intro">
+      <div class="volunteering-intro-content">
+        <h2>
+          <i class="fas fa-hands-helping"></i>
+          ¡Haz voluntariado y cambia vidas!
+        </h2>
+        <p>
+          Descubre oportunidades de voluntariado, aporta tu tiempo y talento, suma impacto y vive experiencias únicas ayudando a quienes más lo necesitan. ¡Cada acción solidaria cuenta!
+        </p>
+      </div>
+    </div>
+
+    <!-- Título y botón crear voluntariado -->
     <div class="volunteering-header">
-      <h1>Oportunidades de Voluntariado</h1>
+      <h1 class="main-title">
+        Oportunidades de Voluntariado
+      </h1>
       <a href="#" id="create-volunteering-btn" class="btn btn-primary">
         <i class="fas fa-plus"></i> Crear Voluntariado
       </a>
