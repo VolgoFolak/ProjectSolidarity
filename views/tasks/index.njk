@@ -716,10 +716,24 @@ async function loadTasksFromSupabase(filter = "all", searchTerm = "") {
     causes.forEach(c => causesMap[c.id] = c);
   }
 
+  // 1. Obtén el usuario actual UNA SOLA VEZ
+  const { data: { session } } = await supabase.auth.getSession();
+  const userId = session?.user?.id;
+
+  // 2. Obtén los task_ids donde el usuario ya participa UNA SOLA VEZ
+  let userTaskIds = [];
+  if (userId) {
+    const { data: memberships } = await supabase
+      .from('task_members')
+      .select('task_id')
+      .eq('user_id', userId);
+    userTaskIds = memberships ? memberships.map(m => m.task_id) : [];
+  }
+
   // Guardar las tareas en una variable global para acceder desde el modal
   window.tasks = tasks;
   
-  tasks.forEach(task => {
+  for (const task of tasks) {
     const urgentBadge = task.is_urgent ? `<div class="task-badge urgent"><i class="fas fa-exclamation-circle"></i> Urgente</div>` : "";
     const pointsBadge = `<div class="task-badge points"><i class="fas fa-star"></i> +${task.points || 0} pts</div>`;
     const location = task.city && task.country ? `${task.city}, ${task.country}` : "";
@@ -734,6 +748,14 @@ async function loadTasksFromSupabase(filter = "all", searchTerm = "") {
         </div>
       `;
     }
+    // ¿El usuario ya participa?
+    const isParticipating = userTaskIds.includes(task.id);
+
+    // Renderiza el botón según corresponda
+    const participateBtn = isParticipating
+      ? `<button class="btn btn-accent participate-btn" data-task-id="${task.id}" disabled style="opacity:0.7;cursor:not-allowed;">Participando</button>`
+      : `<button class="btn btn-accent participate-btn" data-task-id="${task.id}">Participar</button>`;
+
     const card = document.createElement('div');
     card.className = 'task-card';
     card.innerHTML = `
@@ -764,12 +786,12 @@ async function loadTasksFromSupabase(filter = "all", searchTerm = "") {
         </div>
         <div class="task-actions">
           <button class="btn btn-primary view-task-btn" data-task-id="${task.id}">Ver más</button>
-          <button class="btn btn-accent participate-btn" data-task-id="${task.id}">Participar</button>
+          ${participateBtn}
         </div>
       </div>
     `;
     tasksList.appendChild(card);
-  });
+  }
   
   // Agregar event listeners para los botones de ver más
   document.querySelectorAll('.view-task-btn').forEach(btn => {
@@ -855,6 +877,40 @@ async function showTaskModal(taskId) {
     }
   }
 
+  // Obtener participantes (user_id, username, photo_url)
+  const { data: members, error: membersError } = await supabase
+    .from('task_members')
+    .select('user_id, profiles(username, photo_url)')
+    .eq('task_id', taskId);
+
+  let participantsHtml = '';
+  if (members && members.length > 0) {
+    participantsHtml = `
+      <div class="content-section" style="margin-bottom:2.2rem;">
+        <h3 class="content-title" style="font-size:1.2rem; font-weight:600; color:var(--primary); margin-bottom:0.9rem; display:flex; align-items:center; gap:0.7rem;">
+          <i class="fas fa-users"></i> Participantes
+        </h3>
+        <div style="display:flex; flex-wrap:wrap; gap:1rem;">
+          ${members.map(m => `
+            <div style="display:flex; align-items:center; gap:0.6rem; background:#f8fafc; border-radius:8px; padding:0.5rem 1rem; border:1px solid #e5e7eb;">
+              <img src="${m.profiles?.photo_url || '/img/avatar-default.png'}" alt="${m.profiles?.username || 'Usuario'}" style="width:36px; height:36px; border-radius:50%; object-fit:cover; border:1px solid #e5e7eb;">
+              <span style="font-weight:600; color:var(--primary);">${m.profiles?.username || 'Usuario'}</span>
+            </div>
+          `).join('')}
+        </div>
+      </div>
+    `;
+  } else {
+    participantsHtml = `
+      <div class="content-section" style="margin-bottom:2.2rem;">
+        <h3 class="content-title" style="font-size:1.2rem; font-weight:600; color:var(--primary); margin-bottom:0.9rem; display:flex; align-items:center; gap:0.7rem;">
+          <i class="fas fa-users"></i> Participantes
+        </h3>
+        <div style="color:#6b7280;">Aún no hay participantes en esta tarea.</div>
+      </div>
+    `;
+  }
+
   document.getElementById('taskModalBody').innerHTML = `
     <div class="modal-task-container">
       <!-- Título principal centrado, más espacio abajo -->
@@ -902,7 +958,7 @@ async function showTaskModal(taskId) {
             </div>
             <div class="meta-item">
               <span class="meta-icon"><i class="fas fa-calendar-alt"></i></span>
-              <span>${endDate}</span>
+              <span>${task.end_date ? new Date(task.end_date).toLocaleDateString('es-ES', { year: 'numeric', month: 'long', day: 'numeric' }) : 'Sin fecha límite'}</span>
             </div>
           </div>
           <div class="points-notice" style="background:#f0f9ff; border-left:4px solid var(--accent); padding:0.8rem; border-radius:0 8px 8px 0; font-size:0.97rem; display:flex; align-items:center; gap:0.7rem;">
@@ -920,6 +976,7 @@ async function showTaskModal(taskId) {
           </h3>
           <p class="content-text" style="line-height:1.7; color:#4b5563; font-size:1.05rem; margin-left:0; margin-right:0; text-align:justify;">${task.description || 'No hay descripción disponible para esta tarea.'}</p>
         </div>
+        ${participantsHtml}
         <div class="content-section" style="margin-bottom:2.2rem;">
           <h3 class="content-title" style="font-size:1.2rem; font-weight:600; color:var(--primary); margin-bottom:0.9rem; display:flex; align-items:center; gap:0.7rem;">
             <i class="fas fa-info-circle"></i> Detalles adicionales
@@ -1038,8 +1095,63 @@ document.getElementById('taskModal').addEventListener('click', function(e) {
 });
 
 // Ejemplo de función para participar en tarea
-function participateInTask(taskId) {
-  alert('Funcionalidad de participación próximamente.');
+async function participateInTask(taskId) {
+  // 1. Verifica sesión
+  const { data: { session } } = await supabase.auth.getSession();
+  if (!session?.user) {
+    document.getElementById('loginModal').classList.add('active');
+    return;
+  }
+  const userId = session.user.id;
+
+  // 2. Intenta insertar en task_members (único por usuario y tarea)
+  const { error } = await supabase
+    .from('task_members')
+    .insert([{ task_id: taskId, user_id: userId }]);
+
+  if (error) {
+    if (error.code === '23505' || error.status === 409) { // unique violation
+      alert('Ya estás participando en esta tarea.');
+    } else {
+      alert('Error al participar: ' + error.message);
+    }
+    return;
+  }
+
+  // 3. Actualiza el botón inmediatamente
+  const btn = document.querySelector(`.participate-btn[data-task-id="${taskId}"]`);
+  if (btn) {
+    btn.textContent = "Participando";
+    btn.disabled = true;
+    btn.style.opacity = "0.7";
+    btn.style.cursor = "not-allowed";
+  }
+
+  // 4. Espera un momento a que el trigger actualice la tabla y actualiza el número de participantes
+  setTimeout(async () => {
+    const { data: task, error: fetchError } = await supabase
+      .from('tasks')
+      .select('participants')
+      .eq('id', taskId)
+      .single();
+
+    if (!fetchError && task) {
+      // Actualiza el número en la tarjeta del grid
+      const card = btn ? btn.closest('.task-card') : null;
+      if (card) {
+        // Actualiza el meta-item y la barra de progreso
+        const meta = card.querySelector('.meta-item i.fa-users').parentElement;
+        meta.innerHTML = `<i class="fas fa-users"></i> ${task.participants} participantes`;
+        const progressInfo = card.querySelector('.progress-info span');
+        progressInfo.textContent = `${task.participants} participantes`;
+        // Actualiza la barra de progreso
+        const beneficiaries = parseInt(card.querySelector('.beneficiaries-count').textContent.match(/\d+/)[0]);
+        const progressFill = card.querySelector('.progress-fill');
+        const percent = beneficiaries ? Math.min(Math.round((task.participants / beneficiaries) * 100), 100) : 0;
+        progressFill.style.width = percent + '%';
+      }
+    }
+  }, 400);
 }
 
 // Modifica loadTasksFromSupabase para usar el modal y listeners
@@ -1075,10 +1187,24 @@ async function loadTasksFromSupabase(filter = "all", searchTerm = "") {
     causes.forEach(c => causesMap[c.id] = c);
   }
 
+  // 1. Obtén el usuario actual UNA SOLA VEZ
+  const { data: { session } } = await supabase.auth.getSession();
+  const userId = session?.user?.id;
+
+  // 2. Obtén los task_ids donde el usuario ya participa UNA SOLA VEZ
+  let userTaskIds = [];
+  if (userId) {
+    const { data: memberships } = await supabase
+      .from('task_members')
+      .select('task_id')
+      .eq('user_id', userId);
+    userTaskIds = memberships ? memberships.map(m => m.task_id) : [];
+  }
+
   // Guardar las tareas en una variable global para acceder desde el modal
   window.tasks = tasks;
   
-  tasks.forEach(task => {
+  for (const task of tasks) {
     const urgentBadge = task.is_urgent ? `<div class="task-badge urgent"><i class="fas fa-exclamation-circle"></i> Urgente</div>` : "";
     const pointsBadge = `<div class="task-badge points"><i class="fas fa-star"></i> +${task.points || 0} pts</div>`;
     const location = task.city && task.country ? `${task.city}, ${task.country}` : "";
@@ -1093,6 +1219,14 @@ async function loadTasksFromSupabase(filter = "all", searchTerm = "") {
         </div>
       `;
     }
+    // ¿El usuario ya participa?
+    const isParticipating = userTaskIds.includes(task.id);
+
+    // Renderiza el botón según corresponda
+    const participateBtn = isParticipating
+      ? `<button class="btn btn-accent participate-btn" data-task-id="${task.id}" disabled style="opacity:0.7;cursor:not-allowed;">Participando</button>`
+      : `<button class="btn btn-accent participate-btn" data-task-id="${task.id}">Participar</button>`;
+
     const card = document.createElement('div');
     card.className = 'task-card';
     card.innerHTML = `
@@ -1123,12 +1257,12 @@ async function loadTasksFromSupabase(filter = "all", searchTerm = "") {
         </div>
         <div class="task-actions">
           <button class="btn btn-primary view-task-btn" data-task-id="${task.id}">Ver más</button>
-          <button class="btn btn-accent participate-btn" data-task-id="${task.id}">Participar</button>
+          ${participateBtn}
         </div>
       </div>
     `;
     tasksList.appendChild(card);
-  });
+  }
   
   // Agregar event listeners para los botones de ver más
   document.querySelectorAll('.view-task-btn').forEach(btn => {
@@ -1243,5 +1377,38 @@ document.getElementById('causeModal').onclick = function(e) {
     document.body.style.overflow = '';
   }
 };
+
+/* NUEVAS FUNCIONES */
+
+async function leaveTask(taskId) {
+  const { data: { session } } = await supabase.auth.getSession();
+  if (!session?.user) return;
+  const userId = session.user.id;
+
+  const { error } = await supabase
+    .from('task_members')
+    .delete()
+    .eq('task_id', taskId)
+    .eq('user_id', userId);
+
+  if (error) {
+    alert('Error al dejar de participar: ' + error.message);
+    return;
+  }
+
+  // Espera y actualiza el número igual que arriba
+  setTimeout(async () => {
+    const { data: task, error: fetchError } = await supabase
+      .from('tasks')
+      .select('participants')
+      .eq('id', taskId)
+      .single();
+
+    if (!fetchError && task) {
+      // Actualiza el DOM igual que en participateInTask
+      // ...
+    }
+  }, 400);
+}
 </script>
 {% endblock %}
