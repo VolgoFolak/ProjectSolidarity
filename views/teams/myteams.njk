@@ -792,6 +792,25 @@
       font-size: 1.05rem;
       margin-bottom: 0.5rem;
     }
+
+    .activity-cards-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2rem 2.5rem;
+      justify-items: center;
+      margin-bottom: 1.5rem;
+    }
+    @media (max-width: 700px) {
+      .activity-cards-grid {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+      }
+    }
+    .activity-card:hover {
+      box-shadow: 0 8px 32px #4a6fa522;
+      transform: translateY(-4px) scale(1.03);
+      transition: all 0.18s;
+    }
   </style>
 {% endblock %}
 
@@ -804,6 +823,7 @@
       
       <div class="admin-tabs">
         <button class="admin-tab active" data-tab="overview">Resumen</button>
+        <button class="admin-tab" data-tab="crearactividad">Crear actividad</button>
         <button class="admin-tab" data-tab="members">Miembros</button>
         <button class="admin-tab" data-tab="settings">Configuración</button>
         <button class="admin-tab" data-tab="content">Contenido</button>
@@ -837,21 +857,47 @@
           <span id="progressPercent">0% completado</span>
           <span id="progressAmount">0 € de 0 €</span>
         </div>
-        
-        <h3 style="margin-top: 2rem;">Acciones rápidas</h3>
-        <div class="team-actions-classic" style="margin-top: 1rem;">
-          <button class="btn btn-primary" id="createCauseBtn">
-            <i class="fas fa-heart"></i> Crear Causa
-          </button>
-          <button class="btn btn-accent" id="createTaskBtn">
-            <i class="fas fa-tasks"></i> Crear Tarea
-          </button>
-          <button class="btn btn-primary" id="createChallengeBtn">
-            <i class="fas fa-trophy"></i> Crear Reto
-          </button>
-          <button class="btn btn-accent" id="createVolunteeringBtn">
-            <i class="fas fa-hands-helping"></i> Crear Voluntariado
-          </button>
+      </div>
+      
+      <div class="admin-tab-content" id="crearactividadTab">
+        <h3 style="margin-bottom:1.5rem;">Crear nueva actividad</h3>
+        <div class="activity-cards-grid">
+          <div class="activity-card" style="background:linear-gradient(135deg,#e3f0ff 0%,#f8fafc 100%);border-radius:14px;padding:1.7rem 1.5rem;display:flex;flex-direction:column;align-items:center;box-shadow:0 4px 16px #4a6fa511;min-width:170px;max-width:320px;">
+            <div style="background:#4a6fa5;padding:1rem;border-radius:50%;margin-bottom:1rem;box-shadow:0 2px 8px #4a6fa522;">
+              <img src="https://cdn-icons-png.flaticon.com/512/833/833472.png" alt="Causa" style="width:44px;height:44px;">
+            </div>
+            <button class="btn btn-primary btn-lg" id="createCauseBtnTab" style="width:100%;margin-bottom:0.7rem;">
+              <i class="fas fa-heart"></i> Crear Causa
+            </button>
+            <span style="color:#4a6fa5;font-size:1em;text-align:center;">Apoya una causa solidaria</span>
+          </div>
+          <div class="activity-card" style="background:linear-gradient(135deg,#e6fff7 0%,#f8fafc 100%);border-radius:14px;padding:1.7rem 1.5rem;display:flex;flex-direction:column;align-items:center;box-shadow:0 4px 16px #4fc3a122;min-width:170px;max-width:320px;">
+            <div style="background:#4fc3a1;padding:1rem;border-radius:50%;margin-bottom:1rem;box-shadow:0 2px 8px #4fc3a122;">
+              <img src="https://cdn-icons-png.flaticon.com/512/3079/3079165.png" alt="Tarea" style="width:44px;height:44px;">
+            </div>
+            <button class="btn btn-accent btn-lg" id="createTaskBtnTab" style="width:100%;margin-bottom:0.7rem;background:#4fc3a1;color:#fff;">
+              <i class="fas fa-tasks"></i> Crear Tarea
+            </button>
+            <span style="color:#249e7a;font-size:1em;text-align:center;">Organiza tareas concretas</span>
+          </div>
+          <div class="activity-card" style="background:linear-gradient(135deg,#fffbe6 0%,#fffdf7 100%);border-radius:14px;padding:1.7rem 1.5rem;display:flex;flex-direction:column;align-items:center;box-shadow:0 4px 16px #ffe06644;min-width:170px;max-width:320px;">
+            <div style="background:#ffe066;padding:1rem;border-radius:50%;margin-bottom:1rem;box-shadow:0 2px 8px #ffe06688;">
+              <img src="https://cdn-icons-png.flaticon.com/512/2278/2278992.png" alt="Reto" style="width:44px;height:44px;">
+            </div>
+            <button class="btn btn-warning btn-lg" id="createChallengeBtnTab" style="width:100%;margin-bottom:0.7rem;background:#ffe066;color:#a67c00;border:none;">
+              <i class="fas fa-trophy"></i> Crear Reto
+            </button>
+            <span style="color:#a67c00;font-size:1em;text-align:center;">Lanza un reto divertido</span>
+          </div>
+          <div class="activity-card" style="background:linear-gradient(135deg,#e6faff 0%,#f8fafc 100%);border-radius:14px;padding:1.7rem 1.5rem;display:flex;flex-direction:column;align-items:center;box-shadow:0 4px 16px #4fc3a122;min-width:170px;max-width:320px;">
+            <div style="background:#00bcd4;padding:1rem;border-radius:50%;margin-bottom:1rem;box-shadow:0 2px 8px #00bcd422;">
+              <img src="https://cdn-icons-png.flaticon.com/512/616/616494.png" alt="Voluntariado" style="width:44px;height:44px;">
+            </div>
+            <button class="btn btn-info btn-lg" id="createVolunteeringBtnTab" style="width:100%;margin-bottom:0.7rem;background:#00bcd4;color:#fff;border:none;">
+              <i class="fas fa-hands-helping"></i> Crear Voluntariado
+            </button>
+            <span style="color:#249e7a;font-size:1em;text-align:center;">Convoca voluntariado</span>
+          </div>
         </div>
       </div>
       
@@ -922,18 +968,6 @@
           <div class="form-actions">
             <button type="submit" class="btn btn-primary">
               <i class="fas fa-save"></i> Guardar Cambios
-            </button>
-            <button type="button" class="btn btn-accent" id="createCauseBtnModal">
-              <i class="fas fa-heart"></i> Crear Causa
-            </button>
-            <button type="button" class="btn btn-accent" id="createTaskBtnModal">
-              <i class="fas fa-tasks"></i> Crear Tarea
-            </button>
-            <button type="button" class="btn btn-primary" id="createChallengeBtnModal">
-              <i class="fas fa-trophy"></i> Crear Reto
-            </button>
-            <button type="button" class="btn btn-primary" id="createVolunteeringBtnModal">
-              <i class="fas fa-hands-helping"></i> Crear Voluntariado
             </button>
           </div>
         </form>
@@ -1450,119 +1484,250 @@
             });
           }
 
-          // 3. Obtener los perfiles de todos los miembros
-          let profilesMap = {};
-          if (membersList.length) {
-            const userIds = membersList.map(m => m.user_id);
-            const { data: profiles, error: profilesError } = await supabase
-              .from('profiles')
-              .select('id, username, photo_url')
-              .in('id', userIds);
-
-            if (profilesError) {
-              console.error('Error cargando perfiles:', profilesError);
-            } else {
-              profilesMap = Object.fromEntries(profiles.map(p => [p.id, p]));
-            }
-          }
+          // 3. Cargar avatares
+          const userIds = membersList.map(m => m.user_id);
+          const { data: avatars } = await supabase
+            .from('profiles')
+            .select('id, avatar_url')
+            .in('id', userIds);
 
           // 4. Renderizar miembros
-          const membersHtml = `
-            <div style="margin-top:1.5rem;">
-              <h4 style="color:var(--primary);font-size:1.05rem;margin-bottom:0.5rem;">
-                <i class="fas fa-users"></i> Miembros (${membersList.length})
-              </h4>
-              <div style="display:flex;flex-wrap:wrap;gap:0.7rem;">
-                ${membersList.map(m => {
-                  const profile = profilesMap[m.user_id] || {};
-                  return `
-                    <div style="display:flex;align-items:center;gap:0.4rem;">
-                      <img src="${profile.photo_url ? profile.photo_url : 'https://ui-avatars.com/api/?name=' + encodeURIComponent(profile.username || 'Usuario')}" alt="${profile.username || 'Usuario'}" style="width:32px;height:32px;border-radius:50%;object-fit:cover;">
-                      <span style="font-size:0.98rem;color:#4a6fa5;">${profile.username || 'Usuario'}</span>
-                      <span class="role-badge ${m.role === 'founder' ? 'admin' : m.role}">
-                        ${m.role === 'founder' ? 'Fundador' : m.role.charAt(0).toUpperCase() + m.role.slice(1)}
-                      </span>
-                    </div>
-                  `;
-                }).join('')}
+          const container = document.getElementById('membersList');
+          container.innerHTML = '';
+          membersList.forEach(member => {
+            const isFounder = member.role === 'founder';
+            const avatar = avatars?.find(a => a.id === member.user_id)?.avatar_url || 'https://via.placeholder.com/40?text=No+Img';
+            const memberItem = document.createElement('div');
+            memberItem.className = 'member-item';
+            memberItem.innerHTML = `
+              <div class="member-info">
+                <img src="${avatar}" alt="${member.user_id}" class="member-avatar">
+                <span class="member-name">${member.user_id}</span>
               </div>
-            </div>
-          `;
-
-          const membersListContainer = document.getElementById('membersList');
-          membersListContainer.innerHTML = membersHtml;
+              <div class="member-actions">
+                ${isFounder ? `
+                  <span class="role-badge admin" style="font-size:0.8rem;">
+                    <i class="fas fa-crown"></i> Fundador
+                  </span>
+                ` : `
+                  <button class="btn btn-outline" onclick="removeMember('${member.user_id}', '${teamId}')">
+                    <i class="fas fa-user-minus"></i> Quitar
+                  </button>
+                `}
+              </div>
+            `;
+            container.appendChild(memberItem);
+          });
         } catch (error) {
           console.error('Error loading team members:', error);
         }
       }
 
-      // Guardar cambios en Supabase
-      document.getElementById('teamSettingsForm').onsubmit = async function(e) {
-        e.preventDefault();
-        const updatedTeam = {
-          name: document.getElementById('editTeamName').value,
-          description: document.getElementById('editTeamDesc').value,
-          category: document.getElementById('editTeamCategory').value,
-          privacy: document.getElementById('editTeamPrivacy').value,
-          tags: document.getElementById('editTeamTags').value.split(',').map(t => t.trim()).filter(Boolean),
-          goal: Number(document.getElementById('editTeamGoal').value) || null,
-        };
-
-        // Subida de imagen omitida para claridad
-
-        // DEBUG: muestra el usuario y el equipo
-        console.log('Intentando update', currentAdminTeam, session.user.id, updatedTeam);
-
-        const { data, error } = await supabase
-          .from('teams')
-          .update(updatedTeam)
-          .eq('id', currentAdminTeam.id)
-          .select();
-
-        if (error) {
-          alert('Error al guardar los cambios: ' + error.message);
-        } else if (!data || !data.length) {
-          alert('No se guardaron cambios. ¿Tienes permisos de edición?');
-        } else {
-          alert('¡Cambios guardados!');
-          await loadUserTeams();
-          document.getElementById('adminModal').classList.remove('active');
-          document.body.style.overflow = '';
+      async function removeMember(userId, teamId) {
+        if (confirm('¿Estás seguro de que quieres quitar a este miembro de la comunidad?')) {
+          try {
+            const { error } = await supabase
+              .from('team_members')
+              .delete()
+              .eq('user_id', userId)
+              .eq('team_id', teamId);
+            if (error) throw error;
+            alert('Miembro quitado de la comunidad.');
+            loadTeamMembers(teamId);
+          } catch (error) {
+            console.error('Error removing member:', error);
+            alert('Error al quitar miembro: ' + error.message);
+          }
         }
-      };
-    }); // Fin del DOMContentLoaded
-
-    // Permite cerrar el modal "Ver más" con la cruz o haciendo clic fuera
-    document.addEventListener('DOMContentLoaded', function() {
-      const teamModal = document.getElementById('teamModal');
-      const closeTeamModal = document.getElementById('closeTeamModal');
-      if (closeTeamModal) {
-        closeTeamModal.onclick = function() {
-          teamModal.classList.remove('active');
-          document.body.style.overflow = '';
-        };
       }
-     
-      if (teamModal) {
-        teamModal.onclick = function(e) {
-          if (e.target === teamModal) {
+
+      // Función para cargar actividades recientes
+      async function loadRecentActivities(teamId) {
+        try {
+          const { data: activities, error } = await supabase
+            .from('activities')
+            .select('*')
+            .eq('team_id', teamId)
+            .order('created_at', { ascending: false })
+            .limit(5);
+
+          if (error) throw error;
+
+          const container = document.getElementById('recentActivities');
+          container.innerHTML = '';
+          activities.forEach(activity => {
+            const activityItem = document.createElement('div');
+            activityItem.className = 'activity-item';
+            activityItem.style = 'background:#f8fafc; border-radius:12px; padding:1rem; margin-bottom:0.8rem; display:flex; align-items:center; gap:0.8rem;';
+            activityItem.innerHTML = `
+              <div style="flex-shrink: 0;">
+                <i class="fas fa-bolt" style="font-size:1.5rem; color:#4a6fa5;"></i>
+              </div>
+              <div style="flex-grow: 1;">
+                <div style="font-weight: 600; color:#2d3748;">${activity.title}</div>
+                <div style="font-size: 0.9rem; color:#4a5568;">${activity.description}</div>
+              </div>
+              <div style="white-space: nowrap;">
+                <span class="badge" style="background:#4a6fa5; color:white; padding:0.4rem 0.8rem; border-radius:10px; font-size:0.85rem;">${activity.type}</span>
+              </div>
+            `;
+            container.appendChild(activityItem);
+          });
+
+          if (activities.length === 0) {
+            container.innerHTML = '<div style="color:#718096; text-align:center; padding:1rem;">No hay actividades recientes en esta comunidad.</div>';
+          }
+        } catch (error) {
+          console.error('Error loading recent activities:', error);
+        }
+      }
+
+      // Función para crear una nueva causa (actividad)
+      async function createCause(teamId) {
+        const title = prompt('Ingrese el título de la causa:');
+        if (!title) return;
+        const description = prompt('Ingrese la descripción de la causa:');
+        if (!description) return;
+        try {
+          const { error } = await supabase
+            .from('activities')
+            .insert([{
+              team_id: teamId,
+              title,
+              description,
+              type: 'cause',
+              created_at: new Date()
+            }]);
+          if (error) throw error;
+          alert('Causa creada exitosamente.');
+          loadRecentActivities(teamId);
+        } catch (error) {
+          console.error('Error creating cause:', error);
+          alert('Error al crear causa: ' + error.message);
+        }
+      }
+
+      // Función para crear una nueva tarea
+      async function createTask(teamId) {
+        const title = prompt('Ingrese el título de la tarea:');
+        if (!title) return;
+        const description = prompt('Ingrese la descripción de la tarea:');
+        if (!description) return;
+        try {
+          const { error } = await supabase
+            .from('activities')
+            .insert([{
+              team_id: teamId,
+              title,
+              description,
+              type: 'task',
+              created_at: new Date()
+            }]);
+          if (error) throw error;
+          alert('Tarea creada exitosamente.');
+          loadRecentActivities(teamId);
+        } catch (error) {
+          console.error('Error creating task:', error);
+          alert('Error al crear tarea: ' + error.message);
+        }
+      }
+
+      // Función para crear un nuevo reto
+      async function createChallenge(teamId) {
+        const title = prompt('Ingrese el título del reto:');
+        if (!title) return;
+        const description = prompt('Ingrese la descripción del reto:');
+        if (!description) return;
+        try {
+          const { error } = await supabase
+            .from('activities')
+            .insert([{
+              team_id: teamId,
+              title,
+              description,
+              type: 'challenge',
+              created_at: new Date()
+            }]);
+          if (error) throw error;
+          alert('Reto creado exitosamente.');
+          loadRecentActivities(teamId);
+        } catch (error) {
+          console.error('Error creating challenge:', error);
+          alert('Error al crear reto: ' + error.message);
+        }
+      }
+
+      // Función para crear un nuevo voluntariado
+      async function createVolunteering(teamId) {
+        const title = prompt('Ingrese el título del voluntariado:');
+        if (!title) return;
+        const description = prompt('Ingrese la descripción del voluntariado:');
+        if (!description) return;
+        try {
+          const { error } = await supabase
+            .from('activities')
+            .insert([{
+              team_id: teamId,
+              title,
+              description,
+              type: 'volunteering',
+              created_at: new Date()
+            }]);
+          if (error) throw error;
+          alert('Voluntariado creado exitosamente.');
+          loadRecentActivities(teamId);
+        } catch (error) {
+          console.error('Error creating volunteering:', error);
+          alert('Error al crear voluntariado: ' + error.message);
+        }
+      }
+
+      // Eventos para los botones de crear actividad en el modal
+      document.getElementById('createCauseBtnTab').addEventListener('click', function() {
+        if (currentAdminTeam) createCause(currentAdminTeam.id);
+      });
+      document.getElementById('createTaskBtnTab').addEventListener('click', function() {
+        if (currentAdminTeam) createTask(currentAdminTeam.id);
+      });
+      document.getElementById('createChallengeBtnTab').addEventListener('click', function() {
+        if (currentAdminTeam) createChallenge(currentAdminTeam.id);
+      });
+      document.getElementById('createVolunteeringBtnTab').addEventListener('click', function() {
+        if (currentAdminTeam) createVolunteering(currentAdminTeam.id);
+      });
+
+      // Permite cerrar el modal "Ver más" con la cruz o haciendo clic fuera
+      document.addEventListener('DOMContentLoaded', function() {
+        const teamModal = document.getElementById('teamModal');
+        const closeTeamModal = document.getElementById('closeTeamModal');
+        if (closeTeamModal) {
+          closeTeamModal.onclick = function() {
             teamModal.classList.remove('active');
             document.body.style.overflow = '';
-          }
-        };
-      }
-    });
+          };
+        }
+       
+        if (teamModal) {
+          teamModal.onclick = function(e) {
+            if (e.target === teamModal) {
+              teamModal.classList.remove('active');
+              document.body.style.overflow = '';
+            }
+          };
+        }
+      });
 
-    function getCategoryName(category) {
-      const categories = {
-        'medio_ambiente': 'Medio Ambiente',
-        'educacion': 'Educación',
-        'salud': 'Salud',
-        'animales': 'Animales',
-        'comunidad': 'Comunidad',
-        'otros': 'Otros'
-      };
-      return categories[category] || 'General';
-    }
+      function getCategoryName(category) {
+        const categories = {
+          'medio_ambiente': 'Medio Ambiente',
+          'educacion': 'Educación',
+          'salud': 'Salud',
+          'animales': 'Animales',
+          'comunidad': 'Comunidad',
+          'otros': 'Otros'
+        };
+        return categories[category] || 'General';
+      }
+    }); // Fin del DOMContentLoaded
   </script>
 {% endblock %}
