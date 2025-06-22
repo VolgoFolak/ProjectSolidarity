@@ -598,6 +598,31 @@
     .share-btn-twitter { background: #1da1f2; }
     .share-btn-whatsapp { background: #25d366; }
     .share-btn-link { background: var(--primary); }
+
+    /* Estilos para la sección de introducción de causas */
+    .causes-intro {
+      background: linear-gradient(135deg, #f0f9ff 0%, #e6f0fa 100%);
+      border-radius: 12px;
+      padding: 2rem;
+      margin-bottom: 2rem;
+      border: 1px solid #e2e8f0;
+    }
+    .causes-intro h2 {
+      font-size: 1.8rem;
+      color: #166088;
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+    }
+    .causes-intro h2 i {
+      color: #4fc3a1;
+    }
+    .causes-intro p {
+      color: #4a6fa5;
+      font-size: 1.1rem;
+      line-height: 1.6;
+    }
   </style>
 {% endblock %}
 
@@ -694,6 +719,21 @@
       <button id="closeModal" style="position:absolute; top:1.5rem; right:1.5rem; background:none; border:none; font-size:1.8rem; color:#6b7280; cursor:pointer; transition:color 0.2s;" onmouseover="this.style.color='#4a6fa5'" onmouseout="this.style.color='#6b7280'">&times;</button>
       <div id="modalBody" style="padding:0.5rem;">
         <!-- Contenido dinámico -->
+      </div>
+    </div>
+  </div>
+
+  <!-- Sección de introducción a las causas solidarias (espaciado igual que retos y volunteering) -->
+  <div class="main-container">
+    <div class="causes-intro">
+      <div class="causes-intro-content">
+        <h2>
+          <i class="fas fa-seedling"></i>
+          ¡Descubre causas y suma tu impacto!
+        </h2>
+        <p>
+          Explora causas solidarias, conoce sus historias y encuentra cómo puedes ayudar. Cada causa es una oportunidad para transformar vidas y construir un mundo mejor. ¡Tu apoyo marca la diferencia!
+        </p>
       </div>
     </div>
   </div>
