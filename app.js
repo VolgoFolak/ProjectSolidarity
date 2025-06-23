@@ -182,6 +182,9 @@ app.get('/ranking', (req, res) => {
 app.get('/takeaction', (req, res) => {
     res.render('takeaction/index.njk');
 });
+app.get('/profile/myactivities', (req, res) => {
+    res.render('profile/myactivities');
+});
 
 // --- RUTAS DEL SISTEMA DE MENSAJERÍA ---
 app.get('/messages', (req, res) => {
@@ -399,7 +402,6 @@ app.post('/donate', async (req, res) => {
     res.status(400).json({ error: err.message });
   }
 });
-
 app.post('/api/impact-points', async (req, res) => {
   const { userId, points, communityId, weekly } = req.body;
 
