@@ -38,6 +38,17 @@
       margin-bottom: 0;
     }
     
+    .members-stats-overview {
+      font-size: 1.1rem;
+      color: #6b7280;
+    }
+    
+    .stats-number {
+      font-weight: 700;
+      color: var(--accent);
+      font-size: 1.3rem;
+    }
+    
     .members-intro {
       background: linear-gradient(135deg, #f0f9ff 0%, #e6f0fa 100%);
       border-radius: 12px;
@@ -70,12 +81,16 @@
       display: flex;
       align-items: center;
       gap: 0.7rem;
+      background: white;
+      border-radius: 8px;
+      padding: 0.8rem 1.2rem;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.05);
     }
     
     .members-search input {
       flex: 1;
-      padding: 0.6rem 1.2rem;
-      border-radius: 7px;
+      padding: 0.6rem 0.8rem;
+      border-radius: 5px;
       border: 1.5px solid var(--gray);
       font-size: 1.05rem;
       outline: none;
@@ -85,6 +100,11 @@
     
     .members-search input:focus {
       border-color: var(--primary);
+    }
+    
+    .members-search i {
+      margin-right: 0.5rem;
+      font-size: 1.2rem;
     }
     
     .tabs {
@@ -474,8 +494,8 @@
     
     <!-- Búsqueda -->
     <div class="members-search">
-      <input type="text" id="search-input" placeholder="Buscar por nombre, usuario, país...">
       <i class="fas fa-search" style="color:#4a6fa5;"></i>
+      <input type="text" id="search-input" placeholder="Buscar por nombre, usuario, país...">
     </div>
     
     <!-- Tabs para filtros -->
@@ -521,7 +541,7 @@
     // Variables globales
     let currentFilter = "all";
     let currentPage = 1;
-    let itemsPerPage = 15;
+    let itemsPerPage = 12;
     let totalMembers = 0;
     let allMembers = [];
     let filteredMembers = [];
@@ -564,7 +584,7 @@
       });
     });
 
-    // Cargar miembros desde Supabase
+    // Cargar miembros desde Supabase con manejo eficiente de errores y carga
     async function loadMembersFromSupabase() {
       try {
         // Loading state
@@ -574,44 +594,55 @@
           </div>
         `;
         
-        // 1. Get all profiles
+        // 1. Obtener los datos básicos de los perfiles (elimina verified)
         const { data: profiles, error } = await supabase
           .from('profiles')
-          .select('*')
-          .order('created_at', { ascending: false });
+          .select(`
+            id,
+            username,
+            first_name,
+            last_name,
+            photo_url,
+            city,
+            country,
+            impact_points,
+            bio,
+            created_at
+          `)
+          .order('impact_points', { ascending: false });
           
         if (error) throw error;
         
         // 2. Get additional data for each profile
         const memberData = [];
-        
+
         for (const profile of profiles) {
           // Get causes count
           const { count: causesCount } = await supabase
             .from('causes_members')
             .select('id', { count: 'exact', head: true })
             .eq('user_id', profile.id);
-            
+
           // Get volunteering count
           const { count: volunteeringCount } = await supabase
             .from('volunteering_members')
             .select('id', { count: 'exact', head: true })
             .eq('user_id', profile.id)
             .eq('status', 'active');
-          
-          // Get communities count (assuming there's a communities_members table)
+
+          // Get communities count
           const { count: communitiesCount } = await supabase
             .from('communities_members')
             .select('id', { count: 'exact', head: true })
             .eq('user_id', profile.id)
             .eq('status', 'active');
-          
-          // Get social shares count (assuming there's a shares table)
+
+          // Get shares count
           const { count: sharesCount } = await supabase
             .from('shares')
             .select('id', { count: 'exact', head: true })
             .eq('user_id', profile.id);
-          
+
           memberData.push({
             ...profile,
             causesCount: causesCount || 0,
@@ -620,8 +651,7 @@
             sharesCount: sharesCount || 0
           });
         }
-        
-        // Save members data globally
+
         allMembers = memberData;
         totalMembers = memberData.length;
         document.getElementById('total-members').textContent = totalMembers;
@@ -633,7 +663,7 @@
         document.getElementById('membersList').innerHTML = `
           <div style="text-align: center; padding: 2rem; grid-column: 1/-1;">
             <p>Error cargando miembros. Por favor intenta de nuevo más tarde.</p>
-            <button class="btn btn-primary" onclick="loadMembersFromSupabase()">
+            <button class="btn btn-primary" style="padding:0.6rem 1.2rem; background:var(--primary); color:white; border:none; border-radius:5px; cursor:pointer; margin-top:1rem;" onclick="loadMembersFromSupabase()">
               <i class="fas fa-sync"></i> Reintentar
             </button>
           </div>
@@ -683,11 +713,11 @@
         case 'international':
           // Filter only international members and then sort by country
           filteredMembers = filteredMembers.filter(m => m.country && m.country.trim() !== '');
-          filteredMembers.sort((a, b) => a.country.localeCompare(b.country));
+          filteredMembers.sort((a, b) => (a.country || '').localeCompare(b.country || ''));
           break;
         default:
-          // Default sorting by newest
-          filteredMembers.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+          // Default sorting by impact points
+          filteredMembers.sort((a, b) => (b.impact_points || 0) - (a.impact_points || 0));
       }
       
       // Update the view with paginated results
@@ -762,14 +792,13 @@
         ${rank <= 10 ? `<div class="member-rank ${isTop3 ? 'top-3' : ''}">${rank}</div>` : ''}
         <div class="member-level"><i class="fas fa-${levelIcon}"></i> ${level}</div>
         <div class="member-header">
-          <img src="${member.avatar_url || '/img/default-avatar.png'}" 
+          <img src="${member.photo_url || '/img/default-avatar.png'}" 
                alt="${member.username || 'Usuario'}" 
                class="member-avatar" 
                onerror="this.src='/img/default-avatar.png'">
           <div class="member-info">
             <div class="member-name">
               ${member.first_name || ''} ${member.last_name || ''}
-              ${member.verified ? '<i class="fas fa-check-circle" title="Perfil verificado"></i>' : ''}
             </div>
             <div class="member-username">@${member.username || 'usuario'}</div>
             <div class="member-location">
@@ -929,7 +958,7 @@
       document.getElementById('membersList').scrollIntoView({ behavior: 'smooth' });
     }
 
-    // Mostrar el perfil de un miembro
+    // Mostrar el perfil de un miembro en modal
     async function showMemberProfile(member) {
       // In a real app, you might want to fetch more details here
       const profileModal = document.getElementById('profileModal');
@@ -944,12 +973,14 @@
       
       profileModalBody.innerHTML = `
         <div class="profile-modal-header" style="display:flex;align-items:center;gap:1.5rem;margin-bottom:2rem;">
-          <img src="${member.avatar_url || '/img/default-avatar.png'}" 
+          <img src="${member.photo_url || '/img/default-avatar.png'}" 
                alt="${member.username || 'Usuario'}" 
                style="width:100px;height:100px;border-radius:50%;object-fit:cover;border:3px solid var(--primary-light);"
                onerror="this.src='/img/default-avatar.png'">
           <div>
-            <h2 style="color:var(--primary);margin-bottom:0.5rem;font-size:1.8rem;">${member.first_name || ''} ${member.last_name || ''}</h2>
+            <h2 style="color:var(--primary);margin-bottom:0.5rem;font-size:1.8rem;">
+              ${member.first_name || ''} ${member.last_name || ''}
+            </h2>
             <div style="color:#6b7280;margin-bottom:0.5rem;font-size:1.1rem;">@${member.username || 'usuario'}</div>
             <div style="display:flex;align-items:center;gap:0.5rem;color:#6b7280;">
               <i class="fas fa-map-marker-alt" style="color:var(--primary);"></i>
@@ -990,7 +1021,7 @@
           <div style="color:#6b7280;">
             <i class="fas fa-calendar-check"></i> Miembro desde ${joinDate}
           </div>
-          <a href="/profile/${member.id}" class="btn btn-primary" style="display:flex;align-items:center;gap:0.5rem;text-decoration:none;padding:0.6rem 1.2rem;">
+          <a href="/profile/${member.id}" class="btn btn-primary" style="display:flex;align-items:center;gap:0.5rem;text-decoration:none;padding:0.6rem 1.2rem;background:var(--primary);color:white;border-radius:8px;font-weight:600;">
             <i class="fas fa-external-link-alt"></i> Ver perfil completo
           </a>
         </div>
