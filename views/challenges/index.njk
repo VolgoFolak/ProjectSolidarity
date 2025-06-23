@@ -100,6 +100,12 @@
       .challenge-actions { flex-direction: column; }
       .challenges-search { max-width: 100%; }
     }
+    .form-group.urgent-group {
+      display: flex;
+      align-items: center;
+      gap: 0.7rem;
+      margin-bottom: 0;
+    }
   </style>
 {% endblock %}
 
@@ -145,13 +151,11 @@
         <div class="form-group">
           <label for="challenge_type">Tipo de reto</label>
           <select id="challenge_type" name="challenge_type" required>
-            <option value="duel">Duelo 1vs1</option>
+            <option value="duel" selected>Duelo 1vs1</option>
             <option value="open">Reto abierto</option>
-            <option value="community">Reto de comunidad</option>
-            <option value="creative">Reto creativo</option>
           </select>
         </div>
-        <div class="form-group" id="opponentGroup" style="display:none;">
+        <div class="form-group" id="opponentGroup" style="display:block;">
           <label for="opponent-select">¿A quién quieres retar?</label>
           <select id="opponent-select" name="opponent_id">
             <option value="">Selecciona un usuario</option>
@@ -185,9 +189,10 @@
           <label for="deadline">Fecha límite</label>
           <input type="date" id="deadline" name="deadline" required>
         </div>
-        <div class="form-group">
-          <label for="is_urgent">
-            <input type="checkbox" id="is_urgent" name="is_urgent"> Marcar como urgente
+        <div class="form-group" style="display:flex; align-items:center; gap:0.7rem; margin-bottom:0;">
+          <input type="checkbox" id="is_urgent" name="is_urgent" style="width:18px; height:18px; accent-color:var(--urgent); margin:0;">
+          <label for="is_urgent" style="margin:0; font-weight:500; color:#e53e3e; cursor:pointer;">
+            Marcar como urgente
           </label>
         </div>
         <input type="hidden" id="lat" name="lat">
@@ -240,12 +245,11 @@
       <input type="text" id="search-input" placeholder="Buscar por título, país, descripción...">
       <i class="fas fa-search" style="color:#4a6fa5;"></i>
     </div>
+    <!-- Tabs -->
     <div class="tabs">
       <button class="tab active" data-filter="all">Todos los retos</button>
       <button class="tab" data-filter="duel">Duelos 1vs1</button>
       <button class="tab" data-filter="open">Retos abiertos</button>
-      <button class="tab" data-filter="community">Retos comunitarios</button>
-      <button class="tab" data-filter="creative">Retos creativos</button>
     </div>
     <div class="challenges-grid" id="challengesList">
       <!-- Aquí se cargarán los retos desde Supabase -->
@@ -324,6 +328,13 @@ document.addEventListener('DOMContentLoaded', async function() {
   document.getElementById('challenge_type').addEventListener('change', function() {
     const opponentGroup = document.getElementById('opponentGroup');
     opponentGroup.style.display = this.value === 'duel' ? 'block' : 'none';
+  });
+
+  // Al cargar el modal, mostrar el campo de oponente si el valor inicial es 'duel'
+  document.addEventListener('DOMContentLoaded', function() {
+    const challengeType = document.getElementById('challenge_type');
+    const opponentGroup = document.getElementById('opponentGroup');
+    opponentGroup.style.display = challengeType.value === 'duel' ? 'block' : 'none';
   });
 
   // Vista previa de imagen
@@ -455,10 +466,9 @@ document.addEventListener('DOMContentLoaded', async function() {
 
   // Cargar causas en el mapa
   await loadCausesMap();
-
-  // Cargar retos al inicio
   loadChallengesFromSupabase();
-});
+
+}); // <-- Solo este cierre para el bloque DOMContentLoaded
 
 // Cargar causas en el select al abrir el modal de crear reto
 async function loadCausesForSelect() {
@@ -553,9 +563,15 @@ async function geocodeCityCountry() {
 
 // Cargar causas en el mapa
 async function loadCausesMap() {
-  const { data: causes } = await supabase.from('causes').select('id, title');
+  const { data: causes } = await supabase.from('causes').select('id, title, photo_url');
   if (causes) {
-    causes.forEach(c => causesMap[c.id] = c.title);
+    causesMap = {}; // Reinicia el mapa para evitar residuos
+    causes.forEach(c => {
+      causesMap[c.id] = {
+        title: c.title,
+        photo_url: c.photo_url
+      };
+    });
   }
 }
 
@@ -614,10 +630,16 @@ async function loadChallengesFromSupabase(filter = "all", searchTerm = "") {
     const deadline = challenge.deadline ? new Date(challenge.deadline).toLocaleDateString('es-ES', { day: 'numeric', month: 'short' }) : "";
     let causeHtml = '';
     if (challenge.cause_id && causesMap[challenge.cause_id]) {
+      const cause = causesMap[challenge.cause_id];
       causeHtml = `
-        <div class="linked-cause" style="display:flex;align-items:center;gap:0.5rem;">
-          <i class="fas fa-link" style="color:var(--primary);"></i>
-          <span style="color:var(--primary);font-weight:600;">${causesMap[challenge.cause_id]}</span>
+        <div class="linked-cause" style="display:inline-flex;align-items:center;gap:0.4rem;margin-bottom:0.7rem;">
+          <i class="fas fa-link" style="color:var(--primary);font-size:0.92rem;"></i>
+          <img src="${cause.photo_url || '/img/causa-default.jpg'}"
+               alt="Causa vinculada"
+               style="width:20px;height:20px;object-fit:cover;border-radius:50%;border:1px solid var(--primary);background:#fff;">
+          <span style="color:var(--primary);font-weight:600;font-size:0.92rem;display:inline-block;vertical-align:middle;line-height:1.2;">
+            ${cause.title}
+          </span>
         </div>
       `;
     }
@@ -640,12 +662,12 @@ async function loadChallengesFromSupabase(filter = "all", searchTerm = "") {
         ${typeBadge}
         <img src="${challenge.photo_url || '/img/challenge-default.jpg'}" alt="${challenge.title}" onerror="this.src='/img/challenge-default.jpg'">
         ${urgentBadge}
-        ${pointsBadge}
       </div>
       <div class="challenge-content">
         <h3>${challenge.title}</h3>
-        <p style="font-weight:600;color:#4a6fa5;">${challenge.summary || ''}</p>
-        <p>${challenge.description ? challenge.description.substring(0, 100) + (challenge.description.length > 100 ? '...' : '') : ''}</p>
+        <p style="color:#6b7280; margin-bottom:1.5rem; font-size:0.95rem; line-height:1.6;">
+          ${challenge.summary || ''}
+        </p>
         ${causeHtml}
         <div class="challenge-meta">
           <div class="meta-item"><i class="fas fa-map-marker-alt"></i> ${location}</div>
@@ -696,26 +718,32 @@ async function showChallengeModal(challengeId) {
       .single();
     if (cause) {
       causeInfo = `
-        <div class="linked-cause-section" style="margin-bottom:1.5rem;">
-          <h3 class="content-title" style="font-size:1.2rem; font-weight:600; color:var(--primary); margin-bottom:0.9rem; display:flex; align-items:center; gap:0.7rem;">
-            <i class="fas fa-link"></i> Vinculado a la causa
-          </h3>
-          <div style="display:flex; align-items:center; gap:1rem; background:#f8fafc; padding:1rem; border-radius:8px; border:1px solid #e5e7eb;">
-            <img src="${cause.photo_url || '/img/causa-default.jpg'}"
-                 alt="Imagen de la causa vinculada"
-                 style="width:80px; height:80px; object-fit:cover; border-radius:6px;"
-                 onerror="this.src='/img/causa-default.jpg'">
-            <div>
-              <strong style="color:var(--primary);">${cause.title}</strong>
-              <p style="margin-top:0.3rem; font-size:0.9rem; color:#6b7280;">Causa #${challenge.cause_id}</p>
-              <a href="/causes/${challenge.cause_id}" class="btn btn-sm" style="margin-top:0.5rem; padding:0.3rem 0.8rem; font-size:0.85rem;"
-                 onclick="showCauseModal('${challenge.cause_id}'); return false;">
-                <i class="fas fa-external-link-alt"></i> Ver causa
-              </a>
-            </div>
+    <div class="linked-cause-section" style="margin-bottom:1.5rem;">
+      <h3 class="content-title" style="font-size:1.2rem; font-weight:600; color:var(--primary); margin-bottom:0.9rem; display:flex; align-items:center; gap:0.7rem;">
+        <i class="fas fa-link"></i> Vinculado a la causa
+      </h3>
+      <div style="display:flex; align-items:center; gap:1.2rem; background:#f8fafc; padding:1rem; border-radius:8px; border:1px solid #e5e7eb;">
+        <img src="${cause.photo_url || '/img/causa-default.jpg'}"
+             alt="Imagen de la causa vinculada"
+             style="width:80px; height:80px; object-fit:cover; border-radius:6px;"
+             onerror="this.src='/img/causa-default.jpg'">
+        <div style="flex:1; min-width:0;">
+          <div style="font-weight:700; color:var(--primary); font-size:1.05rem; margin-bottom:0.2rem; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">
+            ${cause.title}
+          </div>
+          <div style="color:#6b7280; font-size:0.97rem; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:260px;">
+            ${cause.short_description || 'Sin resumen disponible'}
           </div>
         </div>
-      `;
+        <a href="/causes/${challenge.cause_id}" 
+           class="btn btn-primary" 
+           style="margin-left:1.2rem; white-space:nowrap; font-size:0.97rem; padding:0.5rem 1.1rem; display:flex; align-items:center; gap:0.5rem;"
+           onclick="showCauseModal('${challenge.cause_id}'); return false;">
+          <i class="fas fa-arrow-right"></i> Ver causa
+        </a>
+      </div>
+    </div>
+  `;
     }
   }
 
@@ -748,90 +776,99 @@ async function showChallengeModal(challengeId) {
   }
 
   document.getElementById('challengeModalBody').innerHTML = `
-    <div class="modal-task-container">
-      <h1 class="modal-task-title" style="font-size:2rem; font-weight:800; color:var(--primary); margin-bottom:2.7rem; text-align:center; width:100%;">${challenge.title}</h1>
-      <div class="modal-task-header" style="display:flex; gap:2.5rem; margin-bottom:2.7rem;">
-        <div class="modal-task-image-wrapper" style="flex:1; min-width:320px; height:300px; border-radius:12px; overflow:hidden; position:relative; box-shadow:0 4px 12px rgba(0,0,0,0.08);">
-          <div class="modal-cause-badge" style="top:1.2rem; left:1.2rem; right:auto; background:var(--accent); color:white; position:absolute; border-radius:50px; padding:0.5rem 1rem; font-size:0.9rem; font-weight:600; display:flex; align-items:center; gap:0.6rem; box-shadow:0 2px 8px rgba(0,0,0,0.1); z-index:2;">
-            <i class="fas ${tipoIcon}"></i> ${tipo}
-          </div>
-          <img class="modal-task-image" src="${challenge.photo_url || '/img/challenge-default.jpg'}"
-               alt="Imagen del reto ${challenge.title}"
-               style="width:100%;height:100%;object-fit:cover;"
-               onerror="this.src='/img/challenge-default.jpg'">
-          ${challenge.is_urgent ? `
-          <div class="modal-cause-badge urgent" style="right:1.2rem; left:auto; top:1.2rem; background:var(--urgent); color:white; border-radius:50px; padding:0.5rem 1rem; font-size:0.9rem; font-weight:600; display:flex; align-items:center; gap:0.6rem; box-shadow:0 2px 8px rgba(0,0,0,0.1); z-index:2;">
-            <i class="fas fa-exclamation-circle"></i> Urgente
-          </div>` : ''}
+  <div class="modal-task-container">
+    <h1 class="modal-task-title" style="font-size:2rem; font-weight:800; color:var(--primary); margin-bottom:2.7rem; text-align:center; width:100%;">${challenge.title}</h1>
+    <div class="modal-task-header" style="display:flex; gap:2.5rem; margin-bottom:2.7rem;">
+      <div class="modal-task-image-wrapper" style="flex:1; min-width:320px; height:300px; border-radius:12px; overflow:hidden; position:relative; box-shadow:0 4px 12px rgba(0,0,0,0.08);">
+        <div class="modal-cause-badge" style="top:1.2rem; left:1.2rem; right:auto; background:var(--accent); color:white; position:absolute; border-radius:50px; padding:0.5rem 1rem; font-size:0.9rem; font-weight:600; display:flex; align-items:center; gap:0.6rem; box-shadow:0 2px 8px rgba(0,0,0,0.1); z-index:2;">
+          <i class="fas ${tipoIcon}"></i> ${tipo}
         </div>
-        <div class="modal-task-info" style="flex:1.5; display:flex; flex-direction:column; justify-content:flex-start;">
-          <div class="modal-task-meta-grid" style="display:grid; grid-template-columns:1fr 1fr; gap:0.7rem 1.2rem; margin-bottom:1.2rem;">
-            <div class="meta-item">
-              <span class="meta-icon"><i class="fas fa-map-marker-alt"></i></span>
-              <span>${challenge.city || 'Sin ubicación'}${challenge.country ? ', ' + challenge.country : ''}</span>
-            </div>
-            <div class="meta-item">
-              <span class="meta-icon"><i class="fas fa-star"></i></span>
-              <span>${challenge.points || 0} puntos</span>
-            </div>
-            <div class="meta-item">
-              <span class="meta-icon"><i class="fas fa-calendar-alt"></i></span>
-              <span>${deadline}</span>
-            </div>
-            <div class="meta-item">
-              <span class="meta-icon"><i class="fas fa-bolt"></i></span>
-              <span>${tipo}</span>
-            </div>
+        <img class="modal-task-image" src="${challenge.photo_url || '/img/challenge-default.jpg'}"
+             alt="Imagen del reto ${challenge.title}"
+             style="width:100%;height:100%;object-fit:cover;"
+             onerror="this.src='/img/challenge-default.jpg'">
+        ${challenge.is_urgent ? `
+        <div class="modal-cause-badge urgent" style="right:1.2rem; left:auto; top:1.2rem; background:var(--urgent); color:white; border-radius:50px; padding:0.5rem 1rem; font-size:0.9rem; font-weight:600; display:flex; align-items:center; gap:0.6rem; box-shadow:0 2px 8px rgba(0,0,0,0.1); z-index:2;">
+          <i class="fas fa-exclamation-circle"></i> Urgente
+        </div>` : ''}
+      </div>
+      <div class="modal-task-info" style="flex:1.5; display:flex; flex-direction:column; justify-content:flex-start;">
+        <div class="modal-task-meta-grid" style="display:grid; grid-template-columns:1fr 1fr; gap:0.7rem 1.2rem; margin-bottom:1.2rem;">
+          <div class="meta-item">
+            <span class="meta-icon"><i class="fas fa-map-marker-alt"></i></span>
+            <span>${challenge.city || 'Sin ubicación'}${challenge.country ? ', ' + challenge.country : ''}</span>
           </div>
-          <div class="points-notice" style="background:#f0f9ff; border-left:4px solid var(--accent); padding:0.8rem; border-radius:0 8px 8px 0; font-size:0.97rem; display:flex; align-items:center; gap:0.7rem;">
-            <i class="fas fa-star" style="color: var(--accent);"></i>
-            Completar este reto otorga <strong>${challenge.points || 0} puntos</strong>
+          <div class="meta-item">
+            <span class="meta-icon"><i class="fas fa-star"></i></span>
+            <span>${challenge.points || 0} puntos</span>
           </div>
+          <div class="meta-item">
+            <span class="meta-icon"><i class="fas fa-calendar-alt"></i></span>
+            <span>${deadline}</span>
+          </div>
+          <div class="meta-item">
+            <span class="meta-icon"><i class="fas fa-bolt"></i></span>
+            <span>${tipo}</span>
+          </div>
+        </div>
+        <div class="points-notice" style="background:#f0f9ff; border-left:4px solid var(--accent); padding:0.8rem; border-radius:0 8px 8px 0; font-size:0.97rem; display:flex; align-items:center; gap:0.7rem;">
+          <i class="fas fa-star" style="color: var(--accent);"></i>
+          Completar este reto otorga <strong>${challenge.points || 0} puntos</strong>
         </div>
       </div>
-      ${causeInfo}
-      <div class="modal-task-content" style="margin-top:0;">
-        <div class="content-section" style="margin-bottom:2.2rem;">
-          <h3 class="content-title" style="font-size:1.2rem; font-weight:600; color:var(--primary); margin-bottom:0.9rem; display:flex; align-items:center; gap:0.7rem;">
-            <i class="fas fa-align-left"></i> Descripción
-          </h3>
-          <p class="content-text" style="line-height:1.7; color:#4b5563; font-size:1.05rem; margin-left:0; margin-right:0; text-align:justify;">${challenge.description || 'No hay descripción disponible para este reto.'}</p>
-        </div>
-        <div class="content-section" style="margin-bottom:2.2rem;">
-          <h3 class="content-title" style="font-size:1.2rem; font-weight:600; color:var(--primary); margin-bottom:0.9rem; display:flex; align-items:center; gap:0.7rem;">
-            <i class="fas fa-info-circle"></i> Detalles adicionales
-          </h3>
-          <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem;">
-            <div>
-              <p style="font-weight:600; color:#4b5563; margin-bottom:0.3rem;">Fecha de creación</p>
-              <p style="color:#6b7280;">${createdDate}</p>
-            </div>
-            <div>
-              <p style="font-weight:600; color:#4b5563; margin-bottom:0.3rem;">Estado</p>
-              <p style="color:#6b7280;">${challenge.status === 'completed' ? 'Completado' : 'En progreso'}</p>
-            </div>
-            <div>
-              <p style="font-weight:600; color:#4b5563; margin-bottom:0.3rem;">Prioridad</p>
-              <p style="color:#6b7280;">${challenge.is_urgent ? 'Alta prioridad' : 'Prioridad normal'}</p>
-            </div>
-            <div>
-              <p style="font-weight:600; color:#4b5563; margin-bottom:0.3rem;">Tipo</p>
-              <p style="color:#6b7280;">${tipo}</p>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="task-actions" style="display:flex; gap:0.8rem; margin-top:2.2rem;">
-        <button class="btn btn-primary btn-aceptar" data-challenge-id="${challenge.id}" style="flex:1;">
-          <i class="fas fa-hand-holding-heart"></i> Aceptar reto
-        </button>
-        <button class="btn btn-accent" style="flex:1;" onclick="showShareOptionsChallenge('${challenge.id}')">
-          <i class="fas fa-share-alt"></i> Compartir
-        </button>
-      </div>
-      <div class="share-section" id="shareSectionChallenge"></div>
     </div>
-  `;
+    ${causeInfo}
+    <!-- SECCIÓN DE RESUMEN -->
+    <div class="content-section" style="margin-bottom:2.2rem;">
+      <h3 class="content-title" style="font-size:1.2rem; font-weight:600; color:var(--primary); margin-bottom:0.9rem; display:flex; align-items:center; gap:0.7rem;">
+        <i class="fas fa-align-left"></i> Resumen
+      </h3>
+      <p class="content-text" style="line-height:1.7; color:#4b5563; font-size:1.05rem; margin-left:0; margin-right:0; text-align:justify;">
+        ${challenge.summary || 'No hay resumen disponible para este reto.'}
+      </p>
+    </div>
+    <div class="modal-task-content" style="margin-top:0;">
+      <div class="content-section" style="margin-bottom:2.2rem;">
+        <h3 class="content-title" style="font-size:1.2rem; font-weight:600; color:var(--primary); margin-bottom:0.9rem; display:flex; align-items:center; gap:0.7rem;">
+          <i class="fas fa-align-left"></i> Descripción
+        </h3>
+        <p class="content-text" style="line-height:1.7; color:#4b5563; font-size:1.05rem; margin-left:0; margin-right:0; text-align:justify;">${challenge.description || 'No hay descripción disponible para este reto.'}</p>
+      </div>
+      <div class="content-section" style="margin-bottom:2.2rem;">
+        <h3 class="content-title" style="font-size:1.2rem; font-weight:600; color:var(--primary); margin-bottom:0.9rem; display:flex; align-items:center; gap:0.7rem;">
+          <i class="fas fa-info-circle"></i> Detalles adicionales
+        </h3>
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem;">
+          <div>
+            <p style="font-weight:600; color:#4b5563; margin-bottom:0.3rem;">Fecha de creación</p>
+            <p style="color:#6b7280;">${createdDate}</p>
+          </div>
+          <div>
+            <p style="font-weight:600; color:#4b5563; margin-bottom:0.3rem;">Estado</p>
+            <p style="color:#6b7280;">${challenge.status === 'completed' ? 'Completado' : 'En progreso'}</p>
+          </div>
+          <div>
+            <p style="font-weight:600; color:#4b5563; margin-bottom:0.3rem;">Prioridad</p>
+            <p style="color:#6b7280;">${challenge.is_urgent ? 'Alta prioridad' : 'Prioridad normal'}</p>
+          </div>
+          <div>
+            <p style="font-weight:600; color:#4b5563; margin-bottom:0.3rem;">Tipo</p>
+            <p style="color:#6b7280;">${tipo}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="task-actions" style="display:flex; gap:0.8rem; margin-top:2.2rem;">
+      <button class="btn btn-primary btn-aceptar" data-challenge-id="${challenge.id}" style="flex:1;">
+        <i class="fas fa-hand-holding-heart"></i> Aceptar reto
+      </button>
+      <button class="btn btn-accent" style="flex:1;" onclick="showShareOptionsChallenge('${challenge.id}')">
+        <i class="fas fa-share-alt"></i> Compartir
+      </button>
+    </div>
+    <div class="share-section" id="shareSectionChallenge"></div>
+  </div>
+`;
 
   document.getElementById('challengeModal').style.display = 'flex';
   document.body.style.overflow = 'hidden';

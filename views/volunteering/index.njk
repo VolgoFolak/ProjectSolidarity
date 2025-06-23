@@ -306,13 +306,34 @@
     .linked-cause {
         display: inline-flex;
         align-items: center;
-        background: #f0f0ff;
-        color: var(--primary);
-        padding: 0.3rem 0.8rem;
-        border-radius: 50px;
-        font-size: 0.85rem;
+        gap: 0.4rem;
+        margin-bottom: 0.7rem;
+        background: none !important;
+        padding: 0 !important;
+        border-radius: 0 !important;
+        font-size: 0.92rem !important;
         font-weight: 600;
-        margin-bottom: 1rem;
+        color: var(--primary);
+    }
+    .linked-cause img {
+        width: 20px !important;
+        height: 20px !important;
+        object-fit: cover;
+        border-radius: 50%;
+        border: 1px solid var(--primary);
+        background: #fff;
+    }
+    .linked-cause i {
+        color: var(--primary);
+        font-size: 0.92rem;
+    }
+    .linked-cause span {
+        color: var(--primary);
+        font-weight: 600;
+        font-size: 0.92rem;
+        display: inline-block;
+        vertical-align: middle;
+        line-height: 1.2;
     }
     .volunteering-progress {
         margin-bottom: 1.5rem;
@@ -714,6 +735,7 @@
 <script>
 let currentFilter = "all";
 let causeChoices = null;
+let causesMap = {};
 
 document.addEventListener('DOMContentLoaded', async function() {
   // Abrir modal de crear voluntariado
@@ -893,6 +915,7 @@ document.addEventListener('DOMContentLoaded', async function() {
   });
 
   // Cargar voluntariados al iniciar
+  await loadCausesMap();
   await loadVolunteeringFromSupabase();
 });
 
@@ -925,92 +948,106 @@ async function loadVolunteeringFromSupabase(filter = "all", searchTerm = "") {
   window.volunteering = volunteering;
 
   // 1. Obtén el usuario actual y sus voluntariados activos
-let userId = null;
-let joinedIds = [];
-const { data: { session } } = await supabase.auth.getSession();
-if (session?.user) {
-  userId = session.user.id;
-  const { data: memberships } = await supabase
-    .from('volunteering_members')
-    .select('volunteering_id')
-    .eq('user_id', userId)
-    .eq('status', 'active');
-  joinedIds = memberships ? memberships.map(m => m.volunteering_id) : [];
-}
+  let userId = null;
+  let joinedIds = [];
+  const { data: { session } } = await supabase.auth.getSession();
+  if (session?.user) {
+    userId = session.user.id;
+    const { data: memberships } = await supabase
+      .from('volunteering_members')
+      .select('volunteering_id')
+      .eq('user_id', userId)
+      .eq('status', 'active');
+    joinedIds = memberships ? memberships.map(m => m.volunteering_id) : [];
+  }
 
-volunteering.forEach(volunteer => {
-  const urgentBadge = volunteer.is_urgent ? `<div class="volunteering-badge urgent"><i class="fas fa-exclamation-circle"></i> Urgente</div>` : "";
-  const pointsBadge = `<div class="volunteering-badge points"><i class="fas fa-star"></i> +${volunteer.points || 0} pts/h</div>`;
-  const location = volunteer.city && volunteer.country ? `${volunteer.city}, ${volunteer.country}` : "";
-  const startDate = volunteer.start_date ? new Date(volunteer.start_date).toLocaleDateString('es-ES', { day: 'numeric', month: 'short' }) : '';
-  const endDate = volunteer.end_date ? new Date(volunteer.end_date).toLocaleDateString('es-ES', { day: 'numeric', month: 'short' }) : '';
-  const beneficiariesHtml = volunteer.beneficiaries
-    ? `<div class="beneficiaries-count" style="color:var(--primary);">
-        <i class="fas fa-heart"></i> Beneficia a ${volunteer.beneficiaries} personas
-      </div>`
-    : '';
+  // Usar causesMap global ya cargado
+  volunteering.forEach(volunteer => {
+    const urgentBadge = volunteer.is_urgent ? `<div class="volunteering-badge urgent"><i class="fas fa-exclamation-circle"></i> Urgente</div>` : "";
+    const pointsBadge = `<div class="volunteering-badge points"><i class="fas fa-star"></i> +${volunteer.points || 0} pts/h</div>`;
+    const location = volunteer.city && volunteer.country ? `${volunteer.city}, ${volunteer.country}` : "";
+    const startDate = volunteer.start_date ? new Date(volunteer.start_date).toLocaleDateString('es-ES', { day: 'numeric', month: 'short' }) : '';
+    const endDate = volunteer.end_date ? new Date(volunteer.end_date).toLocaleDateString('es-ES', { day: 'numeric', month: 'short' }) : '';
+    const beneficiariesHtml = volunteer.beneficiaries
+      ? `<div class="beneficiaries-count" style="color:var(--primary);">
+          <i class="fas fa-heart"></i> Beneficia a ${volunteer.beneficiaries} personas
+        </div>`
+      : '';
 
-  // ¿Ya participa el usuario?
-  const isJoined = joinedIds.includes(volunteer.id);
+    // ¿Ya participa el usuario?
+    const isJoined = joinedIds.includes(volunteer.id);
 
-  const card = document.createElement('div');
-  card.className = 'volunteering-card';
-  card.innerHTML = `
-    <div class="volunteering-image">
-      <img src="${volunteer.photo_url || '/img/volunteer-default.jpg'}"
-           alt="${volunteer.title}"
-           onerror="this.src='/img/volunteer-default.jpg'">
-      ${urgentBadge}
-      ${pointsBadge}
-    </div>
-    <div class="volunteering-content">
-      <h3>${volunteer.title}</h3>
-      <p>${volunteer.summary || (volunteer.description ? volunteer.description.substring(0, 100) + (volunteer.description.length > 100 ? '...' : '') : '')}</p>
-      ${volunteer.cause_id ? `<div class="linked-cause"><i class="fas fa-link"></i> Vinculado a causa #${volunteer.cause_id}</div>` : ''}
-      <div class="volunteering-meta">
-        <div class="meta-item"><i class="fas fa-map-marker-alt"></i> ${location}</div>
-        <div class="meta-item"><i class="fas fa-users"></i> ${volunteer.volunteers || 0}/${volunteer.volunteers_needed || 0} voluntarios</div>
-        ${beneficiariesHtml}
-        <div class="meta-item"><i class="fas fa-calendar-alt"></i> ${startDate} - ${endDate}</div>
-      </div>
-      <div class="volunteering-progress">
-        <div class="progress-bar">
-          <div class="progress-fill" style="width: ${Math.min(Math.round((volunteer.volunteers / volunteer.volunteers_needed) * 100), 100)}%"></div>
+    // Cargar información de la causa si existe
+    let causeHtml = '';
+    if (volunteer.cause_id && causesMap[volunteer.cause_id]) {
+      const cause = causesMap[volunteer.cause_id];
+      causeHtml = `
+        <div class="linked-cause">
+          <i class="fas fa-link"></i>
+          <img src="${cause.photo_url || '/img/causa-default.jpg'}"
+               alt="Causa vinculada">
+          <span>${cause.title}</span>
         </div>
-        <div class="progress-info">
-          <span>${volunteer.volunteers || 0} voluntarios</span>
-          <span>Meta: ${volunteer.volunteers_needed || 0}</span>
-        </div>
+      `;
+    }
+
+    const progress = Math.min(Math.round((volunteer.volunteers / volunteer.volunteers_needed) * 100), 100);
+
+    const card = document.createElement('div');
+    card.className = 'volunteering-card';
+    card.innerHTML = `
+  <div class="volunteering-image">
+    <img src="${volunteer.photo_url || '/img/volunteer-default.jpg'}" alt="${volunteer.title}" onerror="this.src='/img/volunteer-default.jpg'">
+    ${urgentBadge}
+    ${pointsBadge}
+  </div>
+  <div class="volunteering-content">
+    <h3>${volunteer.title}</h3>
+    <p>${volunteer.summary || ''}</p>
+    ${causeHtml}
+    <div class="volunteering-progress">
+      <div class="progress-bar">
+        <div class="progress-fill" style="width:${progress || 0}%"></div>
       </div>
-      <div class="volunteering-actions">
-        <button class="btn btn-primary view-volunteer-btn" data-volunteer-id="${volunteer.id}">
-          <i class="fas fa-eye"></i> Ver más
-        </button>
-        <button class="btn btn-accent join-btn" data-volunteer-id="${volunteer.id}"
-          ${isJoined ? 'disabled style="opacity:0.7;cursor:not-allowed;"' : ''}>
-          <i class="fas fa-handshake"></i> ${isJoined ? 'Ya eres voluntario' : 'Unirse'}
-        </button>
+      <div class="progress-info">
+        <span>${progress || 0}% completado</span>
+        <span>${volunteer.volunteers || 0} de ${volunteer.volunteers_needed || 0} voluntarios</span>
       </div>
     </div>
-  `;
-  volunteeringList.appendChild(card);
-});
+    <div class="volunteering-meta">
+      <div class="meta-item"><i class="fas fa-map-marker-alt"></i> ${location}</div>
+      <div class="meta-item"><i class="fas fa-calendar-alt"></i> ${startDate} - ${endDate}</div>
+      <div class="meta-item"><i class="fas fa-heart"></i> ${volunteer.beneficiaries || 0} beneficiarios</div>
+    </div>
+    <div class="volunteering-actions">
+      <button class="btn btn-primary view-volunteer-btn" data-volunteer-id="${volunteer.id}">
+        <i class="fas fa-eye"></i> Ver más
+      </button>
+      <button class="btn btn-accent join-btn" data-volunteer-id="${volunteer.id}"
+        ${isJoined ? 'disabled style="opacity:0.7;cursor:not-allowed;"' : ''}>
+        <i class="fas fa-handshake"></i> ${isJoined ? 'Ya eres voluntario' : 'Unirse'}
+      </button>
+    </div>
+  </div>
+`;
+    volunteeringList.appendChild(card);
+  });
 
-// Listeners para los botones
-document.querySelectorAll('.view-volunteer-btn').forEach(btn => {
-  btn.addEventListener('click', function(e) {
-    e.preventDefault();
-    const volunteerId = this.getAttribute('data-volunteer-id');
-    showVolunteeringModal(volunteerId);
+  // Listeners para los botones
+  document.querySelectorAll('.view-volunteer-btn').forEach(btn => {
+    btn.addEventListener('click', function(e) {
+      e.preventDefault();
+      const volunteerId = this.getAttribute('data-volunteer-id');
+      showVolunteeringModal(volunteerId);
+    });
   });
-});
-document.querySelectorAll('.join-btn').forEach(btn => {
-  btn.addEventListener('click', async function(e) {
-    e.preventDefault();
-    const volunteerId = this.getAttribute('data-volunteer-id');
-    await joinVolunteering(volunteerId, this);
+  document.querySelectorAll('.join-btn').forEach(btn => {
+    btn.addEventListener('click', async function(e) {
+      e.preventDefault();
+      const volunteerId = this.getAttribute('data-volunteer-id');
+      await joinVolunteering(volunteerId, this);
+    });
   });
-});
 }
 
 // Función para mostrar el modal con los detalles del voluntariado
@@ -1036,7 +1073,7 @@ async function showVolunteeringModal(volunteerId) {
   if (volunteer.cause_id) {
     const { data: cause } = await supabase
       .from('causes')
-      .select('title, photo_url')
+      .select('title, short_description, photo_url')
       .eq('id', volunteer.cause_id)
       .single();
 
@@ -1046,19 +1083,25 @@ async function showVolunteeringModal(volunteerId) {
           <h3 class="content-title" style="font-size:1.2rem; font-weight:600; color:var(--primary); margin-bottom:0.9rem; display:flex; align-items:center; gap:0.7rem;">
             <i class="fas fa-link"></i> Vinculado a la causa
           </h3>
-          <div style="display:flex; align-items:center; gap:1rem; background:#f8fafc; padding:1rem; border-radius:8px; border:1px solid #e5e7eb;">
+          <div style="display:flex; align-items:center; gap:1.2rem; background:#f8fafc; padding:1rem; border-radius:8px; border:1px solid #e5e7eb;">
             <img src="${cause.photo_url || '/img/causa-default.jpg'}" 
                  alt="Imagen de la causa vinculada"
                  style="width:80px; height:80px; object-fit:cover; border-radius:6px;"
                  onerror="this.src='/img/causa-default.jpg'">
-            <div>
-              <strong style="color:var(--primary);">${cause.title}</strong>
-              <p style="margin-top:0.3rem; font-size:0.9rem; color:#6b7280;">Causa #${volunteer.cause_id}</p>
-              <a href="#" class="btn btn-sm" style="margin-top:0.5rem; padding:0.3rem 0.8rem; font-size:0.85rem;"
-                 onclick="showCauseModal('${volunteer.cause_id}'); return false;">
-                <i class="fas fa-external-link-alt"></i> Ver causa
-              </a>
+            <div style="flex:1; min-width:0;">
+              <div style="font-weight:700; color:var(--primary); font-size:1.05rem; margin-bottom:0.2rem; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">
+                ${cause.title}
+              </div>
+              <div style="color:#6b7280; font-size:0.97rem; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:260px;">
+                ${cause.short_description || 'Sin resumen disponible'}
+              </div>
             </div>
+            <a href="/causes/${volunteer.cause_id}"
+               class="btn btn-primary"
+               style="margin-left:1.2rem; white-space:nowrap; font-size:0.97rem; padding:0.5rem 1.1rem; display:flex; align-items:center; gap:0.5rem;"
+               onclick="showCauseModal('${volunteer.cause_id}'); return false;">
+              <i class="fas fa-arrow-right"></i> Ver causa
+            </a>
           </div>
         </div>
       `;
@@ -1133,11 +1176,15 @@ async function showVolunteeringModal(volunteerId) {
       ${causeInfo}
       <div class="modal-volunteer-content" style="margin-top:0;">
         <div class="content-section" style="margin-bottom:2.2rem;">
-          <h3 class="content-title"><i class="fas fa-align-left"></i> Resumen</h3>
+          <h3 class="content-title" style="font-size:1.2rem; font-weight:600; color:var(--primary); margin-bottom:0.9rem; display:flex; align-items:center; gap:0.7rem;">
+            <i class="fas fa-align-left"></i> Resumen
+          </h3>
           <p class="content-text">${volunteer.summary || 'Sin resumen.'}</p>
         </div>
         <div class="content-section" style="margin-bottom:2.2rem;">
-          <h3 class="content-title"><i class="fas fa-align-left"></i> Descripción</h3>
+          <h3 class="content-title" style="font-size:1.2rem; font-weight:600; color:var(--primary); margin-bottom:0.9rem; display:flex; align-items:center; gap:0.7rem;">
+            <i class="fas fa-align-left"></i> Descripción
+          </h3>
           <p class="content-text">${volunteer.description || 'No hay descripción disponible para este voluntariado.'}</p>
         </div>
         <div class="content-section" style="margin-bottom:2.2rem;">
@@ -1411,5 +1458,18 @@ document.getElementById('causeModal').onclick = function(e) {
     document.body.style.overflow = '';
   }
 };
+
+async function loadCausesMap() {
+  const { data: causes } = await supabase.from('causes').select('id, title, photo_url');
+  if (causes) {
+    causesMap = {};
+    causes.forEach(c => {
+      causesMap[c.id] = {
+        title: c.title,
+        photo_url: c.photo_url
+      };
+    });
+  }
+}
 </script>
 {% endblock %}

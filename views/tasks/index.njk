@@ -429,6 +429,11 @@
           <img id="previewImg" class="preview-img" alt="Vista previa de la foto" style="display:none;">
         </div>
         <div class="form-group">
+          <label for="summary">Resumen breve</label>
+          <input type="text" id="summary" name="summary" maxlength="120" placeholder="Ej: Recogida de plásticos en la playa" required>
+          <small style="color:#6b7280;">Máx. 120 caracteres. Aparecerá en la tarjeta y en el listado.</small>
+        </div>
+        <div class="form-group">
           <label for="description">Descripción</label>
           <textarea id="description" name="description" placeholder="Describe la tarea, qué se necesita y cómo pueden ayudar los voluntarios..." required></textarea>
         </div>
@@ -649,6 +654,7 @@ document.addEventListener('DOMContentLoaded', async function() {
     e.preventDefault();
     // Recoge los datos del formulario
     const title = document.getElementById('title').value.trim();
+    const summary = document.getElementById('summary').value.trim();
     const description = document.getElementById('description').value.trim();
     const city = document.getElementById('city').value.trim();
     const country = document.getElementById('country').value.trim();
@@ -691,6 +697,7 @@ document.addEventListener('DOMContentLoaded', async function() {
 
     const datosTarea = {
       title,
+      summary,
       description,
       city,
       country,
@@ -809,7 +816,7 @@ async function loadTasksFromSupabase(filter = "all", searchTerm = "") {
       </div>
       <div class="task-content">
         <h3>${task.title}</h3>
-        <p>${task.description.substring(0, 100)}${task.description.length > 100 ? '...' : ''}</p>
+        <p>${task.summary ? task.summary : (task.description.substring(0, 100) + (task.description.length > 100 ? '...' : ''))}</p>
         ${causeHtml}
         <div class="task-meta">
           <div class="meta-item"><i class="fas fa-map-marker-alt"></i> ${location}</div>
@@ -891,29 +898,35 @@ async function showTaskModal(taskId) {
   if (task.cause_id) {
     const { data: cause } = await supabase
       .from('causes')
-      .select('title, photo_url')
+      .select('title, short_description, photo_url')
       .eq('id', task.cause_id)
       .single();
-    
+
     if (cause) {
       causeInfo = `
         <div class="linked-cause-section" style="margin-bottom:1.5rem;">
           <h3 class="content-title" style="font-size:1.2rem; font-weight:600; color:var(--primary); margin-bottom:0.9rem; display:flex; align-items:center; gap:0.7rem;">
             <i class="fas fa-link"></i> Vinculado a la causa
           </h3>
-          <div style="display:flex; align-items:center; gap:1rem; background:#f8fafc; padding:1rem; border-radius:8px; border:1px solid #e5e7eb;">
-            <img src="${cause.photo_url || '/img/causa-default.jpg'}" 
+          <div style="display:flex; align-items:center; gap:1.2rem; background:#f8fafc; padding:1rem; border-radius:8px; border:1px solid #e5e7eb;">
+            <img src="${cause.photo_url || '/img/causa-default.jpg'}"
                  alt="Imagen de la causa vinculada"
                  style="width:80px; height:80px; object-fit:cover; border-radius:6px;"
                  onerror="this.src='/img/causa-default.jpg'">
-            <div>
-              <strong style="color:var(--primary);">${cause.title}</strong>
-              <p style="margin-top:0.3rem; font-size:0.9rem; color:#6b7280;">Causa #${task.cause_id}</p>
-              <a href="/causes/${task.cause_id}" class="btn btn-sm" style="margin-top:0.5rem; padding:0.3rem 0.8rem; font-size:0.85rem;"
-                 onclick="showCauseModal('${task.cause_id}'); return false;">
-                <i class="fas fa-external-link-alt"></i> Ver causa
-              </a>
+            <div style="flex:1; min-width:0;">
+              <div style="font-weight:700; color:var(--primary); font-size:1.05rem; margin-bottom:0.2rem; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">
+                ${cause.title}
+              </div>
+              <div style="color:#6b7280; font-size:0.97rem; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:260px;">
+                ${cause.short_description || 'Sin resumen disponible'}
+              </div>
             </div>
+            <a href="/causes/${task.cause_id}"
+               class="btn btn-primary"
+               style="margin-left:1.2rem; white-space:nowrap; font-size:0.97rem; padding:0.5rem 1.1rem; display:flex; align-items:center; gap:0.5rem;"
+               onclick="showCauseModal('${task.cause_id}'); return false;">
+              <i class="fas fa-arrow-right"></i> Ver causa
+            </a>
           </div>
         </div>
       `;
@@ -1015,9 +1028,17 @@ async function showTaskModal(taskId) {
       <div class="modal-task-content" style="margin-top:0;">
         <div class="content-section" style="margin-bottom:2.2rem;">
           <h3 class="content-title" style="font-size:1.2rem; font-weight:600; color:var(--primary); margin-bottom:0.9rem; display:flex; align-items:center; gap:0.7rem;">
-            <i class="fas fa-align-left"></i> Descripción
+            <i class="fas fa-align-left"></i> Resumen
           </h3>
-          <p class="content-text" style="line-height:1.7; color:#4b5563; font-size:1.05rem; margin-left:0; margin-right:0; text-align:justify;">${task.description || 'No hay descripción disponible para esta tarea.'}</p>
+          <p class="content-text" style="line-height:1.7; color:#4b5563; font-size:1.05rem; margin-left:0; margin-right:0; text-align:justify; font-weight:400; margin-bottom:2.2rem;">
+            ${task.summary || 'No hay resumen disponible para esta tarea.'}
+          </p>
+          <h3 class="content-title" style="font-size:1.2rem; font-weight:600; color:var(--primary); margin-bottom:0.9rem; display:flex; align-items:center; gap:0.7rem;">
+            <i class="fas fa-info-circle"></i> Descripción completa
+          </h3>
+          <p class="content-text" style="line-height:1.7; color:#4b5563; font-size:1.05rem; margin-left:0; margin-right:0; text-align:justify;">
+            ${task.description || 'No hay descripción disponible para esta tarea.'}
+          </p>
         </div>
         ${participantsHtml}
         <div class="content-section" style="margin-bottom:2.2rem;">
