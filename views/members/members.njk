@@ -149,9 +149,9 @@
     
     /* Grid para mostrar miembros */
     .members-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-      gap: 2rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
     }
     
     /* Tarjeta de miembro */
@@ -538,6 +538,24 @@
 {% block scripts %}
   {{ super() }}
   <script>
+    // Diccionario de países
+    const countryNames = {
+      ES: "España",
+      MX: "México",
+      AR: "Argentina",
+      CO: "Colombia",
+      CL: "Chile",
+      PE: "Perú",
+      VE: "Venezuela",
+      UY: "Uruguay",
+      US: "Estados Unidos",
+      FR: "Francia",
+      DE: "Alemania",
+      IT: "Italia",
+      PT: "Portugal"
+      // ...
+    };
+
     // Variables globales
     let currentFilter = "all";
     let currentPage = 1;
@@ -630,25 +648,32 @@
             .eq('user_id', profile.id)
             .eq('status', 'active');
 
-          // Get communities count
-          const { count: communitiesCount } = await supabase
-            .from('communities_members')
-            .select('id', { count: 'exact', head: true })
-            .eq('user_id', profile.id)
-            .eq('status', 'active');
-
-          // Get shares count
-          const { count: sharesCount } = await supabase
-            .from('shares')
+          const { count: teamsCount } = await supabase
+            .from('team_members')
             .select('id', { count: 'exact', head: true })
             .eq('user_id', profile.id);
+
+          const { count: challengesCount } = await supabase
+            .from('challenges_members')
+            .select('id', { count: 'exact', head: true })
+            .eq('user_id', profile.id);
+
+          const { count: tasksCount } = await supabase
+            .from('task_members')
+            .select('id', { count: 'exact', head: true })
+            .eq('user_id', profile.id);
+
+          // Si no tienes tabla shares, simplemente pon 0
+          const sharesCount = 0;
 
           memberData.push({
             ...profile,
             causesCount: causesCount || 0,
             volunteeringCount: volunteeringCount || 0,
-            communitiesCount: communitiesCount || 0,
-            sharesCount: sharesCount || 0
+            teamsCount: teamsCount || 0,
+            challengesCount: challengesCount || 0,
+            tasksCount: tasksCount || 0,
+            sharesCount: sharesCount
           });
         }
 
@@ -758,102 +783,77 @@
     function createMemberCard(member, rank) {
       const card = document.createElement('div');
       card.className = 'member-card';
-      
-      // Calculate member level based on impact points
-      const impactPoints = member.impact_points || 0;
-      let level = 'Principiante';
-      let levelIcon = 'seedling';
-      
-      if (impactPoints >= 5000) {
-        level = 'Maestro';
-        levelIcon = 'crown';
-      } else if (impactPoints >= 2000) {
-        level = 'Experto';
-        levelIcon = 'star';
-      } else if (impactPoints >= 500) {
-        level = 'Avanzado';
-        levelIcon = 'award';
-      } else if (impactPoints >= 100) {
-        level = 'Intermedio';
-        levelIcon = 'leaf';
+      card.style.display = 'flex';
+      card.style.flexDirection = 'row';
+      card.style.alignItems = 'center';
+      card.style.justifyContent = 'space-between';
+      card.style.gap = '1.5rem';
+      card.style.marginBottom = '1.5rem';
+      card.style.width = '100%';
+
+      // País completo
+      let countryDisplay = member.country;
+      if (countryDisplay && countryDisplay.length === 2) {
+        countryDisplay = countryNames[countryDisplay.toUpperCase()] || member.country;
       }
-      
-      // Determine if member is in top 3
-      const isTop3 = rank <= 3;
-      
-      // Format date
-      const joinDate = new Date(member.created_at).toLocaleDateString('es-ES', { 
-        year: 'numeric', 
-        month: 'long', 
-        day: 'numeric' 
-      });
-      
+
       card.innerHTML = `
-        ${rank <= 10 ? `<div class="member-rank ${isTop3 ? 'top-3' : ''}">${rank}</div>` : ''}
-        <div class="member-level"><i class="fas fa-${levelIcon}"></i> ${level}</div>
-        <div class="member-header">
-          <img src="${member.photo_url || '/img/default-avatar.png'}" 
-               alt="${member.username || 'Usuario'}" 
-               class="member-avatar" 
-               onerror="this.src='/img/default-avatar.png'">
-          <div class="member-info">
-            <div class="member-name">
-              ${member.first_name || ''} ${member.last_name || ''}
-            </div>
-            <div class="member-username">@${member.username || 'usuario'}</div>
-            <div class="member-location">
+        <div style="display:flex;align-items:center;gap:1.2rem;min-width:260px;">
+          <div class="member-rank" style="position:static;background:var(--primary);color:white;width:2.2rem;height:2.2rem;font-size:1.1rem;">${rank}</div>
+          <img src="${member.photo_url || '/img/default-avatar.png'}" alt="${member.username || 'Usuario'}" class="member-avatar" style="width:70px;height:70px;">
+          <div>
+            <div class="member-name" style="font-size:1.1rem;font-weight:600;color:var(--primary-dark);">${member.first_name || ''} ${member.last_name || ''}</div>
+            <div class="member-username" style="color:#6b7280;font-size:0.95rem;">@${member.username || 'usuario'}</div>
+            <div class="member-location" style="color:#6b7280;font-size:0.9rem;">
               <i class="fas fa-map-marker-alt"></i>
-              ${member.city ? member.city + (member.country ? ', ' : '') : ''} ${member.country || 'Sin ubicación'}
+              ${member.city ? member.city + (countryDisplay ? ', ' : '') : ''} ${countryDisplay || 'Sin ubicación'}
             </div>
           </div>
         </div>
-        <div class="member-stats">
-          <div class="stat-item">
-            <div class="stat-value">${member.volunteeringCount}</div>
-            <div class="stat-label">Voluntariados</div>
+        <div style="display:flex;align-items:center;gap:2.2rem;flex:1;justify-content:center;">
+          <div style="text-align:center;">
+            <div style="font-weight:700;color:var(--primary);font-size:1.2rem;">${member.impact_points || 0}</div>
+            <div style="font-size:0.85rem;color:#6b7280;">Impacto</div>
           </div>
-          <div class="stat-item">
-            <div class="stat-value">${member.causesCount}</div>
-            <div class="stat-label">Causas</div>
+          <div style="text-align:center;">
+            <div style="font-weight:700;color:var(--primary);font-size:1.2rem;">${member.volunteeringCount}</div>
+            <div style="font-size:0.85rem;color:#6b7280;">Voluntariados</div>
           </div>
-          <div class="stat-item">
-            <div class="stat-value">${member.communitiesCount}</div>
-            <div class="stat-label">Comunidades</div>
+          <div style="text-align:center;">
+            <div style="font-weight:700;color:var(--primary);font-size:1.2rem;">${member.causesCount}</div>
+            <div style="font-size:0.85rem;color:#6b7280;">Causas</div>
           </div>
-          <div class="stat-item">
-            <div class="stat-value">${member.sharesCount}</div>
-            <div class="stat-label">Compartidos</div>
+          <div style="text-align:center;">
+            <div style="font-weight:700;color:var(--primary);font-size:1.2rem;">${member.teamsCount}</div>
+            <div style="font-size:0.85rem;color:#6b7280;">Equipos</div>
+          </div>
+          <div style="text-align:center;">
+            <div style="font-weight:700;color:var(--primary);font-size:1.2rem;">${member.challengesCount}</div>
+            <div style="font-size:0.85rem;color:#6b7280;">Retos</div>
+          </div>
+          <div style="text-align:center;">
+            <div style="font-weight:700;color:var(--primary);font-size:1.2rem;">${member.tasksCount}</div>
+            <div style="font-size:0.85rem;color:#6b7280;">Tareas</div>
+          </div>
+          <div style="text-align:center;">
+            <div style="font-weight:700;color:var(--primary);font-size:1.2rem;">${member.sharesCount}</div>
+            <div style="font-size:0.85rem;color:#6b7280;">Compartidos</div>
           </div>
         </div>
-        <div class="member-footer">
-          <div class="member-impact">
-            <i class="fas fa-star" style="color: var(--accent);"></i>
-            <span class="impact-points">${member.impact_points || 0}</span>
-            <span class="impact-label">puntos</span>
-          </div>
-          <a href="/profile/${member.id}" class="member-view-profile">
+        <div style="display:flex;flex-direction:column;align-items:flex-end;gap:0.7rem;min-width:120px;">
+          <a href="/profile/${member.id}" class="member-view-profile" style="background:var(--primary-light);color:var(--primary);padding:0.5rem 1.2rem;border-radius:50px;font-weight:600;text-decoration:none;display:flex;align-items:center;gap:0.5rem;">
             <i class="fas fa-user"></i> Ver perfil
           </a>
         </div>
-        <div class="member-badges">
-          ${member.badges ? createBadgesHTML(member.badges) : ''}
-          ${member.interests ? createInterestBadge(member.interests) : ''}
-          ${joinDate ? `
-            <div class="member-badge">
-              <i class="fas fa-calendar-check"></i>
-              <span class="badge-tooltip">Se unió el ${joinDate}</span>
-            </div>
-          ` : ''}
-        </div>
       `;
-      
+
       // Event listener para mostrar el perfil
       const profileButton = card.querySelector('.member-view-profile');
       profileButton.addEventListener('click', function(e) {
         e.preventDefault();
         showMemberProfile(member);
       });
-      
+
       return card;
     }
 
@@ -960,21 +960,23 @@
 
     // Mostrar el perfil de un miembro en modal
     async function showMemberProfile(member) {
-      // In a real app, you might want to fetch more details here
       const profileModal = document.getElementById('profileModal');
       const profileModalBody = document.getElementById('profileModalBody');
-      
-      // Format date
-      const joinDate = new Date(member.created_at).toLocaleDateString('es-ES', { 
-        year: 'numeric', 
-        month: 'long', 
-        day: 'numeric' 
-      });
-      
+      const joinDate = new Date(member.created_at).toLocaleDateString('es-ES', { year: 'numeric', month: 'long', day: 'numeric' });
+
+      // Nivel
+      const impactPoints = member.impact_points || 0;
+      let level = 'Principiante';
+      let levelIcon = 'seedling';
+      if (impactPoints >= 5000) { level = 'Maestro'; levelIcon = 'crown'; }
+      else if (impactPoints >= 2000) { level = 'Experto'; levelIcon = 'star'; }
+      else if (impactPoints >= 500) { level = 'Avanzado'; levelIcon = 'award'; }
+      else if (impactPoints >= 100) { level = 'Intermedio'; levelIcon = 'leaf'; }
+
       profileModalBody.innerHTML = `
-        <div class="profile-modal-header" style="display:flex;align-items:center;gap:1.5rem;margin-bottom:2rem;">
-          <img src="${member.photo_url || '/img/default-avatar.png'}" 
-               alt="${member.username || 'Usuario'}" 
+        <div style="display:flex;align-items:center;gap:1.5rem;margin-bottom:2rem;">
+          <img src="${member.photo_url || '/img/default-avatar.png'}"
+               alt="${member.username || 'Usuario'}"
                style="width:100px;height:100px;border-radius:50%;object-fit:cover;border:3px solid var(--primary-light);"
                onerror="this.src='/img/default-avatar.png'">
           <div>
@@ -986,37 +988,58 @@
               <i class="fas fa-map-marker-alt" style="color:var(--primary);"></i>
               ${member.city ? member.city + (member.country ? ', ' : '') : ''} ${member.country || 'Sin ubicación'}
             </div>
+            <div style="margin-top:0.5rem;">
+              <span class="member-level" style="background:var(--accent);color:white;padding:0.2rem 0.7rem;border-radius:4px;font-size:0.95rem;font-weight:600;display:inline-flex;align-items:center;gap:0.3rem;">
+                <i class="fas fa-${levelIcon}"></i> ${level}
+              </span>
+            </div>
           </div>
         </div>
-        
-        <div class="profile-modal-bio" style="margin-bottom:2rem;padding:1.5rem;background:#f8fafc;border-radius:12px;">
-          <h3 style="color:var(--primary);margin-bottom:0.8rem;font-size:1.2rem;">
-            <i class="fas fa-quote-left"></i> Acerca de mí
-          </h3>
-          <p style="color:#4b5563;line-height:1.6;">
+        <div style="margin-bottom:2rem;">
+          <div style="font-size:1.1rem;color:var(--primary-dark);font-weight:600;margin-bottom:0.5rem;">
+            <i class="fas fa-quote-left"></i> Slogan
+          </div>
+          <div style="color:#4a6fa5;font-size:1.05rem;margin-bottom:1rem;">
+            Conoce a las personas que están cambiando el mundo a través de sus acciones solidarias.
+            Descubre sus perfiles, contribuciones e impacto social y conéctate con quienes comparten tus valores.
+          </div>
+          <div style="font-size:1.1rem;color:var(--primary-dark);font-weight:600;margin-bottom:0.5rem;">
+            <i class="fas fa-info-circle"></i> Descripción
+          </div>
+          <div style="color:#4b5563;line-height:1.6;">
             ${member.bio || 'Este usuario no ha añadido una biografía todavía.'}
-          </p>
-        </div>
-        
-        <div class="profile-modal-stats" style="display:grid;grid-template-columns:repeat(auto-fit, minmax(150px, 1fr));gap:1rem;margin-bottom:2rem;">
-          <div style="text-align:center;padding:1rem;background:white;border-radius:10px;box-shadow:0 2px 8px rgba(0,0,0,0.05);border:1px solid var(--gray);">
-            <div style="font-size:1.8rem;font-weight:700;color:var(--primary);">${member.impact_points || 0}</div>
-            <div style="color:#6b7280;font-size:0.9rem;">Puntos de impacto</div>
-          </div>
-          <div style="text-align:center;padding:1rem;background:white;border-radius:10px;box-shadow:0 2px 8px rgba(0,0,0,0.05);border:1px solid var(--gray);">
-            <div style="font-size:1.8rem;font-weight:700;color:var(--primary);">${member.volunteeringCount}</div>
-            <div style="color:#6b7280;font-size:0.9rem;">Voluntariados</div>
-          </div>
-          <div style="text-align:center;padding:1rem;background:white;border-radius:10px;box-shadow:0 2px 8px rgba(0,0,0,0.05);border:1px solid var(--gray);">
-            <div style="font-size:1.8rem;font-weight:700;color:var(--primary);">${member.causesCount}</div>
-            <div style="color:#6b7280;font-size:0.9rem;">Causas</div>
-          </div>
-          <div style="text-align:center;padding:1rem;background:white;border-radius:10px;box-shadow:0 2px 8px rgba(0,0,0,0.05);border:1px solid var(--gray);">
-            <div style="font-size:1.8rem;font-weight:700;color:var(--primary);">${member.sharesCount}</div>
-            <div style="color:#6b7280;font-size:0.9rem;">Compartidos</div>
           </div>
         </div>
-        
+        <div style="display:flex;flex-wrap:wrap;gap:1.5rem;justify-content:center;margin-bottom:2rem;">
+          <div style="text-align:center;min-width:110px;">
+            <div style="font-size:1.5rem;font-weight:700;color:var(--primary);">${member.impact_points || 0}</div>
+            <div style="color:#6b7280;font-size:0.95rem;">Impacto</div>
+          </div>
+          <div style="text-align:center;min-width:110px;">
+            <div style="font-size:1.5rem;font-weight:700;color:var(--primary);">${member.volunteeringCount}</div>
+            <div style="color:#6b7280;font-size:0.95rem;">Voluntariados</div>
+          </div>
+          <div style="text-align:center;min-width:110px;">
+            <div style="font-size:1.5rem;font-weight:700;color:var(--primary);">${member.causesCount}</div>
+            <div style="color:#6b7280;font-size:0.95rem;">Causas</div>
+          </div>
+          <div style="text-align:center;min-width:110px;">
+            <div style="font-size:1.5rem;font-weight:700;color:var(--primary);">${member.teamsCount}</div>
+            <div style="color:#6b7280;font-size:0.95rem;">Equipos</div>
+          </div>
+          <div style="text-align:center;min-width:110px;">
+            <div style="font-size:1.5rem;font-weight:700;color:var(--primary);">${member.challengesCount}</div>
+            <div style="color:#6b7280;font-size:0.95rem;">Retos</div>
+          </div>
+          <div style="text-align:center;min-width:110px;">
+            <div style="font-size:1.5rem;font-weight:700;color:var(--primary);">${member.tasksCount}</div>
+            <div style="color:#6b7280;font-size:0.95rem;">Tareas</div>
+          </div>
+          <div style="text-align:center;min-width:110px;">
+            <div style="font-size:1.5rem;font-weight:700;color:var(--primary);">${member.sharesCount}</div>
+            <div style="color:#6b7280;font-size:0.95rem;">Compartidos</div>
+          </div>
+        </div>
         <div style="display:flex;justify-content:space-between;align-items:center;margin-top:2rem;border-top:1px solid var(--gray);padding-top:1.5rem;">
           <div style="color:#6b7280;">
             <i class="fas fa-calendar-check"></i> Miembro desde ${joinDate}
@@ -1026,7 +1049,7 @@
           </a>
         </div>
       `;
-      
+
       profileModal.style.display = 'flex';
       document.body.style.overflow = 'hidden';
     }
