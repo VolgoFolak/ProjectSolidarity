@@ -185,6 +185,9 @@ app.get('/takeaction', (req, res) => {
 app.get('/profile/myactivities', (req, res) => {
     res.render('profile/myactivities');
 });
+app.get('/members', (req, res) => {
+    res.render('members/members.njk');
+});
 
 // --- RUTAS DEL SISTEMA DE MENSAJERÍA ---
 app.get('/messages', (req, res) => {
