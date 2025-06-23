@@ -852,34 +852,39 @@ document.addEventListener('DOMContentLoaded', async function() {
     const lat = document.getElementById('lat').value;
     const lng = document.getElementById('lng').value;
 
-    const { error } = await supabase
-      .from('volunteering')
-      .insert([{
-        title,
-        summary,
-        description,
-        category,
-        city,
-        country,
-        points,
-        beneficiaries,
-        volunteers_needed,
-        is_urgent,
-        photo_url,
-        user_id: user.id,
-        volunteers: 0,
-        cause_id,
-        start_date,
-        end_date,
-        schedule,
-        skills_required,
-        lat: lat ? parseFloat(lat) : null,
-        lng: lng ? parseFloat(lng) : null,
-      }]);
+    const datosVoluntariado = {
+      title,
+      summary,
+      description,
+      category,
+      city,
+      country,
+      points,
+      beneficiaries,
+      volunteers_needed,
+      is_urgent,
+      photo_url,
+      user_id: user.id,
+      volunteers: 0,
+      cause_id,
+      start_date,
+      end_date,
+      schedule,
+      skills_required,
+      lat: lat ? parseFloat(lat) : null,
+      lng: lng ? parseFloat(lng) : null,
+    };
 
-    if (error) {
-      alert('Error al crear el voluntariado: ' + error.message);
-      return;
+    const { data: newVol, error: volError } = await supabase
+      .from('volunteering')
+      .insert([{ ...datosVoluntariado, user_id: user.id }])
+      .select()
+      .single();
+
+    if (!volError && newVol) {
+      await supabase
+        .from('volunteering_members')
+        .insert([{ volunteering_id: newVol.id, user_id: user.id, role: 'founder', status: 'active' }]);
     }
 
     document.getElementById('volunteeringForm').style.display = 'none';
@@ -919,71 +924,93 @@ async function loadVolunteeringFromSupabase(filter = "all", searchTerm = "") {
   // Guardar los voluntariados en una variable global para acceder desde el modal
   window.volunteering = volunteering;
 
-  volunteering.forEach(volunteer => {
-    const urgentBadge = volunteer.is_urgent ? `<div class="volunteering-badge urgent"><i class="fas fa-exclamation-circle"></i> Urgente</div>` : "";
-    const pointsBadge = `<div class="volunteering-badge points"><i class="fas fa-star"></i> +${volunteer.points || 0} pts/h</div>`;
-    const location = volunteer.city && volunteer.country ? `${volunteer.city}, ${volunteer.country}` : "";
-    const startDate = new Date(volunteer.start_date).toLocaleDateString('es-ES', { day: 'numeric', month: 'short' });
-    const endDate = new Date(volunteer.end_date).toLocaleDateString('es-ES', { day: 'numeric', month: 'short' });
+  // 1. Obtén el usuario actual y sus voluntariados activos
+let userId = null;
+let joinedIds = [];
+const { data: { session } } = await supabase.auth.getSession();
+if (session?.user) {
+  userId = session.user.id;
+  const { data: memberships } = await supabase
+    .from('volunteering_members')
+    .select('volunteering_id')
+    .eq('user_id', userId)
+    .eq('status', 'active');
+  joinedIds = memberships ? memberships.map(m => m.volunteering_id) : [];
+}
 
-    const card = document.createElement('div');
-    card.className = 'volunteering-card';
-    const beneficiariesHtml = `
-      <div class="beneficiaries-count" style="color:var(--primary);">
-        <i class="fas fa-heart"></i> Beneficia a ${volunteer.beneficiaries || 0} personas
-      </div>
-    `;
-    card.innerHTML = `
-      <div class="volunteering-image">
-        <img src="${volunteer.photo_url || '/img/volunteer-default.jpg'}" alt="${volunteer.title}" onerror="this.src='/img/volunteer-default.jpg'">
-        ${urgentBadge}
-        ${pointsBadge}
-      </div>
-      <div class="volunteering-content">
-        <h3>${volunteer.title}</h3>
-        <p>${volunteer.summary || volunteer.description.substring(0, 100)}${!volunteer.summary && volunteer.description.length > 100 ? '...' : ''}</p>
-        ${volunteer.cause_id ? `<div class="linked-cause"><i class="fas fa-link"></i> Vinculado a causa #${volunteer.cause_id}</div>` : ''}
-        <div class="volunteering-meta">
-          <div class="meta-item"><i class="fas fa-map-marker-alt"></i> ${location}</div>
-          <div class="meta-item"><i class="fas fa-users"></i> ${volunteer.volunteers || 0}/${volunteer.volunteers_needed || 0} voluntarios</div>
-          ${beneficiariesHtml}
-          <div class="meta-item"><i class="fas fa-calendar-alt"></i> ${startDate} - ${endDate}</div>
-        </div>
-        <div class="volunteering-progress">
-          <div class="progress-bar">
-            <div class="progress-fill" style="width: ${Math.min(Math.round((volunteer.volunteers / volunteer.volunteers_needed) * 100), 100)}%"></div>
-          </div>
-          <div class="progress-info">
-            <span>${volunteer.volunteers || 0} voluntarios</span>
-            <span>Meta: ${volunteer.volunteers_needed || 0}</span>
-          </div>
-        </div>
-        <div class="volunteering-actions">
-          <button class="btn btn-primary view-volunteer-btn" data-volunteer-id="${volunteer.id}">Ver más</button>
-          <button class="btn btn-accent join-btn" data-volunteer-id="${volunteer.id}">Unirse</button>
-        </div>
-      </div>
-    `;
-    volunteeringList.appendChild(card);
-  });
+volunteering.forEach(volunteer => {
+  const urgentBadge = volunteer.is_urgent ? `<div class="volunteering-badge urgent"><i class="fas fa-exclamation-circle"></i> Urgente</div>` : "";
+  const pointsBadge = `<div class="volunteering-badge points"><i class="fas fa-star"></i> +${volunteer.points || 0} pts/h</div>`;
+  const location = volunteer.city && volunteer.country ? `${volunteer.city}, ${volunteer.country}` : "";
+  const startDate = volunteer.start_date ? new Date(volunteer.start_date).toLocaleDateString('es-ES', { day: 'numeric', month: 'short' }) : '';
+  const endDate = volunteer.end_date ? new Date(volunteer.end_date).toLocaleDateString('es-ES', { day: 'numeric', month: 'short' }) : '';
+  const beneficiariesHtml = volunteer.beneficiaries
+    ? `<div class="beneficiaries-count" style="color:var(--primary);">
+        <i class="fas fa-heart"></i> Beneficia a ${volunteer.beneficiaries} personas
+      </div>`
+    : '';
 
-  // Agregar event listeners para los botones de ver más
-  document.querySelectorAll('.view-volunteer-btn').forEach(btn => {
-    btn.addEventListener('click', function(e) {
-      e.preventDefault();
-      const volunteerId = this.getAttribute('data-volunteer-id');
-      showVolunteeringModal(volunteerId);
-    });
-  });
+  // ¿Ya participa el usuario?
+  const isJoined = joinedIds.includes(volunteer.id);
 
-  // Agregar event listeners para los botones de unirse
-  document.querySelectorAll('.join-btn').forEach(btn => {
-    btn.addEventListener('click', function(e) {
-      e.preventDefault();
-      const volunteerId = this.getAttribute('data-volunteer-id');
-      joinVolunteering(volunteerId);
-    });
+  const card = document.createElement('div');
+  card.className = 'volunteering-card';
+  card.innerHTML = `
+    <div class="volunteering-image">
+      <img src="${volunteer.photo_url || '/img/volunteer-default.jpg'}"
+           alt="${volunteer.title}"
+           onerror="this.src='/img/volunteer-default.jpg'">
+      ${urgentBadge}
+      ${pointsBadge}
+    </div>
+    <div class="volunteering-content">
+      <h3>${volunteer.title}</h3>
+      <p>${volunteer.summary || (volunteer.description ? volunteer.description.substring(0, 100) + (volunteer.description.length > 100 ? '...' : '') : '')}</p>
+      ${volunteer.cause_id ? `<div class="linked-cause"><i class="fas fa-link"></i> Vinculado a causa #${volunteer.cause_id}</div>` : ''}
+      <div class="volunteering-meta">
+        <div class="meta-item"><i class="fas fa-map-marker-alt"></i> ${location}</div>
+        <div class="meta-item"><i class="fas fa-users"></i> ${volunteer.volunteers || 0}/${volunteer.volunteers_needed || 0} voluntarios</div>
+        ${beneficiariesHtml}
+        <div class="meta-item"><i class="fas fa-calendar-alt"></i> ${startDate} - ${endDate}</div>
+      </div>
+      <div class="volunteering-progress">
+        <div class="progress-bar">
+          <div class="progress-fill" style="width: ${Math.min(Math.round((volunteer.volunteers / volunteer.volunteers_needed) * 100), 100)}%"></div>
+        </div>
+        <div class="progress-info">
+          <span>${volunteer.volunteers || 0} voluntarios</span>
+          <span>Meta: ${volunteer.volunteers_needed || 0}</span>
+        </div>
+      </div>
+      <div class="volunteering-actions">
+        <button class="btn btn-primary view-volunteer-btn" data-volunteer-id="${volunteer.id}">
+          <i class="fas fa-eye"></i> Ver más
+        </button>
+        <button class="btn btn-accent join-btn" data-volunteer-id="${volunteer.id}"
+          ${isJoined ? 'disabled style="opacity:0.7;cursor:not-allowed;"' : ''}>
+          <i class="fas fa-handshake"></i> ${isJoined ? 'Ya eres voluntario' : 'Unirse'}
+        </button>
+      </div>
+    </div>
+  `;
+  volunteeringList.appendChild(card);
+});
+
+// Listeners para los botones
+document.querySelectorAll('.view-volunteer-btn').forEach(btn => {
+  btn.addEventListener('click', function(e) {
+    e.preventDefault();
+    const volunteerId = this.getAttribute('data-volunteer-id');
+    showVolunteeringModal(volunteerId);
   });
+});
+document.querySelectorAll('.join-btn').forEach(btn => {
+  btn.addEventListener('click', async function(e) {
+    e.preventDefault();
+    const volunteerId = this.getAttribute('data-volunteer-id');
+    await joinVolunteering(volunteerId, this);
+  });
+});
 }
 
 // Función para mostrar el modal con los detalles del voluntariado
@@ -1230,8 +1257,50 @@ document.getElementById('volunteeringModal').addEventListener('click', function(
 });
 
 // Ejemplo de función para unirse a voluntariado
-function joinVolunteering(volunteerId) {
-  alert('Funcionalidad de unión a voluntariado próximamente.');
+async function joinVolunteering(volunteeringId, btn = null) {
+  const { data: { session } } = await supabase.auth.getSession();
+  if (!session?.user) {
+    document.getElementById('loginModal').classList.add('active');
+    return;
+  }
+  const userId = session.user.id;
+
+  // Evita duplicados
+  const { data: existing } = await supabase
+    .from('volunteering_members')
+    .select('id')
+    .eq('volunteering_id', volunteeringId)
+    .eq('user_id', userId)
+    .maybeSingle();
+
+  if (existing) {
+    alert('Ya eres voluntario en esta oportunidad.');
+    if (btn) {
+      btn.textContent = "Ya eres voluntario";
+      btn.disabled = true;
+      btn.style.opacity = "0.7";
+      btn.style.cursor = "not-allowed";
+    }
+    return;
+  }
+
+  const { error } = await supabase
+    .from('volunteering_members')
+    .insert([{ volunteering_id: volunteeringId, user_id: userId, role: 'member', status: 'active' }]);
+
+  if (error) {
+    alert('Error al unirte: ' + error.message);
+    return;
+  }
+
+  if (btn) {
+    btn.textContent = "Ya eres voluntario";
+    btn.disabled = true;
+    btn.style.opacity = "0.7";
+    btn.style.cursor = "not-allowed";
+  }
+
+  alert('¡Ahora eres voluntario en esta oportunidad!');
 }
 
 // Cargar causas en el select al abrir el modal de crear voluntariado

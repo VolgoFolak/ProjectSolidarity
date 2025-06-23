@@ -647,7 +647,9 @@
                 </div>
                 <div class="actions">
                   <a href="/causes/${activity.id}" class="btn btn-primary btn-sm"><i class="fas fa-eye"></i> Ver causa</a>
-                  ${activity.isCreator ? `<a href="/causes/edit/${activity.id}" class="btn btn-accent btn-sm"><i class="fas fa-edit"></i> Editar</a>` : ''}
+                  ${(activity.role === 'founder' || activity.role === 'admin') 
+                    ? `<a href="/causes/edit/${activity.id}" class="btn btn-accent btn-sm"><i class="fas fa-cog"></i> Administrar</a>` 
+                    : ''}
                 </div>
               </div>
             `;
@@ -668,7 +670,9 @@
                 </div>
                 <div class="task-actions">
                   <a href="/tasks/${activity.id}" class="btn btn-primary btn-sm"><i class="fas fa-eye"></i> Ver tarea</a>
-                  ${activity.isCreator ? `<a href="/tasks/edit/${activity.id}" class="btn btn-accent btn-sm"><i class="fas fa-edit"></i> Editar</a>` : ''}
+                  ${(activity.role === 'founder' || activity.role === 'admin') 
+                    ? `<a href="/tasks/edit/${activity.id}" class="btn btn-accent btn-sm"><i class="fas fa-cog"></i> Administrar</a>` 
+                    : ''}
                 </div>
               </div>
             `;
@@ -689,7 +693,9 @@
                 </div>
                 <div class="challenge-actions">
                   <a href="/challenges/${activity.id}" class="btn btn-primary btn-sm"><i class="fas fa-eye"></i> Ver reto</a>
-                  ${activity.isCreator ? `<a href="/challenges/edit/${activity.id}" class="btn btn-accent btn-sm"><i class="fas fa-edit"></i> Editar</a>` : ''}
+                  ${(activity.role === 'founder' || activity.role === 'admin') 
+                    ? `<a href="/challenges/edit/${activity.id}" class="btn btn-accent btn-sm"><i class="fas fa-cog"></i> Administrar</a>` 
+                    : ''}
                 </div>
               </div>
             `;
@@ -710,7 +716,9 @@
                 </div>
                 <div class="volunteering-actions">
                   <a href="/volunteering/${activity.id}" class="btn btn-primary btn-sm"><i class="fas fa-eye"></i> Ver voluntariado</a>
-                  ${activity.isCreator ? `<a href="/volunteering/edit/${activity.id}" class="btn btn-accent btn-sm"><i class="fas fa-edit"></i> Editar</a>` : ''}
+                  ${(activity.role === 'founder' || activity.role === 'admin') 
+                    ? `<a href="/volunteering/edit/${activity.id}" class="btn btn-accent btn-sm"><i class="fas fa-cog"></i> Administrar</a>` 
+                    : ''}
                 </div>
               </div>
             `;
