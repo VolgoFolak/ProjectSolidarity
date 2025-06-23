@@ -889,30 +889,16 @@ document.addEventListener('DOMContentLoaded', async function() {
     const lat = document.getElementById('lat').value;
     const lng = document.getElementById('lng').value;
 
-    const { error } = await supabase
+    const { data: newCause, error: causeError } = await supabase
       .from('causes')
-      .insert([{
-        title,
-        short_description,
-        description,
-        goal,
-        beneficiaries,
-        city,
-        country,
-        lat: lat ? parseFloat(lat) : null,
-        lng: lng ? parseFloat(lng) : null,
-        points,
-        photo_url,
-        user_id: user.id,
-        raised: 0,
-        donors: 0,
-        urgent: false,
-        category: 'community' // Puedes cambiar esto según tu lógica
-      }]);
+      .insert([{ ...datosCausa, user_id: user.id }])
+      .select()
+      .single();
 
-    if (error) {
-      alert('Error al crear la causa: ' + error.message);
-      return;
+    if (!causeError && newCause) {
+      await supabase
+        .from('causes_members')
+        .insert([{ cause_id: newCause.id, user_id: user.id, role: 'founder', status: 'active' }]);
     }
 
     document.getElementById('causeForm').style.display = 'none';
@@ -1123,8 +1109,8 @@ async function showCauseModal(causeId) {
         <button class="btn btn-primary" style="flex:1;" onclick="donateToCause('${cause.id}')">
           <i class="fas fa-donate"></i> Donar ahora
         </button>
-        <button class="btn btn-accent" style="flex:1;" onclick="volunteerForCause('${cause.id}')">
-          <i class="fas fa-hands-helping"></i> Colaborar
+        <button class="btn btn-accent" style="flex:1;" onclick="joinCause('${cause.id}')">
+          <i class="fas fa-hands-helping"></i> Participar
         </button>
         <button class="btn btn-outline" style="flex:1;" onclick="showShareOptions('${cause.id}')">
           <i class="fas fa-share-alt"></i> Compartir
@@ -1241,6 +1227,18 @@ function donateToCause(causeId) {
 }
 function volunteerForCause(causeId) {
   alert('Funcionalidad de voluntariado próximamente.');
+}
+async function joinCause(causeId) {
+  const { data: { session } } = await supabase.auth.getSession();
+  if (!session?.user) {
+    alert('Debes iniciar sesión para participar.');
+    return;
+  }
+  const userId = session.user.id;
+  await supabase
+    .from('causes_members')
+    .insert([{ cause_id: causeId, user_id: userId, role: 'member', status: 'active' }]);
+  alert('¡Ahora eres miembro de esta causa!');
 }
 </script>
 {% endblock %}

@@ -268,6 +268,17 @@ document.addEventListener('DOMContentLoaded', async function() {
   const { data: { session } } = await supabase.auth.getSession();
   currentUserId = session?.user?.id || null;
 
+  // 1. Obtener los retos en los que el usuario ya participa
+  let joinedChallengeIds = [];
+  if (currentUserId) {
+    const { data: memberships } = await supabase
+      .from('challenges_members')
+      .select('challenge_id')
+      .eq('user_id', currentUserId)
+      .eq('status', 'active');
+    joinedChallengeIds = memberships ? memberships.map(m => m.challenge_id) : [];
+  }
+
   // Abrir modal de crear reto
   document.getElementById('create-challenge-btn').onclick = async function(e) {
     e.preventDefault();
@@ -395,30 +406,16 @@ document.addEventListener('DOMContentLoaded', async function() {
     const lat = document.getElementById('lat').value;
     const lng = document.getElementById('lng').value;
 
-    const { error } = await supabase
+    const { data: newChallenge, error: challengeError } = await supabase
       .from('challenges')
-      .insert([{
-        title,
-        summary,
-        description,
-        challenge_type,
-        creator_id: user.id,
-        opponent_id,
-        cause_id,
-        city,
-        country,
-        points,
-        deadline,
-        is_urgent,
-        photo_url,
-        status: opponent_id ? 'pending' : 'active',
-        lat: lat ? parseFloat(lat) : null,
-        lng: lng ? parseFloat(lng) : null,
-      }]);
+      .insert([{ title, summary, description, challenge_type, creator_id: user.id, opponent_id, cause_id, city, country, points, deadline, is_urgent, photo_url, status: opponent_id ? 'pending' : 'active', lat: lat ? parseFloat(lat) : null, lng: lng ? parseFloat(lng) : null }])
+      .select()
+      .single();
 
-    if (error) {
-      alert('Error al crear el reto: ' + error.message);
-      return;
+    if (!challengeError && newChallenge) {
+      await supabase
+        .from('challenges_members')
+        .insert([{ challenge_id: newChallenge.id, user_id: user.id, role: 'founder', status: 'active' }]);
     }
 
     document.getElementById('challengeForm').style.display = 'none';
@@ -576,6 +573,22 @@ async function loadChallengesFromSupabase(filter = "all", searchTerm = "") {
   if (searchTerm && searchTerm.trim() !== "") {
     query = query.or(`title.ilike.%${searchTerm}%,description.ilike.%${searchTerm}%,city.ilike.%${searchTerm}%,country.ilike.%${searchTerm}%`);
   }
+
+  // --- AÑADE ESTA LÓGICA AQUÍ ---
+  let joinedChallengeIds = [];
+  let currentUserId = null;
+  const { data: { session } } = await supabase.auth.getSession();
+  if (session?.user) {
+    currentUserId = session.user.id;
+    const { data: memberships } = await supabase
+      .from('challenges_members')
+      .select('challenge_id')
+      .eq('user_id', currentUserId)
+      .eq('status', 'active');
+    joinedChallengeIds = memberships ? memberships.map(m => m.challenge_id) : [];
+  }
+  // --- FIN DE LA LÓGICA ---
+
   const { data: challenges, error } = await query;
   const challengesList = document.getElementById('challengesList');
   if (error) {
@@ -591,6 +604,7 @@ async function loadChallengesFromSupabase(filter = "all", searchTerm = "") {
   window.challenges = challenges;
 
   challenges.forEach(challenge => {
+    const isParticipating = joinedChallengeIds.includes(challenge.id);
     const urgentBadge = challenge.is_urgent ? `<div class="challenge-badge badge-urgent"><i class="fas fa-exclamation-circle"></i> Urgente</div>` : "";
     const pointsBadge = `<div class="challenge-badge badge-points"><i class="fas fa-star"></i> +${challenge.points || 0} pts</div>`;
     const typeBadge = challenge.challenge_type === 'duel'
@@ -608,25 +622,16 @@ async function loadChallengesFromSupabase(filter = "all", searchTerm = "") {
       `;
     }
 
-    // Botones según tipo y usuario
-    let actionsHtml = '';
-    if (challenge.challenge_type === 'open') {
-      actionsHtml = `
-        <button class="btn btn-primary btn-vermas" data-challenge-id="${challenge.id}"><i class="fas fa-eye"></i> Ver más</button>
-        <button class="btn btn-accent btn-aceptar" data-challenge-id="${challenge.id}"><i class="fas fa-hand-holding-heart"></i> Aceptar reto</button>
-      `;
-    } else if (challenge.challenge_type === 'duel') {
-      if (currentUserId && (currentUserId === challenge.creator_id || currentUserId === challenge.opponent_id)) {
-        actionsHtml = `<button class="btn btn-primary btn-vermas" data-challenge-id="${challenge.id}"><i class="fas fa-eye"></i> Ver más</button>`;
-      } else {
-        actionsHtml = `
-          <button class="btn btn-primary btn-vermas" data-challenge-id="${challenge.id}"><i class="fas fa-eye"></i> Ver más</button>
-          <button class="btn btn-accent btn-retar" data-challenge-id="${challenge.id}"><i class="fas fa-user-plus"></i> Retar</button>
-        `;
-      }
-    } else {
-      actionsHtml = `<button class="btn btn-primary btn-vermas" data-challenge-id="${challenge.id}"><i class="fas fa-eye"></i> Ver más</button>`;
-    }
+    // Botones: Ver más y Aceptar reto
+    const actionsHtml = `
+      <button class="btn btn-primary btn-vermas" data-challenge-id="${challenge.id}">
+        <i class="fas fa-eye"></i> Ver más
+      </button>
+      <button class="btn btn-accent btn-aceptar" data-challenge-id="${challenge.id}"
+        ${isParticipating ? 'disabled style="opacity:0.7;cursor:not-allowed;"' : ''}>
+        <i class="fas fa-hand-holding-heart"></i> ${isParticipating ? 'Participando' : 'Aceptar reto'}
+      </button>
+    `;
 
     const card = document.createElement('div');
     card.className = 'challenge-card';
@@ -652,23 +657,16 @@ async function loadChallengesFromSupabase(filter = "all", searchTerm = "") {
       </div>
     `;
 
-    card.querySelectorAll('.btn-vermas').forEach(btn => {
-      btn.addEventListener('click', function(e) {
-        e.preventDefault();
-        showChallengeModal(challenge.id);
-      });
+    // Listener para "Ver más"
+    card.querySelector('.btn-vermas').addEventListener('click', function(e) {
+      e.preventDefault();
+      showChallengeModal(challenge.id);
     });
-    card.querySelectorAll('.btn-aceptar').forEach(btn => {
-      btn.addEventListener('click', function(e) {
-        e.preventDefault();
-        alert('Funcionalidad de aceptar reto próximamente.');
-      });
-    });
-    card.querySelectorAll('.btn-retar').forEach(btn => {
-      btn.addEventListener('click', function(e) {
-        e.preventDefault();
-        alert('Funcionalidad de retar próximamente.');
-      });
+
+    // Listener para "Aceptar reto"
+    card.querySelector('.btn-aceptar').addEventListener('click', function(e) {
+      e.preventDefault();
+      participateInChallenge(challenge.id, this);
     });
 
     challengesList.appendChild(card);
@@ -824,10 +822,10 @@ async function showChallengeModal(challengeId) {
         </div>
       </div>
       <div class="task-actions" style="display:flex; gap:0.8rem; margin-top:2.2rem;">
-        <button class="btn btn-primary" style="flex:1; border-radius: var(--radius); font-weight:600; font-size:1.08rem; padding:0.9rem 0;" onclick="participateInChallenge('${challenge.id}')">
-          <i class="fas fa-hand-holding-heart"></i> Participar
+        <button class="btn btn-primary btn-aceptar" data-challenge-id="${challenge.id}" style="flex:1;">
+          <i class="fas fa-hand-holding-heart"></i> Aceptar reto
         </button>
-        <button class="btn btn-accent" style="flex:1; border-radius: var(--radius); font-weight:600; font-size:1.08rem; padding:0.9rem 0;" onclick="showShareOptionsChallenge('${challenge.id}')">
+        <button class="btn btn-accent" style="flex:1;" onclick="showShareOptionsChallenge('${challenge.id}')">
           <i class="fas fa-share-alt"></i> Compartir
         </button>
       </div>
@@ -837,6 +835,34 @@ async function showChallengeModal(challengeId) {
 
   document.getElementById('challengeModal').style.display = 'flex';
   document.body.style.overflow = 'hidden';
+
+  // Consulta si el usuario ya participa en este reto
+  let isParticipating = false;
+  if (currentUserId) {
+    const { data: membership } = await supabase
+      .from('challenges_members')
+      .select('id')
+      .eq('challenge_id', challenge.id)
+      .eq('user_id', currentUserId)
+      .eq('status', 'active')
+      .single();
+    isParticipating = !!membership;
+  }
+
+  const modalBtn = document.querySelector('#challengeModal .btn-aceptar');
+  if (modalBtn) {
+    if (isParticipating) {
+      modalBtn.textContent = "Participando";
+      modalBtn.disabled = true;
+      modalBtn.style.opacity = "0.7";
+      modalBtn.style.cursor = "not-allowed";
+    } else {
+      modalBtn.addEventListener('click', function(e) {
+        e.preventDefault();
+        participateInChallenge(challenge.id, this);
+      });
+    }
+  }
 }
 
 // Compartir reto: igual que tareas
@@ -917,8 +943,57 @@ document.getElementById('challengeModal').addEventListener('click', function(e) 
 });
 
 // Participar en reto (puedes personalizar la lógica)
-function participateInChallenge(challengeId) {
-  alert('Funcionalidad de participación próximamente.');
+async function participateInChallenge(challengeId, btn = null) {
+  const { data: { session } } = await supabase.auth.getSession();
+  if (!session?.user) {
+    document.getElementById('loginModal').classList.add('active');
+    return;
+  }
+  const userId = session.user.id;
+
+  // Intenta insertar como miembro (único por usuario y reto)
+  const { error } = await supabase
+    .from('challenges_members')
+    .insert([{ challenge_id: challengeId, user_id: userId, role: 'member', status: 'active' }]);
+
+  if (error) {
+    if (error.code === '23505' || error.status === 409) {
+      alert('Ya estás participando en este reto.');
+    } else {
+      alert('Error al participar: ' + error.message);
+    }
+    return;
+  }
+
+  // Actualiza el botón inmediatamente
+  if (btn) {
+    btn.textContent = "Participando";
+    btn.disabled = true;
+    btn.style.opacity = "0.7";
+    btn.style.cursor = "not-allowed";
+  } else {
+    // Si se llama desde el modal, también puedes actualizar el botón del modal
+    const modalBtn = document.querySelector('#challengeModal .btn-aceptar');
+    if (modalBtn) {
+      modalBtn.addEventListener('click', function(e) {
+        e.preventDefault();
+        participateInChallenge(challenge.id, this);
+      });
+    }
+  }
+}
+
+async function joinChallenge(challengeId) {
+  const { data: { session } } = await supabase.auth.getSession();
+  if (!session?.user) {
+    alert('Debes iniciar sesión para aceptar el reto.');
+    return;
+  }
+  const userId = session.user.id;
+  await supabase
+    .from('challenges_members')
+    .insert([{ challenge_id: challengeId, user_id: userId, role: 'member', status: 'active' }]);
+  alert('¡Has aceptado el reto!');
 }
 </script>
 {% endblock %}
