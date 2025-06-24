@@ -483,6 +483,14 @@ app.post('/api/impact-points', async (req, res) => {
   res.json({ success: true });
 });
 
+app.get('/api/check-session', (req, res) => {
+  if (req.session.user) {
+    res.json({ ok: true });
+  } else {
+    res.status(401).json({ ok: false });
+  }
+});
+
 app.listen(PORT, () => {
     console.log(`Servidor iniciado en http://localhost:${PORT}`);
 });

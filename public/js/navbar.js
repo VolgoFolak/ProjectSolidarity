@@ -57,3 +57,22 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 });
+
+// Esto se ejecuta al cargar la app
+(async () => {
+  const { data: { session } } = await supabase.auth.getSession();
+  if (session) {
+    // Intenta un endpoint protegido para ver si tienes sesión backend
+    const resp = await fetch('/api/check-session', { credentials: 'include' });
+    if (resp.status === 401) {
+      // No hay sesión backend, sincroniza
+      await fetch('/login-supabase', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+        body: JSON.stringify({ token: session.access_token })
+      });
+      // Ahora ya tienes sesión backend
+    }
+  }
+})();

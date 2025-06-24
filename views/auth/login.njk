@@ -220,6 +220,10 @@ document.getElementById('loginForm').addEventListener('submit', async function(e
   e.preventDefault();
   console.log('Login JS ejecutado');
 
+  const loginBtn = this.querySelector('button[type="submit"]');
+  loginBtn.disabled = true;
+  loginBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Iniciando...';
+
   const loginValue = document.getElementById('login').value.trim();
   const password = document.getElementById('password').value;
 
@@ -235,6 +239,8 @@ document.getElementById('loginForm').addEventListener('submit', async function(e
     if (!profile || profileError) {
       document.getElementById('loginError').textContent = 'Usuario no encontrado';
       document.getElementById('loginError').style.display = 'block';
+      loginBtn.disabled = false;
+      loginBtn.innerHTML = '<i class="fas fa-sign-in-alt"></i> Iniciar Sesión';
       return;
     }
     emailToUse = profile.email;
@@ -249,18 +255,29 @@ document.getElementById('loginForm').addEventListener('submit', async function(e
   if (error || !user || !session) {
     document.getElementById('loginError').textContent = error?.message || 'No se pudo iniciar sesión';
     document.getElementById('loginError').style.display = 'block';
+    loginBtn.disabled = false;
+    loginBtn.innerHTML = '<i class="fas fa-sign-in-alt"></i> Iniciar Sesión';
     return;
   }
 
   // ENVÍA EL TOKEN AL BACKEND
   const token = session.access_token;
-  await fetch('/login-supabase', {
+  const resp = await fetch('/login-supabase', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     credentials: 'include',
     body: JSON.stringify({ token })
   });
   console.log('Token enviado a /login-supabase');
- });
+
+  if (resp.ok) {
+    window.location.href = '/profile'; // Redirige al perfil tras login
+  } else {
+    document.getElementById('loginError').textContent = 'Error al iniciar sesión en el servidor.';
+    document.getElementById('loginError').style.display = 'block';
+    loginBtn.disabled = false;
+    loginBtn.innerHTML = '<i class="fas fa-sign-in-alt"></i> Iniciar Sesión';
+  }
+});
 </script>
 {% endblock %}
