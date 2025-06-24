@@ -1,0 +1,99 @@
+{% extends "layout.njk" %}
+
+{% block title %}Política de Cookies - Solidarity{% endblock %}
+
+{% block head %}
+  {{ super() }}
+  <style>
+    .cookies-container {
+      max-width: 900px;
+      margin: 2rem auto;
+      padding: 2rem;
+      background: #fff;
+      border-radius: 16px;
+      box-shadow: 0 8px 32px rgba(74,111,165,0.10);
+    }
+    .cookies-title {
+      color: var(--primary);
+      font-size: 2.2rem;
+      font-weight: 800;
+      margin-bottom: 1.2rem;
+      text-align: center;
+    }
+    .cookies-section {
+      margin-bottom: 2.5rem;
+    }
+    .cookies-section h2 {
+      color: var(--primary-dark);
+      font-size: 1.3rem;
+      font-weight: 700;
+      margin-bottom: 0.7rem;
+    }
+    .cookies-section ul {
+      margin-left: 1.5rem;
+      color: #4a5568;
+    }
+    .cookies-section p, .cookies-section li {
+      color: #4a5568;
+      font-size: 1rem;
+    }
+    @media (max-width: 700px) {
+      .cookies-container { padding: 1rem; }
+    }
+  </style>
+{% endblock %}
+
+{% block content %}
+<div class="cookies-container">
+  <div class="cookies-title">
+    <i class="fas fa-cookie-bite"></i> Política de Cookies
+  </div>
+
+  <div class="cookies-section">
+    <h2>1. ¿Qué son las cookies?</h2>
+    <p>
+      Las cookies son pequeños archivos de texto que se almacenan en tu dispositivo cuando visitas un sitio web. Permiten recordar tus preferencias y mejorar tu experiencia de navegación.
+    </p>
+  </div>
+
+  <div class="cookies-section">
+    <h2>2. ¿Qué tipos de cookies utiliza Solidarity?</h2>
+    <ul>
+      <li><strong>Cookies técnicas:</strong> necesarias para el funcionamiento básico de la plataforma.</li>
+      <li><strong>Cookies de personalización:</strong> recuerdan tus preferencias (idioma, configuración, etc.).</li>
+      <li><strong>Cookies de análisis:</strong> nos ayudan a entender cómo usas la plataforma y mejorarla (por ejemplo, Google Analytics).</li>
+      <li><strong>Cookies de terceros:</strong> algunas funcionalidades pueden usar servicios externos que instalan sus propias cookies (por ejemplo, redes sociales).</li>
+    </ul>
+  </div>
+
+  <div class="cookies-section">
+    <h2>3. ¿Cómo puedes gestionar las cookies?</h2>
+    <ul>
+      <li>Puedes aceptar o rechazar las cookies desde el banner de configuración al entrar en la web.</li>
+      <li>Puedes eliminar o bloquear las cookies desde la configuración de tu navegador.</li>
+      <li>Ten en cuenta que bloquear algunas cookies puede afectar al funcionamiento de la plataforma.</li>
+    </ul>
+  </div>
+
+  <div class="cookies-section">
+    <h2>4. Cookies de terceros</h2>
+    <p>
+      Solidarity puede utilizar servicios de terceros que instalan cookies propias, como herramientas de análisis, redes sociales o servicios de autenticación. Consulta sus políticas para más información.
+    </p>
+  </div>
+
+  <div class="cookies-section">
+    <h2>5. Cambios en la política de cookies</h2>
+    <p>
+      Podemos actualizar esta Política de Cookies en cualquier momento. Te avisaremos de los cambios importantes a través de la plataforma.
+    </p>
+  </div>
+
+  <div class="cookies-section">
+    <h2>6. Contacto</h2>
+    <p>
+      Si tienes dudas sobre nuestra Política de Cookies, puedes escribirnos a <a href="mailto:info@solidarity.com">info@solidarity.com</a>.
+    </p>
+  </div>
+</div>
+{% endblock %}

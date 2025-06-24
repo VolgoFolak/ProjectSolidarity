@@ -1,0 +1,124 @@
+{% extends "layout.njk" %}
+
+{% block title %}Términos y Condiciones - Solidarity{% endblock %}
+
+{% block head %}
+  {{ super() }}
+  <style>
+    .terms-container {
+      max-width: 900px;
+      margin: 2rem auto;
+      padding: 2rem;
+      background: #fff;
+      border-radius: 16px;
+      box-shadow: 0 8px 32px rgba(74,111,165,0.10);
+    }
+    .terms-title {
+      color: var(--primary);
+      font-size: 2.2rem;
+      font-weight: 800;
+      margin-bottom: 1.2rem;
+      text-align: center;
+    }
+    .terms-section {
+      margin-bottom: 2.5rem;
+    }
+    .terms-section h2 {
+      color: var(--primary-dark);
+      font-size: 1.3rem;
+      font-weight: 700;
+      margin-bottom: 0.7rem;
+    }
+    .terms-section ul {
+      margin-left: 1.5rem;
+      color: #4a5568;
+    }
+    .terms-section p, .terms-section li {
+      color: #4a5568;
+      font-size: 1rem;
+    }
+    @media (max-width: 700px) {
+      .terms-container { padding: 1rem; }
+    }
+  </style>
+{% endblock %}
+
+{% block content %}
+<div class="terms-container">
+  <div class="terms-title">
+    <i class="fas fa-file-contract"></i> Términos y Condiciones
+  </div>
+
+  <div class="terms-section">
+    <h2>1. Aceptación de los términos</h2>
+    <p>
+      Al acceder y utilizar <strong>Solidarity</strong>, aceptas cumplir con estos Términos y Condiciones, así como con nuestra Política de Privacidad. Si no estás de acuerdo, por favor no utilices la plataforma.
+    </p>
+  </div>
+
+  <div class="terms-section">
+    <h2>2. Uso de la plataforma</h2>
+    <ul>
+      <li>Debes ser mayor de 14 años o contar con autorización de tus tutores legales.</li>
+      <li>Te comprometes a proporcionar información veraz y actualizada en tu registro y perfil.</li>
+      <li>No está permitido el uso de la plataforma para actividades ilícitas, fraudulentas o que atenten contra los derechos de terceros.</li>
+      <li>Solidarity puede suspender o eliminar cuentas que incumplan estos términos.</li>
+    </ul>
+  </div>
+
+  <div class="terms-section">
+    <h2>3. Contenido generado por usuarios</h2>
+    <ul>
+      <li>Eres responsable del contenido que publiques (causas, tareas, comentarios, imágenes, etc.).</li>
+      <li>No publiques contenido ofensivo, ilegal, discriminatorio o que infrinja derechos de autor.</li>
+      <li>Solidarity puede eliminar contenido que considere inapropiado o que viole estos términos.</li>
+    </ul>
+  </div>
+
+  <div class="terms-section">
+    <h2>4. Propiedad intelectual</h2>
+    <ul>
+      <li>La plataforma, su diseño, logotipo y funcionalidades son propiedad de Solidarity o de sus licenciantes.</li>
+      <li>El contenido generado por usuarios sigue siendo de su propiedad, pero concedes a Solidarity una licencia para mostrarlo en la plataforma.</li>
+    </ul>
+  </div>
+
+  <div class="terms-section">
+    <h2>5. Responsabilidad</h2>
+    <ul>
+      <li>Solidarity no se hace responsable de las acciones de los usuarios ni de los resultados de las actividades organizadas a través de la plataforma.</li>
+      <li>La participación en causas, tareas, retos o voluntariados es voluntaria y bajo tu propia responsabilidad.</li>
+      <li>La plataforma puede contener enlaces a sitios de terceros, sobre los que Solidarity no tiene control ni asume responsabilidad.</li>
+    </ul>
+  </div>
+
+  <div class="terms-section">
+    <h2>6. Modificaciones</h2>
+    <p>
+      Solidarity puede modificar estos Términos y Condiciones en cualquier momento. Te notificaremos los cambios importantes a través de la plataforma o por correo electrónico.
+    </p>
+  </div>
+
+  <div class="terms-section">
+    <h2>7. Cancelación y cierre de cuenta</h2>
+    <ul>
+      <li>Puedes cancelar tu cuenta en cualquier momento desde tu perfil o contactando con nosotros.</li>
+      <li>Solidarity puede suspender o eliminar cuentas que incumplan estos términos o por motivos de seguridad.</li>
+    </ul>
+  </div>
+
+  <div class="terms-section">
+    <h2>8. Ley aplicable y jurisdicción</h2>
+    <p>
+      Estos términos se rigen por la legislación española. Para cualquier conflicto, las partes se someten a los juzgados y tribunales de la ciudad de Madrid, salvo que la ley disponga otra cosa.
+    </p>
+  </div>
+
+  <div class="terms-section">
+    <h2>9. Contacto</h2>
+    <p>
+      Si tienes dudas sobre estos Términos y Condiciones, puedes escribirnos a <a href="mailto:info@solidarity.com">info@solidarity.com</a>.
+    </p>
+  </div>
+</div>
+{%

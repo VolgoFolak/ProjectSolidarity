@@ -723,6 +723,63 @@
     </div>
   </div>
 
+  <!-- Modal de Administración de Actividad estilo Solidarity -->
+  <div id="activityAdminModal" class="modal-bg">
+    <div class="modal-content" style="max-width:700px; width:95vw; border-radius:18px; padding:2.5rem 1.5rem 2rem 1.5rem; box-shadow:0 8px 32px rgba(74,111,165,0.13); position:relative; max-height:90vh; overflow-y:auto;">
+      <button class="close-modal" id="closeAdminActivityModal" title="Cerrar">&times;</button>
+      <div class="create-cause-title" id="adminActivityTitle" style="margin-bottom:2rem;">
+        <i class="fas fa-cog"></i> Administrar Actividad
+      </div>
+      <div class="tabs" style="margin-bottom:2rem;">
+        <button class="tab active" data-tab="overview">Resumen</button>
+        <button class="tab" data-tab="members">Miembros</button>
+        <button class="tab" data-tab="settings">Configurar</button>
+        <button class="tab" data-tab="activity">Actividad</button>
+      </div>
+      <div id="overviewTab" class="tab-content active">
+        <div class="modal-cause-progress-container" style="background:#f8fafc; padding:1.2rem; border-radius:12px; margin-bottom:1.2rem; border:1px solid #e5e7eb;">
+          <div class="progress-bar">
+            <div class="progress-fill" id="adminActivityProgress" style="width:0%"></div>
+          </div>
+          <div class="progress-info">
+            <span id="adminActivityProgressPercent">0% completado</span>
+            <span id="adminActivityProgressAmount"></span>
+          </div>
+        </div>
+        <div class="modal-cause-meta-grid" style="display:grid; grid-template-columns:1fr 1fr; gap:0.7rem 1.2rem; margin-bottom:1.2rem;">
+          <div class="meta-item"><span class="meta-icon"><i class="fas fa-users"></i></span> <span id="adminActivityMembers">0 miembros</span></div>
+          <div class="meta-item"><span class="meta-icon"><i class="fas fa-star"></i></span> <span id="adminActivityPoints">0 puntos</span></div>
+          <div class="meta-item"><span class="meta-icon"><i class="fas fa-calendar-alt"></i></span> <span id="adminActivityCreated">-</span></div>
+          <div class="meta-item"><span class="meta-icon"><i class="fas fa-info-circle"></i></span> <span id="adminActivityStatus">-</span></div>
+        </div>
+        <div class="points-notice" style="background:#f0f9ff; border-left:4px solid var(--accent); padding:0.8rem; border-radius:0 8px 8px 0; font-size:0.97rem; display:flex; align-items:center; gap:0.7rem;">
+          <i class="fas fa-star" style="color: var(--accent);"></i>
+          <span id="adminActivityNotice"></span>
+        </div>
+        <div class="content-section" style="margin-top:2rem;">
+          <h3 class="content-title"><i class="fas fa-align-left"></i> Descripción</h3>
+          <p class="content-text" id="adminActivityDesc" style="text-align:justify;"></p>
+        </div>
+      </div>
+      <div id="membersTab" class="tab-content">
+        <h3 class="content-title"><i class="fas fa-users"></i> Miembros</h3>
+        <div class="members-list" id="adminActivityMembersList"></div>
+      </div>
+      <div id="settingsTab" class="tab-content">
+        <form id="adminActivityForm" class="cause-form" autocomplete="off">
+          <div id="adminActivityFormFields"></div>
+          <button type="submit" class="btn btn-primary" style="margin-top:1.2rem;">
+            <i class="fas fa-save"></i> Guardar Cambios
+          </button>
+        </form>
+      </div>
+      <div id="activityTab" class="tab-content">
+        <h3 class="content-title"><i class="fas fa-history"></i> Actividad reciente</h3>
+        <div id="adminActivityLog" style="color:#4b5563; font-size:1.05rem;"></div>
+      </div>
+    </div>
+  </div>
+
   <!-- Sección de introducción a las causas solidarias (espaciado igual que retos y volunteering) -->
   <div class="main-container">
     <div class="causes-intro">
