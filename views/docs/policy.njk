@@ -1,0 +1,130 @@
+{% extends "layout.njk" %}
+
+{% block title %}Política de Privacidad - Solidarity{% endblock %}
+
+{% block head %}
+  {{ super() }}
+  <style>
+    .policy-container {
+      max-width: 900px;
+      margin: 2rem auto;
+      padding: 2rem;
+      background: #fff;
+      border-radius: 16px;
+      box-shadow: 0 8px 32px rgba(74,111,165,0.10);
+    }
+    .policy-title {
+      color: var(--primary);
+      font-size: 2.2rem;
+      font-weight: 800;
+      margin-bottom: 1.2rem;
+      text-align: center;
+    }
+    .policy-section {
+      margin-bottom: 2.5rem;
+    }
+    .policy-section h2 {
+      color: var(--primary-dark);
+      font-size: 1.3rem;
+      font-weight: 700;
+      margin-bottom: 0.7rem;
+    }
+    .policy-section ul {
+      margin-left: 1.5rem;
+      color: #4a5568;
+    }
+    .policy-section p, .policy-section li {
+      color: #4a5568;
+      font-size: 1rem;
+    }
+    @media (max-width: 700px) {
+      .policy-container { padding: 1rem; }
+    }
+  </style>
+{% endblock %}
+
+{% block content %}
+<div class="policy-container">
+  <div class="policy-title">
+    <i class="fas fa-user-shield"></i> Política de Privacidad
+  </div>
+
+  <div class="policy-section">
+    <h2>1. Introducción</h2>
+    <p>
+      En <strong>Solidarity</strong> nos comprometemos a proteger tu privacidad y tus datos personales. Esta Política de Privacidad explica cómo recopilamos, usamos, almacenamos y protegemos tu información cuando utilizas nuestra plataforma.
+    </p>
+  </div>
+
+  <div class="policy-section">
+    <h2>2. ¿Qué datos recopilamos?</h2>
+    <ul>
+      <li><strong>Datos de registro:</strong> nombre, correo electrónico, contraseña y foto de perfil.</li>
+      <li><strong>Información de actividad:</strong> causas, tareas, retos y voluntariados en los que participas o creas.</li>
+      <li><strong>Datos de uso:</strong> estadísticas de participación, puntos de impacto, mensajes y comentarios.</li>
+      <li><strong>Datos técnicos:</strong> dirección IP, tipo de dispositivo, navegador y cookies.</li>
+    </ul>
+  </div>
+
+  <div class="policy-section">
+    <h2>3. ¿Para qué usamos tus datos?</h2>
+    <ul>
+      <li>Para gestionar tu cuenta y tu experiencia en la plataforma.</li>
+      <li>Para mostrarte actividades relevantes y personalizadas.</li>
+      <li>Para mejorar nuestros servicios y funcionalidades.</li>
+      <li>Para garantizar la seguridad y prevenir fraudes.</li>
+      <li>Para enviarte notificaciones importantes relacionadas con tu actividad.</li>
+    </ul>
+  </div>
+
+  <div class="policy-section">
+    <h2>4. ¿Con quién compartimos tu información?</h2>
+    <ul>
+      <li>No vendemos tus datos personales a terceros.</li>
+      <li>Podemos compartir información con proveedores tecnológicos (por ejemplo, servicios de alojamiento o correo) bajo acuerdos de confidencialidad.</li>
+      <li>En caso de requerimiento legal, podríamos compartir datos con autoridades competentes.</li>
+    </ul>
+  </div>
+
+  <div class="policy-section">
+    <h2>5. Seguridad de tus datos</h2>
+    <p>
+      Aplicamos medidas técnicas y organizativas para proteger tu información contra accesos no autorizados, pérdida o alteración. Sin embargo, ningún sistema es 100% seguro.
+    </p>
+  </div>
+
+  <div class="policy-section">
+    <h2>6. Tus derechos</h2>
+    <ul>
+      <li>Acceder, rectificar o eliminar tus datos personales.</li>
+      <li>Solicitar la portabilidad de tus datos.</li>
+      <li>Oponerte o limitar el tratamiento de tus datos.</li>
+      <li>Retirar tu consentimiento en cualquier momento.</li>
+    </ul>
+    <p>
+      Puedes ejercer estos derechos escribiendo a <a href="mailto:info@solidarity.com">info@solidarity.com</a>.
+    </p>
+  </div>
+
+  <div class="policy-section">
+    <h2>7. Cookies</h2>
+    <p>
+      Utilizamos cookies propias y de terceros para mejorar tu experiencia y analizar el uso de la plataforma. Puedes gestionar tus preferencias de cookies desde la configuración de tu navegador.
+    </p>
+  </div>
+
+  <div class="policy-section">
+    <h2>8. Cambios en la política</h2>
+    <p>
+      Podemos actualizar esta Política de Privacidad en cualquier momento. Te avisaremos de los cambios importantes a través de la plataforma o por correo electrónico.
+    </p>
+  </div>
+
+  <div class="policy-section">
+    <h2>9. Contacto</h2>
+    <p>
+      Si tienes dudas sobre esta política o el tratamiento de tus datos, contáctanos en <a href="mailto:info@solidarity.com">info@solidarity.com</a>.
+    </p>
+  </div>
+</div>
+{% endblock %}

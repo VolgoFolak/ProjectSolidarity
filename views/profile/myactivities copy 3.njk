@@ -767,74 +767,25 @@
       <input type="text" id="search-input" placeholder="Buscar entre tus actividades...">
       <i class="fas fa-search" style="color:#4a6fa5;"></i>
     </div>
-
-    <!-- Sección de Causas -->
-    <section class="activity-section causes-section" style="margin-bottom: 3.5rem;">
-      <div class="activity-section-header"
-           style="display:flex;align-items:center;gap:1.1rem;margin-bottom:2.2rem;
-                  background:linear-gradient(90deg,#e6f4ea 0%,#fff 100%);
-                  border-radius:14px;padding:1.2rem 1.7rem;box-shadow:0 2px 12px #e3eefd55;">
-        <div style="background:var(--accent);color:#fff;border-radius:50%;width:48px;height:48px;display:flex;align-items:center;justify-content:center;font-size:2rem;box-shadow:0 2px 8px #4fc3a133;">
-          <i class="fas fa-heart"></i>
-        </div>
-        <div>
-          <h2 style="color:var(--accent);font-weight:900;font-size:1.45rem;margin:0;letter-spacing:-1px;">Tus causas</h2>
-          <div style="color:#3da58a;font-size:1rem;font-weight:500;">Todas tus causas solidarias activas</div>
-        </div>
-      </div>
-      <div class="activities-grid" id="causesGrid"></div>
-    </section>
-
-    <!-- Sección de Tareas -->
-    <section class="activity-section tasks-section" style="margin-bottom: 3.5rem;">
-      <div class="activity-section-header"
-           style="display:flex;align-items:center;gap:1.1rem;margin-bottom:2.2rem;
-                  background:linear-gradient(90deg,#e3eefd 0%,#fff 100%);
-                  border-radius:14px;padding:1.2rem 1.7rem;box-shadow:0 2px 12px #e3eefd55;">
-        <div style="background:var(--primary);color:#fff;border-radius:50%;width:48px;height:48px;display:flex;align-items:center;justify-content:center;font-size:2rem;box-shadow:0 2px 8px #4a6fa533;">
-          <i class="fas fa-tasks"></i>
-        </div>
-        <div>
-          <h2 style="color:var(--primary);font-weight:900;font-size:1.45rem;margin:0;letter-spacing:-1px;">Tus tareas</h2>
-          <div style="color:#166088;font-size:1rem;font-weight:500;">Tus tareas pendientes y completadas</div>
-        </div>
-      </div>
-      <div class="activities-grid" id="tasksGrid"></div>
-    </section>
-
-    <!-- Sección de Retos -->
-    <section class="activity-section challenges-section" style="margin-bottom: 3.5rem;">
-      <div class="activity-section-header"
-           style="display:flex;align-items:center;gap:1.1rem;margin-bottom:2.2rem;
-                  background:linear-gradient(90deg,#fffbe6 0%,#fff 100%);
-                  border-radius:14px;padding:1.2rem 1.7rem;box-shadow:0 2px 12px #ffe06655;">
-        <div style="background:var(--challenge-dark);color:#fff;border-radius:50%;width:48px;height:48px;display:flex;align-items:center;justify-content:center;font-size:2rem;box-shadow:0 2px 8px #ffe06633;">
-          <i class="fas fa-trophy"></i>
-        </div>
-        <div>
-          <h2 style="color:var(--challenge-dark);font-weight:900;font-size:1.45rem;margin:0;letter-spacing:-1px;">Tus retos</h2>
-          <div style="color:#a67c00;font-size:1rem;font-weight:500;">Tus retos y desafíos solidarios</div>
-        </div>
-      </div>
-      <div class="activities-grid" id="challengesGrid"></div>
-    </section>
-
-    <!-- Sección de Voluntariado -->
-    <section class="activity-section volunteering-section" style="margin-bottom: 3.5rem;">
-      <div class="activity-section-header"
-           style="display:flex;align-items:center;gap:1.1rem;margin-bottom:2.2rem;
-                  background:linear-gradient(90deg,#e6faff 0%,#fff 100%);
-                  border-radius:14px;padding:1.2rem 1.7rem;box-shadow:0 2px 12px #00bcd433;">
-        <div style="background:var(--volunteering-dark);color:#fff;border-radius:50%;width:48px;height:48px;display:flex;align-items:center;justify-content:center;font-size:2rem;box-shadow:0 2px 8px #00bcd433;">
-          <i class="fas fa-hands-helping"></i>
-        </div>
-        <div>
-          <h2 style="color:var(--volunteering-dark);font-weight:900;fontsize:1.45rem;margin:0;letter-spacing:-1px;">Tus voluntariados</h2>
-          <div style="color:#0097a7;font-size:1rem;font-weight:500;">Tus acciones de voluntariado</div>
-        </div>
-      </div>
-      <div class="activities-grid" id="volunteeringGrid"></div>
-    </section>
+    <div class="tabs">
+      <button class="tab active" data-filter="all">Todas</button>
+      <button class="tab" data-filter="cause">Causas</button>
+      <button class="tab" data-filter="task">Tareas</button>
+      <button class="tab" data-filter="challenge">Retos</button>
+      <button class="tab" data-filter="volunteering">Voluntariados</button>
+      <button class="tab" data-filter="created">Creadas por mí</button>
+      <button class="tab" data-filter="completed">Completadas</button>
+    </div>
+    <div class="activities-grid" id="activitiesGrid"></div>
+    <div class="pagination" id="pagination">
+      <button id="prevPage" class="btn btn-outline" disabled>
+        <i class="fas fa-chevron-left"></i>
+      </button>
+      <span id="pageInfo">1</span>
+      <button id="nextPage" class="btn btn-outline" disabled>
+        <i class="fas fa-chevron-right"></i>
+      </button>
+    </div>
   </div>
 
 <!-- Modal de administración de actividad (idéntico a myteams.njk) -->
@@ -934,6 +885,47 @@
       }
       userId = session.user.id;
 
+      // Cargar actividades
+      await loadUserActivities();
+
+      // Filtros y búsqueda
+      document.querySelectorAll('.tab').forEach(tab => {
+        tab.addEventListener('click', function() {
+          document.querySelector('.tab.active').classList.remove('active');
+          this.classList.add('active');
+          currentPage = 1;
+          filterAndRenderActivities();
+        });
+      });
+      document.getElementById('search-input').addEventListener('input', function() {
+        currentPage = 1;
+        filterAndRenderActivities();
+      });
+      document.getElementById('prevPage').addEventListener('click', function() {
+        if (currentPage > 1) { currentPage--; renderActivities(); }
+      });
+      document.getElementById('nextPage').addEventListener('click', function() {
+        const totalPages = Math.ceil(filteredActivities.length / itemsPerPage);
+        if (currentPage < totalPages) { currentPage++; renderActivities(); }
+      });
+
+      // Modal cerrar
+      document.getElementById('closeAdminModal').addEventListener('click', closeAdminModal);
+      document.getElementById('adminModal').addEventListener('click', function(e) {
+        if (e.target === this) closeAdminModal();
+      });
+
+      // Tabs del modal
+      document.querySelectorAll('.admin-tab').forEach(tab => {
+        tab.addEventListener('click', function() {
+          const tabId = this.getAttribute('data-tab');
+          document.querySelectorAll('.admin-tab-content').forEach(content => content.classList.remove('active'));
+          document.querySelectorAll('.admin-tab').forEach(t => t.classList.remove('active'));
+          this.classList.add('active');
+          document.getElementById(`${tabId}Tab`).classList.add('active');
+        });
+      });
+
       // -------- MODAL ADMINISTRAR ACTIVIDAD --------
       window.openAdminActivityModal = async function(activity) {
         currentAdminActivity = activity;
@@ -968,7 +960,7 @@
           return `
             <div class="form-group form-group-full" style="display:flex; flex-direction:column; align-items:center; gap:0.7rem;">
               <label style="align-self:flex-start;" for="editActivityImage"><i class="fas fa-image"></i> Imagen principal</label>
-              <img id="activityImagePreview" src="${currentUrl || '/img/causa-default.jpg'}" alt="Preview" style="width:120px;height:120px;object-fit:cover;border-radius:12px;border:1.5px solid #e2e8f0;box-shadow:0 2px 8px #e2eefd;">
+              <img id="activityImagePreview" src="${currentUrl || '/img/causa-default.jpg'}" alt="Preview" style="width:120px;height:120px;object-fit:cover;border-radius:12px;border:1.5px solid #e2e8f0;box-shadow:0 2px 8px #e2e8f0;">
               <input type="file" id="editActivityImageFile" accept="image/*" style="margin-top:0.5rem;">
               <input type="hidden" id="editActivityImage" name="editActivityImage" value="${currentUrl || ''}">
               <small style="color:#888;">Formatos permitidos: JPG, PNG. Tamaño máx: 2MB.</small>
@@ -1452,102 +1444,93 @@
         renderActivities();
       }
 
-      // Evento administrar en renderActivities
       function renderActivities() {
-        // Limpia los grids
-        document.getElementById('causesGrid').innerHTML = '';
-        document.getElementById('tasksGrid').innerHTML = '';
-        document.getElementById('challengesGrid').innerHTML = '';
-        document.getElementById('volunteeringGrid').innerHTML = '';
+        const startIdx = (currentPage - 1) * itemsPerPage;
+        const endIdx = startIdx + itemsPerPage;
+        const paginatedActivities = filteredActivities.slice(startIdx, endIdx);
+        const container = document.getElementById('activitiesGrid');
+        container.innerHTML = '';
 
-        // Filtra y renderiza por tipo
-        const types = [
-          { key: 'cause', grid: 'causesGrid' },
-          { key: 'task', grid: 'tasksGrid' },
-          { key: 'challenge', grid: 'challengesGrid' },
-          { key: 'volunteering', grid: 'volunteeringGrid' }
-        ];
+        if (paginatedActivities.length === 0) {
+          showEmptyState();
+          return;
+        }
 
-        types.forEach(({ key, grid }) => {
-          const activities = filteredActivities.filter(a => a.type === key);
-          const container = document.getElementById(grid);
-          if (activities.length === 0) {
-            container.innerHTML = `<div style="color:#aaa;text-align:center;padding:2rem;">No tienes ${key === 'cause' ? 'causas' : key === 'task' ? 'tareas' : key === 'challenge' ? 'retos' : 'voluntariados'}.</div>`;
-            return;
+        document.getElementById('pagination').style.display = 'flex';
+
+        paginatedActivities.forEach(activity => {
+          // Normaliza datos
+          const img = activity.photo_url || '/img/causa-default.jpg';
+          const resumen = activity.short_description || activity.description || 'Sin descripción';
+          const meta = activity.goal || 0;
+          const recaudado = activity.raised || 0;
+          const porcentaje = meta ? Math.min(100, Math.round((recaudado / meta) * 100)) : 0;
+          const fecha = formatDate(activity.created_at);
+          let metaExtra = '';
+          let url = '#';
+          let tipo = '';
+          if (activity.type === 'cause') {
+            metaExtra = `<span><i class="fas fa-users"></i> ${activity.beneficiaries || 0} beneficiarios</span>`;
+            url = `/causes/${activity.id}`;
+            tipo = 'Causa';
+          } else if (activity.type === 'task') {
+            metaExtra = `<span><i class="fas fa-users"></i> ${activity.participants || 0} participantes</span>`;
+            url = `/tasks/${activity.id}`;
+            tipo = 'Tarea';
+          } else if (activity.type === 'challenge') {
+            metaExtra = `<span><i class="fas fa-users"></i> ${activity.participants || 0} participantes</span>`;
+            url = `/challenges/${activity.id}`;
+            tipo = 'Reto';
+          } else if (activity.type === 'volunteering') {
+            metaExtra = `<span><i class="fas fa-users"></i> ${activity.participants || 0} participantes</span>`;
+            url = `/volunteering/${activity.id}`;
+            tipo = 'Voluntariado';
           }
-          activities.forEach(activity => {
-            const img = activity.photo_url || '/img/causa-default.jpg';
-            const resumen = activity.short_description || activity.description || 'Sin descripción';
-            const meta = activity.goal || 0;
-            const recaudado = activity.raised || 0;
-            const porcentaje = meta ? Math.min(100, Math.round((recaudado / meta) * 100)) : 0;
-            const fecha = formatDate(activity.created_at);
-            let metaExtra = '';
-            let url = '#';
-            if (activity.type === 'cause') {
-              metaExtra = `<span><i class="fas fa-users"></i> ${activity.beneficiaries || 0} beneficiarios</span>`;
-              url = `/causes/${activity.id}`;
-            } else if (activity.type === 'task') {
-              metaExtra = `<span><i class="fas fa-users"></i> ${activity.participants || 0} participantes</span>`;
-              url = `/tasks/${activity.id}`;
-            } else if (activity.type === 'challenge') {
-              metaExtra = `<span><i class="fas fa-users"></i> ${activity.participants || 0} participantes</span>`;
-              url = `/challenges/${activity.id}`;
-            } else if (activity.type === 'volunteering') {
-              metaExtra = `<span><i class="fas fa-users"></i> ${activity.participants || 0} participantes</span>`;
-              url = `/volunteering/${activity.id}`;
-            }
 
-            const card = document.createElement('div');
-            card.className = 'cause-card';
-            card.innerHTML = `
-              <div class="cause-image">
-                <img src="${img}" alt="${activity.title}">
-              </div>
-              <div class="cause-content">
-                <h3>${activity.title}</h3>
-                <p>${resumen}</p>
-                <div class="progress-container">
-                  <div class="progress-bar">
-                    <div class="progress" style="width: ${porcentaje}%"></div>
-                  </div>
-                  <div class="progress-info">
-                    <span>${recaudado}€</span>
-                    <span>${meta}€</span>
-                  </div>
+          // Tarjeta homogénea
+          const card = document.createElement('div');
+          card.className = 'cause-card'; // Usamos el mismo estilo base de causa para todas
+          card.innerHTML = `
+            <div class="cause-image">
+              <img src="${img}" alt="${activity.title}">
+            </div>
+            <div class="cause-content">
+              <h3>${activity.title}</h3>
+              <p>${resumen}</p>
+              <div class="progress-container">
+                <div class="progress-bar">
+                  <div class="progress" style="width: ${porcentaje}%"></div>
                 </div>
-                <div class="meta">
-                  ${metaExtra}
-                  <span><i class="fas fa-calendar-alt"></i> ${fecha}</span>
-                </div>
-                <div class="actions">
-                  <a href="${url}" class="btn btn-primary btn-sm"><i class="fas fa-eye"></i> Ver más</a>
-                  ${(activity.role === 'founder' || activity.role === 'admin')
-                    ? `<button class="btn btn-accent btn-sm admin-activity-btn"><i class="fas fa-cog"></i> Administrar</button>`
-                    : `<span class="role-badge member"><i class="fas fa-user"></i> Miembro</span>`
-                  }
+                <div class="progress-info">
+                  <span>${recaudado}€</span>
+                  <span>${meta}€</span>
                 </div>
               </div>
-            `;
-            // Evento administrar
-            const adminBtn = card.querySelector('.admin-activity-btn');
-            if (adminBtn) {
-              adminBtn.addEventListener('click', (e) => {
-                e.preventDefault();
-                // Solución robusta: espera a que la función esté definida
-                if (typeof window.openAdminActivityModal === 'function') {
-                  window.openAdminActivityModal(activity);
-                } else {
-                  alert('El modal de administración aún no está listo. Intenta de nuevo en un momento.');
+              <div class="meta">
+                ${metaExtra}
+                <span><i class="fas fa-calendar-alt"></i> ${fecha}</span>
+              </div>
+              <div class="actions">
+                <a href="${url}" class="btn btn-primary btn-sm"><i class="fas fa-eye"></i> Ver más</a>
+                ${(activity.role === 'founder' || activity.role === 'admin')
+                  ? `<button class="btn btn-accent btn-sm admin-activity-btn"><i class="fas fa-cog"></i> Administrar</button>`
+                  : `<span class="role-badge member"><i class="fas fa-user"></i> Miembro</span>`
                 }
-              });
-            }
-            container.appendChild(card);
-          });
+              </div>
+            </div>
+          `;
+          // Evento administrar
+          const adminBtn = card.querySelector('.admin-activity-btn');
+          if (adminBtn) {
+            adminBtn.addEventListener('click', (e) => {
+              e.preventDefault();
+              openAdminActivityModal(activity);
+            });
+          }
+          container.appendChild(card);
         });
-        // Oculta paginación si no la necesitas en este modo
-        const pag = document.getElementById('pagination');
-        if (pag) pag.style.display = 'none';
+
+        updatePagination();
       }
 
       function updatePagination() {
@@ -1566,60 +1549,10 @@
         });
       }
 
-      // Cargar actividades
-      await loadUserActivities(); // Esto llama a renderActivities() internamente
-
-      // Filtros y búsqueda
-      document.querySelectorAll('.tab').forEach(tab => {
-        tab.addEventListener('click', function() {
-          document.querySelector('.tab.active').classList.remove('active');
-          this.classList.add('active');
-          currentPage = 1;
-          filterAndRenderActivities();
-        });
-      });
-      document.getElementById('search-input').addEventListener('input', function() {
-        currentPage = 1;
-        filterAndRenderActivities();
-      });
-      const prevPageBtn = document.getElementById('prevPage');
-      if (prevPageBtn) {
-        prevPageBtn.addEventListener('click', function() {
-          if (currentPage > 1) { currentPage--; renderActivities(); }
-        });
+      function closeAdminModal() {
+        document.getElementById('adminModal').classList.remove('active'); // <-- usa adminModal
+        document.body.style.overflow = '';
       }
-
-      const nextPageBtn = document.getElementById('nextPage');
-      if (nextPageBtn) {
-        nextPageBtn.addEventListener('click', function() {
-          const totalPages = Math.ceil(filteredActivities.length / itemsPerPage);
-          if (currentPage < totalPages) { currentPage++; renderActivities(); }
-        });
-      }
-
-      // Modal cerrar
-      const closeBtn = document.getElementById('closeAdminModal');
-      if (closeBtn) {
-        closeBtn.addEventListener('click', closeAdminModal);
-      }
-
-      const adminModal = document.getElementById('adminModal');
-      if (adminModal) {
-        adminModal.addEventListener('click', function(e) {
-          if (e.target === this) closeAdminModal();
-        });
-      }
-
-      document.querySelectorAll('.admin-tab').forEach(tab => {
-        tab.addEventListener('click', function() {
-          const tabId = this.getAttribute('data-tab');
-          document.querySelectorAll('.admin-tab-content').forEach(content => content.classList.remove('active'));
-          document.querySelectorAll('.admin-tab').forEach(t => t.classList.remove('active'));
-          this.classList.add('active');
-          const tabContent = document.getElementById(`${tabId}Tab`);
-          if (tabContent) tabContent.classList.add('active');
-        });
-      });
     });
-   </script>
+  </script>
 {% endblock %}
