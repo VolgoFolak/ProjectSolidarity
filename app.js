@@ -109,10 +109,53 @@ app.post('/login', (req, res) => {
     }
 });
 
+// --- Login con Supabase ---
+app.post('/login-supabase', async (req, res) => {
+  const { token } = req.body;
+  if (!token) {
+    console.log('No token recibido');
+    return res.status(400).json({ error: 'No token' });
+  }
+
+  // Valida el token con Supabase
+  const { data: { user }, error } = await supabase.auth.getUser(token);
+  if (error || !user) {
+    console.log('Token inválido:', error);
+    return res.status(401).json({ error: 'Token inválido' });
+  }
+
+  // Busca el perfil en tu tabla de perfiles (usa first_name en vez de name)
+  const { data: profile, error: profileError } = await supabase
+    .from('profiles')
+    .select('id, username, first_name, email, photo_url')
+    .eq('id', user.id)
+    .single();
+
+  if (profileError || !profile) {
+    console.log('Perfil no encontrado:', profileError);
+    return res.status(401).json({ error: 'Perfil no encontrado' });
+  }
+
+  // Crea la sesión Express
+  req.session.user = {
+    id: profile.id,
+    name: profile.first_name, // Usa first_name aquí
+    photo: profile.photo_url || '',
+    username: profile.username,
+    email: profile.email
+  };
+  req.session.firstLogin = true;
+  res.json({ ok: true, user: req.session.user });
+});
+
 // --- Saber si hay sesión ---
 app.get('/me', (req, res) => {
     if (req.session.user) {
-        res.json({ logged: true, user: req.session.user });
+        res.json({ 
+            logged: true,
+            user: req.session.user,
+            firstLogin: req.session.firstLogin // Añade esto si quieres detectar primer login
+        });
     } else {
         res.json({ logged: false });
     }
@@ -194,12 +237,12 @@ app.get('/messages', (req, res) => {
     res.render('messages/index.njk');
 });
 
-app.get('/messages/:conversationId', (req, res) => {
-    res.render('messages/conversation.njk');
-});
-
 app.get('/messages/new', (req, res) => {
     res.render('messages/new.njk');
+});
+
+app.get('/messages/:conversationId', (req, res) => {
+    res.render('messages/conversation.njk');
 });
 
 // --- API para mensajes ---
@@ -217,8 +260,8 @@ app.get('/api/conversations', async (req, res) => {
                     profile: profiles!conversation_participants_profile_id_fkey (id, username, photo_url)
                 )
             `)
-            .neq('participants.profile.id', req.session.user.id)
-            .order('last_message.created_at', { ascending: false });
+            // .order('last_message.created_at', { ascending: false }) // ❌ Quita o comenta esta línea
+            .order('created_at', { ascending: false }); // ✅ Ordena por created_at de conversations
         
         if (error) throw error;
         res.json(data);

@@ -218,20 +218,15 @@
 
 document.getElementById('loginForm').addEventListener('submit', async function(e) {
   e.preventDefault();
+  console.log('Login JS ejecutado');
 
   const loginValue = document.getElementById('login').value.trim();
   const password = document.getElementById('password').value;
 
-  let user = null;
-  let error = null;
+  let emailToUse = loginValue;
 
-  // Si es email, intenta login directo
-  if (loginValue.includes('@')) {
-    const res = await supabase.auth.signInWithPassword({ email: loginValue, password });
-    user = res.data?.user;
-    error = res.error;
-  } else {
-    // Si es username, busca el email asociado
+  // Si el usuario NO puso un email, busca el email por username
+  if (!loginValue.includes('@')) {
     const { data: profile, error: profileError } = await supabase
       .from('profiles')
       .select('email')
@@ -242,35 +237,30 @@ document.getElementById('loginForm').addEventListener('submit', async function(e
       document.getElementById('loginError').style.display = 'block';
       return;
     }
-    const res = await supabase.auth.signInWithPassword({ email: profile.email, password });
-    user = res.data?.user;
-    error = res.error;
+    emailToUse = profile.email;
   }
 
-  if (error) {
-    document.getElementById('loginError').textContent = error.message || 'No se pudo iniciar sesión';
+  // Login con Supabase usando email
+  const res = await supabase.auth.signInWithPassword({ email: emailToUse, password });
+  const user = res.data?.user;
+  const session = res.data?.session;
+  const error = res.error;
+
+  if (error || !user || !session) {
+    document.getElementById('loginError').textContent = error?.message || 'No se pudo iniciar sesión';
     document.getElementById('loginError').style.display = 'block';
     return;
   }
 
-  if (!user) {
-    document.getElementById('loginError').textContent = 'No se pudo obtener el usuario';
-    document.getElementById('loginError').style.display = 'block';
-    return;
-  }
-
-  // Comprueba si el perfil existe en la tabla profiles
-  const { data: profile, error: profileError } = await supabase
-    .from('profiles')
-    .select('id')
-    .eq('id', user.id)
-    .maybeSingle();
-
-  if (!profile) {
-    window.location.href = '/completar-perfil';
-  } else {
-    window.location.href = '/';
-  }
-});
+  // ENVÍA EL TOKEN AL BACKEND
+  const token = session.access_token;
+  await fetch('/login-supabase', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    credentials: 'include',
+    body: JSON.stringify({ token })
+  });
+  console.log('Token enviado a /login-supabase');
+ });
 </script>
 {% endblock %}

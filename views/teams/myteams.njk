@@ -811,6 +811,49 @@
       transform: translateY(-4px) scale(1.03);
       transition: all 0.18s;
     }
+
+    /* Nuevos estilos para las secciones de comunidades */
+    .activity-section {
+      margin-bottom: 3.5rem;
+    }
+
+    .activity-section-header {
+      display: flex;
+      align-items: center;
+      gap: 1.1rem;
+      margin-bottom: 2.2rem;
+      padding: 1.2rem 1.7rem;
+      border-radius: 14px;
+      box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
+    }
+
+    .activity-section-header h2 {
+      margin: 0;
+      font-size: 1.45rem;
+      font-weight: 900;
+      letter-spacing: -1px;
+    }
+
+    .admin-teams-section .activity-section-header {
+      background: linear-gradient(90deg, #e3f0ff 0%, #fff 100%);
+    }
+
+    .member-teams-section .activity-section-header {
+      background: linear-gradient(90deg, #e6fff7 0%, #fff 100%);
+    }
+
+    /* Ajustes en los grids de comunidades */
+    .teams-grid-classic {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 1.5rem;
+    }
+
+    @media (max-width: 768px) {
+      .teams-grid-classic {
+        grid-template-columns: 1fr;
+      }
+    }
   </style>
 {% endblock %}
 
@@ -1054,10 +1097,39 @@
       <button class="tab" data-filter="pending">Requests</button>
     </div>
     
-    <!-- Grid de comunidades -->
-    <div class="teams-grid-classic" id="teamsGrid">
-      <!-- Las comunidades se cargarán aquí dinámicamente -->
-    </div>
+    <!-- Sección: Comunidades que administro -->
+    <section class="activity-section admin-teams-section" style="margin-bottom: 3.5rem;">
+      <div class="activity-section-header"
+           style="display:flex;align-items:center;gap:1.1rem;margin-bottom:2.2rem;
+                  background:linear-gradient(90deg,#e3f0ff 0%,#fff 100%);
+                  border-radius:14px;padding:1.2rem 1.7rem;box-shadow:0 2px 12px #e3eefd55;">
+        <div style="background:var(--accent);color:#fff;border-radius:50%;width:48px;height:48px;display:flex;align-items:center;justify-content:center;font-size:2rem;box-shadow:0 2px 8px #4fc3a133;">
+          <i class="fas fa-crown"></i>
+        </div>
+        <div>
+          <h2 style="color:var(--primary);font-weight:900;font-size:1.45rem;margin:0;letter-spacing:-1px;">Comunidades que administras</h2>
+          <div style="color:#249e7a;font-size:1rem;font-weight:500;">Gestionas como fundador o coordinador</div>
+        </div>
+      </div>
+      <div class="teams-grid-classic" id="adminTeamsGrid"></div>
+    </section>
+
+    <!-- Sección: Comunidades donde soy miembro -->
+    <section class="activity-section member-teams-section" style="margin-bottom: 3.5rem;">
+      <div class="activity-section-header"
+           style="display:flex;align-items:center;gap:1.1rem;margin-bottom:2.2rem;
+                  background:linear-gradient(90deg,#e6fff7 0%,#fff 100%);
+                  border-radius:14px;padding:1.2rem 1.7rem;box-shadow:0 2px 12px #4fc3a122;">
+        <div style="background:var(--accent);color:#fff;border-radius:50%;width:48px;height:48px;display:flex;align-items:center;justify-content:center;font-size:2rem;box-shadow:0 2px 8px #4fc3a133;">
+          <i class="fas fa-users"></i>
+        </div>
+        <div>
+          <h2 style="color:var(--primary);font-weight:900;font-size:1.45rem;margin:0;letter-spacing:-1px;">Comunidades donde eres miembro</h2>
+          <div style="color:#249e7a;font-size:1rem;font-weight:500;">Participas como miembro regular</div>
+        </div>
+      </div>
+      <div class="teams-grid-classic" id="memberTeamsGrid"></div>
+    </section>
     
     <!-- Paginación -->
     <div class="pagination" id="pagination">
@@ -1235,25 +1307,31 @@
       }
 
       function renderTeams() {
-        const startIdx = (currentPage - 1) * itemsPerPage;
-        const endIdx = startIdx + itemsPerPage;
-        const paginatedTeams = filteredTeams.slice(startIdx, endIdx);
-        const container = document.getElementById('teamsGrid');
+        // Divide los equipos en administrados y miembro
+        const adminTeams = filteredTeams.filter(team => team.is_admin || team.is_moderator);
+        const memberTeams = filteredTeams.filter(team => !team.is_admin && !team.is_moderator);
+
+        // Renderiza cada sección
+        renderTeamsSection(adminTeams, 'adminTeamsGrid');
+        renderTeamsSection(memberTeams, 'memberTeamsGrid');
+
+        // Oculta paginación (o adáptala si quieres paginar por sección)
+        document.getElementById('pagination').style.display = 'none';
+      }
+
+      function renderTeamsSection(teams, gridId) {
+        const container = document.getElementById(gridId);
         container.innerHTML = '';
-        if (paginatedTeams.length === 0) {
+        if (teams.length === 0) {
           container.innerHTML = `
             <div class="empty-state" style="grid-column: 1 / -1; text-align: center; padding: 3rem;">
-              <i class="fas fa-search" style="font-size: 3rem; color: #a0aec0; margin-bottom: 1rem;"></i>
-              <h3 style="color: #4a5568; margin-bottom: 0.5rem;">No se encontraron comunidades</h3>
-              <p style="color: #718096;">No hay comunidades que coincidan con tu búsqueda.</p>
+              <i class="fas fa-users-slash" style="font-size: 3rem; color: #a0aec0; margin-bottom: 1rem;"></i>
+              <h3 style="color: #4a5568; margin-bottom: 0.5rem;">No hay comunidades en esta sección</h3>
             </div>
           `;
-          document.getElementById('pagination').style.display = 'none';
           return;
         }
-        document.getElementById('pagination').style.display = 'flex';
-
-        paginatedTeams.forEach(team => {
+        teams.forEach(team => {
           const membersCount = team.members_count || 1;
           const tagsHtml = team.tags?.length
             ? `<div class="team-tags-classic">${team.tags.slice(0, 4).map(tag => `<span class="team-tag-classic">${tag}</span>`).join('')}${team.tags.length > 4 ? `<span class="team-tag-classic tag-more">+${team.tags.length - 4}</span>` : ''}</div>`
@@ -1347,22 +1425,23 @@
         });
 
         // Listeners para los botones "Ver más"
-        document.querySelectorAll('.btn-vermas-team').forEach(btn => {
+        container.querySelectorAll('.btn-vermas-team').forEach(btn => {
           btn.addEventListener('click', function() {
             showTeamModal(this.getAttribute('data-team-id'));
           });
         });
 
         // Listeners para los botones "Administrar"
-        document.querySelectorAll('.admin-team-btn').forEach(btn => {
+        container.querySelectorAll('.admin-team-btn').forEach(btn => {
           btn.addEventListener('click', function() {
             const teamId = this.getAttribute('data-team-id');
             const team = allTeams.find(t => t.id === teamId);
             if (team) openAdminModal(team);
           });
         });
+
         // Botones de salir
-        document.querySelectorAll('.leave-team-btn').forEach(btn => {
+        container.querySelectorAll('.leave-team-btn').forEach(btn => {
           btn.addEventListener('click', async function() {
             const teamId = this.getAttribute('data-team-id');
             if (confirm('¿Estás seguro de que quieres salir de esta comunidad?')) {
@@ -1382,7 +1461,6 @@
             }
           });
         });
-        updatePagination();
       }
 
       updatePagination();
