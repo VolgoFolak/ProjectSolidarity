@@ -837,341 +837,250 @@
     </section>
   </div>
 
-<!-- Modal de administración de actividad (idéntico a myteams.njk) -->
-<div class="admin-modal" id="adminModal">
-  <div class="admin-modal-content">
-    <button class="close-admin-modal" id="closeAdminModal">&times;</button>
-    <h2 id="adminModalTitle">Administrar Actividad</h2>
-    <div class="admin-tabs">
-      <button class="admin-tab active" data-tab="overview">Resumen</button>
-      <button class="admin-tab" data-tab="members">Miembros</button>
-      <button class="admin-tab" data-tab="settings">Configuración</button>
-      <button class="admin-tab" data-tab="content">Contenido</button>
-    </div>
-    <div class="admin-tab-content active" id="overviewTab">
-      <div class="stats-grid">
-        <div class="stat-card">
-          <div class="stat-value" id="participantsCount">0</div>
-          <div class="stat-label">Participantes</div>
+  <!-- Modal de administración de actividad -->
+  <div class="admin-modal" id="adminModal">
+    <div class="admin-modal-content">
+      <button class="close-admin-modal" id="closeAdminModal">&times;</button>
+      <h2 id="adminModalTitle">Administrar Actividad</h2>
+      <div class="admin-tabs">
+        <button class="admin-tab active" data-tab="overview">Resumen</button>
+        <button class="admin-tab" data-tab="members">Miembros</button>
+        <button class="admin-tab" data-tab="settings">Configuración</button>
+        <button class="admin-tab" data-tab="content">Contenido</button>
+      </div>
+      <div class="admin-tab-content active" id="overviewTab">
+        <div class="stats-grid">
+          <div class="stat-card">
+            <div class="stat-value" id="participantsCount">0</div>
+            <div class="stat-label">Participantes</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-value" id="impactPoints">0</div>
+            <div class="stat-label">Puntos de Impacto</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-value" id="beneficiariesCount">0</div>
+            <div class="stat-label">Beneficiarios</div>
+          </div>
         </div>
-        <div class="stat-card">
-          <div class="stat-value" id="impactPoints">0</div>
-          <div class="stat-label">Puntos de Impacto</div>
+        <h3>Progreso de la actividad</h3>
+        <div class="progress-bar">
+          <div class="progress-fill" id="activityProgress" style="width: 0%"></div>
         </div>
-        <div class="stat-card">
-          <div class="stat-value" id="beneficiariesCount">0</div>
-          <div class="stat-label">Beneficiarios</div>
+        <div class="progress-info">
+          <span id="progressPercent">0% completado</span>
+          <span id="progressAmount">0 € de 0 €</span>
+        </div>
+        <div style="margin-top:1.5rem;">
+          <strong>Resumen:</strong> <span id="activitySummary"></span><br>
+          <strong>Descripción:</strong> <span id="activityDescription"></span>
         </div>
       </div>
-      <h3>Progreso de la actividad</h3>
-      <div class="progress-bar">
-        <div class="progress-fill" id="activityProgress" style="width: 0%"></div>
+      <div class="admin-tab-content" id="membersTab">
+        <h3>Miembros actuales</h3>
+        <div class="members-list" id="membersList"></div>
       </div>
-      <div class="progress-info">
-        <span id="progressPercent">0% completado</span>
-        <span id="progressAmount">0 € de 0 €</span>
-      </div>
-      <div style="margin-top:1.5rem;">
-        <strong>Resumen:</strong> <span id="activitySummary"></span><br>
-        <strong>Descripción:</strong> <span id="activityDescription"></span>
-      </div>
-    </div>
-    <div class="admin-tab-content" id="membersTab">
-      <h3>Miembros actuales</h3>
-      <div class="members-list" id="membersList"></div>
-    </div>
-    <div class="admin-tab-content" id="settingsTab">
-      <form id="activitySettingsForm" class="solidarity-form">
-        <h3 class="form-section-title"><i class="fas fa-cog"></i> Configuración de la actividad</h3>
-        <div class="form-grid">
+      <div class="admin-tab-content" id="settingsTab">
+        <!-- Dentro de #settingsTab en el modal de administración -->
+        <form class="cause-form" id="editCauseForm" autocomplete="off" style="margin-top:1.2rem;">
           <div class="form-group">
-            <label for="editActivityTitle"><i class="fas fa-heading"></i> Título</label>
-            <input type="text" id="editActivityTitle" name="editActivityTitle" required>
+            <label for="editTitle">Título de la causa</label>
+            <input type="text" id="editTitle" name="editTitle" required>
           </div>
           <div class="form-group">
-            <label for="editActivityGoal"><i class="fas fa-euro-sign"></i> Meta (€)</label>
-            <input type="number" id="editActivityGoal" name="editActivityGoal" min="0">
+            <label for="editShortDescription">Resumen (máx. 3 líneas)</label>
+            <textarea id="editShortDescription" name="editShortDescription" maxlength="180" required></textarea>
           </div>
-          <div class="form-group form-group-full">
-            <label for="editActivityDesc"><i class="fas fa-align-left"></i> Descripción</label>
-            <textarea id="editActivityDesc" name="editActivityDesc" rows="4" required></textarea>
+          <div class="form-group">
+            <label for="editDescription">Descripción exhaustiva</label>
+            <textarea id="editDescription" name="editDescription" required></textarea>
           </div>
-        </div>
-        <div class="form-actions">
-          <button type="submit" class="btn btn-primary">
+          <div class="form-group">
+            <label for="editPhoto">Foto principal</label>
+            <input type="file" id="editPhoto" name="editPhoto" accept="image/*">
+            <img id="editPreviewImg" class="preview-img" alt="Vista previa de la foto" style="display:none;">
+          </div>
+          <div class="form-inline-group">
+            <div class="form-group">
+              <label for="editGoal">Meta de recaudación (€)</label>
+              <input type="number" id="editGoal" name="editGoal" min="1" step="0.01" required>
+            </div>
+            <div class="form-group">
+              <label for="editBeneficiaries">Nº de beneficiarios</label>
+              <input type="number" id="editBeneficiaries" name="editBeneficiaries" min="1" required>
+            </div>
+          </div>
+          <div class="form-inline-group">
+            <div class="form-group">
+              <label for="editCity">Ciudad</label>
+              <input type="text" id="editCity" name="editCity" required>
+            </div>
+            <div class="form-group">
+              <label for="editCountry">País</label>
+              <input type="text" id="editCountry" name="editCountry" required>
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="editPoints">Puntos por colaborar</label>
+            <input type="number" id="editPoints" name="editPoints" min="1" max="1000" required>
+            <div class="points-info" id="editPointsText">
+              <i class="fas fa-star"></i>
+              Colaborar en esta causa otorgará <strong>50 puntos</strong> a cada participante.
+            </div>
+          </div>
+          <input type="hidden" id="editLat" name="editLat">
+          <input type="hidden" id="editLng" name="editLng">
+          <button type="submit" class="btn btn-primary" style="margin-top:1rem;">
             <i class="fas fa-save"></i> Guardar Cambios
           </button>
-        </div>
-      </form>
-    </div>
-    <div class="admin-tab-content" id="contentTab">
-      <h3>Mensaje para los participantes</h3>
-      <textarea id="activityMessage" rows="5" style="width: 100%; margin-bottom: 1rem;"></textarea>
-      <button class="btn btn-primary" id="saveMessageBtn">
-        <i class="fas fa-bullhorn"></i> Publicar Mensaje
-      </button>
+        </form>
+      </div>
+      <div class="admin-tab-content" id="contentTab">
+        <h3>Mensaje para los participantes</h3>
+        <textarea id="activityMessage" rows="5" style="width: 100%; margin-bottom: 1rem;"></textarea>
+        <button class="btn btn-primary" id="saveMessageBtn">
+          <i class="fas fa-bullhorn"></i> Publicar Mensaje
+        </button>
+      </div>
     </div>
   </div>
-</div>
-{% endblock %}
+{% endblock %}   {# <-- CIERRA EL BLOQUE CONTENT AQUÍ #}
 
 {% block scripts %}
   {{ super() }}
   <script>
     document.addEventListener('DOMContentLoaded', async function() {
-      let currentPage = 1;
-      const itemsPerPage = 9;
-      let allActivities = [];
-      let filteredActivities = [];
-      let userId = null;
-      let currentAdminActivity = null;
-
-      // Obtener usuario actual
-      const { data: { session } } = await supabase.auth.getSession();
-      if (!session?.user) {
-        window.location.href = '/login?return=/profile/myactivities';
-        return;
+      // --- Funciones auxiliares ---
+      function formatDate(dateString) {
+        if (!dateString) return 'Sin fecha';
+        const date = new Date(dateString);
+        return date.toLocaleDateString('es-ES', {
+          day: 'numeric',
+          month: 'short',
+          year: 'numeric'
+        });
       }
-      userId = session.user.id;
 
-      // -------- MODAL ADMINISTRAR ACTIVIDAD --------
-      window.openAdminActivityModal = async function(activity) {
-        currentAdminActivity = activity;
-        document.getElementById('adminModalTitle').textContent = `Administrar ${activity.title}`;
-        document.getElementById('adminModal').classList.add('active');
-        document.body.style.overflow = 'hidden';
+      function showToast(message, type = 'success') {
+        const toast = document.createElement('div');
+        toast.textContent = message;
+        toast.style.position = 'fixed';
+        toast.style.bottom = '30px';
+        toast.style.left = '50%';
+        toast.style.transform = 'translateX(-50%)';
+        toast.style.padding = '14px 28px';
+        toast.style.borderRadius = '8px';
+        toast.style.backgroundColor = type === 'success' ? '#4fc3a1' : '#e53e3e';
+        toast.style.color = '#fff';
+        toast.style.fontWeight = '600';
+        toast.style.fontSize = '1.05rem';
+        toast.style.boxShadow = '0 4px 16px rgba(0,0,0,0.13)';
+        toast.style.zIndex = '99999';
+        toast.style.opacity = '0';
+        toast.style.transition = 'opacity 0.3s';
+        document.body.appendChild(toast);
+        setTimeout(() => { toast.style.opacity = '1'; }, 10);
+        setTimeout(() => {
+          toast.style.opacity = '0';
+          setTimeout(() => toast.remove(), 350);
+        }, 2200);
+      }
 
-        // 1. Mostrar resumen y descripción
-        document.getElementById('activitySummary').textContent = activity.short_description || 'Sin resumen';
-        document.getElementById('activityDescription').textContent = activity.description || 'Sin descripción';
+      // --- MODAL ADMIN robusto con datos y edición ---
+      window.openAdminActivityModal = async function(activityId, activityType) {
+        // Busca la actividad seleccionada
+        const act = (window.allActivities || allActivities || []).find(a => a.id == activityId && a.type == activityType);
+        if (!act) return;
 
-        // 2. Mostrar stats
-        document.getElementById('participantsCount').textContent = activity.participants || 0;
-        document.getElementById('impactPoints').textContent = activity.impact || 0;
-        document.getElementById('beneficiariesCount').textContent = activity.beneficiaries || 0;
+        // Rellena los campos del modal (Resumen)
+        document.getElementById('adminModalTitle').textContent = `Administrar: ${act.title || ''}`;
+        document.getElementById('participantsCount').textContent = act.participants || 0;
+        document.getElementById('impactPoints').textContent = act.points || 0;
+        document.getElementById('beneficiariesCount').textContent = act.beneficiaries || 0;
+        document.getElementById('activitySummary').textContent = act.short_description || '';
+        document.getElementById('activityDescription').textContent = act.description || '';
 
-        // 3. Progreso
-        const recaudado = activity.raised || 0;
-        const meta = activity.goal || 0;
+        // --- Megadatos en el resumen ---
+        const oldExtra = document.getElementById('modal-extra-info');
+        if (oldExtra) oldExtra.remove();
+        const resumenExtra = `
+          <div id="modal-extra-info" style="margin-top:1rem;font-size:0.98em;color:#666;">
+            <strong>Tipo:</strong> ${activityType.charAt(0).toUpperCase() + activityType.slice(1)}<br>
+            <strong>Ciudad:</strong> ${act.city || '-'}<br>
+            <strong>País:</strong> ${act.country || '-'}<br>
+            <strong>Creada:</strong> ${formatDate(act.created_at)}
+          </div>
+        `;
+        document.getElementById('activityDescription').parentElement.insertAdjacentHTML('beforeend', resumenExtra);
+
+        // Progreso
+        const meta = act.goal || 0;
+        const recaudado = act.raised || 0;
         const porcentaje = meta ? Math.min(100, Math.round((recaudado / meta) * 100)) : 0;
         document.getElementById('activityProgress').style.width = porcentaje + '%';
         document.getElementById('progressPercent').textContent = `${porcentaje}% completado`;
         document.getElementById('progressAmount').textContent = `${recaudado} € de ${meta} €`;
 
-        // 4. Configuración dinámica según tipo de actividad
-        const settingsForm = document.getElementById('activitySettingsForm');
-        const formGrid = settingsForm.querySelector('.form-grid');
-        formGrid.innerHTML = ''; // Limpiar campos previos
+        // Rellena los campos del formulario de edición (Configuración)
+        document.getElementById('editTitle').value = act.title || '';
+        document.getElementById('editShortDescription').value = act.short_description || '';
+        document.getElementById('editDescription').value = act.description || '';
+        document.getElementById('editGoal').value = act.goal || '';
+        document.getElementById('editBeneficiaries').value = act.beneficiaries || '';
+        document.getElementById('editCity').value = act.city || '';
+        document.getElementById('editCountry').value = act.country || '';
+        document.getElementById('editPoints').value = act.points || '';
+        document.getElementById('editLat').value = act.lat || '';
+        document.getElementById('editLng').value = act.lng || '';
+        document.getElementById('editPreviewImg').style.display = act.photo_url ? 'block' : 'none';
+        document.getElementById('editPreviewImg').src = act.photo_url || '';
 
-        // Helper para el preview de imagen
-        function renderImageInput(currentUrl) {
-          return `
-            <div class="form-group form-group-full" style="display:flex; flex-direction:column; align-items:center; gap:0.7rem;">
-              <label style="align-self:flex-start;" for="editActivityImage"><i class="fas fa-image"></i> Imagen principal</label>
-              <img id="activityImagePreview" src="${currentUrl || '/img/causa-default.jpg'}" alt="Preview" style="width:120px;height:120px;object-fit:cover;border-radius:12px;border:1.5px solid #e2e8f0;box-shadow:0 2px 8px #e2eefd;">
-              <input type="file" id="editActivityImageFile" accept="image/*" style="margin-top:0.5rem;">
-              <input type="hidden" id="editActivityImage" name="editActivityImage" value="${currentUrl || ''}">
-              <small style="color:#888;">Formatos permitidos: JPG, PNG. Tamaño máx: 2MB.</small>
-            </div>
-          `;
-        }
+        // Mensaje para participantes (Contenido)
+        document.getElementById('activityMessage').value = act.message || '';
 
-        if (activity.type === 'cause') {
-          formGrid.innerHTML = `
-            <div class="form-group form-group-full">
-              <label for="editActivityTitle"><i class="fas fa-heading"></i> Título</label>
-              <input type="text" id="editActivityTitle" name="editActivityTitle" required value="${activity.title || ''}">
-            </div>
-            ${renderImageInput(activity.photo_url)}
-            <div class="form-group form-group-full">
-              <label for="editActivityDesc"><i class="fas fa-align-left"></i> Descripción</label>
-              <textarea id="editActivityDesc" name="editActivityDesc" rows="4">${activity.description || ''}</textarea>
-            </div>
-            <div class="form-group form-group-full">
-              <label for="editActivitySummary"><i class="fas fa-align-left"></i> Resumen</label>
-              <input type="text" id="editActivitySummary" name="editActivitySummary" value="${activity.short_description || ''}">
-            </div>
-            <div class="form-group">
-              <label for="editActivityGoal"><i class="fas fa-euro-sign"></i> Meta de donación (€)</label>
-              <input type="number" id="editActivityGoal" name="editActivityGoal" min="0" value="${activity.goal || ''}">
-            </div>
-            <div class="form-group">
-              <label for="editActivityBeneficiaries"><i class="fas fa-users"></i> Beneficiarios</label>
-              <input type="number" id="editActivityBeneficiaries" name="editActivityBeneficiaries" min="0" value="${activity.beneficiaries || ''}">
-            </div>
-            <div class="form-group">
-              <label for="editActivityUrgent"><i class="fas fa-bolt"></i> ¿Urgente?</label>
-              <select id="editActivityUrgent" name="editActivityUrgent">
-                <option value="false" ${!activity.urgent ? 'selected' : ''}>No</option>
-                <option value="true" ${activity.urgent ? 'selected' : ''}>Sí</option>
-              </select>
-            </div>
-            <div class="form-group">
-              <label for="editActivityCategory"><i class="fas fa-tag"></i> Categoría</label>
-              <input type="text" id="editActivityCategory" name="editActivityCategory" value="${activity.category || ''}">
-            </div>
-          `;
-        } else if (activity.type === 'task') {
-          formGrid.innerHTML = `
-            <div class="form-group form-group-full">
-              <label for="editActivityTitle"><i class="fas fa-heading"></i> Título</label>
-              <input type="text" id="editActivityTitle" name="editActivityTitle" required value="${activity.title || ''}">
-            </div>
-            ${renderImageInput(activity.photo_url)}
-            <div class="form-group form-group-full">
-              <label for="editActivityDesc"><i class="fas fa-align-left"></i> Descripción</label>
-              <textarea id="editActivityDesc" name="editActivityDesc" rows="4">${activity.description || ''}</textarea>
-            </div>
-            <div class="form-group form-group-full">
-              <label for="editActivitySummary"><i class="fas fa-align-left"></i> Resumen</label>
-              <input type="text" id="editActivitySummary" name="editActivitySummary" value="${activity.short_description || ''}">
-            </div>
-            <div class="form-group">
-              <label for="editActivityDate"><i class="fas fa-calendar-alt"></i> Fecha</label>
-              <input type="date" id="editActivityDate" name="editActivityDate" value="${activity.date ? activity.date.split('T')[0] : ''}">
-            </div>
-            <div class="form-group">
-              <label for="editActivityLocation"><i class="fas fa-map-marker-alt"></i> Ubicación</label>
-              <input type="text" id="editActivityLocation" name="editActivityLocation" value="${activity.location || ''}">
-            </div>
-            <div class="form-group">
-              <label for="editActivityParticipants"><i class="fas fa-users"></i> Participantes</label>
-              <input type="number" id="editActivityParticipants" name="editActivityParticipants" min="0" value="${activity.participants || ''}">
-            </div>
-            <div class="form-group">
-              <label for="editActivityCategory"><i class="fas fa-tag"></i> Categoría</label>
-              <input type="text" id="editActivityCategory" name="editActivityCategory" value="${activity.category || ''}">
-            </div>
-          `;
-        } else if (activity.type === 'challenge') {
-          formGrid.innerHTML = `
-            <div class="form-group form-group-full">
-              <label for="editActivityTitle"><i class="fas fa-heading"></i> Título</label>
-              <input type="text" id="editActivityTitle" name="editActivityTitle" required value="${activity.title || ''}">
-            </div>
-            ${renderImageInput(activity.photo_url)}
-            <div class="form-group form-group-full">
-              <label for="editActivityDesc"><i class="fas fa-align-left"></i> Descripción</label>
-              <textarea id="editActivityDesc" name="editActivityDesc" rows="4">${activity.description || ''}</textarea>
-            </div>
-            <div class="form-group form-group-full">
-              <label for="editActivitySummary"><i class="fas fa-align-left"></i> Resumen</label>
-              <input type="text" id="editActivitySummary" name="editActivitySummary" value="${activity.short_description || ''}">
-            </div>
-            <div class="form-group">
-              <label for="editActivityStart"><i class="fas fa-calendar-day"></i> Inicio</label>
-              <input type="date" id="editActivityStart" name="editActivityStart" value="${activity.start_date ? activity.start_date.split('T')[0] : ''}">
-            </div>
-            <div class="form-group">
-              <label for="editActivityEnd"><i class="fas fa-calendar-check"></i> Fin</label>
-              <input type="date" id="editActivityEnd" name="editActivityEnd" value="${activity.end_date ? activity.end_date.split('T')[0] : ''}">
-            </div>
-            <div class="form-group">
-              <label for="editActivityLocation"><i class="fas fa-map-marker-alt"></i> Ubicación</label>
-              <input type="text" id="editActivityLocation" name="editActivityLocation" value="${activity.location || ''}">
-            </div>
-            <div class="form-group">
-              <label for="editActivityParticipants"><i class="fas fa-users"></i> Participantes</label>
-              <input type="number" id="editActivityParticipants" name="editActivityParticipants" min="0" value="${activity.participants || ''}">
-            </div>
-            <div class="form-group">
-              <label for="editActivityCategory"><i class="fas fa-tag"></i> Categoría</label>
-              <input type="text" id="editActivityCategory" name="editActivityCategory" value="${activity.category || ''}">
-            </div>
-          `;
-        } else if (activity.type === 'volunteering') {
-          formGrid.innerHTML = `
-            <div class="form-group form-group-full">
-              <label for="editActivityTitle"><i class="fas fa-heading"></i> Título</label>
-              <input type="text" id="editActivityTitle" name="editActivityTitle" required value="${activity.title || ''}">
-            </div>
-            ${renderImageInput(activity.photo_url)}
-            <div class="form-group form-group-full">
-              <label for="editActivityDesc"><i class="fas fa-align-left"></i> Descripción</label>
-              <textarea id="editActivityDesc" name="editActivityDesc" rows="4">${activity.description || ''}</textarea>
-            </div>
-            <div class="form-group form-group-full">
-              <label for="editActivitySummary"><i class="fas fa-align-left"></i> Resumen</label>
-              <input type="text" id="editActivitySummary" name="editActivitySummary" value="${activity.short_description || ''}">
-            </div>
-            <div class="form-group">
-              <label for="editActivityDate"><i class="fas fa-calendar-alt"></i> Fecha</label>
-              <input type="date" id="editActivityDate" name="editActivityDate" value="${activity.date ? activity.date.split('T')[0] : ''}">
-            </div>
-            <div class="form-group">
-              <label for="editActivityLocation"><i class="fas fa-map-marker-alt"></i> Ubicación</label>
-              <input type="text" id="editActivityLocation" name="editActivityLocation" value="${activity.location || ''}">
-            </div>
-            <div class="form-group">
-              <label for="editActivityParticipants"><i class="fas fa-users"></i> Participantes</label>
-              <input type="number" id="editActivityParticipants" name="editActivityParticipants" min="0" value="${activity.participants || ''}">
-            </div>
-            <div class="form-group">
-              <label for="editActivityCategory"><i class="fas fa-tag"></i> Categoría</label>
-              <input type="text" id="editActivityCategory" name="editActivityCategory" value="${activity.category || ''}">
-            </div>
-          `;
-        }
+        // Abre el modal
+        document.getElementById('adminModal').classList.add('active');
+        document.body.style.overflow = 'hidden';
 
-        // --- Imagen: preview y subida ---
-        const fileInput = document.getElementById('editActivityImageFile');
-        if (fileInput) {
-          fileInput.addEventListener('change', function (e) {
-            const file = e.target.files[0];
-            if (file) {
-              if (!file.type.startsWith('image/')) {
-                alert('El archivo debe ser una imagen.');
-                return;
-              }
-              if (file.size > 2 * 1024 * 1024) {
-                alert('La imagen no puede superar los 2MB.');
-                return;
-              }
-              const reader = new FileReader();
-              reader.onload = function (ev) {
-                document.getElementById('activityImagePreview').src = ev.target.result;
-                // Si quieres subir a Supabase Storage, aquí deberías hacerlo y luego guardar la URL en el input hidden
-                // Por ahora, solo preview local:
-                document.getElementById('editActivityImage').value = ev.target.result;
-              };
-              reader.readAsDataURL(file);
-            }
-          });
-        }
+        // Guarda el id y tipo de la actividad editada para el submit
+        document.getElementById('editCauseForm').dataset.activityId = activityId;
+        document.getElementById('editCauseForm').dataset.activityType = activityType;
 
-        // 5. Cargar miembros según tipo de actividad
+        // --- Cargar miembros participantes en el modal ---
+        const membersList = document.getElementById('membersList');
+        membersList.innerHTML = '<div style="color:#888;">Cargando miembros...</div>';
         let members = [];
         let membersTable = '';
         let idField = '';
-        if (activity.type === 'cause') {
+        if (activityType === 'cause') {
           membersTable = 'causes_members';
           idField = 'cause_id';
-        } else if (activity.type === 'task') {
+        } else if (activityType === 'task') {
           membersTable = 'task_members';
           idField = 'task_id';
-        } else if (activity.type === 'challenge') {
+        } else if (activityType === 'challenge') {
           membersTable = 'challenges_members';
           idField = 'challenge_id';
-        } else if (activity.type === 'volunteering') {
+        } else if (activityType === 'volunteering') {
           membersTable = 'volunteering_members';
           idField = 'volunteering_id';
         }
-
         if (membersTable && idField) {
-          // Traer user_id, role y status de la tabla de miembros
+          // 1. Traer user_id, role y status de la tabla de miembros
           const { data: memberRows } = await supabase
             .from(membersTable)
             .select('user_id, role, status')
-            .eq(idField, activity.id);
+            .eq(idField, activityId);
 
           if (memberRows && memberRows.length > 0) {
-            // Traer username y photo_url de cada usuario
+            // 2. Traer username y photo_url de cada usuario
             const userIds = memberRows.map(m => m.user_id);
             const { data: profiles } = await supabase
               .from('profiles')
               .select('id, username, photo_url')
               .in('id', userIds);
 
+            // 3. Unir datos y renderizar
             members = memberRows.map(m => {
               const profile = profiles?.find(p => p.id === m.user_id) || {};
               return {
@@ -1184,7 +1093,6 @@
         }
 
         // Renderizar miembros
-        const membersList = document.getElementById('membersList');
         membersList.innerHTML = '';
         if (members.length === 0) {
           membersList.innerHTML = '<div style="color:#888;">No hay miembros en esta actividad.</div>';
@@ -1207,90 +1115,62 @@
         }
       };
 
-      // Guardar cambios de configuración en Supabase
-      document.getElementById('activitySettingsForm').addEventListener('submit', async function(e) {
-        e.preventDefault();
-        if (!currentAdminActivity) return;
+      document.getElementById('closeAdminModal')?.addEventListener('click', function() {
+        document.getElementById('adminModal').classList.remove('active');
+        document.body.style.overflow = '';
+      });
 
-        let updateFields = {};
-        if (currentAdminActivity.type === 'cause') {
-          updateFields = {
-            title: document.getElementById('editActivityTitle').value.trim(),
-            goal: parseFloat(document.getElementById('editActivityGoal').value) || 0,
-            beneficiaries: parseInt(document.getElementById('editActivityBeneficiaries').value) || 0,
-            urgent: document.getElementById('editActivityUrgent').value === 'true',
-            short_description: document.getElementById('editActivitySummary').value.trim(),
-            description: document.getElementById('editActivityDesc').value.trim()
-          };
-        } else if (currentAdminActivity.type === 'task') {
-          updateFields = {
-            title: document.getElementById('editActivityTitle').value.trim(),
-            date: document.getElementById('editActivityDate').value,
-            participants: parseInt(document.getElementById('editActivityParticipants').value) || 0,
-            short_description: document.getElementById('editActivitySummary').value.trim(),
-            description: document.getElementById('editActivityDesc').value.trim()
-          };
-        } else if (currentAdminActivity.type === 'challenge') {
-          updateFields = {
-            title: document.getElementById('editActivityTitle').value.trim(),
-            start_date: document.getElementById('editActivityStart').value,
-            end_date: document.getElementById('editActivityEnd').value,
-            participants: parseInt(document.getElementById('editActivityParticipants').value) || 0,
-            short_description: document.getElementById('editActivitySummary').value.trim(),
-            description: document.getElementById('editActivityDesc').value.trim()
-          };
-        } else if (currentAdminActivity.type === 'volunteering') {
-          updateFields = {
-            title: document.getElementById('editActivityTitle').value.trim(),
-            date: document.getElementById('editActivityDate').value,
-            location: document.getElementById('editActivityLocation').value.trim(),
-            participants: parseInt(document.getElementById('editActivityParticipants').value) || 0,
-            short_description: document.getElementById('editActivitySummary').value.trim(),
-            description: document.getElementById('editActivityDesc').value.trim()
-          };
-        }
-
-        let table = '';
-        if (currentAdminActivity.type === 'cause') table = 'causes';
-        if (currentAdminActivity.type === 'task') table = 'tasks';
-        if (currentAdminActivity.type === 'challenge') table = 'challenges';
-        if (currentAdminActivity.type === 'volunteering') table = 'volunteering';
-
-        if (!table) return;
-
-        const { error } = await supabase
-          .from(table)
-          .update(updateFields)
-          .eq('id', currentAdminActivity.id);
-
-        if (error) {
-          alert('Error al guardar cambios: ' + error.message);
-        } else {
-          alert('¡Cambios guardados!');
-          await loadUserActivities();
-          closeAdminModal();
+      document.getElementById('adminModal')?.addEventListener('click', function(e) {
+        if (e.target === this) {
+          document.getElementById('adminModal').classList.remove('active');
+          document.body.style.overflow = '';
         }
       });
 
-      function closeAdminModal() {
-        document.getElementById('adminModal').classList.remove('active');
-        document.body.style.overflow = '';
-      }
+      document.querySelectorAll('.admin-tab').forEach(tab => {
+        tab.addEventListener('click', function() {
+          document.querySelectorAll('.admin-tab').forEach(t => t.classList.remove('active'));
+          document.querySelectorAll('.admin-tab-content').forEach(c => c.classList.remove('active'));
+          this.classList.add('active');
+          const tabId = this.getAttribute('data-tab');
+          document.getElementById(tabId + 'Tab').classList.add('active');
+        });
+      });
 
+      document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') {
+          document.getElementById('adminModal').classList.remove('active');
+          document.body.style.overflow = '';
+        }
+      });
+
+      // --- Variables globales ---
+      let userId = null;
+      window.allActivities = [];
+      let filteredActivities = [];
+
+      // --- Obtener usuario actual ---
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session?.user) {
+        window.location.href = '/login?return=/profile/myactivities';
+        return;
+      }
+      userId = session.user.id;
+
+      // --- Cargar actividades del usuario ---
       async function loadUserActivities() {
-        // ...tu código de carga de actividades, igual que antes...
-        // (No lo repito aquí para no hacer la respuesta muy larga, pero no cambia)
-        // Solo cambia la función renderActivities:
         try {
           // 1. Causas
           const { data: createdCauses } = await supabase
             .from('causes')
             .select('*')
             .eq('user_id', userId);
+
           const { data: joinedCauses } = await supabase
             .from('causes_members')
             .select('cause_id, role, status')
             .eq('user_id', userId);
+
           let joinedCausesDetails = [];
           if (joinedCauses && joinedCauses.length > 0) {
             const causeIds = joinedCauses.map(j => j.cause_id);
@@ -1298,6 +1178,7 @@
               .from('causes')
               .select('*')
               .in('id', causeIds);
+
             joinedCausesDetails = causesDetails.map(cause => {
               const part = joinedCauses.find(j => j.cause_id === cause.id);
               return { ...cause, role: part.role, status: part.status };
@@ -1309,10 +1190,12 @@
             .from('tasks')
             .select('*')
             .eq('user_id', userId);
+
           const { data: joinedTasks } = await supabase
             .from('task_members')
             .select('task_id, role, status')
             .eq('user_id', userId);
+
           let joinedTasksDetails = [];
           if (joinedTasks && joinedTasks.length > 0) {
             const taskIds = joinedTasks.map(j => j.task_id);
@@ -1320,6 +1203,7 @@
               .from('tasks')
               .select('*')
               .in('id', taskIds);
+
             joinedTasksDetails = tasksDetails.map(task => {
               const part = joinedTasks.find(j => j.task_id === task.id);
               return { ...task, role: part.role, status: part.status };
@@ -1331,10 +1215,12 @@
             .from('challenges')
             .select('*')
             .eq('creator_id', userId);
+
           const { data: joinedChallenges } = await supabase
             .from('challenges_members')
             .select('challenge_id, role, status')
             .eq('user_id', userId);
+
           let joinedChallengesDetails = [];
           if (joinedChallenges && joinedChallenges.length > 0) {
             const challengeIds = joinedChallenges.map(j => j.challenge_id);
@@ -1342,6 +1228,7 @@
               .from('challenges')
               .select('*')
               .in('id', challengeIds);
+
             joinedChallengesDetails = challengesDetails.map(challenge => {
               const part = joinedChallenges.find(j => j.challenge_id === challenge.id);
               return { ...challenge, role: part.role, status: part.status };
@@ -1353,10 +1240,12 @@
             .from('volunteering')
             .select('*')
             .eq('user_id', userId);
+
           const { data: joinedVolunteering } = await supabase
             .from('volunteering_members')
             .select('volunteering_id, role, status')
             .eq('user_id', userId);
+
           let joinedVolunteeringDetails = [];
           if (joinedVolunteering && joinedVolunteering.length > 0) {
             const volunteeringIds = joinedVolunteering.map(j => j.volunteering_id);
@@ -1364,6 +1253,7 @@
               .from('volunteering')
               .select('*')
               .in('id', volunteeringIds);
+
             joinedVolunteeringDetails = volunteeringDetails.map(vol => {
               const part = joinedVolunteering.find(j => j.volunteering_id === vol.id);
               return { ...vol, role: part.role, status: part.status };
@@ -1379,7 +1269,7 @@
               status: item.status || 'in_progress'
             }));
 
-          allActivities = [
+          window.allActivities = [
             ...normalize(createdCauses || [], 'cause', true),
             ...normalize(joinedCausesDetails || [], 'cause', false),
             ...normalize(createdTasks || [], 'task', true),
@@ -1392,27 +1282,29 @@
 
           // Eliminar duplicados
           const activityMap = new Map();
-          allActivities.forEach(act => {
+          window.allActivities.forEach(act => {
             activityMap.set(`${act.type}-${act.id}`, act);
           });
-          allActivities = Array.from(activityMap.values());
+          window.allActivities = Array.from(activityMap.values());
 
           // Ordenar por fecha
-          allActivities.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+          window.allActivities.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
 
-          filteredActivities = [...allActivities];
-          currentPage = 1;
+          filteredActivities = [...window.allActivities];
           renderActivities();
         } catch (error) {
           console.error('Error loading user activities:', error);
+          showToast('Error al cargar actividades', 'error');
           showEmptyState();
         }
       }
 
       function showEmptyState() {
-        const container = document.getElementById('activitiesGrid');
-        container.innerHTML = `
-          <div class="empty-state" style="grid-column: 1 / -1; text-align: center; padding: 3rem;">
+        document.getElementById('causesGrid').innerHTML =
+        document.getElementById('tasksGrid').innerHTML =
+        document.getElementById('challengesGrid').innerHTML =
+        document.getElementById('volunteeringGrid').innerHTML =
+          `<div class="empty-state" style="grid-column: 1 / -1; text-align: center; padding: 3rem;">
             <i class="fas fa-clipboard-list" style="font-size: 3rem; color: #a0aec0; margin-bottom: 1rem;"></i>
             <h3 style="color: #4a5568; margin-bottom: 0.5rem;">No tienes actividades solidarias aún</h3>
             <p style="color: #718096; margin-bottom: 1.5rem;">Empieza creando una nueva actividad o únete a alguna existente.</p>
@@ -1425,42 +1317,10 @@
             <a href="/challenges" class="btn btn-warning">
               <i class="fas fa-trophy"></i> Descubrir retos
             </a>
-          </div>
-        `;
-        document.getElementById('pagination').style.display = 'none';
+          </div>`;
       }
 
-      function filterAndRenderActivities() {
-        const activeFilter = document.querySelector('.tab.active').getAttribute('data-filter');
-        const searchTerm = document.getElementById('search-input').value.toLowerCase();
-
-        filteredActivities = allActivities.filter(activity => {
-          if (activeFilter !== 'all') {
-            if (activeFilter === 'created' && !activity.isCreator) return false;
-            if (activeFilter === 'completed' && activity.status !== 'completed') return false;
-            if (['cause', 'task', 'challenge', 'volunteering'].includes(activeFilter) &&
-                activity.type !== activeFilter) return false;
-          }
-          if (searchTerm) {
-            const matchesTitle = activity.title && activity.title.toLowerCase().includes(searchTerm);
-            const matchesDesc = activity.description && activity.description.toLowerCase().includes(searchTerm);
-            return matchesTitle || matchesDesc;
-          }
-          return true;
-        });
-
-        renderActivities();
-      }
-
-      // Evento administrar en renderActivities
       function renderActivities() {
-        // Limpia los grids
-        document.getElementById('causesGrid').innerHTML = '';
-        document.getElementById('tasksGrid').innerHTML = '';
-        document.getElementById('challengesGrid').innerHTML = '';
-        document.getElementById('volunteeringGrid').innerHTML = '';
-
-        // Filtra y renderiza por tipo
         const types = [
           { key: 'cause', grid: 'causesGrid' },
           { key: 'task', grid: 'tasksGrid' },
@@ -1471,10 +1331,13 @@
         types.forEach(({ key, grid }) => {
           const activities = filteredActivities.filter(a => a.type === key);
           const container = document.getElementById(grid);
+          container.innerHTML = '';
+
           if (activities.length === 0) {
             container.innerHTML = `<div style="color:#aaa;text-align:center;padding:2rem;">No tienes ${key === 'cause' ? 'causas' : key === 'task' ? 'tareas' : key === 'challenge' ? 'retos' : 'voluntariados'}.</div>`;
             return;
           }
+
           activities.forEach(activity => {
             const img = activity.photo_url || '/img/causa-default.jpg';
             const resumen = activity.short_description || activity.description || 'Sin descripción';
@@ -1484,6 +1347,7 @@
             const fecha = formatDate(activity.created_at);
             let metaExtra = '';
             let url = '#';
+
             if (activity.type === 'cause') {
               metaExtra = `<span><i class="fas fa-users"></i> ${activity.beneficiaries || 0} beneficiarios</span>`;
               url = `/causes/${activity.id}`;
@@ -1499,7 +1363,7 @@
             }
 
             const card = document.createElement('div');
-            card.className = 'cause-card';
+            card.className = `${activity.type}-card`;
             card.innerHTML = `
               <div class="cause-image">
                 <img src="${img}" alt="${activity.title}">
@@ -1523,7 +1387,7 @@
                 <div class="actions">
                   <a href="${url}" class="btn btn-primary btn-sm"><i class="fas fa-eye"></i> Ver más</a>
                   ${(activity.role === 'founder' || activity.role === 'admin')
-                    ? `<button class="btn btn-accent btn-sm admin-activity-btn"><i class="fas fa-cog"></i> Administrar</button>`
+                    ? `<button class="btn btn-accent btn-sm admin-activity-btn" data-id="${activity.id}" data-type="${activity.type}"><i class="fas fa-cog"></i> Administrar</button>`
                     : `<span class="role-badge member"><i class="fas fa-user"></i> Miembro</span>`
                   }
                 </div>
@@ -1534,9 +1398,8 @@
             if (adminBtn) {
               adminBtn.addEventListener('click', (e) => {
                 e.preventDefault();
-                // Solución robusta: espera a que la función esté definida
                 if (typeof window.openAdminActivityModal === 'function') {
-                  window.openAdminActivityModal(activity);
+                  window.openAdminActivityModal(activity.id, activity.type);
                 } else {
                   alert('El modal de administración aún no está listo. Intenta de nuevo en un momento.');
                 }
@@ -1545,81 +1408,97 @@
             container.appendChild(card);
           });
         });
-        // Oculta paginación si no la necesitas en este modo
-        const pag = document.getElementById('pagination');
-        if (pag) pag.style.display = 'none';
       }
 
-      function updatePagination() {
-        const totalPages = Math.max(1, Math.ceil(filteredActivities.length / itemsPerPage));
-        document.getElementById('pageInfo').textContent = `${currentPage} / ${totalPages}`;
-        document.getElementById('prevPage').disabled = currentPage <= 1;
-        document.getElementById('nextPage').disabled = currentPage >= totalPages;
+      // --- Geocodificación automática para ciudad/país en edición de causa ---
+      function geocodeEditCityCountry() {
+        const city = document.getElementById('editCity')?.value.trim();
+        const country = document.getElementById('editCountry')?.value.trim();
+        if (!city || !country) return;
+
+        const query = encodeURIComponent(`${city}, ${country}`);
+        const url = `https://nominatim.openstreetmap.org/search?q=${query}&format=json&limit=1`;
+
+        fetch(url, { headers: { 'Accept-Language': 'es' } })
+          .then(res => res.json())
+          .then(data => {
+            if (data && data.length > 0) {
+              document.getElementById('editLat').value = data[0].lat;
+              document.getElementById('editLng').value = data[0].lon;
+            } else {
+              document.getElementById('editLat').value = '';
+              document.getElementById('editLng').value = '';
+            }
+          })
+          .catch(() => {
+            document.getElementById('editLat').value = '';
+            document.getElementById('editLng').value = '';
+          });
       }
 
-      function formatDate(dateString) {
-        const date = new Date(dateString);
-        return date.toLocaleDateString('es-ES', {
-          day: 'numeric',
-          month: 'short',
-          year: 'numeric'
-        });
-      }
+      document.getElementById('editCity')?.addEventListener('change', geocodeEditCityCountry);
+      document.getElementById('editCountry')?.addEventListener('change', geocodeEditCityCountry);
 
-      // Cargar actividades
-      await loadUserActivities(); // Esto llama a renderActivities() internamente
+      // --- Inicialización ---
+      await loadUserActivities();
 
-      // Filtros y búsqueda
-      document.querySelectorAll('.tab').forEach(tab => {
-        tab.addEventListener('click', function() {
-          document.querySelector('.tab.active').classList.remove('active');
-          this.classList.add('active');
-          currentPage = 1;
-          filterAndRenderActivities();
-        });
-      });
-      document.getElementById('search-input').addEventListener('input', function() {
-        currentPage = 1;
-        filterAndRenderActivities();
-      });
-      const prevPageBtn = document.getElementById('prevPage');
-      if (prevPageBtn) {
-        prevPageBtn.addEventListener('click', function() {
-          if (currentPage > 1) { currentPage--; renderActivities(); }
-        });
-      }
+      document.getElementById('editCauseForm').addEventListener('submit', async function(e) {
+        e.preventDefault();
+        const activityId = this.dataset.activityId;
+        const activityType = this.dataset.activityType;
+        if (!activityId || !activityType) return;
 
-      const nextPageBtn = document.getElementById('nextPage');
-      if (nextPageBtn) {
-        nextPageBtn.addEventListener('click', function() {
-          const totalPages = Math.ceil(filteredActivities.length / itemsPerPage);
-          if (currentPage < totalPages) { currentPage++; renderActivities(); }
-        });
-      }
+        // Recoge los datos del formulario
+        const updated = {
+          title: document.getElementById('editTitle').value.trim(),
+          short_description: document.getElementById('editShortDescription').value.trim(),
+          description: document.getElementById('editDescription').value.trim(),
+          goal: Number(document.getElementById('editGoal').value),
+          beneficiaries: Number(document.getElementById('editBeneficiaries').value),
+          city: document.getElementById('editCity').value.trim(),
+          country: document.getElementById('editCountry').value.trim(),
+          points: Number(document.getElementById('editPoints').value),
+          lat: document.getElementById('editLat').value,
+          lng: document.getElementById('editLng').value
+          // Añade más campos si los tienes
+        };
 
-      // Modal cerrar
-      const closeBtn = document.getElementById('closeAdminModal');
-      if (closeBtn) {
-        closeBtn.addEventListener('click', closeAdminModal);
-      }
+        // Si hay nueva foto, súbela (opcional)
+        const photoInput = document.getElementById('editPhoto');
+        if (photoInput && photoInput.files && photoInput.files[0]) {
+          const file = photoInput.files[0];
+          const fileExt = file.name.split('.').pop();
+          const filePath = `${activityType}/${activityId}.${fileExt}`;
+          let { error: uploadError } = await supabase.storage.from('activities').upload(filePath, file, { upsert: true });
+          if (!uploadError) {
+            const { data: publicUrl } = supabase.storage.from('activities').getPublicUrl(filePath);
+            updated.photo_url = publicUrl.publicUrl;
+          }
+        }
 
-      const adminModal = document.getElementById('adminModal');
-      if (adminModal) {
-        adminModal.addEventListener('click', function(e) {
-          if (e.target === this) closeAdminModal();
-        });
-      }
+        // Actualiza en la base de datos
+        let table = '';
+        if (activityType === 'cause') table = 'causes';
+        else if (activityType === 'task') table = 'tasks';
+        else if (activityType === 'challenge') table = 'challenges';
+        else if (activityType === 'volunteering') table = 'volunteering';
+        else return;
 
-      document.querySelectorAll('.admin-tab').forEach(tab => {
-        tab.addEventListener('click', function() {
-          const tabId = this.getAttribute('data-tab');
-          document.querySelectorAll('.admin-tab-content').forEach(content => content.classList.remove('active'));
-          document.querySelectorAll('.admin-tab').forEach(t => t.classList.remove('active'));
-          this.classList.add('active');
-          const tabContent = document.getElementById(`${tabId}Tab`);
-          if (tabContent) tabContent.classList.add('active');
-        });
+        const { error } = await supabase
+          .from(table)
+          .update(updated)
+          .eq('id', activityId);
+
+        if (error) {
+          showToast('Error al guardar cambios', 'error');
+          return;
+        }
+
+        showToast('Cambios guardados');
+        document.getElementById('adminModal').classList.remove('active');
+        document.body.style.overflow = '';
+        await loadUserActivities(); // <-- Esto refresca las tarjetas
       });
     });
-   </script>
+  </script>
 {% endblock %}
