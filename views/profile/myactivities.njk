@@ -125,6 +125,30 @@
       border-top-left-radius: 12px;
       border-top-right-radius: 12px;
     }
+    .cause-badge {
+      position: absolute;
+      top: 1rem;
+      right: 1rem;
+      background: rgba(255, 255, 255, 0.9);
+      padding: 0.3rem 0.8rem;
+      border-radius: 50px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
+    .cause-badge.urgent {
+      background: var(--urgent);
+      color: white;
+    }
+    .cause-badge.points {
+      background: var(--primary);
+      color: white;
+      left: 1rem;
+      right: auto;
+    }
     .cause-content {
       padding: 1.2rem 1.5rem 1.5rem 1.5rem;
       flex: 1;
@@ -143,19 +167,46 @@
       margin-bottom: 1rem;
       flex: 1;
     }
-    .progress-container {
+    .cause-meta {
+      display: flex;
+      gap: 1.2rem;
+      font-size: 0.9rem;
       margin-bottom: 1rem;
+      color: #6b7280;
+    }
+    .meta-item {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      color: #6b7280;
+    }
+    .meta-item i {
+      color: var(--primary);
+    }
+    .beneficiaries-count {
+      display: inline-flex;
+      align-items: center;
+      background: #f0f9ff;
+      color: var(--primary);
+      padding: 0.3rem 0.8rem;
+      border-radius: 50px;
+      font-size: 0.85rem;
+      font-weight: 600;
+    }
+    .beneficiaries-count i {
+      margin-right: 0.3rem;
+    }
+    .cause-progress {
+      margin-bottom: 1.5rem;
     }
     .progress-bar {
-      width: 100%;
+      height: 8px;
       background: var(--gray);
       border-radius: 4px;
-      height: 8px;
-      position: relative;
       overflow: hidden;
       margin-bottom: 0.5rem;
     }
-    .progress {
+    .progress-fill {
       height: 100%;
       background: var(--primary);
       border-radius: 4px;
@@ -167,84 +218,33 @@
       font-size: 0.9rem;
       color: #6b7280;
     }
-    .meta {
+    .cause-actions {
       display: flex;
-      gap: 1.2rem;
-      font-size: 0.9rem;
-      margin-bottom: 1rem;
-      color: #6b7280;
+      gap: 0.8rem;
     }
-    .actions {
-      display: flex;
-      gap: 0.7rem;
-      margin-top: 1rem;
-    }
-
-    /* Tarjetas de tareas */
-    .task-card {
-      background: #fff;
-      border-radius: 12px;
-      overflow: hidden;
-      box-shadow: 0 5px 15px rgba(0,0,0,0.05);
-      border: 1px solid var(--gray);
-      display: flex;
-      flex-direction: column;
-      transition: all 0.3s;
-      position: relative;
-    }
-    .task-card:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 10px 25px rgba(0,0,0,0.1);
-      border-color: var(--accent);
-    }
-    .task-image img {
-      width: 100%;
-      height: 180px;
-      object-fit: cover;
-      border-top-left-radius: 12px;
-      border-top-right-radius: 12px;
-    }
-    .task-content {
-      padding: 1.2rem 1.5rem 1.5rem 1.5rem;
+    .cause-actions .btn {
       flex: 1;
-      display: flex;
-      flex-direction: column;
+      text-align: center;
+      justify-content: center;
     }
-    .task-content h3 {
-      font-size: 1.2rem;
-      color: var(--accent);
-      margin-bottom: 0.5rem;
-      font-weight: 700;
+    .btn-accent {
+      background: var(--accent);
+      color: white;
     }
-    .task-content p {
-      color: #4a5568;
-      font-size: 0.97rem;
-      margin-bottom: 1rem;
-      flex: 1;
+    .btn-accent:hover {
+      background: var(--accent-dark);
+      transform: translateY(-2px);
     }
-    .task-meta {
-      display: flex;
-      gap: 1.2rem;
-      font-size: 0.9rem;
-      margin-bottom: 1rem;
-      color: #6b7280;
+    .btn-sm {
+      padding: 0.4rem 0.8rem;
+      font-size: 0.85rem;
     }
-    .task-actions {
-      display: flex;
-      gap: 0.7rem;
-      margin-top: 1rem;
-    }
-
-    /* Tarjetas de retos */
-    .challenge-card {
-      background: #fffbe6;
-      border-radius: 12px;
-      overflow: hidden;
-      box-shadow: 0 5px 15px rgba(0,0,0,0.05);
-      border: 1px solid #ffe066;
-      display: flex;
-      flex-direction: column;
-      transition: all 0.3s;
+    .role-badge.member {
+      background: #e3eefd;
+      color: var(--primary-dark);
+      border-radius: 999px;
+      font-size: 0.93em;
+      font-weight: 600;
       position: relative;
     }
     .challenge-card:hover {
@@ -754,6 +754,159 @@
 .role-badge.member i {
   color: var(--primary-dark);
   font-size: 1em;
+}
+.task-card {
+  background: #fff;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+  border: 1px solid var(--gray);
+  display: flex;
+  flex-direction: column;
+  transition: all 0.3s;
+  position: relative;
+}
+.task-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+  border-color: var(--accent);
+}
+.task-image {
+  height: 180px;
+  overflow: hidden;
+  position: relative;
+}
+.task-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+.task-card:hover .task-image img {
+  transform: scale(1.05);
+}
+.task-badge {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  background: rgba(255, 255, 255, 0.9);
+  padding: 0.3rem 0.8rem;
+  border-radius: 50px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+.task-badge.urgent {
+  background: var(--urgent);
+  color: white;
+}
+.task-badge.points {
+  background: var(--primary);
+  color: white;
+  left: 1rem;
+  right: auto;
+}
+.task-content {
+  padding: 1.2rem 1.5rem 1.5rem 1.5rem;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+.task-content h3 {
+  font-size: 1.2rem;
+  color: var(--accent);
+  margin-bottom: 0.5rem;
+  font-weight: 700;
+}
+.task-content p {
+  color: #4a5568;
+  font-size: 0.97rem;
+  margin-bottom: 1rem;
+  flex: 1;
+}
+.task-meta {
+  display: flex;
+  gap: 1.2rem;
+  font-size: 0.9rem;
+  margin-bottom: 1rem;
+  color: #6b7280;
+}
+.linked-cause {
+  display: inline-flex;
+  align-items: center;
+  background: #f0f0ff;
+  color: var(--primary);
+  padding: 0.3rem 0.8rem;
+  border-radius: 50px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+}
+.linked-cause img {
+  width: 22px;
+  height: 22px;
+  object-fit: cover;
+  border-radius: 50%;
+  border: 1px solid #e5e7eb;
+  margin-right: 0.4em;
+}
+.task-progress {
+  margin-bottom: 1.5rem;
+}
+.task-actions {
+  display: flex;
+  gap: 0.7rem;
+  margin-top: 1rem;
+}
+
+/* Estilos para el modal de la tarea */
+.modal-task-container {
+  font-family: 'Inter', sans-serif;
+  color: #2d3748;
+}
+.modal-task-title {
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: var(--primary);
+  margin-bottom: 1rem;
+  line-height: 1.3;
+}
+.modal-task-badge {
+  position: absolute;
+  top: 1.5rem;
+  right: 1.5rem;
+  background: rgba(255,255,255,0.95);
+  padding: 0.5rem 1rem;
+  border-radius: 50px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  z-index: 2;
+}
+.content-title {
+  font-size: 1.3rem;
+  font-weight: 600;
+  color: var(--primary);
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+}
+.content-text {
+  line-height: 1.7;
+  color: #4b5563;
+  font-size: 1.05rem;
+}
+.share-section {
+  margin-top: 2rem;
+  padding-top: 2rem;
+  border-top: 1px solid #e5e7eb;
 }
   </style>
 {% endblock %}
@@ -1339,60 +1492,229 @@
           }
 
           activities.forEach(activity => {
-            const img = activity.photo_url || '/img/causa-default.jpg';
-            const resumen = activity.short_description || activity.description || 'Sin descripción';
-            const meta = activity.goal || 0;
-            const recaudado = activity.raised || 0;
-            const porcentaje = meta ? Math.min(100, Math.round((recaudado / meta) * 100)) : 0;
-            const fecha = formatDate(activity.created_at);
-            let metaExtra = '';
-            let url = '#';
+            let card = document.createElement('div');
+            let img = activity.photo_url || '/img/causa-default.jpg';
+            let resumen = activity.short_description || activity.description || 'Sin resumen';
+            let fecha = formatDate(activity.created_at);
 
+            // CAUSA
             if (activity.type === 'cause') {
-              metaExtra = `<span><i class="fas fa-users"></i> ${activity.beneficiaries || 0} beneficiarios</span>`;
-              url = `/causes/${activity.id}`;
-            } else if (activity.type === 'task') {
-              metaExtra = `<span><i class="fas fa-users"></i> ${activity.participants || 0} participantes</span>`;
-              url = `/tasks/${activity.id}`;
-            } else if (activity.type === 'challenge') {
-              metaExtra = `<span><i class="fas fa-users"></i> ${activity.participants || 0} participantes</span>`;
-              url = `/challenges/${activity.id}`;
-            } else if (activity.type === 'volunteering') {
-              metaExtra = `<span><i class="fas fa-users"></i> ${activity.participants || 0} participantes</span>`;
-              url = `/volunteering/${activity.id}`;
+              const progress = activity.goal ? Math.min(Math.round((activity.raised / activity.goal) * 100), 100) : 0;
+              const urgentBadge = activity.urgent ? `<div class="cause-badge urgent"><i class="fas fa-exclamation-circle"></i> Urgente</div>` : "";
+              const pointsBadge = `<div class="cause-badge points"><i class="fas fa-star"></i> +${activity.points || 0} pts</div>`;
+              const location = activity.city && activity.country ? `${activity.city}, ${activity.country}` : "";
+              card.className = 'cause-card';
+              card.innerHTML = `
+                <div class="cause-image">
+                  <img src="${activity.photo_url || '/img/causa-default.jpg'}" alt="${activity.title}" 
+                  onerror="if (!this._defaulted) { this._defaulted = true; this.src='/img/causa-default.jpg'; }">
+                  ${urgentBadge}
+                  ${pointsBadge}
+                </div>
+                <div class="cause-content">
+                  <h3>${activity.title}</h3>
+                  <p>${activity.short_description || ''}</p>
+                  <div class="cause-meta">
+                    <div class="meta-item"><i class="fas fa-map-marker-alt"></i> ${location}</div>
+                    <div class="meta-item"><i class="fas fa-users"></i> ${activity.donors || 0} donantes</div>
+                    <div class="beneficiaries-count">
+                      <i class="fas fa-heart"></i> Beneficia a ${activity.beneficiaries || 0} personas
+                    </div>
+                  </div>
+                  <div class="cause-progress">
+                    <div class="progress-bar">
+                      <div class="progress-fill" style="width: ${progress}%"></div>
+                    </div>
+                    <div class="progress-info">
+                      <span>${progress}% completado</span>
+                      <span>${activity.raised || 0} € de ${activity.goal || 0} €</span>
+                    </div>
+                  </div>
+                  <div class="cause-actions">
+                    <button class="btn btn-primary btn-sm view-more-btn" data-type="cause" data-id="${activity.id}">
+                      <i class="fas fa-eye"></i> Ver más
+                    </button>
+                    ${(activity.role === 'founder' || activity.role === 'admin')
+                      ? `<button class="btn btn-accent btn-sm admin-activity-btn" data-id="${activity.id}" data-type="cause"><i class="fas fa-cog"></i> Administrar</button>`
+                      : `<span class="role-badge member"><i class="fas fa-user"></i> Miembro</span>`
+                    }
+                  </div>
+                </div>
+              `;
             }
 
-            const card = document.createElement('div');
-            card.className = `${activity.type}-card`;
-            card.innerHTML = `
-              <div class="cause-image">
-                <img src="${img}" alt="${activity.title}">
-              </div>
-              <div class="cause-content">
-                <h3>${activity.title}</h3>
-                <p>${resumen}</p>
-                <div class="progress-container">
-                  <div class="progress-bar">
-                    <div class="progress" style="width: ${porcentaje}%"></div>
+            // TAREA
+            else if (activity.type === 'task') {
+              const urgentBadge = activity.is_urgent ? `<div class="task-badge urgent"><i class="fas fa-exclamation-circle"></i> Urgente</div>` : "";
+              const pointsBadge = `<div class="task-badge points"><i class="fas fa-star"></i> +${activity.points || 0} pts</div>`;
+              const location = activity.city && activity.country ? `${activity.city}, ${activity.country}` : (activity.location || '-');
+              
+              card.className = 'task-card';
+              card.innerHTML = `
+                <div class="task-image">
+                  <img src="${activity.photo_url || '/img/task-default.jpg'}" alt="${activity.title}" 
+                  onerror="if (!this._defaulted) { this._defaulted = true; this.src='/img/task-default.jpg'; }">
+                  ${urgentBadge}
+                  ${pointsBadge}
+                </div>
+                <div class="task-content">
+                  <h3>${activity.title}</h3>
+                  <p>${activity.summary ? activity.summary : (activity.description?.substring(0, 100) + (activity.description?.length > 100 ? '...' : ''))}</p>
+                  ${activity.cause_id ? `
+                    <div class="linked-cause" style="display:flex;align-items:center;gap:0.5rem;margin-bottom:1rem;">
+                      <i class="fas fa-link" style="color:var(--primary);"></i>
+                      <img src="${activity.cause_photo || '/img/causa-default.jpg'}" alt="${activity.cause_title || 'Causa'}" 
+                           style="width:22px;height:22px;object-fit:cover;border-radius:50%;border:1px solid #e5e7eb;">
+                      <span style="color:var(--primary);font-weight:600;">${activity.cause_title || 'Causa vinculada'}</span>
+                    </div>
+                  ` : ''}
+                  <div class="task-meta">
+                    <div class="meta-item"><i class="fas fa-map-marker-alt"></i> ${location}</div>
+                    <div class="meta-item"><i class="fas fa-users"></i> ${activity.participants || 0} participantes</div>
+                    <div class="beneficiaries-count">
+                      <i class="fas fa-heart"></i> Beneficia a ${activity.beneficiaries || 0} personas
+                    </div>
                   </div>
-                  <div class="progress-info">
-                    <span>${recaudado}€</span>
-                    <span>${meta}€</span>
+                  <div class="task-progress">
+                    <div class="progress-bar">
+                      <div class="progress-fill" style="width: ${Math.min(Math.round((activity.participants / activity.beneficiaries) * 100), 100)}%"></div>
+                    </div>
+                    <div class="progress-info">
+                      <span>${activity.participants || 0} participantes</span>
+                      <span>Meta: ${activity.beneficiaries || 0}</span>
+                    </div>
+                  </div>
+                  <div class="task-actions">
+                    <button class="btn btn-primary btn-sm view-more-btn" data-type="task" data-id="${activity.id}">
+                      <i class="fas fa-eye"></i> Ver más
+                    </button>
+                    ${(activity.role === 'founder' || activity.role === 'admin')
+                      ? `<button class="btn btn-accent btn-sm admin-activity-btn" data-id="${activity.id}" data-type="task"><i class="fas fa-cog"></i> Administrar</button>`
+                      : `<span class="role-badge member"><i class="fas fa-user"></i> Miembro</span>`
+                    }
                   </div>
                 </div>
-                <div class="meta">
-                  ${metaExtra}
-                  <span><i class="fas fa-calendar-alt"></i> ${fecha}</span>
+              `;
+            }
+
+            // RETO
+            else if (activity.type === 'challenge') {
+              const cause = window.causes?.find?.(c => c.id === activity.cause_id) || (window.causesMap && window.causesMap[activity.cause_id]);
+              // Badges
+              const typeBadge = activity.challenge_type === 'duel'
+                ? `<div class="badge-type"><i class="fas fa-user-friends"></i> 1vs1</div>`
+                : `<div class="badge-type"><i class="fas fa-users"></i> Reto abierto</div>`;
+              const urgentBadge = activity.is_urgent ? `<div class="challenge-badge badge-urgent"><i class="fas fa-exclamation-circle"></i> Urgente</div>` : "";
+              // const pointsBadge = `<div class="challenge-badge badge-points"><i class="fas fa-star"></i> +${activity.points || 0} pts</div>`;
+              const location = activity.city && activity.country ? `${activity.city}, ${activity.country}` : "";
+              const deadline = activity.deadline ? new Date(activity.deadline).toLocaleDateString('es-ES', { day: 'numeric', month: 'short' }) : "";
+              let causeHtml = '';
+              if (activity.cause_id && cause) {
+                causeHtml = `
+                  <div class="linked-cause" style="display:inline-flex;align-items:center;gap:0.4rem;margin-bottom:0.7rem;">
+                    <i class="fas fa-link" style="color:var(--primary);font-size:0.92rem;"></i>
+                    <img src="${cause.photo_url || '/img/causa-default.jpg'}"
+                         alt="Causa vinculada"
+                         style="width:20px;height:20px;object-fit:cover;border-radius:50%;border:1px solid var(--primary);background:#fff;">
+                    <span style="color:var(--primary);font-weight:600;font-size:0.92rem;display:inline-block;vertical-align:middle;line-height:1.2;">
+                      ${cause.title}
+                    </span>
+                  </div>
+                `;
+              }
+
+              const actionsHtml = `
+                <a href="/challenges/${activity.id}" class="btn btn-primary btn-sm"><i class="fas fa-eye"></i> Ver más</a>
+                ${(activity.role === 'founder' || activity.role === 'admin')
+                  ? `<button class="btn btn-accent btn-sm admin-activity-btn" data-id="${activity.id}" data-type="challenge"><i class="fas fa-cog"></i> Administrar</button>`
+                  : `<span class="role-badge member"><i class="fas fa-user"></i> Miembro</span>`
+                }
+              `;
+
+              card.className = 'challenge-card';
+              card.innerHTML = `
+                <div class="challenge-image">
+                  ${typeBadge}
+                  <img src="${activity.photo_url || '/img/challenge-default.jpg'}" alt="${activity.title}" onerror="this.src='/img/challenge-default.jpg'">
+                  ${urgentBadge}
                 </div>
-                <div class="actions">
-                  <a href="${url}" class="btn btn-primary btn-sm"><i class="fas fa-eye"></i> Ver más</a>
-                  ${(activity.role === 'founder' || activity.role === 'admin')
-                    ? `<button class="btn btn-accent btn-sm admin-activity-btn" data-id="${activity.id}" data-type="${activity.type}"><i class="fas fa-cog"></i> Administrar</button>`
-                    : `<span class="role-badge member"><i class="fas fa-user"></i> Miembro</span>`
-                  }
+                <div class="challenge-content">
+                  <h3>${activity.title}</h3>
+                  <p style="color:#6b7280; margin-bottom:1.5rem; font-size:0.95rem; line-height:1.6;">
+                    ${activity.summary || ''}
+                  </p>
+                  ${causeHtml}
+                  <div class="challenge-meta">
+                    <div class="meta-item"><i class="fas fa-map-marker-alt"></i> ${location}</div>
+                    <div class="meta-item"><i class="fas fa-calendar-alt"></i> ${deadline}</div>
+                  </div>
+                  <div class="challenge-actions">
+                    ${actionsHtml}
+                  </div>
                 </div>
-              </div>
-            `;
+              `;
+            }
+
+            // VOLUNTARIADO
+            else if (activity.type === 'volunteering') {
+              // Usa causesMap global como en volunteering/index.njk
+              const cause = window.causes?.find?.(c => c.id === activity.cause_id) || (window.causesMap && window.causesMap[activity.cause_id]);
+              const urgentBadge = activity.is_urgent ? `<div class="volunteering-badge urgent"><i class="fas fa-exclamation-circle"></i> Urgente</div>` : "";
+              const pointsBadge = `<div class="volunteering-badge points"><i class="fas fa-star"></i> +${activity.points || 0} pts/h</div>`;
+              const location = activity.city && activity.country ? `${activity.city}, ${activity.country}` : "";
+              const startDate = activity.start_date ? new Date(activity.start_date).toLocaleDateString('es-ES', { day: 'numeric', month: 'short' }) : '';
+              const endDate = activity.end_date ? new Date(activity.end_date).toLocaleDateString('es-ES', { day: 'numeric', month: 'short' }) : '';
+              const progress = activity.volunteers_needed ? Math.min(Math.round((activity.volunteers / activity.volunteers_needed) * 100), 100) : 0;
+              let causeHtml = '';
+              if (activity.cause_id && cause) {
+                causeHtml = `
+                  <div class="linked-cause">
+                    <i class="fas fa-link"></i>
+                    <img src="${cause.photo_url || '/img/causa-default.jpg'}" alt="Causa vinculada">
+                    <span>${cause.title}</span>
+                  </div>
+                `;
+              }
+
+              // Botones: Ver más y Admin/Miembro (ajusta lógica de rol según tu app)
+              const actionsHtml = `
+                <a href="/volunteering/${activity.id}" class="btn btn-primary btn-sm"><i class="fas fa-eye"></i> Ver más</a>
+                ${(activity.role === 'founder' || activity.role === 'admin')
+                  ? `<button class="btn btn-accent btn-sm admin-activity-btn" data-id="${activity.id}" data-type="volunteering"><i class="fas fa-cog"></i> Administrar</button>`
+                  : `<span class="role-badge member"><i class="fas fa-user"></i> Miembro</span>`
+                }
+              `;
+
+              card.className = 'volunteering-card';
+              card.innerHTML = `
+                <div class="volunteering-image">
+                  <img src="${activity.photo_url || '/img/volunteer-default.jpg'}" alt="${activity.title}" onerror="this.src='/img/volunteer-default.jpg'">
+                </div>
+                <div class="volunteering-content">
+                  <h3>${activity.title}</h3>
+                  <p>${activity.summary || ''}</p>
+                  ${causeHtml}
+                  <div class="volunteering-progress">
+                    <div class="progress-bar">
+                      <div class="progress-fill" style="width:${progress || 0}%"></div>
+                    </div>
+                    <div class="progress-info">
+                      <span>${progress || 0}% completado</span>
+                      <span>${activity.volunteers || 0} de ${activity.volunteers_needed || 0} voluntarios</span>
+                    </div>
+                  </div>
+                  <div class="volunteering-meta">
+                    <div class="meta-item"><i class="fas fa-map-marker-alt"></i> ${location}</div>
+                    <div class="meta-item"><i class="fas fa-calendar-alt"></i> ${startDate} - ${endDate}</div>
+                    <div class="meta-item"><i class="fas fa-heart"></i> ${activity.beneficiaries || 0} beneficiarios</div>
+                  </div>
+                  <div class="volunteering-actions">
+                    ${actionsHtml}
+                  </div>
+                </div>
+              `;
+            }
+
             // Evento administrar
             const adminBtn = card.querySelector('.admin-activity-btn');
             if (adminBtn) {
@@ -1460,45 +1782,791 @@
           points: Number(document.getElementById('editPoints').value),
           lat: document.getElementById('editLat').value,
           lng: document.getElementById('editLng').value
-          // Añade más campos si los tienes
-        };
+        }; // <--- CIERRA EL OBJETO Y LA INSTRUCCIÓN
 
-        // Si hay nueva foto, súbela (opcional)
-        const photoInput = document.getElementById('editPhoto');
-        if (photoInput && photoInput.files && photoInput.files[0]) {
-          const file = photoInput.files[0];
-          const fileExt = file.name.split('.').pop();
-          const filePath = `${activityType}/${activityId}.${fileExt}`;
-          let { error: uploadError } = await supabase.storage.from('activities').upload(filePath, file, { upsert: true });
-          if (!uploadError) {
-            const { data: publicUrl } = supabase.storage.from('activities').getPublicUrl(filePath);
-            updated.photo_url = publicUrl.publicUrl;
+        // Si se subió una nueva foto, primero sube la imagen y luego actualiza la actividad
+        if (this.querySelector('input[type="file"]').files.length > 0) {
+          const file = this.querySelector('input[type="file"]').files[0];
+          const fileName = `activity_${activityId}_${Date.now()}`;
+          const { data: uploadData, error: uploadError } = await supabase
+            .storage
+            .from('activity-photos')
+            .upload(fileName, file, {
+              cacheControl: '3600',
+              upsert: true
+            });
+
+          if (uploadError) {
+            showToast('Error al subir la foto. Intenta de nuevo.', 'error');
+            return;
           }
+
+          // Obtiene la URL de la foto subida
+          const { publicURL, error: urlError } = supabase
+            .storage
+            .from('activity-photos')
+            .getPublicUrl(fileName);
+
+          if (urlError) {
+            showToast('Error al obtener la URL de la foto. Intenta de nuevo.', 'error');
+            return;
+          }
+
+          updated.photo_url = publicURL;
         }
 
-        // Actualiza en la base de datos
-        let table = '';
-        if (activityType === 'cause') table = 'causes';
-        else if (activityType === 'task') table = 'tasks';
-        else if (activityType === 'challenge') table = 'challenges';
-        else if (activityType === 'volunteering') table = 'volunteering';
-        else return;
-
-        const { error } = await supabase
-          .from(table)
+        // Actualiza la actividad en la base de datos
+        const { error: updateError } = await supabase
+          .from(activityType === 'cause' ? 'causes' : activityType === 'task' ? 'tasks' : 'challenges')
           .update(updated)
           .eq('id', activityId);
 
-        if (error) {
-          showToast('Error al guardar cambios', 'error');
+        if (updateError) {
+          showToast('Error al actualizar la actividad. Intenta de nuevo.', 'error');
           return;
         }
 
-        showToast('Cambios guardados');
+        showToast('Actividad actualizada con éxito.', 'success');
+
+        // Actualiza la actividad en la lista global y vuelve a renderizar
+        const index = window.allActivities.findIndex(a => a.id === activityId && a.type === activityType);
+        if (index !== -1) {
+          window.allActivities[index] = { ...window.allActivities[index], ...updated };
+          renderActivities();
+        }
+
+        // Cierra el modal
         document.getElementById('adminModal').classList.remove('active');
         document.body.style.overflow = '';
-        await loadUserActivities(); // <-- Esto refresca las tarjetas
       });
+
+      // --- MODALES "VER MÁS" universales para cada tipo de actividad ---
+
+      // Utilidad para crear y mostrar un modal único por tipo
+      function ensureModal(modalId, maxWidth = '650px') {
+        let modal = document.getElementById(modalId);
+        if (!modal) {
+          modal = document.createElement('div');
+          modal.id = modalId;
+          modal.className = 'modal-bg';
+          modal.innerHTML = `
+            <div class="modal-content" style="max-width:${maxWidth};">
+              <button class="close-modal" id="close${modalId.charAt(0).toUpperCase() + modalId.slice(1)}" title="Cerrar">&times;</button>
+              <div id="${modalId}Body"></div>
+            </div>
+          `;
+          document.body.appendChild(modal);
+          document.getElementById(`close${modalId.charAt(0).toUpperCase() + modalId.slice(1)}`).onclick = () => {
+            modal.classList.remove('active');
+            document.body.style.overflow = '';
+          };
+          modal.onclick = function(e) {
+            if (e.target === modal) {
+              modal.classList.remove('active');
+              document.body.style.overflow = '';
+            }
+          };
+          document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape' && modal.style.display === 'flex') {
+              modal.style.display = 'none';
+              document.body.style.overflow = '';
+            }
+          });
+        }
+        return modal;
+      }
+
+      // --- MODAL DE CAUSA ---
+      window.showCauseModal = async function(causeId) {
+        // Crear/asegurar que existe el modal
+        let modal = document.getElementById('causeModal');
+        if (!modal) {
+          modal = document.createElement('div');
+          modal.id = 'causeModal';
+          modal.style.cssText = 'display:none; position:fixed; z-index:9999; left:0; top:0; width:100vw; height:100vh; background:rgba(0,0,0,0.35); align-items:center; justify-content:center;';
+          
+          modal.innerHTML = `
+            <div class="modal-content" style="background:#fff; border-radius:18px; max-width:800px; width:95vw; padding:2rem; box-shadow:0 8px 32px rgba(74,111,165,0.13); position:relative; max-height:90vh; overflow-y:auto;">
+              <button id="closeCauseModal" style="position:absolute; top:1.5rem; right:1.5rem; background:none; border:none; font-size:1.8rem; color:#6b7280; cursor:pointer; transition:color 0.2s;" onmouseover="this.style.color='#4a6fa5'" onmouseout="this.style.color='#6b7280'">&times;</button>
+              <div id="modalBody">
+                <!-- Contenido dinámico -->
+              </div>
+            </div>
+          `;
+          document.body.appendChild(modal);
+          
+          // Agregar evento para cerrar
+          document.getElementById('closeCauseModal').onclick = function() {
+            modal.style.display = 'none';
+            document.body.style.overflow = '';
+          };
+          
+          // Cerrar al hacer clic fuera
+          modal.onclick = function(e) {
+            if (e.target === modal) {
+              modal.style.display = 'none';
+              document.body.style.overflow = '';
+            }
+          };
+          
+          // Cerrar con Escape
+          document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape' && modal.style.display === 'flex') {
+              modal.style.display = 'none';
+              document.body.style.overflow = '';
+            }
+          });
+        }
+
+        // Carga los datos de la causa
+        const { data: cause, error } = await supabase
+          .from('causes')
+          .select('*')
+          .eq('id', causeId)
+          .single();
+
+        if (error || !cause) {
+          document.getElementById('modalBody').innerHTML = '<div style="color:#e53e3e;text-align:center;padding:1.5rem;">No se pudo cargar la causa.</div>';
+          modal.style.display = 'flex';
+          document.body.style.overflow = 'hidden';
+          return;
+        }
+
+        const progress = cause.goal ? Math.min(Math.round((cause.raised / cause.goal) * 100), 100) : 0;
+        const createdDate = new Date(cause.created_at).toLocaleDateString('es-ES', {
+          year: 'numeric',
+          month: 'long',
+          day: 'numeric'
+        });
+
+        document.getElementById('modalBody').innerHTML = `
+          <div class="modal-cause-container">
+            <!-- Título principal centrado, más espacio abajo -->
+            <h1 class="modal-cause-title" style="font-size:2rem; font-weight:800; color:var(--primary); margin-bottom:2.7rem; text-align:center; width:100%;">${cause.title}</h1>
+            <div class="modal-cause-header" style="display:flex; gap:2.5rem; margin-bottom:2.7rem;">
+              <div class="modal-cause-image-wrapper" style="flex:1; min-width:320px; height:300px; border-radius:12px; overflow:hidden; position:relative; box-shadow:0 4px 12px rgba(0,0,0,0.08);">
+                <!-- Badge arriba a la izquierda, verde -->
+                <div class="modal-cause-badge" style="top:1.2rem; left:1.2rem; right:auto; background:var(--accent); color:white; position:absolute;">
+                  <i class="fas fa-hands-helping"></i> Causa Solidaria
+                </div>
+                <img class="modal-cause-image" src="${cause.photo_url || '/img/causa-default.jpg'}" 
+                     alt="Imagen de la causa ${cause.title}"
+                     style="width:100%;height:100%;object-fit:cover;"
+                     onerror="this.src='/img/causa-default.jpg'">
+                ${cause.urgent ? `
+                <div class="modal-cause-badge urgent" style="right:1.2rem; left:auto; top:1.2rem; background:var(--urgent); color:white;">
+                  <i class="fas fa-exclamation-circle"></i> Urgente
+                </div>` : ''}
+              </div>
+              <!-- Info a la derecha de la foto -->
+              <div class="modal-cause-info" style="flex:1.5; display:flex; flex-direction:column; justify-content:flex-start;">
+                <div class="modal-cause-progress-container" style="background:#f8fafc; padding:1.2rem; border-radius:12px; margin-bottom:1.2rem; border:1px solid #e5e7eb;">
+                  <div class="progress-bar">
+                    <div class="progress-fill" style="width: ${progress}%"></div>
+                  </div>
+                  <div class="progress-info">
+                    <span>${progress}% completado</span>
+                    <span>${cause.raised || 0} € de ${cause.goal || 0} €</span>
+                  </div>
+                </div>
+                <!-- Meta compacta en dos columnas -->
+                <div class="modal-cause-meta-grid" style="display:grid; grid-template-columns:1fr 1fr; gap:0.7rem 1.2rem; margin-bottom:1.2rem;">
+                  <div class="meta-item">
+                    <span class="meta-icon"><i class="fas fa-map-marker-alt"></i></span>
+                    <span>${cause.city || 'Sin ubicación'}${cause.country ? ', ' + cause.country : ''}</span>
+                  </div>
+                  <div class="meta-item">
+                    <span class="meta-icon"><i class="fas fa-users"></i></span>
+                    <span>${cause.donors || 0} donantes</span>
+                  </div>
+                  <div class="meta-item">
+                    <span class="meta-icon"><i class="fas fa-heart"></i></span>
+                    <span>${cause.beneficiaries || 0} beneficiarios</span>
+                  </div>
+                  <div class="meta-item">
+                    <span class="meta-icon"><i class="fas fa-calendar-alt"></i></span>
+                    <span>${createdDate}</span>
+                  </div>
+                </div>
+                <div class="points-notice" style="background:#f0f9ff; border-left:4px solid var(--accent); padding:0.8rem; border-radius:0 8px 8px 0; font-size:0.97rem; display:flex; align-items:center; gap:0.7rem;">
+                  <i class="fas fa-star" style="color: var(--accent);"></i>
+                  Cada euro donado recibirá <strong>${cause.points || 20} puntos</strong> de impacto
+                </div>
+              </div>
+            </div>
+            <!-- Resumen y descripción debajo, con más espacio entre bloques -->
+            <div class="modal-cause-content" style="margin-top:0;">
+              <div class="content-section" style="margin-bottom:2.2rem;">
+                <h3 class="content-title" style="font-size:1.2rem; font-weight:600; color:var(--primary); margin-bottom:0.9rem; display:flex; align-items:center; gap:0.7rem;">
+                  <i class="fas fa-align-left"></i> Resumen
+                </h3>
+                <p class="content-text" style="line-height:1.7; color:#4b5563; font-size:1.05rem; margin-left:0; margin-right:0; text-align:justify;">${cause.short_description || 'No hay resumen disponible para esta causa.'}</p>
+              </div>
+              <div class="content-section" style="margin-bottom:2.2rem;">
+                <h3 class="content-title" style="font-size:1.2rem; font-weight:600; color:var(--primary); margin-bottom:0.9rem; display:flex; align-items:center; gap:0.7rem;">
+                  <i class="fas fa-info-circle"></i> Descripción completa
+                </h3>
+                <p class="content-text" style="line-height:1.7; color:#4b5563; font-size:1.05rem; margin-left:0; margin-right:0; text-align:justify;">${cause.description || 'No hay descripción detallada disponible para esta causa.'}</p>
+              </div>
+            </div>
+            <!-- Botones abajo, con más espacio arriba -->
+            <div class="cause-actions" style="display:flex; gap:0.8rem; margin-top:2.2rem;">
+              <button class="btn btn-primary" style="flex:1;" onclick="donateToCause('${cause.id}')">
+                <i class="fas fa-donate"></i> Donar ahora
+              </button>
+              <button class="btn btn-accent" style="flex:1;" onclick="joinCause('${cause.id}')">
+                <i class="fas fa-hands-helping"></i> Participar
+              </button>
+              <button class="btn btn-outline" style="flex:1;" onclick="showShareOptions('${cause.id}')">
+                <i class="fas fa-share-alt"></i> Compartir
+              </button>
+            </div>
+          </div>
+        `;
+        modal.style.display = 'flex';
+        document.body.style.overflow = 'hidden';
+      };
+
+      // --- MODAL DE TAREA ---
+      window.showTaskModal = async function(taskId) {
+        // Crear/asegurar que existe el modal
+        let modal = document.getElementById('taskModal');
+        if (!modal) {
+          modal = document.createElement('div');
+          modal.id = 'taskModal';
+          modal.style.cssText = 'display:none; position:fixed; z-index:9999; left:0; top:0; width:100vw; height:100vh; background:rgba(0,0,0,0.35); align-items:center; justify-content:center;';
+          
+          modal.innerHTML = `
+            <div class="modal-content" style="background:#fff; border-radius:18px; max-width:800px; width:95vw; padding:2rem; box-shadow:0 8px 32px rgba(74,111,165,0.13); position:relative; max-height:90vh; overflow-y:auto;">
+              <button id="closeTaskModal" style="position:absolute; top:1.5rem; right:1.5rem; background:none; border:none; font-size:1.8rem; color:#6b7280; cursor:pointer; transition:color 0.2s;" onmouseover="this.style.color='#4a6fa5'" onmouseout="this.style.color='#6b7280'">&times;</button>
+              <div id="taskModalBody">
+                <!-- Contenido dinámico -->
+              </div>
+            </div>
+          `;
+          document.body.appendChild(modal);
+          
+          // Agregar evento para cerrar
+          document.getElementById('closeTaskModal').onclick = function() {
+            modal.style.display = 'none';
+            document.body.style.overflow = '';
+          };
+          
+          // Cerrar al hacer clic fuera
+          modal.onclick = function(e) {
+            if (e.target === modal) {
+              modal.style.display = 'none';
+              document.body.style.overflow = '';
+            }
+          };
+          
+          // Cerrar con Escape
+          document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape' && modal.style.display === 'flex') {
+              modal.style.display = 'none';
+              document.body.style.overflow = '';
+            }
+          });
+        }
+
+        // Carga los datos de la tarea
+        const { data: task, error } = await supabase
+          .from('tasks')
+          .select('*')
+          .eq('id', taskId)
+          .single();
+
+        if (error || !task) {
+          document.getElementById('taskModalBody').innerHTML = '<div style="color:#e53e3e;text-align:center;padding:1.5rem;">No se pudo cargar la tarea.</div>';
+          modal.style.display = 'flex';
+          document.body.style.overflow = 'hidden';
+          return;
+        }
+
+        // Calcular progreso
+        const progress = task.beneficiaries ? Math.min(Math.round((task.participants / task.beneficiaries) * 100), 100) : 0;
+        
+        // Formatear fechas
+        const createdDate = new Date(task.created_at).toLocaleDateString('es-ES', {
+          year: 'numeric',
+          month: 'long',
+          day: 'numeric'
+        });
+        
+        const endDate = task.end_date ? new Date(task.end_date).toLocaleDateString('es-ES', {
+          year: 'numeric',
+          month: 'long',
+          day: 'numeric'
+        }) : 'Sin fecha límite';
+
+        // Cargar información de la causa vinculada si existe
+        let causeInfo = '';
+        if (task.cause_id) {
+          const { data: cause } = await supabase
+            .from('causes')
+            .select('title, short_description, photo_url')
+            .eq('id', task.cause_id)
+            .single();
+
+          if (cause) {
+            causeInfo = `
+              <div class="linked-cause-section" style="margin-bottom:1.5rem;">
+                <h3 class="content-title" style="font-size:1.2rem; font-weight:600; color:var(--primary); margin-bottom:0.9rem; display:flex; align-items:center; gap:0.7rem;">
+                  <i class="fas fa-link"></i> Vinculado a la causa
+                </h3>
+                <div style="display:flex; align-items:center; gap:1.2rem; background:#f8fafc; padding:1rem; border-radius:8px; border:1px solid #e5e7eb;">
+                  <img src="${cause.photo_url || '/img/causa-default.jpg'}"
+                       alt="Imagen de la causa vinculada"
+                       style="width:80px; height:80px; object-fit:cover; border-radius:6px;"
+                       onerror="this.src='/img/causa-default.jpg'">
+                  <div style="flex:1; min-width:0;">
+                    <div style="font-weight:700; color:var(--primary); font-size:1.05rem; margin-bottom:0.2rem; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">
+                      ${cause.title}
+                    </div>
+                    <div style="color:#6b7280; font-size:0.97rem; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:260px;">
+                      ${cause.short_description || 'Sin resumen disponible'}
+                    </div>
+                  </div>
+                  <a href="/causes/${task.cause_id}"
+                     class="btn btn-primary"
+                     style="margin-left:1.2rem; white-space:nowrap; font-size:0.97rem; padding:0.5rem 1.1rem; display:flex; align-items:center; gap:0.5rem;">
+                    <i class="fas fa-arrow-right"></i> Ver causa
+                  </a>
+                </div>
+              </div>
+            `;
+          }
+        }
+
+        // Obtener participantes
+        const { data: members, error: membersError } = await supabase
+          .from('task_members')
+          .select('user_id, profiles(username, photo_url)')
+          .eq('task_id', taskId);
+
+        let participantsHtml = '';
+        if (members && members.length > 0) {
+          participantsHtml = `
+            <div class="content-section" style="margin-bottom:2.2rem;">
+              <h3 class="content-title" style="font-size:1.2rem; font-weight:600; color:var(--primary); margin-bottom:0.9rem; display:flex; align-items:center; gap:0.7rem;">
+                <i class="fas fa-users"></i> Participantes
+              </h3>
+              <div style="display:flex; flex-wrap:wrap; gap:1rem;">
+                ${members.map(m => `
+                  <div style="display:flex; align-items:center; gap:0.6rem; background:#f8fafc; border-radius:8px; padding:0.5rem 1rem; border:1px solid #e5e7eb;">
+                    <img src="${m.profiles?.photo_url || '/img/avatar-default.png'}" alt="${m.profiles?.username || 'Usuario'}" style="width:36px; height:36px; border-radius:50%; object-fit:cover; border:1px solid #e5e7eb;">
+                    <span style="font-weight:600; color:var(--primary);">${m.profiles?.username || 'Usuario'}</span>
+                  </div>
+                `).join('')}
+              </div>
+            </div>
+          `;
+        } else {
+          participantsHtml = `
+            <div class="content-section" style="margin-bottom:2.2rem;">
+              <h3 class="content-title" style="font-size:1.2rem; font-weight:600; color:var(--primary); margin-bottom:0.9rem; display:flex; align-items:center; gap:0.7rem;">
+                <i class="fas fa-users"></i> Participantes
+              </h3>
+              <div style="color:#6b7280;">Aún no hay participantes en esta tarea.</div>
+            </div>
+          `;
+        }
+
+        document.getElementById('taskModalBody').innerHTML = `
+          <div class="modal-task-container">
+            <!-- Título principal centrado -->
+            <h1 class="modal-task-title" style="font-size:2rem; font-weight:800; color:var(--primary); margin-bottom:2.7rem; text-align:center; width:100%;">${task.title}</h1>
+            
+            <div class="modal-task-header" style="display:flex; gap:2.5rem; margin-bottom:2.7rem;">
+              <div class="modal-task-image-wrapper" style="flex:1; min-width:320px; height:300px; border-radius:12px; overflow:hidden; position:relative; box-shadow:0 4px 12px rgba(0,0,0,0.08);">
+                <!-- Badge arriba a la izquierda -->
+                <div class="modal-cause-badge" style="top:1.2rem; left:1.2rem; right:auto; background:var(--accent); color:white; position:absolute; border-radius:50px; padding:0.5rem 1rem; font-size:0.9rem; font-weight:600; display:flex; align-items:center; gap:0.6rem; box-shadow:0 2px 8px rgba(0,0,0,0.1); z-index:2;">
+                  <i class="fas fa-tasks"></i> Tarea Solidaria
+                </div>
+                
+                <img class="modal-task-image" src="${task.photo_url || '/img/task-default.jpg'}" 
+                     alt="Imagen de la tarea ${task.title}"
+                     style="width:100%;height:100%;object-fit:cover;"
+                     onerror="this.src='/img/task-default.jpg'">
+                     
+                ${task.is_urgent ? `
+                <div class="modal-cause-badge urgent" style="right:1.2rem; left:auto; top:1.2rem; background:var(--urgent); color:white; border-radius:50px; padding:0.5rem 1rem; font-size:0.9rem; font-weight:600; display:flex; align-items:center; gap:0.6rem; box-shadow:0 2px 8px rgba(0,0,0,0.1); z-index:2;">
+                  <i class="fas fa-exclamation-circle"></i> Urgente
+                </div>` : ''}
+              </div>
+              
+              <!-- Info a la derecha de la foto -->
+              <div class="modal-task-info" style="flex:1.5; display:flex; flex-direction:column; justify-content:flex-start;">
+                <!-- Barra de progreso -->
+                <div class="modal-cause-progress-container" style="background:#f8fafc; padding:1.5rem; border-radius:12px; margin-bottom:1.5rem; border:1px solid #e5e7eb;">
+                  <div class="progress-bar">
+                    <div class="progress-fill" style="width: ${progress}%"></div>
+                  </div>
+                  <div class="progress-info">
+                    <span>${progress}% completado</span>
+                    <span>${task.participants || 0} de ${task.beneficiaries || 0} participantes</span>
+                  </div>
+                </div>
+                
+                <!-- Meta compacta en dos columnas -->
+                <div class="modal-task-meta-grid" style="display:grid; grid-template-columns:1fr 1fr; gap:0.7rem 1.2rem; margin-bottom:1.2rem;">
+                  <div class="meta-item">
+                    <span class="meta-icon"><i class="fas fa-map-marker-alt"></i></span>
+                    <span>${task.city || 'Sin ubicación'}${task.country ? ', ' + task.country : ''}</span>
+                  </div>
+                  <div class="meta-item">
+                    <span class="meta-icon"><i class="fas fa-users"></i></span>
+                    <span>${task.participants || 0} participantes</span>
+                  </div>
+                  <div class="meta-item">
+                    <span class="meta-icon"><i class="fas fa-heart"></i></span>
+                    <span>${task.beneficiaries || 0} beneficiarios</span>
+                  </div>
+                  <div class="meta-item">
+                    <span class="meta-icon"><i class="fas fa-calendar-alt"></i></span>
+                    <span>${task.end_date ? endDate : 'Sin fecha límite'}</span>
+                  </div>
+                </div>
+                
+                <div class="points-notice" style="background:#f0f9ff; border-left:4px solid var(--accent); padding:0.8rem; border-radius:0 8px 8px 0; font-size:0.97rem; display:flex; align-items:center; gap:0.7rem;">
+                  <i class="fas fa-star" style="color: var(--accent);"></i>
+                  Participar en esta tarea otorgará <strong>${task.points || 20} puntos</strong> de impacto
+                </div>
+              </div>
+            </div>
+            
+            ${causeInfo}
+            
+            <!-- Resumen y descripción -->
+            <div class="modal-task-content" style="margin-top:0;">
+              <div class="content-section" style="margin-bottom:2.2rem;">
+                <h3 class="content-title" style="font-size:1.2rem; font-weight:600; color:var(--primary); margin-bottom:0.9rem; display:flex; align-items:center; gap:0.7rem;">
+                  <i class="fas fa-align-left"></i> Resumen
+                </h3>
+                <p class="content-text" style="line-height:1.7; color:#4b5563; font-size:1.05rem; margin-left:0; margin-right:0; text-align:justify; font-weight:400; margin-bottom:2.2rem;">
+                  ${task.summary || 'No hay resumen disponible para esta tarea.'}
+                </p>
+                
+                <h3 class="content-title" style="font-size:1.2rem; font-weight:600; color:var(--primary); margin-bottom:0.9rem; display:flex; align-items:center; gap:0.7rem;">
+                  <i class="fas fa-info-circle"></i> Descripción completa
+                </h3>
+                <p class="content-text" style="line-height:1.7; color:#4b5563; font-size:1.05rem; margin-left:0; margin-right:0; text-align:justify;">
+                  ${task.description || 'No hay descripción disponible para esta tarea.'}
+                </p>
+              </div>
+              
+              ${participantsHtml}
+              
+              <div class="content-section" style="margin-bottom:2.2rem;">
+                <h3 class="content-title" style="font-size:1.2rem; font-weight:600; color:var(--primary); margin-bottom:0.9rem; display:flex; align-items:center; gap:0.7rem;">
+                  <i class="fas fa-info-circle"></i> Detalles adicionales
+                </h3>
+                <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem;">
+                  <div>
+                    <p style="font-weight:600; color:#4b5563; margin-bottom:0.3rem;">Fecha de creación</p>
+                    <p style="color:#6b7280;">${createdDate}</p>
+                  </div>
+                  <div>
+                    <p style="font-weight:600; color:#4b5563; margin-bottom:0.3rem;">Estado</p>
+                    <p style="color:#6b7280;">${task.is_completed ? 'Completada' : 'En progreso'}</p>
+                  </div>
+                  <div>
+                    <p style="font-weight:600; color:#4b5563; margin-bottom:0.3rem;">Prioridad</p>
+                    <p style="color:#6b7280;">${task.is_urgent ? 'Alta prioridad' : 'Prioridad normal'}</p>
+                  </div>
+                  <div>
+                    <p style="font-weight:600; color:#4b5563; margin-bottom:0.3rem;">Tipo</p>
+                    <p style="color:#6b7280;">${task.type || 'Tarea general'}</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <!-- Botones abajo -->
+            <div class="task-actions" style="display:flex; gap:0.8rem; margin-top:2.2rem;">
+              <button class="btn btn-primary" style="flex:1;" onclick="participateInTask('${task.id}')">
+                <i class="fas fa-hand-holding-heart"></i> Participar
+              </button>
+              <button class="btn btn-accent" style="flex:1;" onclick="showShareOptionsTask('${task.id}')">
+                <i class="fas fa-share-alt"></i> Compartir
+              </button>
+            </div>
+            <div class="share-section" id="shareSectionTask"></div>
+          </div>
+        `;
+
+        modal.style.display = 'flex';
+        document.body.style.overflow = 'hidden';
+      };
+
+      // --- MODAL DE RETO ---
+      window.showChallengeModal = async function(challengeId) {
+        const modal = ensureModal('challengeModal', '650px');
+        const { data: challenge, error } = await supabase
+          .from('challenges')
+          .select('*')
+          .eq('id', challengeId)
+          .single();
+
+        if (error || !challenge) {
+          document.getElementById('challengeModalBody').innerHTML = '<div style="color:#e53e3e;">No se pudo cargar el reto.</div>';
+          modal.classList.add('active');
+          document.body.style.overflow = 'hidden';
+          return;
+        }
+
+        const deadline = challenge.deadline ? new Date(challenge.deadline).toLocaleDateString('es-ES', { day: 'numeric', month: 'short', year: 'numeric' }) : '';
+        document.getElementById('challengeModalBody').innerHTML = `
+          <h2 style="color:var(--challenge-dark);margin-bottom:1rem;">${challenge.title}</h2>
+          <img src="${challenge.photo_url || '/img/challenge-default.jpg'}" alt="${challenge.title}" style="width:100%;max-width:320px;border-radius:8px;margin-bottom:1rem;">
+          <div style="color:#4b5563;margin-bottom:1rem;">${challenge.summary || challenge.description || ''}</div>
+          <div style="color:#6b7280;font-size:0.97rem;margin-bottom:1rem;">
+            <i class="fas fa-calendar-alt"></i> ${deadline}
+          </div>
+          <div style="color:#6b7280;font-size:0.97rem;">
+            <i class="fas fa-users"></i> ${challenge.participants || 0} participantes
+          </div>
+        `;
+        modal.classList.add('active');
+        document.body.style.overflow = 'hidden';
+      };
+
+      // --- MODAL DE VOLUNTARIADO ---
+      window.showVolunteeringModal = async function(volunteeringId) {
+        const modal = ensureModal('volunteeringModal', '700px');
+        const { data: volunteering, error } = await supabase
+          .from('volunteering')
+          .select('*')
+          .eq('id', volunteeringId)
+          .single();
+
+        if (error || !volunteering) {
+          document.getElementById('volunteeringModalBody').innerHTML = '<div style="color:#e53e3e;">No se pudo cargar el voluntariado.</div>';
+          modal.classList.add('active');
+          document.body.style.overflow = 'hidden';
+          return;
+        }
+
+        const startDate = volunteering.start_date ? new Date(volunteering.start_date).toLocaleDateString('es-ES', { day: 'numeric', month: 'short' }) : '';
+        const endDate = volunteering.end_date ? new Date(volunteering.end_date).toLocaleDateString('es-ES', { day: 'numeric', month: 'short' }) : '';
+        document.getElementById('volunteeringModalBody').innerHTML = `
+          <h2 style="color:var(--volunteering-dark);margin-bottom:1rem;">${volunteering.title}</h2>
+          <img src="${volunteering.photo_url || '/img/volunteer-default.jpg'}" alt="${volunteering.title}" style="width:100%;max-width:320px;border-radius:8px;margin-bottom:1rem;">
+          <div style="color:#4b5563;margin-bottom:1rem;">${volunteering.summary || volunteering.description || ''}</div>
+          <div style="color:#6b7280;font-size:0.97rem;margin-bottom:1rem;">
+            <i class="fas fa-calendar-alt"></i> ${startDate} - ${endDate}
+          </div>
+          <div style="color:#6b7280;font-size:0.97rem;">
+            <i class="fas fa-users"></i> ${volunteering.volunteers || 0} voluntarios
+          </div>
+        `;
+        modal.classList.add('active');
+        document.body.style.overflow = 'hidden';
+      };
+
+      // --- Evento universal para abrir el modal correcto ---
+      document.addEventListener('click', async function(e) {
+        const btn = e.target.closest('.view-more-btn');
+        if (!btn) return;
+        const type = btn.dataset.type;
+        const id = btn.dataset.id;
+        if (!type || !id) return;
+
+        if (type === 'cause') {
+          showCauseModal(id);
+        } else if (type === 'task') {
+          showTaskModal(id); // Ahora usa la nueva función de modal de tareas
+        } else if (type === 'challenge') {
+          showChallengeModal(id);
+        } else if (type === 'volunteering') {
+          showVolunteeringModal(id);
+        }
+      });
+
+      // Función para mostrar opciones de compartir
+      function showShareOptions(causeId) {
+        const cause = window.allActivities.find(c => c.id == causeId && c.type === 'cause');
+        if (!cause) return;
+        
+        const shareSection = document.getElementById('shareSection');
+        shareSection.innerHTML = `
+          <h3 class="share-title" style="font-size:1.3rem;font-weight:600;color:var(--primary);margin-bottom:1.5rem;text-align:center;">
+            <i class="fas fa-share-alt"></i> Ayuda a difundir esta causa
+          </h3>
+          <div class="share-content" style="background:#f8fafc;border-radius:12px;padding:1.5rem;margin-bottom:1.5rem;position:relative;">
+            <p class="share-text" style="font-size:1rem;line-height:1.6;color:#4b5563;margin-bottom:1rem;">
+              <span style="color:var(--primary);font-weight:600;">"${cause.short_description || 'Únete a esta importante causa solidaria'}"</span><br><br>
+              Cada contribución nos acerca más a la meta de <strong>${cause.goal || 0}€</strong> para ayudar a <strong>${cause.beneficiaries || 0} personas</strong>.
+            </p>
+            <div class="share-buttons" style="display:flex;justify-content:center;gap:1rem;flex-wrap:wrap;">
+              <a href="#" class="share-btn" style="display:flex;align-items:center;gap:0.7rem;padding:0.8rem 1.5rem;border-radius:8px;font-weight:600;color:white;transition:all 0.2s;text-decoration:none;background:#3b5998;" onclick="shareOnSocial('facebook', '${cause.id}')">
+                <i class="fab fa-facebook-f"></i> Facebook
+              </a>
+              <a href="#" class="share-btn" style="display:flex;align-items:center;gap:0.7rem;padding:0.8rem 1.5rem;border-radius:8px;font-weight:600;color:white;transition:all 0.2s;text-decoration:none;background:#1da1f2;" onclick="shareOnSocial('twitter', '${cause.id}')">
+                <i class="fab fa-twitter"></i> Twitter
+              </a>
+              <a href="#" class="share-btn" style="display:flex;align-items:center;gap:0.7rem;padding:0.8rem 1.5rem;border-radius:8px;font-weight:600;color:white;transition:all 0.2s;text-decoration:none;background:#25d366;" onclick="shareOnSocial('whatsapp', '${cause.id}')">
+                <i class="fab fa-whatsapp"></i> WhatsApp
+              </a>
+              <a href="#" class="share-btn" style="display:flex;align-items:center;gap:0.7rem;padding:0.8rem 1.5rem;border-radius:8px;font-weight:600;color:white;transition:all 0.2s;text-decoration:none;background:var(--primary);" onclick="copyCauseLink('${cause.id}')">
+                <i class="fas fa-link"></i> Copiar enlace
+              </a>
+            </div>
+          </div>
+        `;
+        shareSection.scrollIntoView({ behavior: 'smooth' });
+      }
+
+      // Función para compartir en redes sociales
+      function shareOnSocial(platform, causeId) {
+        const cause = window.allActivities.find(c => c.id == causeId && c.type === 'cause');
+        if (!cause) return;
+        
+        const url = `${window.location.origin}/causes/${cause.id}`;
+        const text = `Únete a esta causa: "${cause.title}" - ${cause.short_description || 'Ayuda a hacer la diferencia!'} ${url}`;
+        let shareUrl;
+        switch(platform) {
+          case 'facebook':
+            shareUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}&quote=${encodeURIComponent(text)}`;
+            break;
+          case 'twitter':
+            shareUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}`;
+            break;
+          case 'whatsapp':
+            shareUrl = `https://wa.me/?text=${encodeURIComponent(text)}`;
+            break;
+          default:
+            return;
+        }
+        window.open(shareUrl, '_blank', 'width=600,height=400');
+      }
+
+      // Función para copiar enlace de la causa
+      function copyCauseLink(causeId) {
+        const url = `${window.location.origin}/causes/${causeId}`;
+        navigator.clipboard.writeText(url).then(() => {
+          showToast('¡Enlace copiado!', 'success');
+        }).catch(() => {
+          prompt('Por favor, copia este enlace:', url);
+        });
+      }
+
+      // Funciones de donación y participación
+      function donateToCause(causeId) {
+        // Redireccionar a la página de donación o abrir modal
+        showToast('Funcionalidad de donación próximamente', 'info');
+      }
+
+      function joinCause(causeId) {
+        // Lógica para unirse a la causa
+        showToast('Funcionalidad de participación próximamente', 'info');
+      }
+
+      // Función para mostrar opciones de compartir para tareas
+      function showShareOptionsTask(taskId) {
+        const task = window.allActivities.find(a => a.id == taskId && a.type === 'task');
+        if (!task) return;
+        
+        const shareSection = document.getElementById('shareSectionTask');
+        shareSection.innerHTML = `
+          <h3 class="share-title" style="font-size:1.3rem;font-weight:600;color:var(--primary);margin-bottom:1.5rem;text-align:center;">
+            <i class="fas fa-share-alt"></i> Ayuda a difundir esta tarea
+          </h3>
+          <div class="share-content" style="background:#f8fafc;border-radius:12px;padding:1.5rem;margin-bottom:1.5rem;position:relative;">
+            <p class="share-text" style="font-size:1rem;line-height:1.6;color:#4b5563;margin-bottom:1rem;">
+              <span style="color:var(--primary);font-weight:600;">"${task.summary || task.description?.substring(0, 120) + '...' || 'Únete a esta importante tarea solidaria'}"</span><br><br>
+              Cada participante nos acerca más a la meta de ayudar a <strong>${task.beneficiaries || 0} personas</strong>.
+            </p>
+            <div class="share-buttons" style="display:flex;justify-content:center;gap:1rem;flex-wrap:wrap;">
+              <a href="#" class="share-btn" style="display:flex;align-items:center;gap:0.7rem;padding:0.8rem 1.5rem;border-radius:8px;font-weight:600;color:white;transition:all 0.2s;text-decoration:none;background:#3b5998;" onclick="shareOnSocialTask('facebook', '${task.id}')">
+                <i class="fab fa-facebook-f"></i> Facebook
+              </a>
+              <a href="#" class="share-btn" style="display:flex;align-items:center;gap:0.7rem;padding:0.8rem 1.5rem;border-radius:8px;font-weight:600;color:white;transition:all 0.2s;text-decoration:none;background:#1da1f2;" onclick="shareOnSocialTask('twitter', '${task.id}')">
+                <i class="fab fa-twitter"></i> Twitter
+              </a>
+              <a href="#" class="share-btn" style="display:flex;align-items:center;gap:0.7rem;padding:0.8rem 1.5rem;border-radius:8px;font-weight:600;color:white;transition:all 0.2s;text-decoration:none;background:#25d366;" onclick="shareOnSocialTask('whatsapp', '${task.id}')">
+                <i class="fab fa-whatsapp"></i> WhatsApp
+              </a>
+              <a href="#" class="share-btn" style="display:flex;align-items:center;gap:0.7rem;padding:0.8rem 1.5rem;border-radius:8px;font-weight:600;color:white;transition:all 0.2s;text-decoration:none;background:var(--primary);" onclick="copyTaskLink('${task.id}')">
+                <i class="fas fa-link"></i> Copiar enlace
+              </a>
+            </div>
+          </div>
+        `;
+        shareSection.scrollIntoView({ behavior: 'smooth' });
+      }
+
+      // Función para compartir tareas en redes sociales
+      function shareOnSocialTask(platform, taskId) {
+        const task = window.allActivities.find(t => t.id == taskId && t.type === 'task');
+        if (!task) return;
+        
+        const url = `${window.location.origin}/tasks/${task.id}`;
+        const text = `Únete a esta tarea: "${task.title}" - ${task.summary || task.description?.substring(0, 100) + '...' || 'Ayuda a hacer la diferencia!'} ${url}`;
+        let shareUrl;
+        
+        switch(platform) {
+          case 'facebook':
+            shareUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}&quote=${encodeURIComponent(text)}`;
+            break;
+          case 'twitter':
+            shareUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}`;
+            break;
+          case 'whatsapp':
+            shareUrl = `https://wa.me/?text=${encodeURIComponent(text)}`;
+            break;
+          default:
+            return;
+        }
+        
+        window.open(shareUrl, '_blank', 'width=600,height=400');
+      }
+
+      // Función para copiar enlace de la tarea
+      function copyTaskLink(taskId) {
+        const url = `${window.location.origin}/tasks/${taskId}`;
+        navigator.clipboard.writeText(url).then(() => {
+          showToast('¡Enlace copiado!', 'success');
+        }).catch(() => {
+          prompt('Por favor, copia este enlace:', url);
+        });
+      }
+
+      // Función para participar en una tarea
+      function participateInTask(taskId) {
+        // Revisar si el usuario está autenticado
+        supabase.auth.getSession().then(({ data: { session } }) => {
+          if (!session?.user) {
+            showToast('Debes iniciar sesión para participar', 'error');
+            return;
+          }
+          
+          const userId = session.user.id;
+          
+          // Intentar inscribirse como miembro de la tarea
+          supabase
+            .from('task_members')
+            .insert([{ task_id: taskId, user_id: userId, role: 'member', status: 'active' }])
+            .then(({ error }) => {
+              if (error) {
+                if (error.code === '23505') {
+                  showToast('Ya estás participando en esta tarea', 'info');
+                } else {
+                  showToast('Error al participar en la tarea', 'error');
+                }
+                return;
+              }
+              
+              showToast('¡Te has unido a la tarea!', 'success');
+              
+              // Actualizar la interfaz si es necesario
+              setTimeout(() => {
+                // Recargar las actividades para reflejar los cambios
+                loadUserActivities();
+              }, 1000);
+            });
+        });
+      }
     });
   </script>
 {% endblock %}
