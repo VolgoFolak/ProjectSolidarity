@@ -1,0 +1,167 @@
+{% extends "layout.njk" %}
+
+{% block title %}Acerca de Solidarity{% endblock %}
+
+{% block head %}
+  {{ super() }}
+  <style>
+    .about-container {
+      max-width: 900px;
+      margin: 2rem auto;
+      padding: 2rem;
+      background: #fff;
+      border-radius: 16px;
+      box-shadow: 0 8px 32px rgba(74,111,165,0.10);
+    }
+    .about-title {
+      color: var(--primary);
+      font-size: 2.2rem;
+      font-weight: 800;
+      margin-bottom: 1.2rem;
+      text-align: center;
+    }
+    .about-section {
+      margin-bottom: 2.5rem;
+    }
+    .about-section h2 {
+      color: var(--primary-dark);
+      font-size: 1.3rem;
+      font-weight: 700;
+      margin-bottom: 0.7rem;
+    }
+    .about-section ul {
+      margin-left: 1.5rem;
+      color: #4a5568;
+    }
+    .about-team {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 2rem;
+      margin-top: 1rem;
+    }
+    .about-member {
+      flex: 1 1 200px;
+      background: #f8fafc;
+      border-radius: 10px;
+      padding: 1.2rem;
+      text-align: center;
+      box-shadow: 0 2px 8px rgba(74,111,165,0.06);
+    }
+    .about-member img {
+      width: 70px;
+      height: 70px;
+      border-radius: 50%;
+      object-fit: cover;
+      margin-bottom: 0.5rem;
+    }
+    .about-member .name {
+      font-weight: 700;
+      color: var(--primary);
+    }
+    .about-member .role {
+      color: #6b7280;
+      font-size: 0.95rem;
+    }
+    .about-contact {
+      background: #f8fafc;
+      border-radius: 10px;
+      padding: 1.2rem;
+      margin-top: 1rem;
+    }
+    .about-contact a {
+      color: var(--primary-dark);
+      text-decoration: underline;
+    }
+    @media (max-width: 700px) {
+      .about-container { padding: 1rem; }
+      .about-team { flex-direction: column; gap: 1rem; }
+    }
+  </style>
+{% endblock %}
+
+{% block content %}
+<div class="about-container">
+  <div class="about-title">
+    <i class="fas fa-hands-helping"></i> Acerca de Solidarity
+  </div>
+
+  <div class="about-section">
+    <h2>¿Qué es Solidarity?</h2>
+    <p>
+      <strong>Solidarity</strong> es una plataforma digital que conecta personas, organizaciones y causas solidarias para crear un impacto positivo en la sociedad. Aquí puedes descubrir, crear y participar en causas, tareas, retos y voluntariados que buscan mejorar el mundo.
+    </p>
+  </div>
+
+  <div class="about-section">
+    <h2>Nuestra misión</h2>
+    <p>
+      Fomentar la solidaridad, la colaboración y el compromiso social, facilitando la participación ciudadana y el apoyo a quienes más lo necesitan.
+    </p>
+  </div>
+
+  <div class="about-section">
+    <h2>Valores</h2>
+    <ul>
+      <li><strong>Transparencia:</strong> Todas las actividades y causas son públicas y auditables.</li>
+      <li><strong>Colaboración:</strong> Creemos en el trabajo en equipo y la suma de esfuerzos.</li>
+      <li><strong>Impacto:</strong> Medimos y celebramos cada acción solidaria.</li>
+      <li><strong>Inclusión:</strong> Cualquier persona puede participar y proponer iniciativas.</li>
+      <li><strong>Innovación:</strong> Usamos tecnología para facilitar la solidaridad.</li>
+    </ul>
+  </div>
+
+  <div class="about-section">
+    <h2>¿Qué puedes hacer en Solidarity?</h2>
+    <ul>
+      <li>Explorar y unirte a <strong>causas solidarias</strong> de tu interés.</li>
+      <li>Participar en <strong>tareas</strong> y <strong>retos</strong> para sumar puntos de impacto.</li>
+      <li>Organizar o apuntarte a <strong>voluntariados</strong> presenciales o virtuales.</li>
+      <li>Crear tus propias actividades y gestionar equipos.</li>
+      <li>Hacer seguimiento de tu impacto y logros solidarios.</li>
+    </ul>
+  </div>
+
+  <div class="about-section">
+    <h2>El equipo</h2>
+    <div class="about-team">
+      <div class="about-member">
+        <img src="/img/avatar1.png" alt="Gabriela Martínez">
+        <div class="name">Gabriela Martínez</div>
+        <div class="role">Fundadora &amp; Desarrollo</div>
+      </div>
+      <div class="about-member">
+        <img src="/img/avatar2.png" alt="Carlos Ruiz">
+        <div class="name">Carlos Ruiz</div>
+        <div class="role">Diseño UX/UI</div>
+      </div>
+      <div class="about-member">
+        <img src="/img/avatar3.png" alt="Lucía Gómez">
+        <div class="name">Lucía Gómez</div>
+        <div class="role">Comunidad &amp; Comunicación</div>
+      </div>
+      <!-- Añade más miembros si lo deseas -->
+    </div>
+  </div>
+
+  <div class="about-section">
+    <h2>Contacto</h2>
+    <div class="about-contact">
+      ¿Tienes dudas, sugerencias o quieres colaborar? <br>
+      Escríbenos a <a href="mailto:info@solidarity.com">info@solidarity.com</a> o síguenos en nuestras redes sociales:<br>
+      <a href="https://twitter.com/solidarity" target="_blank"><i class="fab fa-twitter"></i> Twitter</a> |
+      <a href="https://instagram.com/solidarity" target="_blank"><i class="fab fa-instagram"></i> Instagram</a>
+    </div>
+  </div>
+
+  <div class="about-section">
+    <h2>Enlaces útiles</h2>
+    <ul>
+      <li><a href="/causes"><i class="fas fa-heart"></i> Explorar causas</a></li>
+      <li><a href="/tasks"><i class="fas fa-tasks"></i> Ver tareas</a></li>
+      <li><a href="/challenges"><i class="fas fa-trophy"></i> Descubrir retos</a></li>
+      <li><a href="/volunteering"><i class="fas fa-hands-helping"></i> Voluntariados</a></li>
+      <li><a href="/profile/myactivities"><i class="fas fa-user"></i> Mi perfil solidario</a></li>
+    </ul>
+  </div>
+</div>
+{% endblock %}
