@@ -231,6 +231,18 @@ app.get('/profile/myactivities', (req, res) => {
 app.get('/members', (req, res) => {
     res.render('members/members.njk');
 });
+app.get('/docs/about', (req, res) => {
+    res.render('docs/about.njk');
+});
+app.get('/docs/cookies', (req, res) => {
+    res.render('docs/cookies.njk');
+});
+app.get('/docs/privacy', (req, res) => {
+    res.render('docs/privacy.njk');
+});
+app.get('/docs/terms', (req, res) => {
+    res.render('docs/terms.njk');
+});
 
 // --- RUTAS DEL SISTEMA DE MENSAJERÍA ---
 app.get('/messages', (req, res) => {

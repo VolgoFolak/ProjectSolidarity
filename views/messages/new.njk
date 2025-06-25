@@ -4,15 +4,50 @@
 {{ super() }}
 <style>
   .new-message-container {
-    max-width: 540px;
-    margin: 2.5rem auto;
+    max-width: 600px;
+    margin: 1.2rem auto 2.5rem auto;
     background: #fff;
-    border-radius: 16px;
-    box-shadow: 0 2px 16px rgba(79,195,161,0.09);
-    padding: 2.5rem 2rem 2rem 2rem;
+    border-radius: 18px;
+    box-shadow: 0 4px 24px rgba(79,195,161,0.13);
+    padding: 2.2rem 1.2rem 2.2rem 1.2rem; /* Menos padding lateral */
     display: flex;
     flex-direction: column;
-    gap: 1.5rem;
+    gap: 2.2rem;
+    position: relative;
+  }
+  .mail-title {
+    display: flex;
+    align-items: center;
+    gap: 1.1rem;
+    justify-content: center; /* Centrado */
+    margin-bottom: 0.5rem;
+    padding-left: 0;
+  }
+  .mail-title-icon {
+    font-size: 2.3rem;
+    color: var(--accent);
+    filter: drop-shadow(0 2px 8px #b2dfdb88);
+    animation: bounce 1.2s infinite alternate;
+  }
+  @keyframes bounce {
+    to { transform: translateY(-7px) scale(1.08);}
+  }
+  .mail-title-text {
+    color: var(--primary);
+    font-weight: 900;
+    font-size: 1.7rem;
+    letter-spacing: 0.01em;
+    text-shadow: 0 2px 8px #b2dfdb22;
+    text-align: center;
+  }
+  .mail-fields-area {
+    background: #f8fafc;
+    border-radius: 12px;
+    padding: 1.1rem 0.2rem 1.2rem 0.2rem; /* Más ancho útil */
+    box-shadow: 0 2px 8px #b2dfdb11;
+    display: flex;
+    flex-direction: column;
+    gap: 1.2rem;
   }
   .mail-field-label {
     font-weight: 700;
@@ -21,23 +56,31 @@
     display: flex;
     align-items: center;
     gap: 0.5rem;
-    font-size: 1.05em;
+    font-size: 1.08em;
+    justify-content: flex-start;
+    text-align: left;
+    padding-left: 0.1rem;
   }
   .mail-field {
-    margin-bottom: 0.7rem;
     display: flex;
     flex-direction: column;
     gap: 0.2rem;
+    align-items: stretch;
   }
   .search-input, .subject-input {
-    width: 100%;
-    padding: 0.8rem 1rem;
+    width: 99%;
+    max-width: 99%;
+    min-width: 0;
+    padding: 0.85rem 1.1rem;
     border: 1.5px solid var(--gray);
     border-radius: 8px;
-    font-size: 1rem;
-    background: #f8fafc;
+    font-size: 1.07rem;
+    background: #fff;
     margin-bottom: 0.2rem;
     transition: border 0.2s;
+    margin-left: 0;
+    margin-right: 0;
+    align-self: center;
   }
   .search-input:focus, .subject-input:focus {
     border: 1.5px solid var(--accent);
@@ -77,11 +120,14 @@
     display: flex;
     align-items: center;
     gap: 1rem;
-    background: #f8fafc;
-    border: 1.5px solid #e2e8f0;
+    background: #e3f7f3;
+    border: 1.5px solid #b2dfdb;
     border-radius: 8px;
     padding: 0.7rem 1rem;
     margin-bottom: 0.5rem;
+    box-shadow: 0 2px 8px #b2dfdb22;
+    max-width: 99%;
+    align-self: center;
   }
   #remove-recipient {
     background: transparent;
@@ -96,21 +142,26 @@
     color: var(--primary);
     margin-bottom: 0.3rem;
     display: block;
+    text-align: left;
   }
   #subject-input {
     font-weight: 500;
     letter-spacing: 0.01em;
   }
   #message-content {
-    width: 100%;
-    min-height: 140px;
-    padding: 1rem;
+    width: 99%;
+    max-width: 99%;
+    min-width: 0;
+    min-height: 120px; /* Más corto */
+    padding: 1.1rem 1.2rem;
     border: 1.5px solid var(--gray);
     border-radius: 8px;
-    font-size: 1rem;
+    font-size: 1.07rem;
     margin-bottom: 1.2rem;
     resize: vertical;
-    background: #f8fafc;
+    background: #fff;
+    box-shadow: 0 1px 4px #b2dfdb11;
+    align-self: center;
   }
   #message-content:focus {
     border: 1.5px solid var(--primary);
@@ -121,15 +172,16 @@
     max-width: 220px;
     margin: 0 auto;
     display: block;
-    font-size: 1.1em;
+    font-size: 1.13em;
     font-weight: 700;
-    background: var(--accent);
+    background: linear-gradient(90deg, var(--primary), var(--accent));
     color: #fff;
     border: none;
     border-radius: 8px;
-    padding: 0.9rem 0;
-    transition: background 0.18s;
+    padding: 1.05rem 0;
+    transition: background 0.18s, box-shadow 0.18s;
     box-shadow: 0 2px 8px #4fc3a122;
+    letter-spacing: 0.01em;
   }
   .btn-send-mail:disabled {
     background: #b2dfdb;
@@ -137,39 +189,50 @@
     cursor: not-allowed;
   }
   @media (max-width: 600px) {
-    .new-message-container { padding: 1.2rem 0.5rem; }
+    .new-message-container { padding: 0.7rem 0.2rem; margin-top: 0.5rem; }
+    .mail-fields-area { padding: 0.5rem 0.2rem; }
+    .mail-title-text { font-size: 1.1rem; }
+    .mail-title-icon { font-size: 1.5rem; }
+    #message-content { min-height: 80px; }
   }
 </style>
 {% endblock %}
 
 {% block content %}
 <div class="new-message-container">
-  <h1 style="color:var(--primary);font-weight:800;margin-bottom:0.7rem;">Nuevo mensaje</h1>
-  <!-- Para (destinatario) -->
-  <div class="mail-field">
-    <label class="mail-field-label" for="user-search"><i class="fas fa-user"></i> Para:</label>
-    <input type="text" class="search-input" id="user-search" placeholder="Buscar usuario por nombre, apellido o perfil..." autocomplete="off">
-    <div class="search-results" id="search-results"></div>
-    <div id="selected-user" style="display:none;">
-      <img id="selected-avatar" src="/img/default-user.png" class="user-avatar" alt="Avatar usuario seleccionado" onerror="this.src='/img/default-user.png'">
-      <span id="selected-username" style="font-weight:600;"></span>
-      <input type="hidden" id="recipient-id">
-      <button id="remove-recipient" title="Quitar destinatario">&times;</button>
+  <div class="mail-title">
+    <span class="mail-title-icon">
+      <i class="fas fa-envelope-open-text"></i>
+    </span>
+    <span class="mail-title-text">Escribir nuevo mensaje</span>
+  </div>
+  <div class="mail-fields-area">
+    <!-- Para (destinatario) -->
+    <div class="mail-field">
+      <label class="mail-field-label" for="user-search"><i class="fas fa-user"></i> Para:</label>
+      <input type="text" class="search-input" id="user-search" placeholder="Buscar usuario por nombre, apellido o perfil..." autocomplete="off">
+      <div class="search-results" id="search-results"></div>
+      <div id="selected-user" style="display:none;">
+        <img id="selected-avatar" src="/img/default-user.png" class="user-avatar" alt="Avatar usuario seleccionado" onerror="this.src='/img/default-user.png'">
+        <span id="selected-username" style="font-weight:600;"></span>
+        <input type="hidden" id="recipient-id">
+        <button id="remove-recipient" title="Quitar destinatario">&times;</button>
+      </div>
     </div>
+    <!-- Asunto -->
+    <div class="mail-field">
+      <label class="mail-field-label" for="subject-input"><i class="fas fa-heading"></i> Asunto:</label>
+      <input type="text" class="subject-input" id="subject-input" placeholder="Escribe el asunto del mensaje...">
+    </div>
+    <!-- Mensaje -->
+    <div class="mail-field">
+      <label class="mail-field-label" for="message-content"><i class="fas fa-align-left"></i> Mensaje:</label>
+      <textarea id="message-content" placeholder="Escribe tu mensaje aquí..."></textarea>
+    </div>
+    <button id="send-message" class="btn-send-mail">
+      <i class="fas fa-paper-plane"></i> Enviar mensaje
+    </button>
   </div>
-  <!-- Asunto -->
-  <div class="mail-field">
-    <label class="mail-field-label" for="subject-input"><i class="fas fa-heading"></i> Asunto:</label>
-    <input type="text" class="subject-input" id="subject-input" placeholder="Escribe el asunto del mensaje...">
-  </div>
-  <!-- Mensaje -->
-  <div class="mail-field">
-    <label class="mail-field-label" for="message-content"><i class="fas fa-align-left"></i> Mensaje:</label>
-    <textarea id="message-content" placeholder="Escribe tu mensaje aquí..."></textarea>
-  </div>
-  <button id="send-message" class="btn-send-mail">
-    <i class="fas fa-paper-plane"></i> Enviar mensaje
-  </button>
 </div>
 {% endblock %}
 
