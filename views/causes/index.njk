@@ -823,11 +823,21 @@
 
 {% block scripts %}
 {{ super() }}
-<script src="/js/compartir.js"></script>
 <script>
 let currentFilter = "all";
 
 document.addEventListener('DOMContentLoaded', async function() {
+  // 1. DETECTAR URL ESPECÍFICA PRIMERO
+  const urlPath = window.location.pathname;
+  const causeMatch = urlPath.match(/\/causes\/([^\/]+)$/);
+  let specificCauseId = null;
+  
+  if (causeMatch) {
+    specificCauseId = causeMatch[1];
+    console.log('🎯 URL detectada para causa específica:', specificCauseId);
+  }
+
+  // 2. CONFIGURAR EVENT LISTENERS
   // Abrir modal de crear causa
   document.getElementById('create-cause-btn').onclick = async function(e) {
     e.preventDefault();
@@ -905,10 +915,10 @@ document.addEventListener('DOMContentLoaded', async function() {
     document.getElementById('pointsText').innerHTML = `<i class="fas fa-star"></i> Colaborar en esta causa otorgará <strong>${val} puntos</strong> a cada participante.`;
   });
 
-  // Envío del formulario
+  // Envío del formulario - CORREGIDO
   document.getElementById('causeForm').addEventListener('submit', async function(e) {
     e.preventDefault();
-    // Recoge los datos del formulario
+    
     const title = document.getElementById('title').value.trim();
     const short_description = document.getElementById('short_description').value.trim();
     const description = document.getElementById('description').value.trim();
@@ -947,13 +957,36 @@ document.addEventListener('DOMContentLoaded', async function() {
     const lat = document.getElementById('lat').value;
     const lng = document.getElementById('lng').value;
 
+    // ✅ CORREGIR ESTA LÍNEA:
+    const datosCausa = {
+      title,
+      short_description,
+      description,
+      goal,
+      beneficiaries,
+      city,
+      country,
+      points,
+      photo_url,
+      lat: lat || null,
+      lng: lng || null,
+      status: 'active',
+      raised: 0,
+      donors: 0
+    };
+
     const { data: newCause, error: causeError } = await supabase
       .from('causes')
       .insert([{ ...datosCausa, user_id: user.id }])
       .select()
       .single();
 
-    if (!causeError && newCause) {
+    if (causeError) {
+      alert('Error creando la causa: ' + causeError.message);
+      return;
+    }
+
+    if (newCause) {
       await supabase
         .from('causes_members')
         .insert([{ cause_id: newCause.id, user_id: user.id, role: 'founder', status: 'active' }]);
@@ -964,8 +997,44 @@ document.addEventListener('DOMContentLoaded', async function() {
     loadCausesFromSupabase();
   });
 
-  // Cargar causas al iniciar
+  // 3. CARGAR CAUSAS Y LUEGO BUSCAR LA ESPECÍFICA
   await loadCausesFromSupabase();
+  
+  // 4. SI HAY UNA CAUSA ESPECÍFICA, ABRIRLA
+  if (specificCauseId) {
+    console.log('🔍 Buscando causa específica después de cargar...');
+    
+    let attempts = 0;
+    const maxAttempts = 10;
+    
+    const waitAndShowCause = () => {
+      attempts++;
+      console.log(`🔄 Intento ${attempts}: Buscando causa...`);
+      
+      if (window.causes && window.causes.length > 0) {
+        const specificCause = window.causes.find(c => c.id === specificCauseId);
+        
+        if (specificCause) {
+          console.log('✅ Causa encontrada, abriendo modal...', specificCause);
+          setTimeout(() => {
+            showCauseModal(specificCauseId);
+          }, 300);
+        } else {
+          console.error('❌ Causa no encontrada con ID:', specificCauseId);
+          console.log('🔄 Redirigiendo a la página principal...');
+          window.location.href = '/causes';
+        }
+      } else if (attempts < maxAttempts) {
+        setTimeout(waitAndShowCause, 500);
+      } else {
+        console.error('❌ Timeout buscando causa');
+        window.location.href = '/causes';
+      }
+    };
+    
+    // Esperar un poco y luego buscar
+    setTimeout(waitAndShowCause, 1000);
+  }
 });
 
 async function loadCausesFromSupabase(filter = "all", searchTerm = "") {
@@ -1033,7 +1102,7 @@ async function loadCausesFromSupabase(filter = "all", searchTerm = "") {
     `;
     causesList.appendChild(card);
   });
-  window.causes = causes; // Añade esto después de obtener las causas
+  window.causes = causes;
 }
 
 // Geocodificación automática al cambiar ciudad o país
@@ -1068,23 +1137,32 @@ document.getElementById('country').addEventListener('change', geocodeCityCountry
 document.addEventListener('click', async function(e) {
   if (e.target.classList.contains('view-cause-btn')) {
     const causeId = e.target.getAttribute('data-cause-id');
-    showCauseModal(causeId); // <-- Usa la función completa
+    showCauseModal(causeId);
   }
 });
 
 // Cerrar el modal
 document.getElementById('closeModal').onclick = function() {
   document.getElementById('causeModal').style.display = 'none';
+  document.body.style.overflow = '';
 };
 
 // Opcional: cerrar al hacer click fuera del modal
 document.getElementById('causeModal').onclick = function(e) {
-  if (e.target === this) this.style.display = 'none';
+  if (e.target === this) {
+    this.style.display = 'none';
+    document.body.style.overflow = '';
+  }
 };
 
 // Función para mostrar el modal con los detalles de la causa
 async function showCauseModal(causeId) {
   const cause = window.causes.find(c => c.id == causeId);
+  if (!cause) {
+    console.error('❌ Causa no encontrada:', causeId);
+    return;
+  }
+  
   const progress = cause.goal ? Math.min(Math.round((cause.raised / cause.goal) * 100), 100) : 0;
   const createdDate = new Date(cause.created_at).toLocaleDateString('es-ES', {
     year: 'numeric',
@@ -1182,48 +1260,35 @@ async function showCauseModal(causeId) {
   document.body.style.overflow = 'hidden';
 }
 
-// 3. AÑADE esta nueva función (reemplaza la antigua showShareOptions):
+// Función para compartir
 window.mostrarCompartir = function(causeId) {
   const cause = window.causes?.find(c => c.id == causeId);
-  if (!cause) return;
+  if (!cause) {
+    console.error('❌ No se encontró la causa con ID:', causeId);
+    return;
+  }
   
-  // DEBUG: Ver qué foto tiene la causa
-  console.log('Causa encontrada:', cause);
-  console.log('Foto de la causa:', cause.photo_url);
+  console.log('🔗 Compartiendo causa:', cause);
+  console.log('🔗 Link generado:', `${window.location.origin}/causes/${cause.id}`);
   
   renderCompartir({
     title: cause.title,
     summary: cause.short_description || cause.description?.substring(0, 120) + '...',
-    photo_url: cause.photo_url || '/img/causa-default.jpg', // ← Esta debe ser la foto de Supabase
+    photo_url: cause.photo_url || '/img/causa-default.jpg',
     link: `${window.location.origin}/causes/${cause.id}`
   }, 'shareSection');
   
-  // Scroll suave hacia la sección
   document.getElementById('shareSection').scrollIntoView({ 
     behavior: 'smooth', 
     block: 'center' 
   });
 };
 
-// Cerrar modal y restaurar scroll
-document.getElementById('closeModal').addEventListener('click', function() {
-  document.getElementById('causeModal').style.display = 'none';
-  document.body.style.overflow = '';
-});
-document.getElementById('causeModal').addEventListener('click', function(e) {
-  if (e.target === this) {
-    this.style.display = 'none';
-    document.body.style.overflow = '';
-  }
-});
-
-// Ejemplo de funciones para donar/colaborar (puedes personalizar)
+// Funciones auxiliares
 function donateToCause(causeId) {
   alert('Funcionalidad de donación próximamente.');
 }
-function volunteerForCause(causeId) {
-  alert('Funcionalidad de voluntariado próximamente.');
-}
+
 async function joinCause(causeId) {
   const { data: { session } } = await supabase.auth.getSession();
   if (!session?.user) {
