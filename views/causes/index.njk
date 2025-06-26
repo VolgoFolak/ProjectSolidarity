@@ -823,6 +823,7 @@
 
 {% block scripts %}
 {{ super() }}
+<script src="/js/compartir.js"></script>
 <script>
 let currentFilter = "all";
 
@@ -1169,7 +1170,7 @@ async function showCauseModal(causeId) {
         <button class="btn btn-accent" style="flex:1;" onclick="joinCause('${cause.id}')">
           <i class="fas fa-hands-helping"></i> Participar
         </button>
-        <button class="btn btn-outline" style="flex:1;" onclick="showShareOptions('${cause.id}')">
+        <button class="btn btn-outline" style="flex:1;" onclick="mostrarCompartir('${cause.id}')">
           <i class="fas fa-share-alt"></i> Compartir
         </button>
       </div>
@@ -1181,90 +1182,28 @@ async function showCauseModal(causeId) {
   document.body.style.overflow = 'hidden';
 }
 
-// Función para mostrar opciones de compartir
-function showShareOptions(causeId) {
-  const cause = window.causes.find(c => c.id == causeId);
-  const shareSection = document.getElementById('shareSection');
-  shareSection.innerHTML = `
-    <h3 class="share-title">
-      <i class="fas fa-share-alt"></i> Ayuda a difundir esta causa
-    </h3>
-    <div class="share-content">
-      <p class="share-text">
-        <span class="share-highlight">"${cause.short_description || 'Únete a esta importante causa solidaria'}"</span><br><br>
-        Cada contribución nos acerca más a la meta de <strong>${cause.goal || 0}€</strong> para ayudar a <strong>${cause.beneficiaries || 0} personas</strong>.
-      </p>
-      <div class="share-buttons">
-        <a href="#" class="share-btn share-btn-facebook" onclick="shareOnSocial('facebook', '${cause.id}')">
-          <i class="fab fa-facebook-f"></i> Facebook
-        </a>
-        <a href="#" class="share-btn share-btn-twitter" onclick="shareOnSocial('twitter', '${cause.id}')">
-          <i class="fab fa-twitter"></i> Twitter
-        </a>
-        <a href="#" class="share-btn share-btn-whatsapp" onclick="shareOnSocial('whatsapp', '${cause.id}')">
-          <i class="fab fa-whatsapp"></i> WhatsApp
-        </a>
-        <a href="#" class="share-btn share-btn-link" onclick="copyCauseLink('${cause.id}')">
-          <i class="fas fa-link"></i> Copiar enlace
-        </a>
-      </div>
-    </div>
-  `;
-  shareSection.scrollIntoView({ behavior: 'smooth' });
-}
-
-// Función para compartir en redes sociales
-function shareOnSocial(platform, causeId) {
-  const cause = window.causes.find(c => c.id == causeId);
-  const url = `${window.location.origin}/causes/${cause.id}`;
-  const text = `Únete a esta causa: "${cause.title}" - ${cause.short_description || 'Ayuda a hacer la diferencia!'} ${url}`;
-  let shareUrl;
-  switch(platform) {
-    case 'facebook':
-      shareUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}&quote=${encodeURIComponent(text)}`;
-      break;
-    case 'twitter':
-      shareUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}`;
-      break;
-    case 'whatsapp':
-      shareUrl = `https://wa.me/?text=${encodeURIComponent(text)}`;
-      break;
-    default:
-      return;
-  }
-  window.open(shareUrl, '_blank', 'width=600,height=400');
-}
-
-// Función para copiar enlace de la causa
-function copyCauseLink(causeId) {
-  const url = `${window.location.origin}/causes/${causeId}`;
-  navigator.clipboard.writeText(url).then(() => {
-    showNotification('¡Enlace copiado!', 'success');
-  }).catch(() => {
-    prompt('Por favor, copia este enlace:', url);
+// 3. AÑADE esta nueva función (reemplaza la antigua showShareOptions):
+window.mostrarCompartir = function(causeId) {
+  const cause = window.causes?.find(c => c.id == causeId);
+  if (!cause) return;
+  
+  // DEBUG: Ver qué foto tiene la causa
+  console.log('Causa encontrada:', cause);
+  console.log('Foto de la causa:', cause.photo_url);
+  
+  renderCompartir({
+    title: cause.title,
+    summary: cause.short_description || cause.description?.substring(0, 120) + '...',
+    photo_url: cause.photo_url || '/img/causa-default.jpg', // ← Esta debe ser la foto de Supabase
+    link: `${window.location.origin}/causes/${cause.id}`
+  }, 'shareSection');
+  
+  // Scroll suave hacia la sección
+  document.getElementById('shareSection').scrollIntoView({ 
+    behavior: 'smooth', 
+    block: 'center' 
   });
-}
-
-// Función para mostrar notificación
-function showNotification(message, type) {
-  const notification = document.createElement('div');
-  notification.textContent = message;
-  notification.style.position = 'fixed';
-  notification.style.bottom = '20px';
-  notification.style.left = '50%';
-  notification.style.transform = 'translateX(-50%)';
-  notification.style.padding = '12px 24px';
-  notification.style.borderRadius = '8px';
-  notification.style.backgroundColor = type === 'success' ? '#4fc3a1' : '#e53e3e';
-  notification.style.color = 'white';
-  notification.style.boxShadow = '0 4px 12px rgba(0,0,0,0.15)';
-  notification.style.zIndex = '10000';
-  notification.style.animation = 'fadeInOut 2.5s ease-in-out';
-  document.body.appendChild(notification);
-  setTimeout(() => {
-    notification.remove();
-  }, 2500);
-}
+};
 
 // Cerrar modal y restaurar scroll
 document.getElementById('closeModal').addEventListener('click', function() {
