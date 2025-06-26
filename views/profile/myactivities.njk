@@ -1597,19 +1597,18 @@
               `;
             }
 
-            // RETO
+            // RETO - Updated to match challenges/index.njk exactly
             else if (activity.type === 'challenge') {
-              const cause = window.causes?.find?.(c => c.id === activity.cause_id) || (window.causesMap && window.causesMap[activity.cause_id]);
-              // Badges
+              const urgentBadge = activity.is_urgent ? `<div class="challenge-badge badge-urgent"><i class="fas fa-exclamation-circle"></i> Urgente</div>` : "";
               const typeBadge = activity.challenge_type === 'duel'
                 ? `<div class="badge-type"><i class="fas fa-user-friends"></i> 1vs1</div>`
                 : `<div class="badge-type"><i class="fas fa-users"></i> Reto abierto</div>`;
-              const urgentBadge = activity.is_urgent ? `<div class="challenge-badge badge-urgent"><i class="fas fa-exclamation-circle"></i> Urgente</div>` : "";
-              // const pointsBadge = `<div class="challenge-badge badge-points"><i class="fas fa-star"></i> +${activity.points || 0} pts</div>`;
               const location = activity.city && activity.country ? `${activity.city}, ${activity.country}` : "";
               const deadline = activity.deadline ? new Date(activity.deadline).toLocaleDateString('es-ES', { day: 'numeric', month: 'short' }) : "";
+              
               let causeHtml = '';
-              if (activity.cause_id && cause) {
+              if (activity.cause_id && window.causesMap && window.causesMap[activity.cause_id]) {
+                const cause = window.causesMap[activity.cause_id];
                 causeHtml = `
                   <div class="linked-cause" style="display:inline-flex;align-items:center;gap:0.4rem;margin-bottom:0.7rem;">
                     <i class="fas fa-link" style="color:var(--primary);font-size:0.92rem;"></i>
@@ -1624,7 +1623,9 @@
               }
 
               const actionsHtml = `
-                <a href="/challenges/${activity.id}" class="btn btn-primary btn-sm"><i class="fas fa-eye"></i> Ver más</a>
+                <button class="btn btn-primary btn-sm view-more-btn" data-type="challenge" data-id="${activity.id}">
+                  <i class="fas fa-eye"></i> Ver más
+                </button>
                 ${(activity.role === 'founder' || activity.role === 'admin')
                   ? `<button class="btn btn-accent btn-sm admin-activity-btn" data-id="${activity.id}" data-type="challenge"><i class="fas fa-cog"></i> Administrar</button>`
                   : `<span class="role-badge member"><i class="fas fa-user"></i> Miembro</span>`
@@ -1732,38 +1733,386 @@
         });
       }
 
-      // --- Geocodificación automática para ciudad/país en edición de causa ---
-      function geocodeEditCityCountry() {
-        const city = document.getElementById('editCity')?.value.trim();
-        const country = document.getElementById('editCountry')?.value.trim();
-        if (!city || !country) return;
-
-        const query = encodeURIComponent(`${city}, ${country}`);
-        const url = `https://nominatim.openstreetmap.org/search?q=${query}&format=json&limit=1`;
-
-        fetch(url, { headers: { 'Accept-Language': 'es' } })
-          .then(res => res.json())
-          .then(data => {
-            if (data && data.length > 0) {
-              document.getElementById('editLat').value = data[0].lat;
-              document.getElementById('editLng').value = data[0].lon;
-            } else {
-              document.getElementById('editLat').value = '';
-              document.getElementById('editLng').value = '';
+      // --- MODAL DE RETO - Updated to match challenges/index.njk exactly ---
+      window.showChallengeModal = async function(challengeId) {
+        // Crear/asegurar que existe el modal
+        let modal = document.getElementById('challengeModal');
+        if (!modal) {
+          modal = document.createElement('div');
+          modal.id = 'challengeModal';
+          modal.style.cssText = 'display:none; position:fixed; z-index:9999; left:0; top:0; width:100vw; height:100vh; background:rgba(0,0,0,0.35); align-items:center; justify-content:center;';
+          
+          modal.innerHTML = `
+            <div class="modal-content" style="background:#fff; border-radius:18px; max-width:800px; width:95vw; padding:2rem; box-shadow:0 8px 32px rgba(74,111,165,0.13); position:relative; max-height:90vh; overflow-y:auto;">
+              <button id="closeChallengeModal" style="position:absolute; top:1.5rem; right:1.5rem; background:none; border:none; font-size:1.8rem; color:#6b7280; cursor:pointer; transition:color 0.2s;" onmouseover="this.style.color='#4a6fa5'" onmouseout="this.style.color='#6b7280'">&times;</button>
+              <div id="challengeModalBody">
+                <!-- Contenido dinámico -->
+              </div>
+            </div>
+          `;
+          document.body.appendChild(modal);
+          
+          // Agregar evento para cerrar
+          document.getElementById('closeChallengeModal').onclick = function() {
+            modal.style.display = 'none';
+            document.body.style.overflow = '';
+          };
+          
+          // Cerrar al hacer clic fuera
+          modal.onclick = function(e) {
+            if (e.target === modal) {
+              modal.style.display = 'none';
+              document.body.style.overflow = '';
             }
-          })
-          .catch(() => {
-            document.getElementById('editLat').value = '';
-            document.getElementById('editLng').value = '';
+          };
+          
+          // Cerrar con Escape
+          document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape' && modal.style.display === 'flex') {
+              modal.style.display = 'none';
+              document.body.style.overflow = '';
+            }
           });
+        }
+
+        // Carga los datos del reto
+        const { data: challenge, error } = await supabase
+          .from('challenges')
+          .select('*')
+          .eq('id', challengeId)
+          .single();
+
+        if (error || !challenge) {
+          document.getElementById('challengeModalBody').innerHTML = '<div style="color:#e53e3e;text-align:center;padding:1.5rem;">No se pudo cargar el reto.</div>';
+          modal.style.display = 'flex';
+          document.body.style.overflow = 'hidden';
+          return;
+        }
+
+        // Causa vinculada
+        let causeInfo = '';
+        if (challenge.cause_id) {
+          const { data: cause } = await supabase
+            .from('causes')
+            .select('title, short_description, photo_url')
+            .eq('id', challenge.cause_id)
+            .single();
+          if (cause) {
+            causeInfo = `
+              <div class="linked-cause-section" style="margin-bottom:1.5rem;">
+                <h3 class="content-title" style="font-size:1.2rem; font-weight:600; color:var(--primary); margin-bottom:0.9rem; display:flex; align-items:center; gap:0.7rem;">
+                  <i class="fas fa-link"></i> Vinculado a la causa
+                </h3>
+                <div style="display:flex; align-items:center; gap:1.2rem; background:#f8fafc; padding:1rem; border-radius:8px; border:1px solid #e5e7eb;">
+                  <img src="${cause.photo_url || '/img/causa-default.jpg'}"
+                       alt="Imagen de la causa vinculada"
+                       style="width:80px; height:80px; object-fit:cover; border-radius:6px;"
+                       onerror="this.src='/img/causa-default.jpg'">
+                  <div style="flex:1; min-width:0;">
+                    <div style="font-weight:700; color:var(--primary); font-size:1.05rem; margin-bottom:0.2rem; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">
+                      ${cause.title}
+                    </div>
+                    <div style="color:#6b7280; font-size:0.97rem; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:260px;">
+                      ${cause.short_description || 'Sin resumen disponible'}
+                    </div>
+                  </div>
+                  <a href="/causes/${challenge.cause_id}"
+                     class="btn btn-primary"
+                     style="margin-left:1.2rem; white-space:nowrap; font-size:0.97rem; padding:0.5rem 1.1rem; display:flex; align-items:center; gap:0.5rem;">
+                    <i class="fas fa-arrow-right"></i> Ver causa
+                  </a>
+                </div>
+              </div>
+            `;
+          }
+        }
+
+        const createdDate = new Date(challenge.created_at).toLocaleDateString('es-ES', {
+          year: 'numeric',
+          month: 'long',
+          day: 'numeric'
+        });
+        const deadline = challenge.deadline ? new Date(challenge.deadline).toLocaleDateString('es-ES', {
+          year: 'numeric',
+          month: 'long',
+          day: 'numeric'
+        }) : 'Sin fecha límite';
+
+        // Badge tipo
+        let tipo = 'Reto general';
+        let tipoIcon = 'fa-bolt';
+        if (challenge.challenge_type === 'duel') {
+          tipo = 'Duelo 1vs1';
+          tipoIcon = 'fa-user-friends';
+        } else if (challenge.challenge_type === 'open') {
+          tipo = 'Reto abierto';
+          tipoIcon = 'fa-users';
+        } else if (challenge.challenge_type === 'community') {
+          tipo = 'Comunitario';
+          tipoIcon = 'fa-people-group';
+        } else if (challenge.challenge_type === 'creative') {
+          tipo = 'Creativo';
+          tipoIcon = 'fa-lightbulb';
+        }
+
+        document.getElementById('challengeModalBody').innerHTML = `
+          <div class="modal-task-container">
+            <h1 class="modal-task-title" style="font-size:2rem; font-weight:800; color:var(--primary); margin-bottom:2.7rem; text-align:center; width:100%;">${challenge.title}</h1>
+            <div class="modal-task-header" style="display:flex; gap:2.5rem; margin-bottom:2.7rem;">
+              <div class="modal-task-image-wrapper" style="flex:1; min-width:320px; height:300px; border-radius:12px; overflow:hidden; position:relative; box-shadow:0 4px 12px rgba(0,0,0,0.08);">
+                <div class="modal-cause-badge" style="top:1.2rem; left:1.2rem; right:auto; background:var(--accent); color:white; position:absolute; border-radius:50px; padding:0.5rem 1rem; font-size:0.9rem; font-weight:600; display:flex; align-items:center; gap:0.6rem; box-shadow:0 2px 8px rgba(0,0,0,0.1); z-index:2;">
+                  <i class="fas ${tipoIcon}"></i> ${tipo}
+                </div>
+                <img class="modal-task-image" src="${challenge.photo_url || '/img/challenge-default.jpg'}"
+                     alt="Imagen del reto ${challenge.title}"
+                     style="width:100%;height:100%;object-fit:cover;"
+                     onerror="this.src='/img/challenge-default.jpg'">
+                ${challenge.is_urgent ? `
+                <div class="modal-cause-badge urgent" style="right:1.2rem; left:auto; top:1.2rem; background:var(--urgent); color:white; border-radius:50px; padding:0.5rem 1rem; font-size:0.9rem; font-weight:600; display:flex; align-items:center; gap:0.6rem; box-shadow:0 2px 8px rgba(0,0,0,0.1); z-index:2;">
+                  <i class="fas fa-exclamation-circle"></i> Urgente
+                </div>` : ''}
+              </div>
+              <div class="modal-task-info" style="flex:1.5; display:flex; flex-direction:column; justify-content:flex-start;">
+                <div class="modal-task-meta-grid" style="display:grid; grid-template-columns:1fr 1fr; gap:0.7rem 1.2rem; margin-bottom:1.2rem;">
+                  <div class="meta-item">
+                    <span class="meta-icon"><i class="fas fa-map-marker-alt"></i></span>
+                    <span>${challenge.city || 'Sin ubicación'}${challenge.country ? ', ' + challenge.country : ''}</span>
+                  </div>
+                  <div class="meta-item">
+                    <span class="meta-icon"><i class="fas fa-star"></i></span>
+                    <span>${challenge.points || 0} puntos</span>
+                  </div>
+                  <div class="meta-item">
+                    <span class="meta-icon"><i class="fas fa-calendar-alt"></i></span>
+                    <span>${deadline}</span>
+                  </div>
+                  <div class="meta-item">
+                    <span class="meta-icon"><i class="fas fa-bolt"></i></span>
+                    <span>${tipo}</span>
+                  </div>
+                </div>
+                <div class="points-notice" style="background:#f0f9ff; border-left:4px solid var(--accent); padding:0.8rem; border-radius:0 8px 8px 0; font-size:0.97rem; display:flex; align-items:center; gap:0.7rem;">
+                  <i class="fas fa-star" style="color: var(--accent);"></i>
+                  Completar este reto otorga <strong>${challenge.points || 0} puntos</strong>
+                </div>
+              </div>
+            </div>
+            ${causeInfo}
+            <!-- SECCIÓN DE RESUMEN -->
+            <div class="content-section" style="margin-bottom:2.2rem;">
+              <h3 class="content-title" style="font-size:1.2rem; font-weight:600; color:var(--primary); margin-bottom:0.9rem; display:flex; align-items:center; gap:0.7rem;">
+                <i class="fas fa-align-left"></i> Resumen
+              </h3>
+              <p class="content-text" style="line-height:1.7; color:#4b5563; font-size:1.05rem; margin-left:0; margin-right:0; text-align:justify;">
+                ${challenge.summary || 'No hay resumen disponible para este reto.'}
+              </p>
+            </div>
+            <div class="modal-task-content" style="margin-top:0;">
+              <div class="content-section" style="margin-bottom:2.2rem;">
+                <h3 class="content-title" style="font-size:1.2rem; font-weight:600; color:var(--primary); margin-bottom:0.9rem; display:flex; align-items:center; gap:0.7rem;">
+                  <i class="fas fa-align-left"></i> Descripción
+                </h3>
+                <p class="content-text" style="line-height:1.7; color:#4b5563; font-size:1.05rem; margin-left:0; margin-right:0; text-align:justify;">${challenge.description || 'No hay descripción disponible para este reto.'}</p>
+              </div>
+              <div class="content-section" style="margin-bottom:2.2rem;">
+                <h3 class="content-title" style="font-size:1.2rem; font-weight:600; color:var(--primary); margin-bottom:0.9rem; display:flex; align-items:center; gap:0.7rem;">
+                  <i class="fas fa-info-circle"></i> Detalles adicionales
+                </h3>
+                <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem;">
+                  <div>
+                    <p style="font-weight:600; color:#4b5563; margin-bottom:0.3rem;">Fecha de creación</p>
+                    <p style="color:#6b7280;">${createdDate}</p>
+                  </div>
+                  <div>
+                    <p style="font-weight:600; color:#4b5563; margin-bottom:0.3rem;">Estado</p>
+                    <p style="color:#6b7280;">${challenge.status === 'completed' ? 'Completado' : 'En progreso'}</p>
+                  </div>
+                  <div>
+                    <p style="font-weight:600; color:#4b5563; margin-bottom:0.3rem;">Prioridad</p>
+                    <p style="color:#6b7280;">${challenge.is_urgent ? 'Alta prioridad' : 'Prioridad normal'}</p>
+                  </div>
+                  <div>
+                    <p style="font-weight:600; color:#4b5563; margin-bottom:0.3rem;">Tipo</p>
+                    <p style="color:#6b7280;">${tipo}</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="task-actions" style="display:flex; gap:0.8rem; margin-top:2.2rem;">
+              <button class="btn btn-primary btn-aceptar" data-challenge-id="${challenge.id}" style="flex:1;">
+                <i class="fas fa-hand-holding-heart"></i> Aceptar reto
+              </button>
+              <button class="btn btn-accent" style="flex:1;" onclick="showShareOptionsChallenge('${challenge.id}')">
+                <i class="fas fa-share-alt"></i> Compartir
+              </button>
+            </div>
+            <div class="share-section" id="shareSectionChallenge"></div>
+          </div>
+        `;
+
+        modal.style.display = 'flex';
+        document.body.style.overflow = 'hidden';
+
+        // Consulta si el usuario ya participa en este reto
+        let isParticipating = false;
+        if (userId) {
+          const { data: membership } = await supabase
+            .from('challenges_members')
+            .select('id')
+            .eq('challenge_id', challenge.id)
+            .eq('user_id', userId)
+            .eq('status', 'active')
+            .maybeSingle();
+          isParticipating = !!membership;
+        }
+
+        const modalBtn = document.querySelector('#challengeModal .btn-aceptar');
+        if (modalBtn) {
+          if (isParticipating) {
+            modalBtn.innerHTML = '<i class="fas fa-check"></i> Participando';
+            modalBtn.disabled = true;
+            modalBtn.style.opacity = "0.7";
+            modalBtn.style.cursor = "not-allowed";
+          } else {
+            modalBtn.addEventListener('click', function(e) {
+              e.preventDefault();
+              participateInChallenge(challenge.id, this);
+            });
+          }
+        }
+      };
+
+      // Función para mostrar opciones de compartir para retos
+      window.showShareOptionsChallenge = function(challengeId) {
+        let challenge = window.allActivities?.find(c => c.id == challengeId && c.type === 'challenge');
+        if (!challenge) return;
+        
+        const shareSection = document.getElementById('shareSectionChallenge');
+        shareSection.innerHTML = `
+          <h3 class="share-title" style="font-size:1.3rem;font-weight:600;color:var(--primary);margin-bottom:1.5rem;text-align:center;margin-top:2rem;">
+            <i class="fas fa-share-alt"></i> Ayuda a difundir este reto
+          </h3>
+          <div class="share-content" style="background:#f8fafc;border-radius:12px;padding:1.5rem;margin-bottom:1.5rem;position:relative;">
+            <p class="share-text" style="font-size:1rem;line-height:1.6;color:#4b5563;margin-bottom:1rem;">
+              <span style="color:var(--primary);font-weight:600;">"${challenge.summary || challenge.description?.substring(0, 120) + '...' || 'Únete a este reto solidario'}"</span><br><br>
+              ¡Cada participante suma impacto!
+            </p>
+            <div class="share-buttons" style="display:flex;justify-content:center;gap:1rem;flex-wrap:wrap;">
+              <a href="#" class="share-btn" style="display:flex;align-items:center;gap:0.7rem;padding:0.8rem 1.5rem;border-radius:8px;font-weight:600;color:white;transition:all 0.2s;text-decoration:none;background:#3b5998;" onclick="shareOnSocialChallenge('facebook', '${challenge.id}')">
+                <i class="fab fa-facebook-f"></i> Facebook
+              </a>
+              <a href="#" class="share-btn" style="display:flex;align-items:center;gap:0.7rem;padding:0.8rem 1.5rem;border-radius:8px;font-weight:600;color:white;transition:all 0.2s;text-decoration:none;background:#1da1f2;" onclick="shareOnSocialChallenge('twitter', '${challenge.id}')">
+                <i class="fab fa-twitter"></i> Twitter
+              </a>
+              <a href="#" class="share-btn" style="display:flex;align-items:center;gap:0.7rem;padding:0.8rem 1.5rem;border-radius:8px;font-weight:600;color:white;transition:all 0.2s;text-decoration:none;background:#25d366;" onclick="shareOnSocialChallenge('whatsapp', '${challenge.id}')">
+                <i class="fab fa-whatsapp"></i> WhatsApp
+              </a>
+              <a href="#" class="share-btn" style="display:flex;align-items:center;gap:0.7rem;padding:0.8rem 1.5rem;border-radius:8px;font-weight:600;color:white;transition:all 0.2s;text-decoration:none;background:var(--primary);" onclick="copyChallengeLink('${challenge.id}')">
+                <i class="fas fa-link"></i> Copiar enlace
+              </a>
+            </div>
+          </div>
+        `;
+        shareSection.scrollIntoView({ behavior: 'smooth' });
+      };
+
+      // Función para compartir retos en redes sociales
+      window.shareOnSocialChallenge = function(platform, challengeId) {
+        let challenge = window.allActivities?.find(c => c.id == challengeId && c.type === 'challenge');
+        if (!challenge) return;
+        
+        const url = `${window.location.origin}/challenges/${challenge.id}`;
+        const text = `¡Participa en el reto: "${challenge.title}"! ${challenge.summary || challenge.description?.substring(0, 100) + '...' || ''} ${url}`;
+        let shareUrl;
+        
+        switch(platform) {
+          case 'facebook':
+            shareUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}&quote=${encodeURIComponent(text)}`;
+            break;
+          case 'twitter':
+            shareUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}`;
+            break;
+          case 'whatsapp':
+            shareUrl = `https://wa.me/?text=${encodeURIComponent(text)}`;
+            break;
+          default:
+            return;
+        }
+        
+        window.open(shareUrl, '_blank', 'width=600,height=400');
+      };
+
+      // Función para copiar enlace del reto
+      window.copyChallengeLink = function(challengeId) {
+        const url = `${window.location.origin}/challenges/${challengeId}`;
+        navigator.clipboard.writeText(url).then(() => {
+          showToast('¡Enlace copiado!', 'success');
+        }).catch(() => {
+          prompt('Por favor, copia este enlace:', url);
+        });
+      };
+
+      // Función para participar en un reto
+      window.participateInChallenge = async function(challengeId, btn = null) {
+        const { data: { session } } = await supabase.auth.getSession();
+        if (!session?.user) {
+          showToast('Debes iniciar sesión para participar en este reto', 'error');
+          return;
+        }
+        
+        const userId = session.user.id;
+        
+        // Intenta insertar como miembro (único por usuario y reto)
+        const { error } = await supabase
+          .from('challenges_members')
+          .insert([{ challenge_id: challengeId, user_id: userId, role: 'member', status: 'active' }]);
+
+        if (error) {
+          if (error.code === '23505' || error.status === 409) {
+            showToast('Ya estás participando en este reto', 'info');
+          } else {
+            showToast('Error al participar en el reto', 'error');
+          }
+          return;
+        }
+
+        showToast('¡Te has unido al reto!', 'success');
+        
+        // Actualiza el botón inmediatamente
+        if (btn) {
+          btn.innerHTML = '<i class="fas fa-check"></i> Participando';
+          btn.disabled = true;
+          btn.style.opacity = "0.7";
+          btn.style.cursor = "not-allowed";
+        }
+        
+        // Recargar las actividades para reflejar los cambios
+        setTimeout(() => {
+          loadUserActivities();
+        }, 1000);
+      };
+
+      // --- Load causes map for challenges ---
+      async function loadCausesMap() {
+        const { data: causes } = await supabase.from('causes').select('id, title, photo_url');
+        if (causes) {
+          window.causesMap = {};
+          causes.forEach(c => {
+            window.causesMap[c.id] = {
+              title: c.title,
+              photo_url: c.photo_url
+            };
+          });
+        }
       }
 
-      document.getElementById('editCity')?.addEventListener('change', geocodeEditCityCountry);
-      document.getElementById('editCountry')?.addEventListener('change', geocodeEditCityCountry);
+      // Load causes map before loading activities
+      await loadCausesMap();
 
-      // --- Inicialización ---
+      // --- Obtener actividades al cargar ---
       await loadUserActivities();
 
+      // --- Formulario de edición de actividad ---
       document.getElementById('editCauseForm').addEventListener('submit', async function(e) {
         e.preventDefault();
         const activityId = this.dataset.activityId;
@@ -1954,7 +2303,7 @@
                      style="width:100%;height:100%;object-fit:cover;"
                      onerror="this.src='/img/causa-default.jpg'">
                 ${cause.urgent ? `
-                <div class="modal-cause-badge urgent" style="right:1.2rem; left:auto; top:1.2rem; background:var(--urgent); color:white;">
+                <div class="modal-cause-badge urgent" style="right:1.2rem; left:auto; top:1.2rem; background:var(--urgent); color:white; border-radius:50px; padding:0.5rem 1rem; font-size:0.9rem; font-weight:600; display:flex; align-items:center; gap:0.6rem; box-shadow:0 2px 8px rgba(0,0,0,0.1); z-index:2;">
                   <i class="fas fa-exclamation-circle"></i> Urgente
                 </div>` : ''}
               </div>
@@ -2000,7 +2349,9 @@
                 <h3 class="content-title" style="font-size:1.2rem; font-weight:600; color:var(--primary); margin-bottom:0.9rem; display:flex; align-items:center; gap:0.7rem;">
                   <i class="fas fa-align-left"></i> Resumen
                 </h3>
-                <p class="content-text" style="line-height:1.7; color:#4b5563; font-size:1.05rem; margin-left:0; margin-right:0; text-align:justify;">${cause.short_description || 'No hay resumen disponible para esta causa.'}</p>
+                <p class="content-text" style="line-height:1.7; color:#4b5563; font-size:1.05rem; margin-left:0; margin-right:0; text-align:justify;">
+                  ${cause.short_description || 'No hay resumen disponible para esta causa.'}
+                </p>
               </div>
               <div class="content-section" style="margin-bottom:2.2rem;">
                 <h3 class="content-title" style="font-size:1.2rem; font-weight:600; color:var(--primary); margin-bottom:0.9rem; display:flex; align-items:center; gap:0.7rem;">
@@ -2083,23 +2434,7 @@
           return;
         }
 
-        // Calcular progreso
-        const progress = task.beneficiaries ? Math.min(Math.round((task.participants / task.beneficiaries) * 100), 100) : 0;
-        
-        // Formatear fechas
-        const createdDate = new Date(task.created_at).toLocaleDateString('es-ES', {
-          year: 'numeric',
-          month: 'long',
-          day: 'numeric'
-        });
-        
-        const endDate = task.end_date ? new Date(task.end_date).toLocaleDateString('es-ES', {
-          year: 'numeric',
-          month: 'long',
-          day: 'numeric'
-        }) : 'Sin fecha límite';
-
-        // Cargar información de la causa vinculada si existe
+        // Causa vinculada
         let causeInfo = '';
         if (task.cause_id) {
           const { data: cause } = await supabase
@@ -2107,7 +2442,6 @@
             .select('title, short_description, photo_url')
             .eq('id', task.cause_id)
             .single();
-
           if (cause) {
             causeInfo = `
               <div class="linked-cause-section" style="margin-bottom:1.5rem;">
@@ -2137,6 +2471,22 @@
             `;
           }
         }
+
+        // Formatear fechas
+        const createdDate = new Date(task.created_at).toLocaleDateString('es-ES', {
+          year: 'numeric',
+          month: 'long',
+          day: 'numeric'
+        });
+        
+        const endDate = task.end_date ? new Date(task.end_date).toLocaleDateString('es-ES', {
+          year: 'numeric',
+          month: 'long',
+          day: 'numeric'
+        }) : 'Sin fecha límite';
+
+        // Calcular progreso
+        const progress = task.beneficiaries ? Math.min(Math.round((task.participants / task.beneficiaries) * 100), 100) : 0;
 
         // Obtener participantes
         const { data: members, error: membersError } = await supabase
@@ -2243,14 +2593,14 @@
                 <h3 class="content-title" style="font-size:1.2rem; font-weight:600; color:var(--primary); margin-bottom:0.9rem; display:flex; align-items:center; gap:0.7rem;">
                   <i class="fas fa-align-left"></i> Resumen
                 </h3>
-                <p class="content-text" style="line-height:1.7; color:#4b5563; font-size:1.05rem; margin-left:0; margin-right:0; text-align:justify; font-weight:400; margin-bottom:2.2rem;">
+                <p class="content-text" style="line-height:1.7; color:#4b5563; font-size:1.05rem; text-align:justify; font-weight:400; margin-bottom:2.2rem;">
                   ${task.summary || 'No hay resumen disponible para esta tarea.'}
                 </p>
                 
                 <h3 class="content-title" style="font-size:1.2rem; font-weight:600; color:var(--primary); margin-bottom:0.9rem; display:flex; align-items:center; gap:0.7rem;">
                   <i class="fas fa-info-circle"></i> Descripción completa
                 </h3>
-                <p class="content-text" style="line-height:1.7; color:#4b5563; font-size:1.05rem; margin-left:0; margin-right:0; text-align:justify;">
+                <p class="content-text" style="line-height:1.7; color:#4b5563; font-size:1.05rem; text-align:justify;">
                   ${task.description || 'No hay descripción disponible para esta tarea.'}
                 </p>
               </div>
@@ -2299,41 +2649,41 @@
         document.body.style.overflow = 'hidden';
       };
 
-      // --- MODAL DE RETO ---
-      window.showChallengeModal = async function(challengeId) {
-        const modal = ensureModal('challengeModal', '650px');
-        const { data: challenge, error } = await supabase
-          .from('challenges')
-          .select('*')
-          .eq('id', challengeId)
-          .single();
-
-        if (error || !challenge) {
-          document.getElementById('challengeModalBody').innerHTML = '<div style="color:#e53e3e;">No se pudo cargar el reto.</div>';
-          modal.classList.add('active');
-          document.body.style.overflow = 'hidden';
-          return;
-        }
-
-        const deadline = challenge.deadline ? new Date(challenge.deadline).toLocaleDateString('es-ES', { day: 'numeric', month: 'short', year: 'numeric' }) : '';
-        document.getElementById('challengeModalBody').innerHTML = `
-          <h2 style="color:var(--challenge-dark);margin-bottom:1rem;">${challenge.title}</h2>
-          <img src="${challenge.photo_url || '/img/challenge-default.jpg'}" alt="${challenge.title}" style="width:100%;max-width:320px;border-radius:8px;margin-bottom:1rem;">
-          <div style="color:#4b5563;margin-bottom:1rem;">${challenge.summary || challenge.description || ''}</div>
-          <div style="color:#6b7280;font-size:0.97rem;margin-bottom:1rem;">
-            <i class="fas fa-calendar-alt"></i> ${deadline}
-          </div>
-          <div style="color:#6b7280;font-size:0.97rem;">
-            <i class="fas fa-users"></i> ${challenge.participants || 0} participantes
-          </div>
-        `;
-        modal.classList.add('active');
-        document.body.style.overflow = 'hidden';
-      };
-
       // --- MODAL DE VOLUNTARIADO ---
       window.showVolunteeringModal = async function(volunteeringId) {
-        const modal = ensureModal('volunteeringModal', '700px');
+        // Crear/asegurar que existe el modal
+        let modal = document.getElementById('volunteeringModal');
+        if (!modal) {
+          modal = document.createElement('div');
+          modal.id = 'volunteeringModal';
+          modal.style.cssText = 'display:none; position:fixed; z-index:9999; left:0; top:0; width:100vw; height:100vh; background:rgba(0,0,0,0.35); align-items:center; justify-content:center;';
+          
+          modal.innerHTML = `
+            <div class="modal-content" style="background:#fff; border-radius:18px; max-width:800px; width:95vw; padding:2rem; box-shadow:0 8px 32px rgba(74,111,165,0.13); position:relative; max-height:90vh; overflow-y:auto;">
+              <button id="closeVolunteeringModal" style="position:absolute; top:1.5rem; right:1.5rem; background:none; border:none; font-size:1.8rem; color:#6b7280; cursor:pointer; transition:color 0.2s;" onmouseover="this.style.color='#4a6fa5'" onmouseout="this.style.color='#6b7280'">&times;</button>
+              <div id="volunteeringModalBody">
+                <!-- Contenido dinámico -->
+              </div>
+            </div>
+          `;
+          document.body.appendChild(modal);
+          
+          // Agregar evento para cerrar
+          document.getElementById('closeVolunteeringModal').onclick = function() {
+            modal.style.display = 'none';
+            document.body.style.overflow = '';
+          };
+          
+          // Cerrar al hacer clic fuera
+          modal.onclick = function(e) {
+            if (e.target === modal) {
+              modal.style.display = 'none';
+              document.body.style.overflow = '';
+            }
+          };
+        }
+
+        // Carga los datos del voluntariado
         const { data: volunteering, error } = await supabase
           .from('volunteering')
           .select('*')
@@ -2341,14 +2691,16 @@
           .single();
 
         if (error || !volunteering) {
-          document.getElementById('volunteeringModalBody').innerHTML = '<div style="color:#e53e3e;">No se pudo cargar el voluntariado.</div>';
-          modal.classList.add('active');
+          document.getElementById('volunteeringModalBody').innerHTML = '<div style="color:#e53e3e;text-align:center;padding:1.5rem;">No se pudo cargar el voluntariado.</div>';
+          modal.style.display = 'flex';
           document.body.style.overflow = 'hidden';
           return;
         }
 
         const startDate = volunteering.start_date ? new Date(volunteering.start_date).toLocaleDateString('es-ES', { day: 'numeric', month: 'short' }) : '';
         const endDate = volunteering.end_date ? new Date(volunteering.end_date).toLocaleDateString('es-ES', { day: 'numeric', month: 'short' }) : '';
+        const progress = volunteering.volunteers_needed ? Math.min(Math.round((volunteering.volunteers / volunteering.volunteers_needed) * 100), 100) : 0;
+
         document.getElementById('volunteeringModalBody').innerHTML = `
           <h2 style="color:var(--volunteering-dark);margin-bottom:1rem;">${volunteering.title}</h2>
           <img src="${volunteering.photo_url || '/img/volunteer-default.jpg'}" alt="${volunteering.title}" style="width:100%;max-width:320px;border-radius:8px;margin-bottom:1rem;">
@@ -2356,15 +2708,23 @@
           <div style="color:#6b7280;font-size:0.97rem;margin-bottom:1rem;">
             <i class="fas fa-calendar-alt"></i> ${startDate} - ${endDate}
           </div>
-          <div style="color:#6b7280;font-size:0.97rem;">
+          <div style="color:#6b7280;font-size:0.97rem;margin-bottom:1rem;">
             <i class="fas fa-users"></i> ${volunteering.volunteers || 0} voluntarios
           </div>
+          <div class="progress-bar" style="margin-bottom:1rem;">
+            <div class="progress-fill" style="width:${progress}%"></div>
+          </div>
+          <div class="progress-info" style="margin-bottom:1rem;">
+            <span>${progress}% completado</span>
+            <span>${volunteering.volunteers || 0} de ${volunteering.volunteers_needed || 0} voluntarios</span>
+          </div>
         `;
-        modal.classList.add('active');
+        
+        modal.style.display = 'flex';
         document.body.style.overflow = 'hidden';
       };
 
-      // --- Evento universal para abrir el modal correcto ---
+      // --- EVENTOS ---
       document.addEventListener('click', async function(e) {
         const btn = e.target.closest('.view-more-btn');
         if (!btn) return;
@@ -2375,7 +2735,7 @@
         if (type === 'cause') {
           showCauseModal(id);
         } else if (type === 'task') {
-          showTaskModal(id); // Ahora usa la nueva función de modal de tareas
+          showTaskModal(id);
         } else if (type === 'challenge') {
           showChallengeModal(id);
         } else if (type === 'volunteering') {
@@ -2383,190 +2743,20 @@
         }
       });
 
-      // Función para mostrar opciones de compartir
-      function showShareOptions(causeId) {
-        const cause = window.allActivities.find(c => c.id == causeId && c.type === 'cause');
-        if (!cause) return;
-        
-        const shareSection = document.getElementById('shareSection');
-        shareSection.innerHTML = `
-          <h3 class="share-title" style="font-size:1.3rem;font-weight:600;color:var(--primary);margin-bottom:1.5rem;text-align:center;">
-            <i class="fas fa-share-alt"></i> Ayuda a difundir esta causa
-          </h3>
-          <div class="share-content" style="background:#f8fafc;border-radius:12px;padding:1.5rem;margin-bottom:1.5rem;position:relative;">
-            <p class="share-text" style="font-size:1rem;line-height:1.6;color:#4b5563;margin-bottom:1rem;">
-              <span style="color:var(--primary);font-weight:600;">"${cause.short_description || 'Únete a esta importante causa solidaria'}"</span><br><br>
-              Cada contribución nos acerca más a la meta de <strong>${cause.goal || 0}€</strong> para ayudar a <strong>${cause.beneficiaries || 0} personas</strong>.
-            </p>
-            <div class="share-buttons" style="display:flex;justify-content:center;gap:1rem;flex-wrap:wrap;">
-              <a href="#" class="share-btn" style="display:flex;align-items:center;gap:0.7rem;padding:0.8rem 1.5rem;border-radius:8px;font-weight:600;color:white;transition:all 0.2s;text-decoration:none;background:#3b5998;" onclick="shareOnSocial('facebook', '${cause.id}')">
-                <i class="fab fa-facebook-f"></i> Facebook
-              </a>
-              <a href="#" class="share-btn" style="display:flex;align-items:center;gap:0.7rem;padding:0.8rem 1.5rem;border-radius:8px;font-weight:600;color:white;transition:all 0.2s;text-decoration:none;background:#1da1f2;" onclick="shareOnSocial('twitter', '${cause.id}')">
-                <i class="fab fa-twitter"></i> Twitter
-              </a>
-              <a href="#" class="share-btn" style="display:flex;align-items:center;gap:0.7rem;padding:0.8rem 1.5rem;border-radius:8px;font-weight:600;color:white;transition:all 0.2s;text-decoration:none;background:#25d366;" onclick="shareOnSocial('whatsapp', '${cause.id}')">
-                <i class="fab fa-whatsapp"></i> WhatsApp
-              </a>
-              <a href="#" class="share-btn" style="display:flex;align-items:center;gap:0.7rem;padding:0.8rem 1.5rem;border-radius:8px;font-weight:600;color:white;transition:all 0.2s;text-decoration:none;background:var(--primary);" onclick="copyCauseLink('${cause.id}')">
-                <i class="fas fa-link"></i> Copiar enlace
-              </a>
-            </div>
-          </div>
-        `;
-        shareSection.scrollIntoView({ behavior: 'smooth' });
-      }
-
-      // Función para compartir en redes sociales
-      function shareOnSocial(platform, causeId) {
-        const cause = window.allActivities.find(c => c.id == causeId && c.type === 'cause');
-        if (!cause) return;
-        
-        const url = `${window.location.origin}/causes/${cause.id}`;
-        const text = `Únete a esta causa: "${cause.title}" - ${cause.short_description || 'Ayuda a hacer la diferencia!'} ${url}`;
-        let shareUrl;
-        switch(platform) {
-          case 'facebook':
-            shareUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}&quote=${encodeURIComponent(text)}`;
-            break;
-          case 'twitter':
-            shareUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}`;
-            break;
-          case 'whatsapp':
-            shareUrl = `https://wa.me/?text=${encodeURIComponent(text)}`;
-            break;
-          default:
-            return;
+      // --- Búsqueda ---
+      document.getElementById('search-input')?.addEventListener('input', function(e) {
+        const query = e.target.value.toLowerCase();
+        if (!query) {
+          filteredActivities = [...window.allActivities];
+        } else {
+          filteredActivities = window.allActivities.filter(activity => 
+            activity.title?.toLowerCase().includes(query) ||
+            activity.description?.toLowerCase().includes(query) ||
+            activity.short_description?.toLowerCase().includes(query)
+          );
         }
-        window.open(shareUrl, '_blank', 'width=600,height=400');
-      }
-
-      // Función para copiar enlace de la causa
-      function copyCauseLink(causeId) {
-        const url = `${window.location.origin}/causes/${causeId}`;
-        navigator.clipboard.writeText(url).then(() => {
-          showToast('¡Enlace copiado!', 'success');
-        }).catch(() => {
-          prompt('Por favor, copia este enlace:', url);
-        });
-      }
-
-      // Funciones de donación y participación
-      function donateToCause(causeId) {
-        // Redireccionar a la página de donación o abrir modal
-        showToast('Funcionalidad de donación próximamente', 'info');
-      }
-
-      function joinCause(causeId) {
-        // Lógica para unirse a la causa
-        showToast('Funcionalidad de participación próximamente', 'info');
-      }
-
-      // Función para mostrar opciones de compartir para tareas
-      function showShareOptionsTask(taskId) {
-        const task = window.allActivities.find(a => a.id == taskId && a.type === 'task');
-        if (!task) return;
-        
-        const shareSection = document.getElementById('shareSectionTask');
-        shareSection.innerHTML = `
-          <h3 class="share-title" style="font-size:1.3rem;font-weight:600;color:var(--primary);margin-bottom:1.5rem;text-align:center;">
-            <i class="fas fa-share-alt"></i> Ayuda a difundir esta tarea
-          </h3>
-          <div class="share-content" style="background:#f8fafc;border-radius:12px;padding:1.5rem;margin-bottom:1.5rem;position:relative;">
-            <p class="share-text" style="font-size:1rem;line-height:1.6;color:#4b5563;margin-bottom:1rem;">
-              <span style="color:var(--primary);font-weight:600;">"${task.summary || task.description?.substring(0, 120) + '...' || 'Únete a esta importante tarea solidaria'}"</span><br><br>
-              Cada participante nos acerca más a la meta de ayudar a <strong>${task.beneficiaries || 0} personas</strong>.
-            </p>
-            <div class="share-buttons" style="display:flex;justify-content:center;gap:1rem;flex-wrap:wrap;">
-              <a href="#" class="share-btn" style="display:flex;align-items:center;gap:0.7rem;padding:0.8rem 1.5rem;border-radius:8px;font-weight:600;color:white;transition:all 0.2s;text-decoration:none;background:#3b5998;" onclick="shareOnSocialTask('facebook', '${task.id}')">
-                <i class="fab fa-facebook-f"></i> Facebook
-              </a>
-              <a href="#" class="share-btn" style="display:flex;align-items:center;gap:0.7rem;padding:0.8rem 1.5rem;border-radius:8px;font-weight:600;color:white;transition:all 0.2s;text-decoration:none;background:#1da1f2;" onclick="shareOnSocialTask('twitter', '${task.id}')">
-                <i class="fab fa-twitter"></i> Twitter
-              </a>
-              <a href="#" class="share-btn" style="display:flex;align-items:center;gap:0.7rem;padding:0.8rem 1.5rem;border-radius:8px;font-weight:600;color:white;transition:all 0.2s;text-decoration:none;background:#25d366;" onclick="shareOnSocialTask('whatsapp', '${task.id}')">
-                <i class="fab fa-whatsapp"></i> WhatsApp
-              </a>
-              <a href="#" class="share-btn" style="display:flex;align-items:center;gap:0.7rem;padding:0.8rem 1.5rem;border-radius:8px;font-weight:600;color:white;transition:all 0.2s;text-decoration:none;background:var(--primary);" onclick="copyTaskLink('${task.id}')">
-                <i class="fas fa-link"></i> Copiar enlace
-              </a>
-            </div>
-          </div>
-        `;
-        shareSection.scrollIntoView({ behavior: 'smooth' });
-      }
-
-      // Función para compartir tareas en redes sociales
-      function shareOnSocialTask(platform, taskId) {
-        const task = window.allActivities.find(t => t.id == taskId && t.type === 'task');
-        if (!task) return;
-        
-        const url = `${window.location.origin}/tasks/${task.id}`;
-        const text = `Únete a esta tarea: "${task.title}" - ${task.summary || task.description?.substring(0, 100) + '...' || 'Ayuda a hacer la diferencia!'} ${url}`;
-        let shareUrl;
-        
-        switch(platform) {
-          case 'facebook':
-            shareUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}&quote=${encodeURIComponent(text)}`;
-            break;
-          case 'twitter':
-            shareUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}`;
-            break;
-          case 'whatsapp':
-            shareUrl = `https://wa.me/?text=${encodeURIComponent(text)}`;
-            break;
-          default:
-            return;
-        }
-        
-        window.open(shareUrl, '_blank', 'width=600,height=400');
-      }
-
-      // Función para copiar enlace de la tarea
-      function copyTaskLink(taskId) {
-        const url = `${window.location.origin}/tasks/${taskId}`;
-        navigator.clipboard.writeText(url).then(() => {
-          showToast('¡Enlace copiado!', 'success');
-        }).catch(() => {
-          prompt('Por favor, copia este enlace:', url);
-        });
-      }
-
-      // Función para participar en una tarea
-      function participateInTask(taskId) {
-        // Revisar si el usuario está autenticado
-        supabase.auth.getSession().then(({ data: { session } }) => {
-          if (!session?.user) {
-            showToast('Debes iniciar sesión para participar', 'error');
-            return;
-          }
-          
-          const userId = session.user.id;
-          
-          // Intentar inscribirse como miembro de la tarea
-          supabase
-            .from('task_members')
-            .insert([{ task_id: taskId, user_id: userId, role: 'member', status: 'active' }])
-            .then(({ error }) => {
-              if (error) {
-                if (error.code === '23505') {
-                  showToast('Ya estás participando en esta tarea', 'info');
-                } else {
-                  showToast('Error al participar en la tarea', 'error');
-                }
-                return;
-              }
-              
-              showToast('¡Te has unido a la tarea!', 'success');
-              
-              // Actualizar la interfaz si es necesario
-              setTimeout(() => {
-                // Recargar las actividades para reflejar los cambios
-                loadUserActivities();
-              }, 1000);
-            });
-        });
-      }
+        renderActivities();
+      });
     });
   </script>
 {% endblock %}
