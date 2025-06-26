@@ -259,6 +259,8 @@
 
 {% block scripts %}
 {{ super() }}
+<script src="/js/share-system.js"></script>
+<script src="/js/compartir.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/choices.js/public/assets/scripts/choices.min.js"></script>
 <script>
 let currentFilter = "all";
@@ -268,7 +270,35 @@ let causesMap = {};
 let currentUserId = null;
 
 document.addEventListener('DOMContentLoaded', async function() {
-  // Obtener usuario actual para lógica de botones
+  // ✅ DETECTAR URL y abrir modal automáticamente
+  setTimeout(() => {
+    const urlPath = window.location.pathname;
+    const challengeIdMatch = urlPath.match(/\/(challenges|reto)\/([^\/]+)$/);
+    if (challengeIdMatch) {
+      const challengeId = challengeIdMatch[2];
+      console.log('🎯 URL detectada para reto específico:', challengeId);
+      
+      // Esperar a que se carguen los retos
+      const waitForChallenges = () => {
+        if (window.challenges && window.challenges.length > 0) {
+          const challenge = window.challenges.find(c => c.id === challengeId);
+          if (challenge) {
+            console.log('✅ Reto encontrado, abriendo modal...');
+            showChallengeModal(challengeId);
+          } else {
+            console.error('❌ Reto no encontrado, redirigiendo...');
+            window.location.href = '/challenges';
+          }
+        } else {
+          setTimeout(waitForChallenges, 1000);
+        }
+      };
+      
+      setTimeout(waitForChallenges, 2000);
+    }
+  }, 1000);
+
+  // Obtener usuario currentFilter para lógica de botones
   const { data: { session } } = await supabase.auth.getSession();
   currentUserId = session?.user?.id || null;
 
@@ -862,11 +892,11 @@ async function showChallengeModal(challengeId) {
       <button class="btn btn-primary btn-aceptar" data-challenge-id="${challenge.id}" style="flex:1;">
         <i class="fas fa-hand-holding-heart"></i> Aceptar reto
       </button>
-      <button class="btn btn-accent" style="flex:1;" onclick="showShareOptionsChallenge('${challenge.id}')">
+      <button class="btn btn-accent" style="flex:1;" onclick="mostrarCompartirChallenge('${challenge.id}')">
         <i class="fas fa-share-alt"></i> Compartir
       </button>
     </div>
-    <div class="share-section" id="shareSectionChallenge"></div>
+    <div class="share-section" id="shareSection"></div>
   </div>
 `;
 
@@ -903,11 +933,11 @@ async function showChallengeModal(challengeId) {
 }
 
 // Compartir reto: igual que tareas
-function showShareOptionsChallenge(challengeId) {
+function mostrarCompartirChallenge(challengeId) {
   // Busca el reto en la lista global si la tienes, si no, recarga el reto
   let challenge = window.challenges?.find(c => c.id == challengeId);
   if (!challenge) return;
-  const shareSection = document.getElementById('shareSectionChallenge');
+  const shareSection = document.getElementById('shareSection');
   shareSection.innerHTML = `
     <h3 class="share-title">
       <i class="fas fa-share-alt"></i> Ayuda a difundir este reto
@@ -967,11 +997,6 @@ function copyChallengeLink(challengeId) {
   });
 }
 
-// Cerrar modal y restaurar scroll
-document.getElementById('closeChallengeModal').addEventListener('click', function() {
-  document.getElementById('challengeModal').style.display = 'none';
-  document.body.style.overflow = '';
-});
 document.getElementById('challengeModal').addEventListener('click', function(e) {
   if (e.target === this) {
     this.style.display = 'none';
@@ -1032,5 +1057,51 @@ async function joinChallenge(challengeId) {
     .insert([{ challenge_id: challengeId, user_id: userId, role: 'member', status: 'active' }]);
   alert('¡Has aceptado el reto!');
 }
+
+// Función para compartir retos (nueva, con preview)
+window.mostrarCompartirChallenge = function(challengeId) {
+  window.universalShare('reto', challengeId);
+};
+
+// ✅ NO sobrescribir showChallengeModal, solo hacerla accesible globalmente
+window.showChallengeModal = showChallengeModal;
+
+// ✅ CERRAR MODAL de reto
+document.addEventListener('DOMContentLoaded', function() {
+  // Cerrar modal de reto
+  document.getElementById('closeChallengeModal').addEventListener('click', function() {
+    document.getElementById('challengeModal').style.display = 'none';
+    document.body.style.overflow = '';
+    
+    // ✅ LIMPIAR URL cuando se cierra el modal
+    if (window.location.pathname.includes('/challenges/') && window.location.pathname !== '/challenges') {
+      window.history.pushState({}, '', '/challenges');
+    }
+    if (window.location.pathname.includes('/reto/') && window.location.pathname !== '/challenges') {
+      window.history.pushState({}, '', '/challenges');
+    }
+  });
+
+  // Click fuera del modal para cerrar
+  document.getElementById('challengeModal').addEventListener('click', function(e) {
+    if (e.target === this) {
+      this.style.display = 'none';
+      document.body.style.overflow = '';
+      
+      // ✅ LIMPIAR URL cuando se cierra el modal
+      if (window.location.pathname.includes('/challenges/') && window.location.pathname !== '/challenges') {
+        window.history.pushState({}, '', '/challenges');
+      }
+      if (window.location.pathname.includes('/reto/') && window.location.pathname !== '/challenges') {
+        window.history.pushState({}, '', '/challenges');
+      }
+    }
+  });
+});
+
+// Reemplazar la función antigua de compartir (si existe)
+window.showShareOptionsChallenge = function(challengeId) {
+  window.mostrarCompartirChallenge(challengeId);
+};
 </script>
 {% endblock %}

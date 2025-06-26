@@ -1110,7 +1110,14 @@
 {% block scripts %}
 {{ super() }}
 <script src="https://cdn.jsdelivr.net/npm/choices.js/public/assets/scripts/choices.min.js"></script>
+<script src="/js/share-system.js"></script>
+<script src="/js/compartir.js"></script>
 <script>
+// Función para compartir voluntariados (nueva, con preview)
+window.mostrarCompartirVolunteering = function(volunteeringId) {
+  window.universalShare('voluntariado', volunteeringId);
+};
+
 let currentFilter = "all";
 let causeChoices = null;
 let causesMap = {};
@@ -1129,7 +1136,7 @@ document.addEventListener('DOMContentLoaded', async function() {
     }
   };
 
-  // Cerrar modal de crear voluntariado
+  // Cerrar modal de crear voluntitario
   document.getElementById('closeCreateVolunteeringModal').onclick = function() {
     document.getElementById('createVolunteeringModal').classList.remove('active');
     document.body.style.overflow = '';
@@ -1292,9 +1299,73 @@ document.addEventListener('DOMContentLoaded', async function() {
     loadVolunteeringFromSupabase();
   });
 
+  // Hacer showVolunteeringModal accesible globalmente
+  window.showVolunteeringModal = showVolunteeringModal;
+
+  // Detectar URL específica y abrir modal
+  setTimeout(() => {
+    const urlPath = window.location.pathname;
+    const match = urlPath.match(/\/(volunteering|voluntariado)\/([^\/]+)$/);
+    if (match) {
+      const id = match[2];
+      console.log('🎯 URL detectada:', id);
+      setTimeout(() => {
+        if (window.volunteering && window.volunteering.length > 0) {
+          const found = window.volunteering.find(v => v.id === id);
+          if (found) {
+            showVolunteeringModal(id);
+          } else {
+            window.location.href = '/volunteering';
+          }
+        } else {
+          setTimeout(arguments.callee, 1000);
+        }
+      }, 2000);
+    }
+  }, 1000);
+
   // Cargar voluntariados al iniciar
   await loadCausesMap();
   await loadVolunteeringFromSupabase();
+});
+
+// ✅ AGREGAR esta configuración corregida:
+document.addEventListener('DOMContentLoaded', function() {
+  // Cerrar modal con botón X
+  const closeBtn = document.getElementById('closeVolunteeringModal');
+  if (closeBtn) {
+    closeBtn.addEventListener('click', function() {
+      document.getElementById('volunteeringModal').style.display = 'none';
+      document.body.style.overflow = '';
+      
+      // Limpiar URL cuando se cierra el modal
+      if (window.location.pathname.includes('/volunteering/') && window.location.pathname !== '/volunteering') {
+        window.history.pushState({}, '', '/volunteering');
+      }
+      if (window.location.pathname.includes('/voluntariado/') && window.location.pathname !== '/volunteering') {
+        window.history.pushState({}, '', '/volunteering');
+      }
+    });
+  }
+
+  // Click fuera del modal para cerrar
+  const modal = document.getElementById('volunteeringModal');
+  if (modal) {
+    modal.addEventListener('click', function(e) {
+      if (e.target === this) {
+        this.style.display = 'none';
+        document.body.style.overflow = '';
+        
+        // Limpiar URL cuando se cierra el modal
+        if (window.location.pathname.includes('/volunteering/') && window.location.pathname !== '/volunteering') {
+          window.history.pushState({}, '', '/volunteering');
+        }
+        if (window.location.pathname.includes('/voluntariado/') && window.location.pathname !== '/volunteering') {
+          window.history.pushState({}, '', '/volunteering');
+        }
+      }
+    });
+  }
 });
 
 async function loadVolunteeringFromSupabase(filter = "all", searchTerm = "") {
@@ -1401,7 +1472,7 @@ async function loadVolunteeringFromSupabase(filter = "all", searchTerm = "") {
       <button class="btn btn-primary view-volunteer-btn" data-volunteer-id="${volunteer.id}">
         <i class="fas fa-eye"></i> Ver más
       </button>
-      <button class="btn btn-accent" onclick="showShareOptionsVolunteer('${volunteer.id}')">
+      <button class="btn btn-accent" onclick="mostrarCompartirVolunteering('${volunteer.id}')">
         <i class="fas fa-share-alt"></i> Compartir
       </button>
     </div>
@@ -1592,11 +1663,11 @@ async function showVolunteeringModal(volunteerId) {
         <button class="btn btn-primary" style="flex:1;" onclick="joinVolunteering('${volunteer.id}')">
           <i class="fas fa-handshake"></i> Unirme como voluntario
         </button>
-        <button class="btn btn-accent" style="flex:1;" onclick="showShareOptionsVolunteer('${volunteer.id}')">
+        <button class="btn btn-accent" style="flex:1;" onclick="mostrarCompartirVolunteering('${volunteer.id}')">
           <i class="fas fa-share-alt"></i> Compartir
         </button>
       </div>
-      <div class="share-section" id="shareSectionVolunteer"></div>
+      <div class="share-section" id="shareSection"></div>
     </div>
   `;
 
@@ -1667,18 +1738,6 @@ function copyVolunteerLink(volunteerId) {
     prompt('Por favor, copia este enlace:', url);
   });
 }
-
-// Cerrar modal y restaurar scroll
-document.getElementById('closeVolunteeringModal').addEventListener('click', function() {
-  document.getElementById('volunteeringModal').style.display = 'none';
-  document.body.style.overflow = '';
-});
-document.getElementById('volunteeringModal').addEventListener('click', function(e) {
-  if (e.target === this) {
-    this.style.display = 'none';
-    document.body.style.overflow = '';
-  }
-});
 
 // Ejemplo de función para unirse a voluntariado
 async function joinVolunteering(volunteeringId, btn = null) {
@@ -1876,8 +1935,6 @@ function renderVolunteering(volunteering) {
       `;
     }
 
-    const progress = Math.min(Math.round((volunteer.volunteers / volunteer.volunteers_needed) * 100), 100);
-
     const card = document.createElement('div');
     card.className = 'volunteering-card';
     card.innerHTML = `
@@ -1890,15 +1947,6 @@ function renderVolunteering(volunteering) {
         <h3>${volunteer.title}</h3>
         <p>${volunteer.summary || ''}</p>
         ${causeHtml}
-        <div class="volunteering-progress">
-          <div class="progress-bar">
-            <div class="progress-fill" style="width:${progress || 0}%"></div>
-          </div>
-          <div class="progress-info">
-            <span>${progress || 0}% completado</span>
-            <span>${volunteer.volunteers || 0} de ${volunteer.volunteers_needed || 0} voluntarios</span>
-          </div>
-        </div>
         <div class="volunteering-meta">
           <div class="meta-item"><i class="fas fa-map-marker-alt"></i> ${location}</div>
           <div class="meta-item"><i class="fas fa-calendar-alt"></i> ${startDate} - ${endDate}</div>
@@ -1908,7 +1956,7 @@ function renderVolunteering(volunteering) {
           <button class="btn btn-primary view-volunteer-btn" data-volunteer-id="${volunteer.id}">
             <i class="fas fa-eye"></i> Ver más
           </button>
-          <button class="btn btn-accent" onclick="showShareOptionsVolunteer('${volunteer.id}')">
+          <button class="btn btn-accent" onclick="mostrarCompartirVolunteering('${volunteer.id}')">
             <i class="fas fa-share-alt"></i> Compartir
           </button>
         </div>

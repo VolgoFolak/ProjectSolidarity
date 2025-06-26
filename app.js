@@ -194,8 +194,6 @@ app.get('/causes/:id', (req, res) => {
   try {
     const causeId = req.params.id;
     console.log('📍 Solicitando causa con ID:', causeId);
-    
-    // Renderizar la vista de causas normal
     res.render('causes/index', { 
       title: 'Causa - Solidarity',
       user: req.session.user || null
@@ -206,6 +204,127 @@ app.get('/causes/:id', (req, res) => {
     res.status(500).send('Error del servidor');
   }
 });
+
+// ✅ TAREAS INDIVIDUALES (inglés)
+app.get('/tasks/:id', (req, res) => {
+  try {
+    const taskId = req.params.id;
+    console.log('📍 Solicitando tarea con ID:', taskId);
+    res.render('tasks/index', { 
+      title: 'Tarea - Solidarity',
+      user: req.session.user || null
+    });
+  } catch (error) {
+    console.error('❌ Error en ruta /tasks/:id:', error);
+    res.status(500).send('Error del servidor');
+  }
+});
+
+// ✅ TAREAS INDIVIDUALES (español)
+app.get('/tarea/:id', (req, res) => {
+  try {
+    const taskId = req.params.id;
+    console.log('📍 Solicitando tarea con ID (español):', taskId);
+    res.render('tasks/index', { 
+      title: 'Tarea - Solidarity',
+      user: req.session.user || null
+    });
+  } catch (error) {
+    console.error('❌ Error en ruta /tarea/:id:', error);
+    res.status(500).send('Error del servidor');
+  }
+});
+
+// ✅ VOLUNTARIADOS INDIVIDUALES (inglés)
+app.get('/volunteering/:id', (req, res) => {
+  try {
+    const volunteeringId = req.params.id;
+    console.log('📍 Solicitando voluntariado con ID:', volunteeringId);
+    res.render('volunteering/index', { 
+      title: 'Voluntariado - Solidarity',
+      user: req.session.user || null
+    });
+  } catch (error) {
+    console.error('❌ Error en ruta /volunteering/:id:', error);
+    res.status(500).send('Error del servidor');
+  }
+});
+
+// ✅ VOLUNTARIADOS INDIVIDUALES (español)
+app.get('/voluntariado/:id', (req, res) => {
+  try {
+    const volunteeringId = req.params.id;
+    console.log('📍 Solicitando voluntariado con ID (español):', volunteeringId);
+    res.render('volunteering/index', { 
+      title: 'Voluntariado - Solidarity',
+      user: req.session.user || null
+    });
+  } catch (error) {
+    console.error('❌ Error en ruta /voluntariado/:id:', error);
+    res.status(500).send('Error del servidor');
+  }
+});
+
+// ✅ DESAFÍOS INDIVIDUALES (inglés)
+app.get('/challenges/:id', (req, res) => {
+  try {
+    const challengeId = req.params.id;
+    console.log('📍 Solicitando desafío con ID:', challengeId);
+    res.render('challenges/index', { 
+      title: 'Desafío - Solidarity',
+      user: req.session.user || null
+    });
+  } catch (error) {
+    console.error('❌ Error en ruta /challenges/:id:', error);
+    res.status(500).send('Error del servidor');
+  }
+});
+
+// ✅ DESAFÍOS INDIVIDUALES (español)
+app.get('/reto/:id', (req, res) => {
+  try {
+    const challengeId = req.params.id;
+    console.log('📍 Solicitando reto con ID (español):', challengeId);
+    res.render('challenges/index', { 
+      title: 'Reto - Solidarity',
+      user: req.session.user || null
+    });
+  } catch (error) {
+    console.error('❌ Error en ruta /reto/:id:', error);
+    res.status(500).send('Error del servidor');
+  }
+});
+
+// ✅ EQUIPOS INDIVIDUALES (inglés)
+app.get('/teams/:id', (req, res) => {
+  try {
+    const teamId = req.params.id;
+    console.log('📍 Solicitando equipo con ID:', teamId);
+    res.render('teams/index', { 
+      title: 'Equipo - Solidarity',
+      user: req.session.user || null
+    });
+  } catch (error) {
+    console.error('❌ Error en ruta /teams/:id:', error);
+    res.status(500).send('Error del servidor');
+  }
+});
+
+// ✅ EQUIPOS INDIVIDUALES (español)
+app.get('/equipo/:id', (req, res) => {
+  try {
+    const teamId = req.params.id;
+    console.log('📍 Solicitando equipo con ID (español):', teamId);
+    res.render('teams/index', { 
+      title: 'Equipo - Solidarity',
+      user: req.session.user || null
+    });
+  } catch (error) {
+    console.error('❌ Error en ruta /equipo/:id:', error);
+    res.status(500).send('Error del servidor');
+  }
+});
+
 app.get('/tasks', (req, res) => {
     res.render('tasks/index.njk');
 });

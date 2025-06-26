@@ -661,9 +661,36 @@
 {% endblock %}
 
 {% block scripts %}
-  {{ super() }}
-  <script>
-    document.addEventListener('DOMContentLoaded', function() {
+{{ super() }}
+<script src="/js/share-system.js"></script>
+<script>
+// Función para compartir (específica de cada sección)
+window.mostrarCompartir[SECTION] = function(itemId) {
+  window.universalShare('[SECTION_TYPE]', itemId);
+};
+
+// Función para mostrar modal (adaptar según cada sección)
+window.show[SECTION]Modal = function(itemId) {
+  const item = window.[GLOBAL_VAR]?.find(i => i.id == itemId);
+  if (!item) {
+    console.error('❌ [SECTION] no encontrado:', itemId);
+    return;
+  }
+  
+  // Tu lógica actual de mostrar modal
+  // ... código del modal ...
+  
+  // Agregar botón de compartir en el modal
+  const shareButton = `
+    <button class="btn btn-outline" onclick="mostrarCompartir[SECTION]('${item.id}')">
+      <i class="fas fa-share-alt"></i> Compartir
+    </button>
+  `;
+  
+  // Agregar a los botones de acción del modal
+};
+
+document.addEventListener('DOMContentLoaded', function() {
       // Variables para paginación
       let currentPage = 1;
       const itemsPerPage = 9;
