@@ -1677,9 +1677,11 @@
                 `;
               }
 
-              // Botones: Ver más y Admin/Miembro (ajusta lógica de rol según tu app)
+              // Botones: Ver más y Admin/Miembro (cambia esta parte)
               const actionsHtml = `
-                <a href="/volunteering/${activity.id}" class="btn btn-primary btn-sm"><i class="fas fa-eye"></i> Ver más</a>
+                <button class="btn btn-primary btn-sm view-more-btn" data-type="volunteering" data-id="${activity.id}">
+                  <i class="fas fa-eye"></i> Ver más
+                </button>
                 ${(activity.role === 'founder' || activity.role === 'admin')
                   ? `<button class="btn btn-accent btn-sm admin-activity-btn" data-id="${activity.id}" data-type="volunteering"><i class="fas fa-cog"></i> Administrar</button>`
                   : `<span class="role-badge member"><i class="fas fa-user"></i> Miembro</span>`
@@ -1690,7 +1692,9 @@
               card.innerHTML = `
                 <div class="volunteering-image">
                   <img src="${activity.photo_url || '/img/volunteer-default.jpg'}" alt="${activity.title}" onerror="this.src='/img/volunteer-default.jpg'">
-                </div>
+                  ${urgentBadge}
+                  ${pointsBadge}
+              </div>
                 <div class="volunteering-content">
                   <h3>${activity.title}</h3>
                   <p>${activity.summary || ''}</p>
