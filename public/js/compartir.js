@@ -1,19 +1,68 @@
 /**
- * Renderiza un bloque de compartir con vista previa estética y botones en fila
+ * Renderiza un bloque de compartir UNIVERSAL con vista previa estética y botones en fila
+ * Funciona para causas, tareas, retos, voluntariados, equipos, etc.
  */
 
-function renderCompartir({ title, summary, photo_url, link }, containerId) {
+function renderCompartir({ title, summary, photo_url, link, type = 'causa' }, containerId) {
   const container = document.getElementById(containerId);
   if (!container) return;
 
+  // Configuración de textos por tipo
+  const typeConfig = {
+    causa: {
+      defaultTitle: 'Únete a esta causa solidaria',
+      defaultSummary: 'Ayuda a hacer la diferencia',
+      defaultImage: '/img/causa-default.jpg',
+      headerText: 'Ayuda a difundir esta causa',
+      placeholder: 'CAUSA'
+    },
+    tarea: {
+      defaultTitle: 'Únete a esta tarea de impacto',
+      defaultSummary: 'Colabora en esta iniciativa',
+      defaultImage: '/img/tarea-default.jpg',
+      headerText: 'Comparte esta tarea',
+      placeholder: 'TAREA'
+    },
+    reto: {
+      defaultTitle: 'Participa en este reto',
+      defaultSummary: 'Únete al desafío',
+      defaultImage: '/img/reto-default.jpg',
+      headerText: 'Comparte este reto',
+      placeholder: 'RETO'
+    },
+    desafio: {
+      defaultTitle: 'Participa en este desafío',
+      defaultSummary: 'Únete al desafío',
+      defaultImage: '/img/reto-default.jpg',
+      headerText: 'Comparte este desafío',
+      placeholder: 'RETO'
+    },
+    voluntariado: {
+      defaultTitle: 'Únete a este voluntariado',
+      defaultSummary: 'Haz la diferencia como voluntario',
+      defaultImage: '/img/voluntariado-default.jpg',
+      headerText: 'Comparte este voluntariado',
+      placeholder: 'VOL'
+    },
+    equipo: {
+      defaultTitle: 'Únete a este equipo',
+      defaultSummary: 'Forma parte de la comunidad',
+      defaultImage: '/img/equipo-default.jpg',
+      headerText: 'Comparte este equipo',
+      placeholder: 'TEAM'
+    }
+  };
+
+  const config = typeConfig[type] || typeConfig.causa;
+
   // Datos limpios para compartir
-  const cleanTitle = title || 'Únete a esta causa solidaria';
-  const cleanSummary = summary || 'Ayuda a hacer la diferencia';
-  const cleanPhoto = photo_url || '/img/causa-default.jpg';
+  const cleanTitle = title || config.defaultTitle;
+  const cleanSummary = summary || config.defaultSummary;
+  const cleanPhoto = photo_url || config.defaultImage;
   const cleanLink = link || window.location.href;
 
   // Debug: verificar datos
-  console.log('Datos para compartir:', { cleanTitle, cleanSummary, cleanPhoto, cleanLink });
+  console.log(`🔗 Datos para compartir ${type}:`, { cleanTitle, cleanSummary, cleanPhoto, cleanLink });
 
   // Función para obtener el HTML de la preview según la red
   function getPreviewHtml(network) {
@@ -21,8 +70,8 @@ function renderCompartir({ title, summary, photo_url, link }, containerId) {
       <div class="preview-card">
         <div class="preview-image">
           <img src="${cleanPhoto}" 
-               alt="Imagen de la causa" 
-               onerror="console.error('Error cargando imagen:', this.src); this.src='https://via.placeholder.com/100x100/4fc3a1/ffffff?text=CAUSA';"
+               alt="Imagen del ${type}" 
+               onerror="console.error('Error cargando imagen:', this.src); this.src='https://via.placeholder.com/100x100/4fc3a1/ffffff?text=${config.placeholder}';"
                onload="console.log('✅ Imagen cargada:', this.src);">
         </div>
         <div class="preview-content">
@@ -37,7 +86,7 @@ function renderCompartir({ title, summary, photo_url, link }, containerId) {
   // HTML con estilo original simple + preview en medio
   container.innerHTML = `
     <div class="share-section">
-      <h3><i class="fas fa-share-alt"></i> Ayuda a difundir esta causa</h3>
+      <h3><i class="fas fa-share-alt"></i> ${config.headerText}</h3>
       
       <!-- Vista previa estética -->
       <div class="share-preview" id="${containerId}-preview">

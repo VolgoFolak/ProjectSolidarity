@@ -557,6 +557,8 @@
 {% block scripts %}
 {{ super() }}
 <script src="https://cdn.jsdelivr.net/npm/choices.js/public/assets/scripts/choices.min.js"></script>
+<script src="/js/share-system.js"></script>
+<script src="/js/compartir.js"></script>
 <script>
 let currentFilter = "all";
 let causeChoices = null;
@@ -1070,11 +1072,11 @@ async function showTaskModal(taskId) {
         <button class="btn btn-primary" style="flex:1;" onclick="participateInTask('${task.id}')">
           <i class="fas fa-hand-holding-heart"></i> Participar
         </button>
-        <button class="btn btn-accent" style="flex:1;" onclick="showShareOptionsTask('${task.id}')">
+        <button class="btn btn-accent" style="flex:1;" onclick="mostrarCompartirTarea('${task.id}')">
           <i class="fas fa-share-alt"></i> Compartir
         </button>
       </div>
-      <div class="share-section" id="shareSectionTask"></div>
+      <div class="share-section" id="shareSection"></div>
     </div>
   `;
 
@@ -1082,170 +1084,44 @@ async function showTaskModal(taskId) {
   document.body.style.overflow = 'hidden';
 }
 
-// Función para mostrar opciones de compartir para tareas (idéntico a causas)
-function showShareOptionsTask(taskId) {
-  const task = window.tasks.find(t => t.id == taskId);
-  const shareSection = document.getElementById('shareSectionTask');
-  shareSection.innerHTML = `
-    <h3 class="share-title">
-      <i class="fas fa-share-alt"></i> Ayuda a difundir esta tarea
-    </h3>
-    <div class="share-content">
-      <p class="share-text">
-        <span class="share-highlight">"${task.description ? task.description.substring(0, 120) + '...' : 'Únete a esta importante tarea solidaria'}"</span><br><br>
-        Cada participante nos acerca más a la meta de ayudar a <strong>${task.beneficiaries || 0} personas</strong>.
-      </p>
-      <div class="share-buttons">
-        <a href="#" class="share-btn share-btn-facebook" onclick="shareOnSocialTask('facebook', '${task.id}')">
-          <i class="fab fa-facebook-f"></i> Facebook
-        </a>
-        <a href="#" class="share-btn share-btn-twitter" onclick="shareOnSocialTask('twitter', '${task.id}')">
-          <i class="fab fa-twitter"></i> Twitter
-        </a>
-        <a href="#" class="share-btn share-btn-whatsapp" onclick="shareOnSocialTask('whatsapp', '${task.id}')">
-          <i class="fab fa-whatsapp"></i> WhatsApp
-        </a>
-        <a href="#" class="share-btn share-btn-link" onclick="copyTaskLink('${task.id}')">
-          <i class="fas fa-link"></i> Copiar enlace
-        </a>
-      </div>
-    </div>
-  `;
-  shareSection.scrollIntoView({ behavior: 'smooth' });
-}
+// Función para compartir tareas (nueva, con preview)
+window.mostrarCompartirTarea = function(taskId) {
+  window.universalShare('tarea', taskId);
+};
 
-// Función para compartir tareas en redes sociales
-function shareOnSocialTask(platform, taskId) {
-  const task = window.tasks.find(t => t.id == taskId);
-  const url = `${window.location.origin}/tasks/${task.id}`;
-  const text = `Únete a esta tarea: "${task.title}" - ${task.description ? task.description.substring(0, 100) + '...' : 'Ayuda a hacer la diferencia!'} ${url}`;
-  let shareUrl;
-  switch(platform) {
-    case 'facebook':
-      shareUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}&quote=${encodeURIComponent(text)}`;
-      break;
-    case 'twitter':
-      shareUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}`;
-      break;
-    case 'whatsapp':
-      shareUrl = `https://wa.me/?text=${encodeURIComponent(text)}`;
-      break;
-    default:
-      return;
-  }
-  window.open(shareUrl, '_blank', 'width=600,height=400');
-}
+// ✅ NO sobrescribir showTaskModal, solo hacerla accesible globalmente
+window.showTaskModal = showTaskModal;
 
-// Función para copiar enlace de la tarea
-function copyTaskLink(taskId) {
-  const url = `${window.location.origin}/tasks/${taskId}`;
-  navigator.clipboard.writeText(url).then(() => {
-    showNotification('¡Enlace copiado!', 'success');
-  }).catch(() => {
-    prompt('Por favor, copia este enlace:', url);
-  });
-}
-
-// Cerrar modal y restaurar scroll
-document.getElementById('closeTaskModal').addEventListener('click', function() {
-  document.getElementById('taskModal').style.display = 'none';
-  document.body.style.overflow = '';
-});
-document.getElementById('taskModal').addEventListener('click', function(e) {
-  if (e.target === this) {
-    this.style.display = 'none';
+// ✅ CERRAR MODAL de tarea
+document.addEventListener('DOMContentLoaded', function() {
+  // Cerrar modal de tarea
+  document.getElementById('closeTaskModal').addEventListener('click', function() {
+    document.getElementById('taskModal').style.display = 'none';
     document.body.style.overflow = '';
-  }
-});
-
-// Ejemplo de función para participar en tarea
-async function participateInTask(taskId) {
-  const { data: { session } } = await supabase.auth.getSession();
-  if (!session?.user) {
-    document.getElementById('loginModal').classList.add('active');
-    return;
-  }
-  const userId = session.user.id;
-
-  // Intenta insertar como miembro (único por usuario y tarea)
-  const { error } = await supabase
-    .from('task_members')
-    .insert([{ task_id: taskId, user_id: userId, role: 'member', status: 'active' }]);
-
-  if (error) {
-    if (error.code === '23505' || error.status === 409) {
-      alert('Ya estás participando en esta tarea.');
-    } else {
-      alert('Error al participar: ' + error.message);
+    
+    // ✅ LIMPIAR URL cuando se cierra el modal
+    if (window.location.pathname.includes('/tasks/') && window.location.pathname !== '/tasks') {
+      window.history.pushState({}, '', '/tasks');
     }
-    return;
-  }
+  });
 
-  // Actualiza el botón inmediatamente
-  const btn = document.querySelector(`.participate-btn[data-task-id="${taskId}"]`);
-  if (btn) {
-    btn.textContent = "Participando";
-    btn.disabled = true;
-    btn.style.opacity = "0.7";
-    btn.style.cursor = "not-allowed";
-  }
-
-  // Actualiza el número de participantes en la tarjeta
-  setTimeout(async () => {
-    const { data: task, error: fetchError } = await supabase
-      .from('tasks')
-      .select('participants')
-      .eq('id', taskId)
-      .single();
-
-    if (!fetchError && task) {
-      const card = btn ? btn.closest('.task-card') : null;
-      if (card) {
-        const meta = card.querySelector('.meta-item i.fa-users').parentElement;
-        meta.innerHTML = `<i class="fas fa-users"></i> ${task.participants} participantes`;
-        const progressInfo = card.querySelector('.progress-info span');
-        progressInfo.textContent = `${task.participants} participantes`;
-        const beneficiaries = parseInt(card.querySelector('.beneficiaries-count').textContent.match(/\d+/)[0]);
-        const progressFill = card.querySelector('.progress-fill');
-        const percent = beneficiaries ? Math.min(Math.round((task.participants / beneficiaries) * 100), 100) : 0;
-        progressFill.style.width = percent + '%';
+  // Click fuera del modal para cerrar
+  document.getElementById('taskModal').addEventListener('click', function(e) {
+    if (e.target === this) {
+      this.style.display = 'none';
+      document.body.style.overflow = '';
+      
+      // ✅ LIMPIAR URL cuando se cierra el modal
+      if (window.location.pathname.includes('/tasks/') && window.location.pathname !== '/tasks') {
+        window.history.pushState({}, '', '/tasks');
       }
     }
-  }, 400);
-}
-
-// NUEVA FUNCIÓN PARA UNIRSE A UNA TAREA (SIN RELOAD)
-async function joinTask(taskId) {
-  const { data: { session } } = await supabase.auth.getSession();
-  if (!session?.user) {
-    alert('Debes iniciar sesión para participar.');
-    return;
-  }
-  const userId = session.user.id;
-  await supabase
-    .from('task_members')
-    .insert([{ task_id: taskId, user_id: userId, role: 'member', status: 'active' }]);
-  alert('¡Ahora participas en esta tarea!');
-}
-
-// Cargar causas para el select en el modal de crear tarea
-async function loadCausesForSelect() {
-  const select = document.getElementById('cause-select');
-  if (!select) return;
-  // Limpia las opciones actuales
-  select.innerHTML = '<option value="">Selecciona una causa</option>';
-  // Carga causas desde Supabase
-  const { data: causes, error } = await supabase
-    .from('causes')
-    .select('id, title')
-    .order('title', { ascending: true });
-  if (error) return;
-  causes.forEach(cause => {
-    const option = document.createElement('option');
-    option.value = cause.id;
-    option.textContent = cause.title;
-    select.appendChild(option);
   });
-}
+});
+
+// Reemplazar la función antigua de compartir
+window.showShareOptionsTask = function(taskId) {
+  window.mostrarCompartirTarea(taskId);
+};
 </script>
 {% endblock %}
