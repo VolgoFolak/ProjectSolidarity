@@ -186,6 +186,26 @@ app.get('/register', (req, res) => {
 app.get('/causes', (req, res) => {
     res.render('causes/index.njk');
 });
+app.get('/causes/create', (req, res) => {
+    res.render('causes/create.njk');
+});
+// ✅ RUTA ESPECÍFICA PARA CAUSA INDIVIDUAL - DEBE ESTAR DESPUÉS DE /causes/create
+app.get('/causes/:id', (req, res) => {
+  try {
+    const causeId = req.params.id;
+    console.log('📍 Solicitando causa con ID:', causeId);
+    
+    // Renderizar la vista de causas normal
+    res.render('causes/index', { 
+      title: 'Causa - Solidarity',
+      user: req.session.user || null
+    });
+
+  } catch (error) {
+    console.error('❌ Error en ruta /causes/:id:', error);
+    res.status(500).send('Error del servidor');
+  }
+});
 app.get('/tasks', (req, res) => {
     res.render('tasks/index.njk');
 });
@@ -197,9 +217,6 @@ app.get('/profile', (req, res) => {
 });
 app.get('/editprofile', (req, res) => {
     res.render('profile/editprofile.njk');
-});
-app.get('/causes/create', (req, res) => {
-    res.render('causes/create.njk');
 });
 app.get('/tasks/create', (req, res) => {
     res.render('tasks/create.njk');
@@ -392,11 +409,15 @@ app.get('/api/users', async (req, res) => {
     }
 });
 
-// --- Ruta para 404 ---
-app.use((req, res) => {
-    res.status(404).send('Página no encontrada');
+app.get('/api/check-session', (req, res) => {
+  if (req.session.user) {
+    res.json({ ok: true });
+  } else {
+    res.status(401).json({ ok: false });
+  }
 });
 
+// --- STRIPE ROUTES ---
 // 1. Crear cuenta Express para el creador de la causa
 app.post('/connect-account', async (req, res) => {
   const { userId, email } = req.body;
@@ -460,6 +481,7 @@ app.post('/donate', async (req, res) => {
     res.status(400).json({ error: err.message });
   }
 });
+
 app.post('/api/impact-points', async (req, res) => {
   const { userId, points, communityId, weekly } = req.body;
 
@@ -495,12 +517,9 @@ app.post('/api/impact-points', async (req, res) => {
   res.json({ success: true });
 });
 
-app.get('/api/check-session', (req, res) => {
-  if (req.session.user) {
-    res.json({ ok: true });
-  } else {
-    res.status(401).json({ ok: false });
-  }
+// --- Ruta para 404 - DEBE ESTAR AL FINAL ---
+app.use((req, res) => {
+    res.status(404).send('Página no encontrada');
 });
 
 app.listen(PORT, () => {
