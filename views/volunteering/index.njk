@@ -536,6 +536,384 @@
       font-size: 1.1rem;
       line-height: 1.6;
     }
+
+    /* ESTILOS PARA TARJETAS DE VOLUNTARIADO */
+.volunteering-card {
+    background: white;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+    transition: all 0.3s ease;
+    border: 1px solid var(--gray);
+    display: flex;
+    flex-direction: column;
+}
+
+.volunteering-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+}
+
+.volunteering-image {
+    height: 180px;
+    overflow: hidden;
+    position: relative;
+}
+
+.volunteering-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+}
+
+.volunteering-card:hover .volunteering-image img {
+    transform: scale(1.05);
+}
+
+.volunteering-badge {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    background: rgba(255, 255, 255, 0.9);
+    padding: 0.3rem 0.8rem;
+    border-radius: 50px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.volunteering-badge.urgent {
+    background: var(--urgent);
+    color: white;
+}
+
+.volunteering-badge.points {
+    background: var(--primary);
+    color: white;
+    left: 1rem;
+    right: auto;
+}
+
+.volunteering-content {
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+}
+
+.volunteering-content h3 {
+    font-size: 1.3rem;
+    margin-bottom: 0.8rem;
+    color: #2d3748;
+}
+
+.volunteering-content p {
+    color: #6b7280;
+    margin-bottom: 1.5rem;
+    font-size: 0.95rem;
+    line-height: 1.6;
+    flex-grow: 1;
+}
+
+.volunteering-progress {
+    margin-bottom: 1.5rem;
+}
+
+.progress-bar {
+    height: 8px;
+    background: var(--gray);
+    border-radius: 4px;
+    overflow: hidden;
+    margin-bottom: 0.5rem;
+}
+
+.progress-fill {
+    height: 100%;
+    background: var(--primary);
+    border-radius: 4px;
+}
+
+.progress-info {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.9rem;
+    color: #6b7280;
+}
+
+.volunteering-meta {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+    font-size: 0.85rem;
+    flex-wrap: wrap;
+}
+
+.volunteering-actions {
+    display: flex;
+    gap: 0.8rem;
+}
+
+.volunteering-actions .btn {
+    flex: 1;
+    text-align: center;
+    justify-content: center;
+}
+
+/* MODAL DE VOLUNTARIADO */
+.modal-volunteer-container {
+    /* Estilos ya incluidos en el JavaScript */
+}
+
+.modal-volunteer-header {
+    display: flex;
+    gap: 2.5rem;
+    margin-bottom: 2.7rem;
+}
+
+.modal-volunteer-image-wrapper {
+    flex: 1;
+    min-width: 320px;
+    height: 300px;
+    border-radius: 12px;
+    overflow: hidden;
+    position: relative;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+}
+
+.modal-volunteer-info {
+    flex: 1.5;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+}
+
+.modal-volunteer-meta-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.7rem 1.2rem;
+    margin-bottom: 1.2rem;
+}
+
+.share-section {
+    margin-top: 2rem;
+}
+
+.share-title {
+    font-size: 1.3rem;
+    font-weight: 600;
+    color: var(--primary);
+    margin-bottom: 1.5rem;
+    text-align: center;
+    margin-top: 2rem;
+}
+
+.share-content {
+    background: #f8fafc;
+    border-radius: 12px;
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+    position: relative;
+}
+
+.share-text {
+    font-size: 1rem;
+    line-height: 1.6;
+    color: #4b5563;
+    margin-bottom: 1rem;
+}
+
+.share-highlight {
+    color: var(--primary);
+    font-weight: 600;
+}
+
+.share-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+.share-btn {
+    display: flex;
+    align-items: center;
+    gap: 0.7rem;
+    padding: 0.8rem 1.5rem;
+    border-radius: 8px;
+    font-weight: 600;
+    color: white;
+    transition: all 0.2s;
+    text-decoration: none;
+}
+
+.share-btn-facebook {
+    background: #3b5998;
+}
+
+.share-btn-twitter {
+    background: #1da1f2;
+}
+
+.share-btn-whatsapp {
+    background: #25d366;
+}
+
+.share-btn-link {
+    background: var(--primary);
+}
+
+.share-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+
+/* NUEVAS CLASES Y ESTILOS PARA MIS ACTIVIDADES */
+.activity-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+  gap: 2rem;
+}
+
+.activity-card {
+  background: #fff;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s;
+  display: flex;
+  flex-direction: column;
+}
+
+.activity-card:hover {
+  transform: translateY(-4px);
+}
+
+.activity-image {
+  position: relative;
+  height: 180px;
+  overflow: hidden;
+}
+
+.activity-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s;
+}
+
+.activity-card:hover .activity-image img {
+  transform: scale(1.1);
+}
+
+.activity-badge {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  background: var(--primary);
+  color: #fff;
+  padding: 0.4rem 0.8rem;
+  border-radius: 50px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+.activity-content {
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.activity-content h3 {
+  font-size: 1.4rem;
+  margin-bottom: 1rem;
+  color: #2d3748;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.activity-content h3 .activity-icon {
+  font-size: 1.2rem;
+  color: var(--primary);
+}
+
+.activity-content p {
+  color: #4b5563;
+  margin-bottom: 1.5rem;
+  font-size: 0.95rem;
+  line-height: 1.6;
+  flex-grow: 1;
+}
+
+.activity-stats {
+  display: flex;
+  gap: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.stat-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: #6b7280;
+  font-size: 0.9rem;
+}
+
+.stat-item i {
+  color: var(--primary);
+}
+
+.activity-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.7rem 1.2rem;
+  border-radius: 8px;
+  font-size: 1rem;
+  transition: background 0.3s, transform 0.3s;
+  text-decoration: none;
+}
+
+.activity-button.btn-primary {
+  background: var(--primary);
+  color: #fff;
+}
+
+.activity-button.btn-primary:hover {
+  background: var(--primary-dark);
+  transform: translateY(-2px);
+}
+
+@media (max-width: 768px) {
+  .activity-card {
+    flex-direction: row;
+    gap: 1rem;
+  }
+  .activity-image {
+    height: 120px;
+  }
+  .activity-content {
+    padding: 1rem;
+  }
+  .activity-content h3 {
+    font-size: 1.2rem;
+  }
+  .activity-button {
+    padding: 0.6rem 1rem;
+    font-size: 0.9rem;
+  }
+}
+
+/* FIN NUEVAS CLASES Y ESTILOS PARA MIS ACTIVIDADES */
   </style>
 {% endblock %}
 
@@ -1023,9 +1401,8 @@ async function loadVolunteeringFromSupabase(filter = "all", searchTerm = "") {
       <button class="btn btn-primary view-volunteer-btn" data-volunteer-id="${volunteer.id}">
         <i class="fas fa-eye"></i> Ver más
       </button>
-      <button class="btn btn-accent join-btn" data-volunteer-id="${volunteer.id}"
-        ${isJoined ? 'disabled style="opacity:0.7;cursor:not-allowed;"' : ''}>
-        <i class="fas fa-handshake"></i> ${isJoined ? 'Ya eres voluntario' : 'Unirse'}
+      <button class="btn btn-accent" onclick="showShareOptionsVolunteer('${volunteer.id}')">
+        <i class="fas fa-share-alt"></i> Compartir
       </button>
     </div>
   </div>
@@ -1470,6 +1847,86 @@ async function loadCausesMap() {
       };
     });
   }
+}
+
+// Función para renderizar voluntariados con el mismo diseño que index.njk
+function renderVolunteering(volunteering) {
+  const container = document.createElement('div');
+  container.className = 'activity-grid';
+  
+  volunteering.forEach(volunteer => {
+    const urgentBadge = volunteer.is_urgent ? 
+      `<div class="volunteering-badge urgent"><i class="fas fa-exclamation-circle"></i> Urgente</div>` : "";
+    const pointsBadge = `<div class="volunteering-badge points"><i class="fas fa-star"></i> +${volunteer.points || 0} pts/h</div>`;
+    const location = volunteer.city && volunteer.country ? `${volunteer.city}, ${volunteer.country}` : "";
+    const startDate = volunteer.start_date ? new Date(volunteer.start_date).toLocaleDateString('es-ES', { day: 'numeric', month: 'short' }) : '';
+    const endDate = volunteer.end_date ? new Date(volunteer.end_date).toLocaleDateString('es-ES', { day: 'numeric', month: 'short' }) : '';
+
+    // Cargar información de la causa si existe
+    let causeHtml = '';
+    if (volunteer.cause_id && window.causesMap && window.causesMap[volunteer.cause_id]) {
+      const cause = window.causesMap[volunteer.cause_id];
+      causeHtml = `
+        <div class="linked-cause">
+          <i class="fas fa-link"></i>
+          <img src="${cause.photo_url || '/img/causa-default.jpg'}"
+               alt="Causa vinculada">
+          <span>${cause.title}</span>
+        </div>
+      `;
+    }
+
+    const progress = Math.min(Math.round((volunteer.volunteers / volunteer.volunteers_needed) * 100), 100);
+
+    const card = document.createElement('div');
+    card.className = 'volunteering-card';
+    card.innerHTML = `
+      <div class="volunteering-image">
+        <img src="${volunteer.photo_url || '/img/volunteer-default.jpg'}" alt="${volunteer.title}" onerror="this.src='/img/volunteer-default.jpg'">
+        ${urgentBadge}
+        ${pointsBadge}
+      </div>
+      <div class="volunteering-content">
+        <h3>${volunteer.title}</h3>
+        <p>${volunteer.summary || ''}</p>
+        ${causeHtml}
+        <div class="volunteering-progress">
+          <div class="progress-bar">
+            <div class="progress-fill" style="width:${progress || 0}%"></div>
+          </div>
+          <div class="progress-info">
+            <span>${progress || 0}% completado</span>
+            <span>${volunteer.volunteers || 0} de ${volunteer.volunteers_needed || 0} voluntarios</span>
+          </div>
+        </div>
+        <div class="volunteering-meta">
+          <div class="meta-item"><i class="fas fa-map-marker-alt"></i> ${location}</div>
+          <div class="meta-item"><i class="fas fa-calendar-alt"></i> ${startDate} - ${endDate}</div>
+          <div class="meta-item"><i class="fas fa-heart"></i> ${volunteer.beneficiaries || 0} beneficiarios</div>
+        </div>
+        <div class="volunteering-actions">
+          <button class="btn btn-primary view-volunteer-btn" data-volunteer-id="${volunteer.id}">
+            <i class="fas fa-eye"></i> Ver más
+          </button>
+          <button class="btn btn-accent" onclick="showShareOptionsVolunteer('${volunteer.id}')">
+            <i class="fas fa-share-alt"></i> Compartir
+          </button>
+        </div>
+      </div>
+    `;
+    container.appendChild(card);
+  });
+
+  // Agregar event listeners
+  container.querySelectorAll('.view-volunteer-btn').forEach(btn => {
+    btn.addEventListener('click', function(e) {
+      e.preventDefault();
+      const volunteerId = this.getAttribute('data-volunteer-id');
+      showVolunteeringModal(volunteerId);
+    });
+  });
+
+  return container;
 }
 </script>
 {% endblock %}
