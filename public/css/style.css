@@ -9,6 +9,338 @@
   --light: #f8f9fa;
   --gray: #e2e8f0;
   --white: #ffffff;
+  --urgent: #e53e3e;
+}
+
+/* ==================== RENDERERS: CHALLENGES & VOLUNTEERING ==================== */
+
+/* --- Variables adicionales para renderers --- */
+
+/* --- Estilos comunes para tarjetas --- */
+.challenge-card,
+.volunteering-card {
+  background: white;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+  transition: all 0.3s ease;
+  border: 1px solid var(--gray);
+  display: flex;
+  flex-direction: column;
+  font-family: 'Poppins', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.challenge-card:hover,
+.volunteering-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+  border-color: var(--accent);
+}
+
+/* --- Imágenes de tarjetas --- */
+.challenge-image,
+.volunteering-image {
+  height: 180px;
+  overflow: hidden;
+  position: relative;
+}
+
+.challenge-image img,
+.volunteering-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+.challenge-card:hover .challenge-image img,
+.volunteering-card:hover .volunteering-image img {
+  transform: scale(1.05);
+}
+
+/* --- Badges de tarjetas --- */
+.challenge-badge,
+.volunteering-badge {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  background: rgba(255, 255, 255, 0.9);
+  padding: 0.3rem 0.8rem;
+  border-radius: 50px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  font-family: 'Poppins', sans-serif;
+}
+
+.challenge-badge.urgent,
+.volunteering-badge.urgent {
+  background: var(--urgent);
+  color: white;
+}
+
+.challenge-badge.points,
+.volunteering-badge.points {
+  background: var(--primary);
+  color: white;
+  left: 1rem;
+  right: auto;
+}
+
+/* --- Contenido de tarjetas --- */
+.challenge-content,
+.volunteering-content {
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.challenge-content h3,
+.volunteering-content h3 {
+  font-size: 1.3rem;
+  margin-bottom: 0.8rem;
+  color: var(--dark);
+  font-weight: 700;
+  font-family: 'Poppins', sans-serif;
+}
+
+.challenge-content p,
+.volunteering-content p {
+  color: #6b7280;
+  margin-bottom: 1.5rem;
+  font-size: 0.95rem;
+  line-height: 1.6;
+  flex-grow: 1;
+}
+
+/* --- Meta información --- */
+.challenge-meta,
+.volunteering-meta {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+  font-size: 0.85rem;
+  flex-wrap: wrap;
+}
+
+.challenge-meta .meta-item,
+.volunteering-meta .meta-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: #6b7280;
+}
+
+.challenge-meta .meta-item i,
+.volunteering-meta .meta-item i {
+  color: var(--primary);
+}
+
+.challenge-meta .beneficiaries-count,
+.volunteering-meta .beneficiaries-count {
+  display: inline-flex;
+  align-items: center;
+  background: #f0f9ff;
+  color: var(--primary);
+  padding: 0.3rem 0.8rem;
+  border-radius: 50px;
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.challenge-meta .beneficiaries-count i,
+.volunteering-meta .beneficiaries-count i {
+  margin-right: 0.3rem;
+}
+
+/* --- Barras de progreso --- */
+.challenge-progress,
+.volunteering-progress {
+  margin-bottom: 1.5rem;
+}
+
+.challenge-progress .progress-bar,
+.volunteering-progress .progress-bar {
+  height: 8px;
+  background: var(--gray);
+  border-radius: 4px;
+  overflow: hidden;
+  margin-bottom: 0.5rem;
+}
+
+.challenge-progress .progress-fill,
+.volunteering-progress .progress-fill {
+  height: 100%;
+  background: var(--primary);
+  border-radius: 4px;
+  transition: width 0.3s ease;
+}
+
+.challenge-progress .progress-info,
+.volunteering-progress .progress-info {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.9rem;
+  color: #6b7280;
+}
+
+/* --- Acciones de tarjetas --- */
+.challenge-actions,
+.volunteering-actions {
+  display: flex;
+  gap: 0.8rem;
+}
+
+.challenge-actions .btn,
+.volunteering-actions .btn {
+  flex: 1;
+  text-align: center;
+  justify-content: center;
+}
+
+/* --- Causa vinculada --- */
+.challenge-content .linked-cause,
+.volunteering-content .linked-cause {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  background: #f8fafc;
+  padding: 0.8rem;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+  border: 1px solid #e5e7eb;
+}
+
+.challenge-content .linked-cause img,
+.volunteering-content .linked-cause img {
+  width: 50px;
+  height: 50px;
+  border-radius: 6px;
+  object-fit: cover;
+}
+
+.challenge-content .linked-cause span,
+.volunteering-content .linked-cause span {
+  font-weight: 600;
+  color: var(--primary);
+  font-size: 0.9rem;
+}
+
+/* --- Grids responsivos --- */
+.challenges-grid,
+.volunteering-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+  gap: 2rem;
+  padding: 1rem 0;
+}
+
+/* --- Modal específico para challenges y volunteering --- */
+.modal {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0,0,0,0.5);
+  z-index: 9999;
+  justify-content: center;
+  align-items: center;
+}
+
+.modal-content {
+  background: #fff;
+  padding: 2rem;
+  border-radius: 18px;
+  max-width: 800px;
+  width: 95%;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: 0 8px 32px rgba(74,111,165,0.13);
+  position: relative;
+  font-family: 'Poppins', sans-serif;
+}
+
+/* --- Responsive Design para renderers --- */
+@media (max-width: 768px) {
+  .challenges-grid,
+  .volunteering-grid {
+    grid-template-columns: 1fr;
+    padding: 1rem;
+  }
+  
+  .challenge-actions,
+  .volunteering-actions {
+    flex-direction: column;
+  }
+  
+  .challenge-meta,
+  .volunteering-meta {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+}
+
+@media (max-width: 900px) {
+  .challenges-grid,
+  .volunteering-grid {
+    padding: 1.2rem 0.5rem;
+  }
+}
+
+/* --- Estados de carga y vacío --- */
+.challenges-grid .empty-state,
+.volunteering-grid .empty-state {
+  grid-column: 1 / -1;
+  text-align: center;
+  padding: 3rem 2rem;
+  color: #6b7280;
+  font-size: 1.1rem;
+}
+
+.challenges-grid .loading-state,
+.volunteering-grid .loading-state {
+  grid-column: 1 / -1;
+  text-align: center;
+  padding: 3rem 2rem;
+  color: var(--primary);
+  font-size: 1.1rem;
+}
+
+/* --- Animaciones adicionales --- */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.challenge-card,
+.volunteering-card {
+  animation: fadeInUp 0.5s ease-out;
+}
+
+/* --- Botones específicos de participar --- */
+.challenge-actions .participate-btn:disabled,
+.volunteering-actions .participate-btn:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+  transform: none !important;
+}
+
+.challenge-actions .participate-btn:disabled:hover,
+.volunteering-actions .participate-btn:disabled:hover {
+  transform: none !important;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 
 * {
@@ -561,6 +893,23 @@ header {
 
   .section-header h2 {
     font-size: 2rem;
+  }
+
+  .challenges-grid,
+  .volunteering-grid {
+    grid-template-columns: 1fr;
+    padding: 1rem;
+  }
+  
+  .challenge-actions,
+  .volunteering-actions {
+    flex-direction: column;
+  }
+  
+  .challenge-meta,
+  .volunteering-meta {
+    flex-direction: column;
+    gap: 0.5rem;
   }
 }
 
