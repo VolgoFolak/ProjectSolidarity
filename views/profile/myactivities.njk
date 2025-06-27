@@ -61,39 +61,6 @@
       border-color: var(--primary);
     }
 
-    .tabs {
-      display: flex;
-      border-bottom: 1px solid var(--gray);
-      margin-bottom: 2rem;
-      flex-wrap: wrap;
-    }
-
-    .tab {
-      padding: 0.75rem 1.5rem;
-      cursor: pointer;
-      position: relative;
-      font-weight: 500;
-      color: #6b7280;
-      background: none;
-      border: none;
-      outline: none;
-    }
-
-    .tab.active {
-      color: var(--primary);
-      font-weight: 600;
-    }
-
-    .tab.active::after {
-      content: '';
-      position: absolute;
-      bottom: -1px;
-      left: 0;
-      width: 100%;
-      height: 3px;
-      background: var(--primary);
-    }
-
     /* Grid de actividades */
     .activities-grid {
       display: grid;
@@ -101,813 +68,12 @@
       gap: 2rem;
     }
 
-    /* Tarjetas de causas */
-    .cause-card {
-      background: #fff;
-      border-radius: 12px;
-      overflow: hidden;
-      box-shadow: 0 5px 15px rgba(0,0,0,0.05);
-      border: 1px solid var(--gray);
-      display: flex;
-      flex-direction: column;
-      transition: all 0.3s;
-      position: relative;
-    }
-    .cause-card:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 10px 25px rgba(0,0,0,0.1);
-      border-color: var(--primary);
-    }
-    .cause-image img {
-      width: 100%;
-      height: 180px;
-      object-fit: cover;
-      border-top-left-radius: 12px;
-      border-top-right-radius: 12px;
-    }
-    .cause-badge {
-      position: absolute;
-      top: 1rem;
-      right: 1rem;
-      background: rgba(255, 255, 255, 0.9);
-      padding: 0.3rem 0.8rem;
-      border-radius: 50px;
-      font-size: 0.8rem;
-      font-weight: 600;
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-    }
-    .cause-badge.urgent {
-      background: var(--urgent);
-      color: white;
-    }
-    .cause-badge.points {
-      background: var(--primary);
-      color: white;
-      left: 1rem;
-      right: auto;
-    }
-    .cause-content {
-      padding: 1.2rem 1.5rem 1.5rem 1.5rem;
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-    }
-    .cause-content h3 {
-      font-size: 1.2rem;
-      color: var(--primary);
-      margin-bottom: 0.5rem;
-      font-weight: 700;
-    }
-    .cause-content p {
-      color: #4a5568;
-      font-size: 0.97rem;
-      margin-bottom: 1rem;
-      flex: 1;
-    }
-    .cause-meta {
-      display: flex;
-      gap: 1.2rem;
-      font-size: 0.9rem;
-      margin-bottom: 1rem;
-      color: #6b7280;
-    }
-    .meta-item {
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-      color: #6b7280;
-    }
-    .meta-item i {
-      color: var(--primary);
-    }
-    .beneficiaries-count {
-      display: inline-flex;
-      align-items: center;
-      background: #f0f9ff;
-      color: var(--primary);
-      padding: 0.3rem 0.8rem;
-      border-radius: 50px;
-      font-size: 0.85rem;
-      font-weight: 600;
-    }
-    .beneficiaries-count i {
-      margin-right: 0.3rem;
-    }
-    .cause-progress {
-      margin-bottom: 1.5rem;
-    }
-    .progress-bar {
-      height: 8px;
-      background: var(--gray);
-      border-radius: 4px;
-      overflow: hidden;
-      margin-bottom: 0.5rem;
-    }
-    .progress-fill {
-      height: 100%;
-      background: var(--primary);
-      border-radius: 4px;
-      transition: width 0.4s cubic-bezier(.4,1,.7,1);
-    }
-    .progress-info {
-      display: flex;
-      justify-content: space-between;
-      font-size: 0.9rem;
-      color: #6b7280;
-    }
-    .cause-actions {
-      display: flex;
-      gap: 0.8rem;
-    }
-    .cause-actions .btn {
-      flex: 1;
-      text-align: center;
-      justify-content: center;
-    }
-    .btn-accent {
-      background: var(--accent);
-      color: white;
-    }
-    .btn-accent:hover {
-      background: var(--accent-dark);
-      transform: translateY(-2px);
-    }
-    .btn-sm {
-      padding: 0.4rem 0.8rem;
-      font-size: 0.85rem;
-    }
-    .role-badge.member {
-      background: #e3eefd;
-      color: var(--primary-dark);
-      border-radius: 999px;
-      font-size: 0.93em;
-      font-weight: 600;
-      position: relative;
-    }
-    .challenge-card:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 10px 25px #ffe06655;
-      border-color: #ffd600;
-    }
-    .challenge-image img {
-      width: 100%;
-      height: 180px;
-      object-fit: cover;
-      border-top-left-radius: 12px;
-      border-top-right-radius: 12px;
-    }
-    .challenge-content {
-      padding: 1.2rem 1.5rem 1.5rem 1.5rem;
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-    }
-    .challenge-content h3 {
-      font-size: 1.2rem;
-      color: var(--challenge-dark);
-      margin-bottom: 0.5rem;
-      font-weight: 700;
-    }
-    .challenge-content p {
-      color: #4a5568;
-      font-size: 0.97rem;
-      margin-bottom: 1rem;
-      flex: 1;
-    }
-    .challenge-meta {
-      display: flex;
-      gap: 1.2rem;
-      font-size: 0.9rem;
-      margin-bottom: 1rem;
-      color: #6b7280;
-    }
-    .challenge-actions {
-      display: flex;
-      gap: 0.7rem;
-      margin-top: 1rem;
-    }
-
-    /* Tarjetas de voluntariado */
-    .volunteering-card {
-      background: #e6faff;
-      border-radius: 12px;
-      overflow: hidden;
-      box-shadow: 0 5px 15px rgba(0,0,0,0.05);
-      border: 1px solid #00bcd4;
-      display: flex;
-      flex-direction: column;
-      transition: all 0.3s;
-      position: relative;
-    }
-    .volunteering-card:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 10px 25px #00bcd422;
-      border-color: #0097a7;
-    }
-    .volunteering-image img {
-      width: 100%;
-      height: 180px;
-      object-fit: cover;
-      border-top-left-radius: 12px;
-      border-top-right-radius: 12px;
-    }
-    .volunteering-content {
-      padding: 1.2rem 1.5rem 1.5rem 1.5rem;
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-    }
-    .volunteering-content h3 {
-      font-size: 1.2rem;
-      color: var(--volunteering-dark);
-      margin-bottom: 0.5rem;
-      font-weight: 700;
-    }
-    .volunteering-content p {
-      color: #4a5568;
-      font-size: 0.97rem;
-      margin-bottom: 1rem;
-      flex: 1;
-    }
-    .volunteering-meta {
-      display: flex;
-      gap: 1.2rem;
-      font-size: 0.9rem;
-      margin-bottom: 1rem;
-      color: #6b7280;
-    }
-    .volunteering-actions {
-      display: flex;
-      gap: 0.7rem;
-      margin-top: 1rem;
-    }
-
-    /* Modal administración */
-    .admin-modal {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(0,0,0,0.5);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      z-index: 1000;
-      opacity: 0;
-      visibility: hidden;
-      transition: all 0.3s;
-    }
-    .admin-modal.active {
-      opacity: 1;
-      visibility: visible;
-    }
-    .admin-modal-content {
-      background: white;
-      border-radius: 12px;
-      width: 90%;
-      max-width: 800px;
-      max-height: 90vh;
-      overflow-y: auto;
-      padding: 2rem;
-      box-shadow: 0 5px 20px rgba(0,0,0,0.2);
-      position: relative;
-    }
-    .close-admin-modal {
-      position: absolute;
-      top: 1rem;
-      right: 1rem;
-      background: none;
-      border: none;
-      font-size: 1.5rem;
-      cursor: pointer;
-      color: #6b7280;
-    }
-    .admin-tabs {
-      display: flex;
-      border-bottom: 1px solid #e2e8f0;
-      margin-bottom: 1.5rem;
-    }
-    .admin-tab {
-      padding: 0.75rem 1.5rem;
-      cursor: pointer;
-      position: relative;
-      font-weight: 500;
-      color: #6b7280;
-      background: none;
-      border: none;
-      outline: none;
-    }
-    .admin-tab.active {
-      color: var(--primary);
-      font-weight: 600;
-    }
-    .admin-tab.active::after {
-      content: '';
-      position: absolute;
-      bottom: -1px;
-      left: 0;
-      width: 100%;
-      height: 3px;
-      background: var(--primary);
-    }
-    .admin-tab-content {
-      display: none;
-    }
-    .admin-tab-content.active {
-      display: block;
-    }
-    .stats-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-      gap: 1rem;
-      margin-bottom: 1.5rem;
-    }
-    .stat-card {
-      background: #f8fafc;
-      border-radius: 8px;
-      padding: 1.5rem;
-      text-align: center;
-    }
-    .stat-value {
-      font-size: 2rem;
-      font-weight: 700;
-      color: var(--primary);
-      margin-bottom: 0.5rem;
-    }
-    .stat-label {
-      color: #6b7280;
-      font-size: 0.9rem;
-    }
-    .progress-bar {
-      width: 100%;
-      background: var(--gray);
-      border-radius: 4px;
-      height: 8px;
-      position: relative;
-      overflow: hidden;
-      margin-bottom: 0.5rem;
-      box-shadow: none;
-    }
-    .progress-fill {
-      height: 100%;
-      background: var(--primary);
-      border-radius: 4px;
-      transition: width 0.4s cubic-bezier(.4,1,.7,1);
-      color: #fff;
-      font-size: 0.95em;
-      font-weight: 700;
-      display: flex;
-      align-items: center;
-      justify-content: flex-end;
-      padding-right: 8px;
-      box-shadow: none;
-    }
-    .progress-info {
-      display: flex;
-      justify-content: space-between;
-      font-size: 0.9rem;
-      color: #6b7280;
-    }
-    .members-list {
-      margin-top: 1rem;
-    }
-    .member-item {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 1rem;
-      border-bottom: 1px solid #e2e8f0;
-    }
-    .member-info {
-      display: flex;
-      align-items: center;
-      gap: 1rem;
-    }
-    .member-avatar {
-      width: 40px;
-      height: 40px;
-      border-radius: 50%;
-      object-fit: cover;
-    }
-    .member-name {
-      font-weight: 600;
-    }
-    .member-actions {
-      display: flex;
-      gap: 0.5rem;
-    }
-    .form-section-title {
-      color: var(--primary);
-      font-size: 1.25rem;
-      font-weight: 700;
-      margin-bottom: 1.2rem;
-      display: flex;
-      align-items: center;
-      gap: 0.7rem;
-    }
-    .form-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 1.2rem 2.2rem;
-    }
-    .form-group {
-      display: flex;
-      flex-direction: column;
-      gap: 0.4rem;
-    }
-    .form-group-full {
-      grid-column: 1 / -1;
-    }
-    .form-group label {
-      color: var(--primary);
-      font-weight: 600;
-      font-size: 1rem;
-      margin-bottom: 0.2rem;
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-    }
-    .form-group input[type="text"],
-    .form-group input[type="number"],
-    .form-group select,
-    .form-group textarea {
-      padding: 0.7rem 1rem;
-      border-radius: 8px;
-      border: 1.5px solid var(--gray);
-      font-size: 1rem;
-      background: #f8fafc;
-      color: #2d3748;
-      transition: border 0.2s;
-    }
-    .form-group input[type="text"]:focus,
-    .form-group input[type="number"]:focus,
-    .form-group select:focus,
-    .form-group textarea:focus {
-      border: 1.5px solid var(--primary);
-      outline: none;
-    }
-    .form-actions {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 1rem;
-      margin-top: 2rem;
-      justify-content: flex-end;
-    }
-    @media (max-width: 700px) {
-      .form-grid {
-        grid-template-columns: 1fr;
-      }
-      .form-actions {
-        flex-direction: column;
-        align-items: stretch;
-      }
-      .admin-modal-content {
-        width: 95%;
-        padding: 1rem;
-      }
-      .member-item {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 1rem;
-      }
-      .member-actions {
-        width: 100%;
-        justify-content: flex-end;
-      }
-    }
-
     /* Responsive */
     @media (max-width: 768px) {
       .activities-grid {
         grid-template-columns: 1fr;
       }
-      .cause-card, .task-card, .challenge-card, .volunteering-card {
-        margin-bottom: 1.5rem;
-      }
-      .actions, .task-actions, .challenge-actions, .volunteering-actions {
-        flex-direction: column;
-      }
     }
-
-    /* Estilo para la info del modal, similar al modal "ver más" */
-    .modal-info-title {
-      font-size: 1.18rem;
-      font-weight: 700;
-      color: var(--primary-dark);
-      margin-bottom: 0.3rem;
-    }
-    .modal-info-meta {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 1.1rem;
-      font-size: 0.97rem;
-      color: #6b7280;
-      margin-bottom: 0.7rem;
-      align-items: center;
-    }
-    .modal-info-summary {
-      font-size: 1.01rem;
-      color: #4a5568;
-      margin-bottom: 0.6rem;
-      font-style: italic;
-    }
-    .modal-info-desc {
-      font-size: 1.05rem;
-      color: #374151;
-      margin-bottom: 0.5rem;
-      white-space: pre-line;
-    }
-    .modal-info-progress {
-      margin-bottom: 0.7rem;
-    }
-    .modal-info-progress-bar {
-      width: 100%;
-      background: var(--gray);
-      border-radius: 4px;
-      height: 8px;
-      position: relative;
-      overflow: hidden;
-      margin-bottom: 0.3rem;
-    }
-    .modal-info-progress-inner {
-      height: 100%;
-      background: var(--primary);
-      border-radius: 4px;
-      transition: width 0.4s cubic-bezier(.4,1,.7,1);
-    }
-    .modal-info-progress-labels {
-      display: flex;
-      justify-content: space-between;
-      font-size: 0.93rem;
-      color: #6b7280;
-    }
-
-    /* Solo añade o modifica este bloque para los títulos y subtítulos del modal admin */
-    .admin-modal-content h2#adminModalTitle {
-      font-size: 1.6rem;
-      font-weight: 800;
-      color: var(--primary);
-      margin-bottom: 2rem;
-      text-align: center;
-      letter-spacing: -1px;
-      display: flex;
-      align-items: center;
-      gap: 0.7rem;
-      justify-content: center;
-    }
-    .admin-modal-content h3,
-    .admin-modal-content .form-section-title {
-      color: var(--primary);
-      font-size: 1.18rem;
-      font-weight: 700;
-      margin-bottom: 1.2rem;
-      margin-top: 0.5rem;
-      letter-spacing: -0.5px;
-      display: flex;
-      align-items: center;
-      gap: 0.7rem;
-    }
-    .admin-modal-content label {
-      color: var(--primary);
-      font-weight: 600;
-      font-size: 1rem;
-      margin-bottom: 0.2rem;
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-    }
-    .admin-modal-content .stat-value {
-      color: var(--primary);
-      font-size: 1.5rem;
-      font-weight: 700;
-    }
-    .admin-modal-content .stat-label {
-      color: #6b7280;
-      font-size: 0.97rem;
-      font-weight: 500;
-    }
-    .admin-modal-content .progress-info {
-      color: #4a6fa5;
-      font-size: 0.97rem;
-      font-weight: 500;
-    }
-    .admin-modal-content .role-badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.4em;
-      padding: 0.25em 0.7em;
-      border-radius: 999px;
-      font-size: 0.93em;
-      font-weight: 600;
-      background: #e3eefd;
-      color: var(--primary-dark);
-    }
-    .admin-modal-content .role-badge.admin {
-      background: #4a6fa5;
-      color: #fff;
-    }
-    .admin-modal-content .role-badge.member {
-      background: #e3eefd;
-      color: var(--primary-dark);
-      border-radius: 999px;
-      font-size: 0.93em;
-      font-weight: 600;
-      padding: 0.25em 0.7em;
-      display: inline-flex;
-      align-items: center;
-      gap: 0.4em;
-      border: none;
-      box-shadow: none;
-      cursor: default;
-      pointer-events: none;
-      user-select: none;
-      transition: background 0.2s, color 0.2s;
-    }
-    .admin-modal-content .role-badge.member i {
-      color: var(--primary-dark);
-      font-size: 1em;
-    }
-   
-    /* Fin de bloque de homogeneidad visual para títulos y badges del modal admin */
-    /* Badge "Miembro" bonito y homogéneo en TODAS las tarjetas, no solo en el modal */
-.role-badge.member {
-  background: #e3eefd;
-  color: var(--primary-dark);
-  border-radius: 999px;
-  font-size: 0.93em;
-  font-weight: 600;
-  padding: 0.25em 0.7em;
-  display: inline-flex;
-  align-items: center;
-  gap: 0.4em;
-  border: none;
-  box-shadow: none;
-  cursor: default;
-  pointer-events: none;
-  user-select: none;
-  transition: background 0.2s, color 0.2s;
-}
-.role-badge.member i {
-  color: var(--primary-dark);
-  font-size: 1em;
-}
-.task-card {
-  background: #fff;
-  border-radius: 12px;
-  overflow: hidden;
-  box-shadow: 0 5px 15px rgba(0,0,0,0.05);
-  border: 1px solid var(--gray);
-  display: flex;
-  flex-direction: column;
-  transition: all 0.3s;
-  position: relative;
-}
-.task-card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 10px 25px rgba(0,0,0,0.1);
-  border-color: var(--accent);
-}
-.task-image {
-  height: 180px;
-  overflow: hidden;
-  position: relative;
-}
-.task-image img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  transition: transform 0.3s ease;
-}
-.task-card:hover .task-image img {
-  transform: scale(1.05);
-}
-.task-badge {
-  position: absolute;
-  top: 1rem;
-  right: 1rem;
-  background: rgba(255, 255, 255, 0.9);
-  padding: 0.3rem 0.8rem;
-  border-radius: 50px;
-  font-size: 0.8rem;
-  font-weight: 600;
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-}
-.task-badge.urgent {
-  background: var(--urgent);
-  color: white;
-}
-.task-badge.points {
-  background: var(--primary);
-  color: white;
-  left: 1rem;
-  right: auto;
-}
-.task-content {
-  padding: 1.2rem 1.5rem 1.5rem 1.5rem;
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-}
-.task-content h3 {
-  font-size: 1.2rem;
-  color: var(--accent);
-  margin-bottom: 0.5rem;
-  font-weight: 700;
-}
-.task-content p {
-  color: #4a5568;
-  font-size: 0.97rem;
-  margin-bottom: 1rem;
-  flex: 1;
-}
-.task-meta {
-  display: flex;
-  gap: 1.2rem;
-  font-size: 0.9rem;
-  margin-bottom: 1rem;
-  color: #6b7280;
-}
-.linked-cause {
-  display: inline-flex;
-  align-items: center;
-  background: #f0f0ff;
-  color: var(--primary);
-  padding: 0.3rem 0.8rem;
-  border-radius: 50px;
-  font-size: 0.85rem;
-  font-weight: 600;
-  margin-bottom: 1rem;
-}
-.linked-cause img {
-  width: 22px;
-  height: 22px;
-  object-fit: cover;
-  border-radius: 50%;
-  border: 1px solid #e5e7eb;
-  margin-right: 0.4em;
-}
-.task-progress {
-  margin-bottom: 1.5rem;
-}
-.task-actions {
-  display: flex;
-  gap: 0.7rem;
-  margin-top: 1rem;
-}
-
-/* Estilos para el modal de la tarea */
-.modal-task-container {
-  font-family: 'Inter', sans-serif;
-  color: #2d3748;
-}
-.modal-task-title {
-  font-size: 1.8rem;
-  font-weight: 700;
-  color: var(--primary);
-  margin-bottom: 1rem;
-  line-height: 1.3;
-}
-.modal-task-badge {
-  position: absolute;
-  top: 1.5rem;
-  right: 1.5rem;
-  background: rgba(255,255,255,0.95);
-  padding: 0.5rem 1rem;
-  border-radius: 50px;
-  font-size: 0.9rem;
-  font-weight: 600;
-  display: flex;
-  align-items: center;
-  gap: 0.6rem;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-  z-index: 2;
-}
-.content-title {
-  font-size: 1.3rem;
-  font-weight: 600;
-  color: var(--primary);
-  margin-bottom: 1rem;
-  display: flex;
-  align-items: center;
-  gap: 0.7rem;
-}
-.content-text {
-  line-height: 1.7;
-  color: #4b5563;
-  font-size: 1.05rem;
-}
-.share-section {
-  margin-top: 2rem;
-  padding-top: 2rem;
-  border-top: 1px solid #e5e7eb;
-}
   </style>
 {% endblock %}
 
@@ -919,6 +85,27 @@
     <div class="search-container">
       <input type="text" id="search-input" placeholder="Buscar entre tus actividades...">
       <i class="fas fa-search" style="color:#4a6fa5;"></i>
+    </div>
+
+    <!-- Estado vacío general (aparece antes de las secciones) -->
+    <div id="generalEmptyState" class="empty-state" style="text-align: center; padding: 3rem; margin-bottom: 2rem; background: linear-gradient(135deg, #f0f9ff 0%, #e6f0fa 100%); border-radius: 12px; border: 1px solid var(--gray);">
+      <i class="fas fa-clipboard-list" style="font-size: 3rem; color: #a0aec0; margin-bottom: 1rem;"></i>
+      <h3 style="color: #4a5568; margin-bottom: 0.5rem;">No tienes actividades solidarias aún</h3>
+      <p style="color: #718096; margin-bottom: 1.5rem;">Empieza creando una nueva actividad o únete a alguna existente.</p>
+      <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
+        <a href="/causes" class="btn btn-primary" style="display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.8rem 1.5rem; border-radius: 8px; font-weight: 600; text-decoration: none; background: var(--primary); color: white;">
+          <i class="fas fa-heart"></i> Explorar causas
+        </a>
+        <a href="/tasks" class="btn btn-accent" style="display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.8rem 1.5rem; border-radius: 8px; font-weight: 600; text-decoration: none; background: var(--accent); color: white;">
+          <i class="fas fa-tasks"></i> Ver tareas
+        </a>
+        <a href="/challenges" class="btn btn-warning" style="display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.8rem 1.5rem; border-radius: 8px; font-weight: 600; text-decoration: none; background: var(--challenge); color: #333;">
+          <i class="fas fa-trophy"></i> Descubrir retos
+        </a>
+        <a href="/volunteering" class="btn btn-secondary" style="display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.8rem 1.5rem; border-radius: 8px; font-weight: 600; text-decoration: none; background: var(--volunteering); color: white;">
+          <i class="fas fa-hands-helping"></i> Ver voluntariados
+        </a>
+      </div>
     </div>
 
     <!-- Sección de Causas -->
@@ -982,138 +169,25 @@
           <i class="fas fa-hands-helping"></i>
         </div>
         <div>
-          <h2 style="color:var(--volunteering-dark);font-weight:900;fontsize:1.45rem;margin:0;letter-spacing:-1px;">Tus voluntariados</h2>
+          <h2 style="color:var(--volunteering-dark);font-weight:900;font-size:1.45rem;margin:0;letter-spacing:-1px;">Tus voluntariados</h2>
           <div style="color:#0097a7;font-size:1rem;font-weight:500;">Tus acciones de voluntariado</div>
         </div>
       </div>
       <div class="activities-grid" id="volunteeringGrid"></div>
     </section>
   </div>
-
-  <!-- Modal de administración de actividad -->
-  <div class="admin-modal" id="adminModal">
-    <div class="admin-modal-content">
-      <button class="close-admin-modal" id="closeAdminModal">&times;</button>
-      <h2 id="adminModalTitle">Administrar Actividad</h2>
-      <div class="admin-tabs">
-        <button class="admin-tab active" data-tab="overview">Resumen</button>
-        <button class="admin-tab" data-tab="members">Miembros</button>
-        <button class="admin-tab" data-tab="settings">Configuración</button>
-        <button class="admin-tab" data-tab="content">Contenido</button>
-      </div>
-      <div class="admin-tab-content active" id="overviewTab">
-        <div class="stats-grid">
-          <div class="stat-card">
-            <div class="stat-value" id="participantsCount">0</div>
-            <div class="stat-label">Participantes</div>
-          </div>
-          <div class="stat-card">
-            <div class="stat-value" id="impactPoints">0</div>
-            <div class="stat-label">Puntos de Impacto</div>
-          </div>
-          <div class="stat-card">
-            <div class="stat-value" id="beneficiariesCount">0</div>
-            <div class="stat-label">Beneficiarios</div>
-          </div>
-        </div>
-        <h3>Progreso de la actividad</h3>
-        <div class="progress-bar">
-          <div class="progress-fill" id="activityProgress" style="width: 0%"></div>
-        </div>
-        <div class="progress-info">
-          <span id="progressPercent">0% completado</span>
-          <span id="progressAmount">0 € de 0 €</span>
-        </div>
-        <div style="margin-top:1.5rem;">
-          <strong>Resumen:</strong> <span id="activitySummary"></span><br>
-          <strong>Descripción:</strong> <span id="activityDescription"></span>
-        </div>
-      </div>
-      <div class="admin-tab-content" id="membersTab">
-        <h3>Miembros actuales</h3>
-        <div class="members-list" id="membersList"></div>
-      </div>
-      <div class="admin-tab-content" id="settingsTab">
-        <!-- Dentro de #settingsTab en el modal de administración -->
-        <form class="cause-form" id="editCauseForm" autocomplete="off" style="margin-top:1.2rem;">
-          <div class="form-group">
-            <label for="editTitle">Título de la causa</label>
-            <input type="text" id="editTitle" name="editTitle" required>
-          </div>
-          <div class="form-group">
-            <label for="editShortDescription">Resumen (máx. 3 líneas)</label>
-            <textarea id="editShortDescription" name="editShortDescription" maxlength="180" required></textarea>
-          </div>
-          <div class="form-group">
-            <label for="editDescription">Descripción exhaustiva</label>
-            <textarea id="editDescription" name="editDescription" required></textarea>
-          </div>
-          <div class="form-group">
-            <label for="editPhoto">Foto principal</label>
-            <input type="file" id="editPhoto" name="editPhoto" accept="image/*">
-            <img id="editPreviewImg" class="preview-img" alt="Vista previa de la foto" style="display:none;">
-          </div>
-          <div class="form-inline-group">
-            <div class="form-group">
-              <label for="editGoal">Meta de recaudación (€)</label>
-              <input type="number" id="editGoal" name="editGoal" min="1" step="0.01" required>
-            </div>
-            <div class="form-group">
-              <label for="editBeneficiaries">Nº de beneficiarios</label>
-              <input type="number" id="editBeneficiaries" name="editBeneficiaries" min="1" required>
-            </div>
-          </div>
-          <div class="form-inline-group">
-            <div class="form-group">
-              <label for="editCity">Ciudad</label>
-              <input type="text" id="editCity" name="editCity" required>
-            </div>
-            <div class="form-group">
-              <label for="editCountry">País</label>
-              <input type="text" id="editCountry" name="editCountry" required>
-            </div>
-          </div>
-          <div class="form-group">
-            <label for="editPoints">Puntos por colaborar</label>
-            <input type="number" id="editPoints" name="editPoints" min="1" max="1000" required>
-            <div class="points-info" id="editPointsText">
-              <i class="fas fa-star"></i>
-              Colaborar en esta causa otorgará <strong>50 puntos</strong> a cada participante.
-            </div>
-          </div>
-          <input type="hidden" id="editLat" name="editLat">
-          <input type="hidden" id="editLng" name="editLng">
-          <button type="submit" class="btn btn-primary" style="margin-top:1rem;">
-            <i class="fas fa-save"></i> Guardar Cambios
-          </button>
-        </form>
-      </div>
-      <div class="admin-tab-content" id="contentTab">
-        <h3>Mensaje para los participantes</h3>
-        <textarea id="activityMessage" rows="5" style="width: 100%; margin-bottom: 1rem;"></textarea>
-        <button class="btn btn-primary" id="saveMessageBtn">
-          <i class="fas fa-bullhorn"></i> Publicar Mensaje
-        </button>
-      </div>
-    </div>
-  </div>
-{% endblock %}   {# <-- CIERRA EL BLOQUE CONTENT AQUÍ #}
+{% endblock %}
 
 {% block scripts %}
   {{ super() }}
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="/js/modules/causes-renderer.js"></script>
+  <script src="/js/modules/challenges-renderer.js"></script>
+  <script src="/js/modules/volunteering-renderer.js"></script>
+  <script src="/js/modules/share-system.js"></script>
   <script>
     document.addEventListener('DOMContentLoaded', async function() {
-      // --- Funciones auxiliares ---
-      function formatDate(dateString) {
-        if (!dateString) return 'Sin fecha';
-        const date = new Date(dateString);
-        return date.toLocaleDateString('es-ES', {
-          day: 'numeric',
-          month: 'short',
-          year: 'numeric'
-        });
-      }
-
+      // --- Funciones auxiliares básicas ---
       function showToast(message, type = 'success') {
         const toast = document.createElement('div');
         toast.textContent = message;
@@ -1123,7 +197,7 @@
         toast.style.transform = 'translateX(-50%)';
         toast.style.padding = '14px 28px';
         toast.style.borderRadius = '8px';
-        toast.style.backgroundColor = type === 'success' ? '#4fc3a1' : '#e53e3e';
+        toast.style.backgroundColor = type === 'success' ? '#4fc3a1' : type === 'info' ? '#4a6fa5' : '#e53e3e';
         toast.style.color = '#fff';
         toast.style.fontWeight = '600';
         toast.style.fontSize = '1.05rem';
@@ -1139,168 +213,14 @@
         }, 2200);
       }
 
-      // --- MODAL ADMIN robusto con datos y edición ---
-      window.openAdminActivityModal = async function(activityId, activityType) {
-        // Busca la actividad seleccionada
-        const act = (window.allActivities || allActivities || []).find(a => a.id == activityId && a.type == activityType);
-        if (!act) return;
-
-        // Rellena los campos del modal (Resumen)
-        document.getElementById('adminModalTitle').textContent = `Administrar: ${act.title || ''}`;
-        document.getElementById('participantsCount').textContent = act.participants || 0;
-        document.getElementById('impactPoints').textContent = act.points || 0;
-        document.getElementById('beneficiariesCount').textContent = act.beneficiaries || 0;
-        document.getElementById('activitySummary').textContent = act.short_description || '';
-        document.getElementById('activityDescription').textContent = act.description || '';
-
-        // --- Megadatos en el resumen ---
-        const oldExtra = document.getElementById('modal-extra-info');
-        if (oldExtra) oldExtra.remove();
-        const resumenExtra = `
-          <div id="modal-extra-info" style="margin-top:1rem;font-size:0.98em;color:#666;">
-            <strong>Tipo:</strong> ${activityType.charAt(0).toUpperCase() + activityType.slice(1)}<br>
-            <strong>Ciudad:</strong> ${act.city || '-'}<br>
-            <strong>País:</strong> ${act.country || '-'}<br>
-            <strong>Creada:</strong> ${formatDate(act.created_at)}
-          </div>
-        `;
-        document.getElementById('activityDescription').parentElement.insertAdjacentHTML('beforeend', resumenExtra);
-
-        // Progreso
-        const meta = act.goal || 0;
-        const recaudado = act.raised || 0;
-        const porcentaje = meta ? Math.min(100, Math.round((recaudado / meta) * 100)) : 0;
-        document.getElementById('activityProgress').style.width = porcentaje + '%';
-        document.getElementById('progressPercent').textContent = `${porcentaje}% completado`;
-        document.getElementById('progressAmount').textContent = `${recaudado} € de ${meta} €`;
-
-        // Rellena los campos del formulario de edición (Configuración)
-        document.getElementById('editTitle').value = act.title || '';
-        document.getElementById('editShortDescription').value = act.short_description || '';
-        document.getElementById('editDescription').value = act.description || '';
-        document.getElementById('editGoal').value = act.goal || '';
-        document.getElementById('editBeneficiaries').value = act.beneficiaries || '';
-        document.getElementById('editCity').value = act.city || '';
-        document.getElementById('editCountry').value = act.country || '';
-        document.getElementById('editPoints').value = act.points || '';
-        document.getElementById('editLat').value = act.lat || '';
-        document.getElementById('editLng').value = act.lng || '';
-        document.getElementById('editPreviewImg').style.display = act.photo_url ? 'block' : 'none';
-        document.getElementById('editPreviewImg').src = act.photo_url || '';
-
-        // Mensaje para participantes (Contenido)
-        document.getElementById('activityMessage').value = act.message || '';
-
-        // Abre el modal
-        document.getElementById('adminModal').classList.add('active');
-        document.body.style.overflow = 'hidden';
-
-        // Guarda el id y tipo de la actividad editada para el submit
-        document.getElementById('editCauseForm').dataset.activityId = activityId;
-        document.getElementById('editCauseForm').dataset.activityType = activityType;
-
-        // --- Cargar miembros participantes en el modal ---
-        const membersList = document.getElementById('membersList');
-        membersList.innerHTML = '<div style="color:#888;">Cargando miembros...</div>';
-        let members = [];
-        let membersTable = '';
-        let idField = '';
-        if (activityType === 'cause') {
-          membersTable = 'causes_members';
-          idField = 'cause_id';
-        } else if (activityType === 'task') {
-          membersTable = 'task_members';
-          idField = 'task_id';
-        } else if (activityType === 'challenge') {
-          membersTable = 'challenges_members';
-          idField = 'challenge_id';
-        } else if (activityType === 'volunteering') {
-          membersTable = 'volunteering_members';
-          idField = 'volunteering_id';
-        }
-        if (membersTable && idField) {
-          // 1. Traer user_id, role y status de la tabla de miembros
-          const { data: memberRows } = await supabase
-            .from(membersTable)
-            .select('user_id, role, status')
-            .eq(idField, activityId);
-
-          if (memberRows && memberRows.length > 0) {
-            // 2. Traer username y photo_url de cada usuario
-            const userIds = memberRows.map(m => m.user_id);
-            const { data: profiles } = await supabase
-              .from('profiles')
-              .select('id, username, photo_url')
-              .in('id', userIds);
-
-            // 3. Unir datos y renderizar
-            members = memberRows.map(m => {
-              const profile = profiles?.find(p => p.id === m.user_id) || {};
-              return {
-                ...m,
-                username: profile.username || m.user_id,
-                photo_url: profile.photo_url || 'https://via.placeholder.com/40?text=U'
-              };
-            });
-          }
-        }
-
-        // Renderizar miembros
-        membersList.innerHTML = '';
-        if (members.length === 0) {
-          membersList.innerHTML = '<div style="color:#888;">No hay miembros en esta actividad.</div>';
-        } else {
-          members.forEach(member => {
-            membersList.innerHTML += `
-              <div class="member-item">
-                <div class="member-info">
-                  <img src="${member.photo_url}" class="member-avatar" alt="${member.username}">
-                  <span class="member-name">${member.username}</span>
-                </div>
-                <div class="member-actions">
-                  <span class="role-badge ${member.role === 'founder' ? 'admin' : 'member'}">
-                    <i class="fas fa-user"></i> ${member.role}
-                  </span>
-                </div>
-              </div>
-            `;
-          });
-        }
-      };
-
-      document.getElementById('closeAdminModal')?.addEventListener('click', function() {
-        document.getElementById('adminModal').classList.remove('active');
-        document.body.style.overflow = '';
-      });
-
-      document.getElementById('adminModal')?.addEventListener('click', function(e) {
-        if (e.target === this) {
-          document.getElementById('adminModal').classList.remove('active');
-          document.body.style.overflow = '';
-        }
-      });
-
-      document.querySelectorAll('.admin-tab').forEach(tab => {
-        tab.addEventListener('click', function() {
-          document.querySelectorAll('.admin-tab').forEach(t => t.classList.remove('active'));
-          document.querySelectorAll('.admin-tab-content').forEach(c => c.classList.remove('active'));
-          this.classList.add('active');
-          const tabId = this.getAttribute('data-tab');
-          document.getElementById(tabId + 'Tab').classList.add('active');
-        });
-      });
-
-      document.addEventListener('keydown', function(e) {
-        if (e.key === 'Escape') {
-          document.getElementById('adminModal').classList.remove('active');
-          document.body.style.overflow = '';
-        }
-      });
-
       // --- Variables globales ---
       let userId = null;
-      window.allActivities = [];
-      let filteredActivities = [];
+      let userActivities = {
+        causes: [],
+        tasks: [],
+        challenges: [],
+        volunteering: []
+      };
 
       // --- Obtener usuario actual ---
       const { data: { session } } = await supabase.auth.getSession();
@@ -1310,436 +230,23 @@
       }
       userId = session.user.id;
 
-      // --- Cargar actividades del usuario ---
-      async function loadUserActivities() {
-        try {
-          // 1. Causas
-          const { data: createdCauses } = await supabase
-            .from('causes')
-            .select('*')
-            .eq('user_id', userId);
-
-          const { data: joinedCauses } = await supabase
-            .from('causes_members')
-            .select('cause_id, role, status')
-            .eq('user_id', userId);
-
-          let joinedCausesDetails = [];
-          if (joinedCauses && joinedCauses.length > 0) {
-            const causeIds = joinedCauses.map(j => j.cause_id);
-            const { data: causesDetails } = await supabase
-              .from('causes')
-              .select('*')
-              .in('id', causeIds);
-
-            joinedCausesDetails = causesDetails.map(cause => {
-              const part = joinedCauses.find(j => j.cause_id === cause.id);
-              return { ...cause, role: part.role, status: part.status };
-            });
-          }
-
-          // 2. Tareas
-          const { data: createdTasks } = await supabase
-            .from('tasks')
-            .select('*')
-            .eq('user_id', userId);
-
-          const { data: joinedTasks } = await supabase
-            .from('task_members')
-            .select('task_id, role, status')
-            .eq('user_id', userId);
-
-          let joinedTasksDetails = [];
-          if (joinedTasks && joinedTasks.length > 0) {
-            const taskIds = joinedTasks.map(j => j.task_id);
-            const { data: tasksDetails } = await supabase
-              .from('tasks')
-              .select('*')
-              .in('id', taskIds);
-
-            joinedTasksDetails = tasksDetails.map(task => {
-              const part = joinedTasks.find(j => j.task_id === task.id);
-              return { ...task, role: part.role, status: part.status };
-            });
-          }
-
-          // 3. Retos
-          const { data: createdChallenges } = await supabase
-            .from('challenges')
-            .select('*')
-            .eq('creator_id', userId);
-
-          const { data: joinedChallenges } = await supabase
-            .from('challenges_members')
-            .select('challenge_id, role, status')
-            .eq('user_id', userId);
-
-          let joinedChallengesDetails = [];
-          if (joinedChallenges && joinedChallenges.length > 0) {
-            const challengeIds = joinedChallenges.map(j => j.challenge_id);
-            const { data: challengesDetails } = await supabase
-              .from('challenges')
-              .select('*')
-              .in('id', challengeIds);
-
-            joinedChallengesDetails = challengesDetails.map(challenge => {
-              const part = joinedChallenges.find(j => j.challenge_id === challenge.id);
-              return { ...challenge, role: part.role, status: part.status };
-            });
-          }
-
-          // 4. Voluntariados
-          const { data: createdVolunteering } = await supabase
-            .from('volunteering')
-            .select('*')
-            .eq('user_id', userId);
-
-          const { data: joinedVolunteering } = await supabase
-            .from('volunteering_members')
-            .select('volunteering_id, role, status')
-            .eq('user_id', userId);
-
-          let joinedVolunteeringDetails = [];
-          if (joinedVolunteering && joinedVolunteering.length > 0) {
-            const volunteeringIds = joinedVolunteering.map(j => j.volunteering_id);
-            const { data: volunteeringDetails } = await supabase
-              .from('volunteering')
-              .select('*')
-              .in('id', volunteeringIds);
-
-            joinedVolunteeringDetails = volunteeringDetails.map(vol => {
-              const part = joinedVolunteering.find(j => j.volunteering_id === vol.id);
-              return { ...vol, role: part.role, status: part.status };
-            });
-          }
-
-          // Unificar y normalizar
-          const normalize = (arr, type, isCreator = false) =>
-            arr.map(item => ({
-              ...item,
-              type,
-              isCreator,
-              status: item.status || 'in_progress'
-            }));
-
-          window.allActivities = [
-            ...normalize(createdCauses || [], 'cause', true),
-            ...normalize(joinedCausesDetails || [], 'cause', false),
-            ...normalize(createdTasks || [], 'task', true),
-            ...normalize(joinedTasksDetails || [], 'task', false),
-            ...normalize(createdChallenges || [], 'challenge', true),
-            ...normalize(joinedChallengesDetails || [], 'challenge', false),
-            ...normalize(createdVolunteering || [], 'volunteering', true),
-            ...normalize(joinedVolunteeringDetails || [], 'volunteering', false)
-          ];
-
-          // Eliminar duplicados
-          const activityMap = new Map();
-          window.allActivities.forEach(act => {
-            activityMap.set(`${act.type}-${act.id}`, act);
+      // --- Cargar causas map para challenges ---
+      async function loadCausesMap() {
+        const { data: causes } = await supabase.from('causes').select('id, title, photo_url, short_description');
+        if (causes) {
+          window.causesMap = {};
+          causes.forEach(c => {
+            window.causesMap[c.id] = {
+              title: c.title,
+              photo_url: c.photo_url,
+              short_description: c.short_description
+            };
           });
-          window.allActivities = Array.from(activityMap.values());
-
-          // Ordenar por fecha
-          window.allActivities.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
-
-          filteredActivities = [...window.allActivities];
-          renderActivities();
-        } catch (error) {
-          console.error('Error loading user activities:', error);
-          showToast('Error al cargar actividades', 'error');
-          showEmptyState();
         }
       }
 
-      function showEmptyState() {
-        document.getElementById('causesGrid').innerHTML =
-        document.getElementById('tasksGrid').innerHTML =
-        document.getElementById('challengesGrid').innerHTML =
-        document.getElementById('volunteeringGrid').innerHTML =
-          `<div class="empty-state" style="grid-column: 1 / -1; text-align: center; padding: 3rem;">
-            <i class="fas fa-clipboard-list" style="font-size: 3rem; color: #a0aec0; margin-bottom: 1rem;"></i>
-            <h3 style="color: #4a5568; margin-bottom: 0.5rem;">No tienes actividades solidarias aún</h3>
-            <p style="color: #718096; margin-bottom: 1.5rem;">Empieza creando una nueva actividad o únete a alguna existente.</p>
-            <a href="/causes" class="btn btn-primary" style="margin-right: 1rem;">
-              <i class="fas fa-heart"></i> Explorar causas
-            </a>
-            <a href="/tasks" class="btn btn-accent" style="margin-right: 1rem;">
-              <i class="fas fa-tasks"></i> Ver tareas
-            </a>
-            <a href="/challenges" class="btn btn-warning">
-              <i class="fas fa-trophy"></i> Descubrir retos
-            </a>
-          </div>`;
-      }
-
-      function renderActivities() {
-        const types = [
-          { key: 'cause', grid: 'causesGrid' },
-          { key: 'task', grid: 'tasksGrid' },
-          { key: 'challenge', grid: 'challengesGrid' },
-          { key: 'volunteering', grid: 'volunteeringGrid' }
-        ];
-
-        types.forEach(({ key, grid }) => {
-          const activities = filteredActivities.filter(a => a.type === key);
-          const container = document.getElementById(grid);
-          container.innerHTML = '';
-
-          if (activities.length === 0) {
-            container.innerHTML = `<div style="color:#aaa;text-align:center;padding:2rem;">No tienes ${key === 'cause' ? 'causas' : key === 'task' ? 'tareas' : key === 'challenge' ? 'retos' : 'voluntariados'}.</div>`;
-            return;
-          }
-
-          activities.forEach(activity => {
-            let card = document.createElement('div');
-            let img = activity.photo_url || '/img/causa-default.jpg';
-            let resumen = activity.short_description || activity.description || 'Sin resumen';
-            let fecha = formatDate(activity.created_at);
-
-            // CAUSA
-            if (activity.type === 'cause') {
-              const progress = activity.goal ? Math.min(Math.round((activity.raised / activity.goal) * 100), 100) : 0;
-              const urgentBadge = activity.urgent ? `<div class="cause-badge urgent"><i class="fas fa-exclamation-circle"></i> Urgente</div>` : "";
-              const pointsBadge = `<div class="cause-badge points"><i class="fas fa-star"></i> +${activity.points || 0} pts</div>`;
-              const location = activity.city && activity.country ? `${activity.city}, ${activity.country}` : "";
-              card.className = 'cause-card';
-              card.innerHTML = `
-                <div class="cause-image">
-                  <img src="${activity.photo_url || '/img/causa-default.jpg'}" alt="${activity.title}" 
-                  onerror="if (!this._defaulted) { this._defaulted = true; this.src='/img/causa-default.jpg'; }">
-                  ${urgentBadge}
-                  ${pointsBadge}
-                </div>
-                <div class="cause-content">
-                  <h3>${activity.title}</h3>
-                  <p>${activity.short_description || ''}</p>
-                  <div class="cause-meta">
-                    <div class="meta-item"><i class="fas fa-map-marker-alt"></i> ${location}</div>
-                    <div class="meta-item"><i class="fas fa-users"></i> ${activity.donors || 0} donantes</div>
-                    <div class="beneficiaries-count">
-                      <i class="fas fa-heart"></i> Beneficia a ${activity.beneficiaries || 0} personas
-                    </div>
-                  </div>
-                  <div class="cause-progress">
-                    <div class="progress-bar">
-                      <div class="progress-fill" style="width: ${progress}%"></div>
-                    </div>
-                    <div class="progress-info">
-                      <span>${progress}% completado</span>
-                      <span>${activity.raised || 0} € de ${activity.goal || 0} €</span>
-                    </div>
-                  </div>
-                  <div class="cause-actions">
-                    <button class="btn btn-primary btn-sm view-more-btn" data-type="cause" data-id="${activity.id}">
-                      <i class="fas fa-eye"></i> Ver más
-                    </button>
-                    ${(activity.role === 'founder' || activity.role === 'admin')
-                      ? `<button class="btn btn-accent btn-sm admin-activity-btn" data-id="${activity.id}" data-type="cause"><i class="fas fa-cog"></i> Administrar</button>`
-                      : `<span class="role-badge member"><i class="fas fa-user"></i> Miembro</span>`
-                    }
-                  </div>
-                </div>
-              `;
-            }
-
-            // TAREA
-            else if (activity.type === 'task') {
-              const urgentBadge = activity.is_urgent ? `<div class="task-badge urgent"><i class="fas fa-exclamation-circle"></i> Urgente</div>` : "";
-              const pointsBadge = `<div class="task-badge points"><i class="fas fa-star"></i> +${activity.points || 0} pts</div>`;
-              const location = activity.city && activity.country ? `${activity.city}, ${activity.country}` : (activity.location || '-');
-              
-              card.className = 'task-card';
-              card.innerHTML = `
-                <div class="task-image">
-                  <img src="${activity.photo_url || '/img/task-default.jpg'}" alt="${activity.title}" 
-                  onerror="if (!this._defaulted) { this._defaulted = true; this.src='/img/task-default.jpg'; }">
-                  ${urgentBadge}
-                  ${pointsBadge}
-                </div>
-                <div class="task-content">
-                  <h3>${activity.title}</h3>
-                  <p>${activity.summary ? activity.summary : (activity.description?.substring(0, 100) + (activity.description?.length > 100 ? '...' : ''))}</p>
-                  ${activity.cause_id ? `
-                    <div class="linked-cause" style="display:flex;align-items:center;gap:0.5rem;margin-bottom:1rem;">
-                      <i class="fas fa-link" style="color:var(--primary);"></i>
-                      <img src="${activity.cause_photo || '/img/causa-default.jpg'}" alt="${activity.cause_title || 'Causa'}" 
-                           style="width:22px;height:22px;object-fit:cover;border-radius:50%;border:1px solid #e5e7eb;">
-                      <span style="color:var(--primary);font-weight:600;">${activity.cause_title || 'Causa vinculada'}</span>
-                    </div>
-                  ` : ''}
-                  <div class="task-meta">
-                    <div class="meta-item"><i class="fas fa-map-marker-alt"></i> ${location}</div>
-                    <div class="meta-item"><i class="fas fa-users"></i> ${activity.participants || 0} participantes</div>
-                    <div class="beneficiaries-count">
-                      <i class="fas fa-heart"></i> Beneficia a ${activity.beneficiaries || 0} personas
-                    </div>
-                  </div>
-                  <div class="task-progress">
-                    <div class="progress-bar">
-                      <div class="progress-fill" style="width: ${Math.min(Math.round((activity.participants / activity.beneficiaries) * 100), 100)}%"></div>
-                    </div>
-                    <div class="progress-info">
-                      <span>${activity.participants || 0} participantes</span>
-                      <span>Meta: ${activity.beneficiaries || 0}</span>
-                    </div>
-                  </div>
-                  <div class="task-actions">
-                    <button class="btn btn-primary btn-sm view-more-btn" data-type="task" data-id="${activity.id}">
-                      <i class="fas fa-eye"></i> Ver más
-                    </button>
-                    ${(activity.role === 'founder' || activity.role === 'admin')
-                      ? `<button class="btn btn-accent btn-sm admin-activity-btn" data-id="${activity.id}" data-type="task"><i class="fas fa-cog"></i> Administrar</button>`
-                      : `<span class="role-badge member"><i class="fas fa-user"></i> Miembro</span>`
-                    }
-                  </div>
-                </div>
-              `;
-            }
-
-            // RETO - Updated to match challenges/index.njk exactly
-            else if (activity.type === 'challenge') {
-              const urgentBadge = activity.is_urgent ? `<div class="challenge-badge badge-urgent"><i class="fas fa-exclamation-circle"></i> Urgente</div>` : "";
-              const typeBadge = activity.challenge_type === 'duel'
-                ? `<div class="badge-type"><i class="fas fa-user-friends"></i> 1vs1</div>`
-                : `<div class="badge-type"><i class="fas fa-users"></i> Reto abierto</div>`;
-              const location = activity.city && activity.country ? `${activity.city}, ${activity.country}` : "";
-              const deadline = activity.deadline ? new Date(activity.deadline).toLocaleDateString('es-ES', { day: 'numeric', month: 'short' }) : "";
-              
-              let causeHtml = '';
-              if (activity.cause_id && window.causesMap && window.causesMap[activity.cause_id]) {
-                const cause = window.causesMap[activity.cause_id];
-                causeHtml = `
-                  <div class="linked-cause" style="display:inline-flex;align-items:center;gap:0.4rem;margin-bottom:0.7rem;">
-                    <i class="fas fa-link" style="color:var(--primary);font-size:0.92rem;"></i>
-                    <img src="${cause.photo_url || '/img/causa-default.jpg'}"
-                         alt="Causa vinculada"
-                         style="width:20px;height:20px;object-fit:cover;border-radius:50%;border:1px solid var(--primary);background:#fff;">
-                    <span style="color:var(--primary);font-weight:600;font-size:0.92rem;display:inline-block;vertical-align:middle;line-height:1.2;">
-                      ${cause.title}
-                    </span>
-                  </div>
-                `;
-              }
-
-              const actionsHtml = `
-                <button class="btn btn-primary btn-sm view-more-btn" data-type="challenge" data-id="${activity.id}">
-                  <i class="fas fa-eye"></i> Ver más
-                </button>
-                ${(activity.role === 'founder' || activity.role === 'admin')
-                  ? `<button class="btn btn-accent btn-sm admin-activity-btn" data-id="${activity.id}" data-type="challenge"><i class="fas fa-cog"></i> Administrar</button>`
-                  : `<span class="role-badge member"><i class="fas fa-user"></i> Miembro</span>`
-                }
-              `;
-
-              card.className = 'challenge-card';
-              card.innerHTML = `
-                <div class="challenge-image">
-                  ${typeBadge}
-                  <img src="${activity.photo_url || '/img/challenge-default.jpg'}" alt="${activity.title}" onerror="this.src='/img/challenge-default.jpg'">
-                  ${urgentBadge}
-                </div>
-                <div class="challenge-content">
-                  <h3>${activity.title}</h3>
-                  <p style="color:#6b7280; margin-bottom:1.5rem; font-size:0.95rem; line-height:1.6;">
-                    ${activity.summary || ''}
-                  </p>
-                  ${causeHtml}
-                  <div class="challenge-meta">
-                    <div class="meta-item"><i class="fas fa-map-marker-alt"></i> ${location}</div>
-                    <div class="meta-item"><i class="fas fa-calendar-alt"></i> ${deadline}</div>
-                  </div>
-                  <div class="challenge-actions">
-                    ${actionsHtml}
-                  </div>
-                </div>
-              `;
-            }
-
-            // VOLUNTARIADO
-            else if (activity.type === 'volunteering') {
-              // Usa causesMap global como en volunteering/index.njk
-              const cause = window.causes?.find?.(c => c.id === activity.cause_id) || (window.causesMap && window.causesMap[activity.cause_id]);
-              const urgentBadge = activity.is_urgent ? `<div class="volunteering-badge urgent"><i class="fas fa-exclamation-circle"></i> Urgente</div>` : "";
-              const pointsBadge = `<div class="volunteering-badge points"><i class="fas fa-star"></i> +${activity.points || 0} pts/h</div>`;
-              const location = activity.city && activity.country ? `${activity.city}, ${activity.country}` : "";
-              const startDate = activity.start_date ? new Date(activity.start_date).toLocaleDateString('es-ES', { day: 'numeric', month: 'short' }) : '';
-              const endDate = activity.end_date ? new Date(activity.end_date).toLocaleDateString('es-ES', { day: 'numeric', month: 'short' }) : '';
-              const progress = activity.volunteers_needed ? Math.min(Math.round((activity.volunteers / activity.volunteers_needed) * 100), 100) : 0;
-              let causeHtml = '';
-              if (activity.cause_id && cause) {
-                causeHtml = `
-                  <div class="linked-cause">
-                    <i class="fas fa-link"></i>
-                    <img src="${cause.photo_url || '/img/causa-default.jpg'}" alt="Causa vinculada">
-                    <span>${cause.title}</span>
-                  </div>
-                `;
-              }
-
-              // Botones: Ver más y Admin/Miembro (cambia esta parte)
-              const actionsHtml = `
-                <button class="btn btn-primary btn-sm view-more-btn" data-type="volunteering" data-id="${activity.id}">
-                  <i class="fas fa-eye"></i> Ver más
-                </button>
-                ${(activity.role === 'founder' || activity.role === 'admin')
-                  ? `<button class="btn btn-accent btn-sm admin-activity-btn" data-id="${activity.id}" data-type="volunteering"><i class="fas fa-cog"></i> Administrar</button>`
-                  : `<span class="role-badge member"><i class="fas fa-user"></i> Miembro</span>`
-                }
-              `;
-
-              card.className = 'volunteering-card';
-              card.innerHTML = `
-                <div class="volunteering-image">
-                  <img src="${activity.photo_url || '/img/volunteer-default.jpg'}" alt="${activity.title}" onerror="this.src='/img/volunteer-default.jpg'">
-                  ${urgentBadge}
-                  ${pointsBadge}
-              </div>
-                <div class="volunteering-content">
-                  <h3>${activity.title}</h3>
-                  <p>${activity.summary || ''}</p>
-                  ${causeHtml}
-                  <div class="volunteering-progress">
-                    <div class="progress-bar">
-                      <div class="progress-fill" style="width:${progress || 0}%"></div>
-                    </div>
-                    <div class="progress-info">
-                      <span>${progress || 0}% completado</span>
-                      <span>${activity.volunteers || 0} de ${activity.volunteers_needed || 0} voluntarios</span>
-                    </div>
-                  </div>
-                  <div class="volunteering-meta">
-                    <div class="meta-item"><i class="fas fa-map-marker-alt"></i> ${location}</div>
-                    <div class="meta-item"><i class="fas fa-calendar-alt"></i> ${startDate} - ${endDate}</div>
-                    <div class="meta-item"><i class="fas fa-heart"></i> ${activity.beneficiaries || 0} beneficiarios</div>
-                  </div>
-                  <div class="volunteering-actions">
-                    ${actionsHtml}
-                  </div>
-                </div>
-              `;
-            }
-
-            // Evento administrar
-            const adminBtn = card.querySelector('.admin-activity-btn');
-            if (adminBtn) {
-              adminBtn.addEventListener('click', (e) => {
-                e.preventDefault();
-                if (typeof window.openAdminActivityModal === 'function') {
-                  window.openAdminActivityModal(activity.id, activity.type);
-                } else {
-                  alert('El modal de administración aún no está listo. Intenta de nuevo en un momento.');
-                }
-              });
-            }
-            container.appendChild(card);
-          });
-        });
-      }
-
-      // --- MODAL DE RETO - Updated to match challenges/index.njk exactly ---
-      window.showChallengeModal = async function(challengeId) {
-        // Crear/asegurar que existe el modal
+      // --- Función para obtener o crear el modal de challenge ---
+      function getOrCreateChallengeModal() {
         let modal = document.getElementById('challengeModal');
         if (!modal) {
           modal = document.createElement('div');
@@ -1747,9 +254,9 @@
           modal.style.cssText = 'display:none; position:fixed; z-index:9999; left:0; top:0; width:100vw; height:100vh; background:rgba(0,0,0,0.35); align-items:center; justify-content:center;';
           
           modal.innerHTML = `
-            <div class="modal-content" style="background:#fff; border-radius:18px; max-width:800px; width:95vw; padding:2rem; box-shadow:0 8px 32px rgba(74,111,165,0.13); position:relative; max-height:90vh; overflow-y:auto;">
+            <div class="modal-content" style="background:#fff; border-radius:18px; max-width:800px; width:95vw; padding:2rem; box-shadow:0 8px 32px rgba(74,111,165,0.13); position:relative; max-height:90vh; overflow-y:auto; text-align:left;">
               <button id="closeChallengeModal" style="position:absolute; top:1.5rem; right:1.5rem; background:none; border:none; font-size:1.8rem; color:#6b7280; cursor:pointer; transition:color 0.2s;" onmouseover="this.style.color='#4a6fa5'" onmouseout="this.style.color='#6b7280'">&times;</button>
-              <div id="challengeModalBody">
+              <div id="challengeModalBody" style="text-align:left;">
                 <!-- Contenido dinámico -->
               </div>
             </div>
@@ -1769,68 +276,808 @@
               document.body.style.overflow = '';
             }
           };
+        }
+        return modal;
+      }
+
+      // --- Función para obtener o crear el modal de volunteering ---
+      function getOrCreateVolunteeringModal() {
+        let modal = document.getElementById('volunteeringModal');
+        if (!modal) {
+          modal = document.createElement('div');
+          modal.id = 'volunteeringModal';
+          modal.style.cssText = 'display:none; position:fixed; z-index:9999; left:0; top:0; width:100vw; height:100vh; background:rgba(0,0,0,0.35); align-items:center; justify-content:center;';
           
-          // Cerrar con Escape
-          document.addEventListener('keydown', function(e) {
-            if (e.key === 'Escape' && modal.style.display === 'flex') {
+          modal.innerHTML = `
+            <div class="modal-content" style="background:#fff; border-radius:18px; max-width:800px; width:95vw; padding:2rem; box-shadow:0 8px 32px rgba(74,111,165,0.13); position:relative; max-height:90vh; overflow-y:auto; text-align:left;">
+              <button id="closeVolunteeringModal" style="position:absolute; top:1.5rem; right:1.5rem; background:none; border:none; font-size:1.8rem; color:#6b7280; cursor:pointer; transition:color 0.2s;" onmouseover="this.style.color='#4a6fa5'" onmouseout="this.style.color='#6b7280'">&times;</button>
+              <div id="volunteeringModalBody" style="text-align:left;">
+                <!-- Contenido dinámico -->
+              </div>
+            </div>
+          `;
+          document.body.appendChild(modal);
+          
+          // Agregar evento para cerrar
+          document.getElementById('closeVolunteeringModal').onclick = function() {
+            modal.style.display = 'none';
+            document.body.style.overflow = '';
+          };
+          
+          // Cerrar al hacer clic fuera
+          modal.onclick = function(e) {
+            if (e.target === modal) {
               modal.style.display = 'none';
               document.body.style.overflow = '';
             }
-          });
+          };
         }
+        return modal;
+      }
 
-        // Carga los datos del reto
-        const { data: challenge, error } = await supabase
-          .from('challenges')
-          .select('*')
-          .eq('id', challengeId)
-          .single();
-
-        if (error || !challenge) {
-          document.getElementById('challengeModalBody').innerHTML = '<div style="color:#e53e3e;text-align:center;padding:1.5rem;">No se pudo cargar el reto.</div>';
-          modal.style.display = 'flex';
-          document.body.style.overflow = 'hidden';
-          return;
+      // --- Función para obtener actividades del usuario ---
+      async function loadUserActivities() {
+        try {
+          // Cargar causes map ANTES que los challenges
+          await loadCausesMap();
+          
+          // Cargar causas del usuario
+          await loadUserCauses();
+          
+          // Cargar retos del usuario
+          await loadUserChallenges();
+          
+          // Cargar voluntariados del usuario
+          await loadUserVolunteering();
+          
+          // TODO: Implementar carga de otras actividades
+          // userActivities.tasks = await getTasksForUser(userId);
+          
+          renderActivities();
+        } catch (error) {
+          console.error('Error cargando actividades:', error);
+          showToast('Error al cargar actividades', 'error');
         }
+      }
 
-        // Causa vinculada
-        let causeInfo = '';
-        if (challenge.cause_id) {
-          const { data: cause } = await supabase
+      // --- Función para cargar causas del usuario ---
+      async function loadUserCauses() {
+        try {
+          // 1. Obtener causas creadas por el usuario (fundador)
+          const { data: createdCauses, error: createdError } = await supabase
             .from('causes')
-            .select('title, short_description, photo_url')
-            .eq('id', challenge.cause_id)
-            .single();
-          if (cause) {
-            causeInfo = `
-              <div class="linked-cause-section" style="margin-bottom:1.5rem;">
-                <h3 class="content-title" style="font-size:1.2rem; font-weight:600; color:var(--primary); margin-bottom:0.9rem; display:flex; align-items:center; gap:0.7rem;">
-                  <i class="fas fa-link"></i> Vinculado a la causa
-                </h3>
-                <div style="display:flex; align-items:center; gap:1.2rem; background:#f8fafc; padding:1rem; border-radius:8px; border:1px solid #e5e7eb;">
-                  <img src="${cause.photo_url || '/img/causa-default.jpg'}"
-                       alt="Imagen de la causa vinculada"
-                       style="width:80px; height:80px; object-fit:cover; border-radius:6px;"
-                       onerror="this.src='/img/causa-default.jpg'">
-                  <div style="flex:1; min-width:0;">
-                    <div style="font-weight:700; color:var(--primary); font-size:1.05rem; margin-bottom:0.2rem; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">
-                      ${cause.title}
-                    </div>
-                    <div style="color:#6b7280; font-size:0.97rem; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:260px;">
-                      ${cause.short_description || 'Sin resumen disponible'}
-                    </div>
-                  </div>
-                  <a href="/causes/${challenge.cause_id}"
-                     class="btn btn-primary"
-                     style="margin-left:1.2rem; white-space:nowrap; font-size:0.97rem; padding:0.5rem 1.1rem; display:flex; align-items:center; gap:0.5rem;">
-                    <i class="fas fa-arrow-right"></i> Ver causa
-                  </a>
-                </div>
+            .select('*')
+            .eq('user_id', userId);
+
+          if (createdError) {
+            console.error('Error cargando causas creadas:', createdError);
+          }
+
+          // 2. Obtener causas donde el usuario es miembro
+          const { data: memberships, error: membershipsError } = await supabase
+            .from('causes_members')
+            .select('cause_id, role, status')
+            .eq('user_id', userId)
+            .eq('status', 'active');
+
+          if (membershipsError) {
+            console.error('Error cargando membresías:', membershipsError);
+          }
+
+          // 3. Si hay membresías, obtener los detalles de esas causas
+          let joinedCauses = [];
+          if (memberships && memberships.length > 0) {
+            const causeIds = memberships.map(m => m.cause_id);
+            const { data: causesDetails, error: detailsError } = await supabase
+              .from('causes')
+              .select('*')
+              .in('id', causeIds);
+
+            if (detailsError) {
+              console.error('Error cargando detalles de causas:', detailsError);
+            } else if (causesDetails) {
+              // Agregar información de rol a cada causa
+              joinedCauses = causesDetails.map(cause => {
+                const membership = memberships.find(m => m.cause_id === cause.id);
+                return {
+                  ...cause,
+                  userRole: membership ? membership.role : 'member',
+                  isCreator: false
+                };
+              });
+            }
+          }
+
+          // 4. Combinar causas creadas y causas donde es miembro
+          const allUserCauses = [
+            ...(createdCauses || []).map(cause => ({ ...cause, userRole: 'founder', isCreator: true })),
+            ...joinedCauses
+          ];
+
+          // 5. Eliminar duplicados (en caso de que sea fundador Y miembro)
+          const uniqueCauses = allUserCauses.reduce((acc, current) => {
+            const existing = acc.find(cause => cause.id === current.id);
+            if (!existing) {
+              acc.push(current);
+            } else if (current.userRole === 'founder') {
+              // Si ya existe pero este es fundador, reemplazar
+              const index = acc.findIndex(cause => cause.id === current.id);
+              acc[index] = current;
+            }
+            return acc;
+          }, []);
+
+          // 6. Actualizar array de actividades
+          userActivities.causes = uniqueCauses;
+
+          console.log('Causas del usuario cargadas:', uniqueCauses);
+
+        } catch (error) {
+          console.error('Error en loadUserCauses:', error);
+          userActivities.causes = [];
+        }
+      }
+
+      // --- Función para cargar retos del usuario ---
+      async function loadUserChallenges() {
+        try {
+          // 1. Obtener retos creados por el usuario (fundador)
+          const { data: createdChallenges, error: createdError } = await supabase
+            .from('challenges')
+            .select('*')
+            .eq('creator_id', userId);
+
+          if (createdError) {
+            console.error('Error cargando retos creados:', createdError);
+          }
+
+          // 2. Obtener retos donde el usuario es miembro
+          const { data: memberships, error: membershipsError } = await supabase
+            .from('challenges_members')
+            .select('challenge_id, role, status')
+            .eq('user_id', userId)
+            .eq('status', 'active');
+
+          if (membershipsError) {
+            console.error('Error cargando membresías de retos:', membershipsError);
+          }
+
+          // 3. Si hay membresías, obtener los detalles de esos retos
+          let joinedChallenges = [];
+          if (memberships && memberships.length > 0) {
+            const challengeIds = memberships.map(m => m.challenge_id);
+            const { data: challengesDetails, error: detailsError } = await supabase
+              .from('challenges')
+              .select('*')
+              .in('id', challengeIds);
+
+            if (detailsError) {
+              console.error('Error cargando detalles de retos:', detailsError);
+            } else if (challengesDetails) {
+              // Agregar información de rol a cada reto
+              joinedChallenges = challengesDetails.map(challenge => {
+                const membership = memberships.find(m => m.challenge_id === challenge.id);
+                return {
+                  ...challenge,
+                  userRole: membership ? membership.role : 'member',
+                  isCreator: false
+                };
+              });
+            }
+          }
+
+          // 4. Combinar retos creados y retos donde es miembro
+          const allUserChallenges = [
+            ...(createdChallenges || []).map(challenge => ({ ...challenge, userRole: 'founder', isCreator: true })),
+            ...joinedChallenges
+          ];
+
+          // 5. Eliminar duplicados (en caso de que sea fundador Y miembro)
+          const uniqueChallenges = allUserChallenges.reduce((acc, current) => {
+            const existing = acc.find(challenge => challenge.id === current.id);
+            if (!existing) {
+              acc.push(current);
+            } else if (current.userRole === 'founder') {
+              // Si ya existe pero este es fundador, reemplazar
+              const index = acc.findIndex(challenge => challenge.id === current.id);
+              acc[index] = current;
+            }
+            return acc;
+          }, []);
+
+          // 6. Enriquecer con información de causa vinculada
+          for (let challenge of uniqueChallenges) {
+            if (challenge.cause_id && window.causesMap && window.causesMap[challenge.cause_id]) {
+              challenge.linkedCause = window.causesMap[challenge.cause_id];
+            }
+          }
+
+          // 7. Actualizar array de actividades
+          userActivities.challenges = uniqueChallenges;
+
+          console.log('Retos del usuario cargados:', uniqueChallenges);
+
+        } catch (error) {
+          console.error('Error en loadUserChallenges:', error);
+          userActivities.challenges = [];
+        }
+      }
+
+      // --- Función para cargar voluntariados del usuario ---
+      async function loadUserVolunteering() {
+        try {
+          // 1. Obtener voluntariados creados por el usuario (fundador)
+          const { data: createdVolunteering, error: createdError } = await supabase
+            .from('volunteering')
+            .select(`
+              *,
+              linkedCause:causes!volunteering_cause_id_fkey(id, title, photo_url)
+            `)
+            .eq('user_id', userId);
+
+          if (createdError) {
+            console.error('Error cargando voluntariados creados:', createdError);
+          }
+
+          // 2. Obtener voluntariados donde el usuario es miembro
+          const { data: memberships, error: membershipsError } = await supabase
+            .from('volunteering_members')
+            .select('volunteering_id, role, status')
+            .eq('user_id', userId)
+            .eq('status', 'active');
+
+          if (membershipsError) {
+            console.error('Error cargando membresías de voluntariados:', membershipsError);
+          }
+
+          // 3. Si hay membresías, obtener los detalles de esos voluntariados
+          let joinedVolunteering = [];
+          if (memberships && memberships.length > 0) {
+            const volunteeringIds = memberships.map(m => m.volunteering_id);
+            const { data: volunteeringDetails, error: detailsError } = await supabase
+              .from('volunteering')
+              .select(`
+                *,
+                linkedCause:causes!volunteering_cause_id_fkey(id, title, photo_url)
+              `)
+              .in('id', volunteeringIds);
+
+            if (detailsError) {
+              console.error('Error cargando detalles de voluntariados:', detailsError);
+            } else if (volunteeringDetails) {
+              // Agregar información de rol a cada voluntariado
+              joinedVolunteering = volunteeringDetails.map(volunteering => {
+                const membership = memberships.find(m => m.volunteering_id === volunteering.id);
+                return {
+                  ...volunteering,
+                  userRole: membership ? membership.role : 'member',
+                  isCreator: false
+                };
+              });
+            }
+          }
+
+          // 4. Combinar voluntariados creados y voluntariados donde es miembro
+          const allUserVolunteering = [
+            ...(createdVolunteering || []).map(volunteering => ({ ...volunteering, userRole: 'founder', isCreator: true })),
+            ...joinedVolunteering
+          ];
+
+          // 5. Eliminar duplicados (en caso de que sea fundador Y miembro)
+          const uniqueVolunteering = allUserVolunteering.reduce((acc, current) => {
+            const existing = acc.find(volunteering => volunteering.id === current.id);
+            if (!existing) {
+              acc.push(current);
+            } else if (current.userRole === 'founder') {
+              // Si ya existe pero este es fundador, reemplazar
+              const index = acc.findIndex(volunteering => volunteering.id === current.id);
+              acc[index] = current;
+            }
+            return acc;
+          }, []);
+
+          // 6. Procesar datos para compatibilidad con el renderer (como en index.njk)
+          uniqueVolunteering.forEach(volunteering => {
+            // Mapear linkedCause para compatibilidad con el renderer
+            if (volunteering.linkedCause && Array.isArray(volunteering.linkedCause)) {
+              volunteering.linkedCause = volunteering.linkedCause[0] || null;
+            }
+            
+            // Asegurar que tenga una imagen por defecto si no tiene
+            if (!volunteering.photo_url) {
+              volunteering.photo_url = '/images/default-volunteering.jpg';
+            }
+
+            // Marcar que ya está participando (para el renderer)
+            volunteering.isParticipating = true;
+          });
+
+          // 7. Actualizar array de actividades
+          userActivities.volunteering = uniqueVolunteering;
+
+          console.log('Voluntariados del usuario cargados:', uniqueVolunteering);
+
+        } catch (error) {
+          console.error('Error en loadUserVolunteering:', error);
+          userActivities.volunteering = [];
+        }
+      }
+
+      // --- Función para renderizar actividades ---
+      function renderActivities() {
+        const totalActivities = userActivities.causes.length + 
+                               userActivities.tasks.length + 
+                               userActivities.challenges.length + 
+                               userActivities.volunteering.length;
+
+        // Si no hay ninguna actividad, mostrar estado general
+        if (totalActivities === 0) {
+          document.getElementById('generalEmptyState').style.display = 'block';
+        } else {
+          document.getElementById('generalEmptyState').style.display = 'none';
+        }
+
+        // Renderizar cada sección
+        renderSection('causesGrid', userActivities.causes, 'causes');
+        renderSection('tasksGrid', userActivities.tasks, 'tasks');
+        renderSection('challengesGrid', userActivities.challenges, 'challenges');
+        renderSection('volunteeringGrid', userActivities.volunteering, 'volunteering');
+      }
+
+      // --- Función para renderizar una sección específica ---
+      function renderSection(gridId, activities, type) {
+        const grid = document.getElementById(gridId);
+        
+        if (activities.length === 0) {
+          const emptyMessages = {
+            causes: {
+              title: 'No tienes causas solidarias aún',
+              subtitle: 'Explora y únete a causas que te importen',
+              icon: 'fas fa-heart',
+              buttonText: 'Explorar causas',
+              buttonLink: '/causes',
+              buttonColor: 'var(--accent)'
+            },
+            tasks: {
+              title: 'No tienes tareas pendientes',
+              subtitle: 'Encuentra tareas donde puedas ayudar',
+              icon: 'fas fa-tasks',
+              buttonText: 'Ver tareas',
+              buttonLink: '/tasks',
+              buttonColor: 'var(--primary)'
+            },
+            challenges: {
+              title: 'No tienes retos activos',
+              subtitle: 'Acepta desafíos solidarios y suma impacto',
+              icon: 'fas fa-trophy',
+              buttonText: 'Descubrir retos',
+              buttonLink: '/challenges',
+              buttonColor: 'var(--challenge-dark)'
+            },
+            volunteering: {
+              title: 'No tienes voluntariados',
+              subtitle: 'Únete a oportunidades de voluntariado',
+              icon: 'fas fa-hands-helping',
+              buttonText: 'Ver voluntariados',
+              buttonLink: '/volunteering',
+              buttonColor: 'var(--volunteering-dark)'
+            }
+          };
+
+          const message = emptyMessages[type];
+          
+          grid.innerHTML = `
+            <div style="grid-column: 1 / -1; text-align: center; padding: 2.5rem; background: linear-gradient(135deg, rgba(74, 111, 165, 0.05) 0%, rgba(255, 255, 255, 0.8) 100%); border-radius: 12px; border: 2px dashed #e2e8f0;">
+              <i class="${message.icon}" style="font-size: 2.5rem; color: ${message.buttonColor}; margin-bottom: 1rem; opacity: 0.7;"></i>
+              <h4 style="color: #4a5568; margin-bottom: 0.5rem; font-size: 1.1rem; font-weight: 600;">${message.title}</h4>
+              <p style="color: #718096; margin-bottom: 1.5rem; font-size: 0.95rem;">${message.subtitle}</p>
+              <a href="${message.buttonLink}" 
+                 style="display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.7rem 1.2rem; border-radius: 8px; font-weight: 600; text-decoration: none; background: ${message.buttonColor}; color: white; transition: all 0.2s; font-size: 0.9rem;"
+                 onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 4px 12px rgba(0,0,0,0.15)';"
+                 onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none';">
+                <i class="${message.icon}"></i> ${message.buttonText}
+              </a>
+            </div>
+          `;
+        } else {
+          // Renderizar actividades reales
+          if (type === 'causes' && window.causesRenderer) {
+            // Usar el causes-renderer para renderizar las causas
+            window.causesRenderer.renderGrid(activities, grid, { showUserRole: true });
+            
+            // Agregar badges de rol después del renderizado
+            setTimeout(() => {
+              activities.forEach(cause => {
+                const cards = grid.querySelectorAll('.cause-card');
+                cards.forEach(card => {
+                  // Buscar la tarjeta correspondiente y agregar badge de rol
+                  if (card.querySelector('h3')?.textContent === cause.title) {
+                    addRoleBadge(card, cause.userRole, cause.isCreator);
+                  }
+                });
+              });
+            }, 100);
+          } else if (type === 'challenges' && window.challengesRenderer) {
+            // Asegurarse de que el grid tenga las clases CSS correctas
+            if (!grid.classList.contains('challenges-grid')) {
+              grid.classList.add('challenges-grid');
+            }
+            
+            // Guardar challenges globalmente para compatibilidad con modales
+            window.challenges = activities;
+            
+            // Usar el challenges-renderer para renderizar los retos
+            window.challengesRenderer.renderGrid(activities, grid, { showUserRole: true });
+            
+            // Agregar event listeners para los modales después del renderizado
+            setTimeout(() => {
+              // Event listeners para "Ver más" de challenges
+              grid.querySelectorAll('.view-challenge-btn').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                  e.preventDefault();
+                  const challengeId = btn.getAttribute('data-challenge-id');
+                  if (window.showChallengeModal) {
+                    window.showChallengeModal(challengeId);
+                  }
+                });
+              });
+
+              // Agregar badges de rol después del renderizado
+              activities.forEach(challenge => {
+                const cards = grid.querySelectorAll('.challenge-card');
+                cards.forEach(card => {
+                  // Buscar la tarjeta correspondiente y agregar badge de rol
+                  const titleElement = card.querySelector('h3');
+                  if (titleElement && titleElement.textContent.trim() === challenge.title.trim()) {
+                    addRoleBadgeToChallenge(card, challenge.userRole, challenge.isCreator);
+                  }
+                });
+              });
+            }, 200);
+          } else if (type === 'volunteering' && window.volunteeringRenderer) {
+            // Asegurarse de que el grid tenga las clases CSS correctas
+            if (!grid.classList.contains('volunteering-grid')) {
+              grid.classList.add('volunteering-grid');
+            }
+            
+            // Guardar volunteering globalmente para compatibilidad con modales Y renderers (igual que index.njk)
+            window.volunteerings = activities;
+            
+            // Usar el volunteering-renderer para renderizar los voluntariados
+            window.volunteeringRenderer.renderGrid(activities, grid, { showUserRole: true });
+            
+            // Agregar event listeners después del renderizado (igual que index.njk)
+            setTimeout(() => {
+              // Agregar badges de rol después del renderizado
+              activities.forEach(volunteering => {
+                const cards = grid.querySelectorAll('.volunteering-card');
+                cards.forEach(card => {
+                  // Buscar la tarjeta correspondiente y agregar badge de rol
+                  const titleElement = card.querySelector('h3');
+                  if (titleElement && titleElement.textContent.trim() === volunteering.title.trim()) {
+                    addRoleBadgeToVolunteering(card, volunteering.userRole, volunteering.isCreator);
+                  }
+                });
+              });
+            }, 200);
+          } else {
+            // Para otros tipos que aún no están implementados
+            grid.innerHTML = `
+              <div style="grid-column: 1 / -1; text-align: center; padding: 2rem; color: #4a6fa5;">
+                Tienes ${activities.length} ${type} (renderizado pendiente)
               </div>
             `;
           }
         }
+      }
 
+      // --- Handler para clicks de volunteering ---
+      function handleVolunteeringClick(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        const volunteeringId = e.currentTarget.getAttribute('data-volunteering-id');
+        if (window.showVolunteeringModal && volunteeringId) {
+          window.showVolunteeringModal(volunteeringId);
+        }
+      }
+
+      // --- Función para agregar badge de rol a una tarjeta de reto ---
+      function addRoleBadgeToChallenge(card, role, isCreator) {
+        const content = card.querySelector('.challenge-content');
+        if (!content) return;
+
+        const roleLabels = {
+          founder: { text: 'Fundador', color: '#4a6fa5', icon: 'fas fa-crown' },
+          admin: { text: 'Coordinador', color: '#166088', icon: 'fas fa-user-tie' },
+          member: { text: 'Miembro', color: '#4fc3a1', icon: 'fas fa-user' }
+        };
+
+        const roleInfo = roleLabels[role] || roleLabels.member;
+        
+        // Buscar si ya existe un badge de rol para evitar duplicados
+        if (content.querySelector('.user-role-badge')) return;
+
+        const roleBadge = document.createElement('div');
+        roleBadge.className = 'user-role-badge';
+        roleBadge.style.cssText = `
+          display: inline-flex;
+          align-items: center;
+          gap: 0.3rem;
+          background: ${roleInfo.color};
+          color: white;
+          padding: 0.2rem 0.6rem;
+          border-radius: 12px;
+          font-size: 0.75rem;
+          font-weight: 600;
+          margin-bottom: 0.8rem;
+          box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        `;
+        roleBadge.innerHTML = `<i class="${roleInfo.icon}"></i> ${roleInfo.text}`;
+
+        // Insertar al principio del contenido
+        content.insertBefore(roleBadge, content.firstChild);
+      }
+
+      // --- Función para agregar badge de rol a una tarjeta de causa ---
+      function addRoleBadge(card, role, isCreator) {
+        const content = card.querySelector('.cause-content');
+        if (!content) return;
+
+        const roleLabels = {
+          founder: { text: 'Fundador', color: '#4a6fa5', icon: 'fas fa-crown' },
+          admin: { text: 'Coordinador', color: '#166088', icon: 'fas fa-user-tie' },
+          member: { text: 'Miembro', color: '#4fc3a1', icon: 'fas fa-user' }
+        };
+
+        const roleInfo = roleLabels[role] || roleLabels.member;
+        
+        // Buscar si ya existe un badge de rol para evitar duplicados
+        if (content.querySelector('.user-role-badge')) return;
+
+        const roleBadge = document.createElement('div');
+        roleBadge.className = 'user-role-badge';
+        roleBadge.style.cssText = `
+          display: inline-flex;
+          align-items: center;
+          gap: 0.3rem;
+          background: ${roleInfo.color};
+          color: white;
+          padding: 0.2rem 0.6rem;
+          border-radius: 12px;
+          font-size: 0.75rem;
+          font-weight: 600;
+          margin-bottom: 0.8rem;
+          box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        `;
+        roleBadge.innerHTML = `<i class="${roleInfo.icon}"></i> ${roleInfo.text}`;
+
+        // Insertar al principio del contenido
+        content.insertBefore(roleBadge, content.firstChild);
+      }
+
+      // --- Función para agregar badge de rol a una tarjeta de voluntariado ---
+      function addRoleBadgeToVolunteering(card, role, isCreator) {
+        const content = card.querySelector('.volunteering-content');
+        if (!content) return;
+
+        const roleLabels = {
+          founder: { text: 'Fundador', color: '#4a6fa5', icon: 'fas fa-crown' },
+          admin: { text: 'Coordinador', color: '#166088', icon: 'fas fa-user-tie' },
+          member: { text: 'Miembro', color: '#4fc3a1', icon: 'fas fa-user' }
+        };
+
+        const roleInfo = roleLabels[role] || roleLabels.member;
+        
+        // Buscar si ya existe un badge de rol para evitar duplicados
+        if (content.querySelector('.user-role-badge')) return;
+
+        const roleBadge = document.createElement('div');
+        roleBadge.className = 'user-role-badge';
+        roleBadge.style.cssText = `
+          display: inline-flex;
+          align-items: center;
+          gap: 0.3rem;
+          background: ${roleInfo.color};
+          color: white;
+          padding: 0.2rem 0.6rem;
+          border-radius: 12px;
+          font-size: 0.75rem;
+          font-weight: 600;
+          margin-bottom: 0.8rem;
+          box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        `;
+        roleBadge.innerHTML = `<i class="${roleInfo.icon}"></i> ${roleInfo.text}`;
+
+        // Insertar al principio del contenido
+        content.insertBefore(roleBadge, content.firstChild);
+      }
+
+      // --- MODAL DE VOLUNTEERING - Implementación completa ---
+      window.showVolunteeringModal = async function(volunteeringId) {
+        const volunteering = window.volunteering?.find(v => v.id == volunteeringId);
+        if (!volunteering) {
+          console.error('❌ Voluntariado no encontrado:', volunteeringId);
+          return;
+        }
+
+        const startDate = volunteering.start_date ? new Date(volunteering.start_date).toLocaleDateString('es-ES', {
+          year: 'numeric',
+          month: 'long',
+          day: 'numeric'
+        }) : 'Sin fecha de inicio';
+        
+        const endDate = volunteering.end_date ? new Date(volunteering.end_date).toLocaleDateString('es-ES', {
+          year: 'numeric',
+          month: 'long',
+          day: 'numeric'
+        }) : 'Sin fecha de fin';
+
+        // Información de la causa vinculada si existe
+        let causeInfo = '';
+        if (volunteering.cause_id && window.causesMap && window.causesMap[volunteering.cause_id]) {
+          const cause = window.causesMap[volunteering.cause_id];
+          causeInfo = `
+            <div class="linked-cause-section" style="margin-bottom:1.5rem;">
+              <h3 class="content-title" style="font-size:1.2rem; font-weight:600; color:var(--primary); margin-bottom:0.9rem; display:flex; align-items:center; gap:0.7rem;">
+                <i class="fas fa-link"></i> Vinculado a la causa
+              </h3>
+              <div style="display:flex; align-items:center; gap:1.2rem; background:#f8fafc; padding:1rem; border-radius:8px; border:1px solid #e5e7eb;">
+                <img src="${cause.photo_url || '/img/causa-default.jpg'}"
+                     alt="Imagen de la causa vinculada"
+                     style="width:80px; height:80px; object-fit:cover; border-radius:6px;"
+                     onerror="this.src='/img/causa-default.jpg'">
+                <div style="flex:1; min-width:0;">
+                  <div style="font-weight:700; color:var(--primary); font-size:1.05rem; margin-bottom:0.2rem;">
+                    ${cause.title}
+                  </div>
+                  <div style="color:#6b7280; font-size:0.97rem;">
+                    ${cause.short_description || 'Sin resumen disponible'}
+                  </div>
+                </div>
+                <a href="/causes/${volunteering.cause_id}"
+                   class="btn btn-primary"
+                   style="margin-left:1.2rem; white-space:nowrap; font-size:0.97rem; padding:0.5rem 1.1rem;">
+                  <i class="fas fa-arrow-right"></i> Ver causa
+                </a>
+              </div>
+            </div>
+          `;
+        }
+
+        // Obtener o crear el modal
+        const modal = getOrCreateVolunteeringModal();
+        const modalBody = modal.querySelector('#volunteeringModalBody');
+
+        modalBody.innerHTML = `
+          <div class="modal-task-container" style="text-align:left;">
+            <h1 class="modal-task-title" style="font-size:2rem; font-weight:800; color:var(--primary); margin-bottom:2.7rem; text-align:center; width:100%;">${volunteering.title}</h1>
+            <div class="modal-task-header" style="display:flex; gap:2.5rem; margin-bottom:2.7rem;">
+              <div class="modal-task-image-wrapper" style="flex:1; min-width:320px; height:300px; border-radius:12px; overflow:hidden; position:relative; box-shadow:0 4px 12px rgba(0,0,0,0.08);">
+                <div class="modal-cause-badge" style="top:1.2rem; left:1.2rem; right:auto; background:var(--volunteering); color:white; position:absolute; border-radius:50px; padding:0.5rem 1rem; font-size:0.9rem; font-weight:600; display:flex; align-items:center; gap:0.6rem; box-shadow:0 2px 8px rgba(0,0,0,0.1); z-index:2;">
+                  <i class="fas fa-hands-helping"></i> Voluntariado
+                </div>
+                <img class="modal-task-image" src="${volunteering.photo_url || '/img/volunteer-default.jpg'}"
+                     alt="Imagen del voluntariado ${volunteering.title}"
+                     style="width:100%;height:100%;object-fit:cover;"
+                     onerror="this.src='/img/volunteer-default.jpg'">
+                ${volunteering.is_urgent ? `
+                <div class="modal-cause-badge urgent" style="right:1.2rem; left:auto; top:1.2rem; background:var(--urgent); color:white; border-radius:50px; padding:0.5rem 1rem; font-size:0.9rem; font-weight:600; display:flex; align-items:center; gap:0.6rem; box-shadow:0 2px 8px rgba(0,0,0,0.1); z-index:2;">
+                  <i class="fas fa-exclamation-circle"></i> Urgente
+                </div>` : ''}
+              </div>
+              <div class="modal-task-info" style="flex:1.5; display:flex; flex-direction:column; justify-content:flex-start;">
+                <div class="modal-task-meta-grid" style="display:grid; grid-template-columns:1fr 1fr; gap:0.7rem 1.2rem; margin-bottom:1.2rem;">
+                  <div class="meta-item">
+                    <span class="meta-icon"><i class="fas fa-map-marker-alt"></i></span>
+                    <span>${volunteering.city || 'Sin ubicación'}${volunteering.country ? ', ' + volunteering.country : ''}</span>
+                  </div>
+                  <div class="meta-item">
+                    <span class="meta-icon"><i class="fas fa-calendar-alt"></i></span>
+                    <span>${startDate}</span>
+                  </div>
+                  <div class="meta-item">
+                    <span class="meta-icon"><i class="fas fa-calendar-check"></i></span>
+                    <span>${endDate}</span>
+                  </div>
+                  <div class="meta-item">
+                    <span class="meta-icon"><i class="fas fa-clock"></i></span>
+                    <span>${volunteering.hours_required || 0} horas</span>
+                  </div>
+                </div>
+                <div class="points-notice" style="background:#e6faff; border-left:4px solid var(--volunteering); padding:0.8rem; border-radius:0 8px 8px 0; font-size:0.97rem; display:flex; align-items:center; gap:0.7rem;">
+                  <i class="fas fa-hands-helping" style="color: var(--volunteering);"></i>
+                  Participar en este voluntariado suma <strong>impacto social</strong>
+                </div>
+              </div>
+            </div>
+            ${causeInfo}
+            <div class="content-section" style="margin-bottom:2.2rem;">
+              <h3 class="content-title" style="font-size:1.2rem; font-weight:600; color:var(--primary); margin-bottom:0.9rem; display:flex; align-items:center; gap:0.7rem;">
+                <i class="fas fa-align-left"></i> Resumen
+              </h3>
+              <div class="content-text" style="line-height:1.7; color:#4b5563; font-size:1.05rem; text-align:justify;">
+                ${volunteering.summary || 'No hay resumen disponible para este voluntariado.'}
+              </div>
+            </div>
+            <div class="modal-task-content" style="margin-top:0;">
+              <div class="content-section" style="margin-bottom:2.2rem;">
+                <h3 class="content-title" style="font-size:1.2rem; font-weight:600; color:var(--primary); margin-bottom:0.9rem; display:flex; align-items:center; gap:0.7rem;">
+                  <i class="fas fa-info-circle"></i> Descripción completa
+                </h3>
+                <div class="content-text" style="line-height:1.7; color:#4b5563; font-size:1.05rem; text-align:justify;">${volunteering.description || 'No hay descripción disponible para este voluntariado.'}</div>
+              </div>
+            </div>
+            <div class="task-actions" style="display:flex; gap:0.8rem; margin-top:2.2rem;">
+              <button class="btn btn-primary btn-apuntarse" data-volunteering-id="${volunteering.id}" style="flex:1;">
+                <i class="fas fa-hand-holding-heart"></i> Apuntarse
+              </button>
+              <button class="btn btn-accent share-btn" style="flex:1;" data-type="volunteering" data-id="${volunteering.id}" data-title="${volunteering.title}" data-url="/volunteering/${volunteering.id}">
+                <i class="fas fa-share-alt"></i> Compartir
+              </button>
+            </div>
+            <div class="share-section" id="shareSectionVolunteering"></div>
+          </div>
+        `;
+
+        modal.style.display = 'flex';
+        document.body.style.overflow = 'hidden';
+
+        // Agregar event listener para el botón de compartir usando el sistema centralizado
+        const shareBtn = modal.querySelector('.share-btn');
+        if (shareBtn && window.shareItem) {
+          shareBtn.addEventListener('click', () => {
+            window.shareItem('volunteering', volunteering.id, volunteering.title, `/volunteering/${volunteering.id}`);
+          });
+        }
+      };
+
+      // --- Función para mostrar opciones de compartir volunteering ---
+      window.showVolunteeringShareOptions = function(volunteeringId) {
+        const shareSection = document.getElementById('shareSectionVolunteering');
+        if (!shareSection) return;
+
+        const volunteering = window.volunteering?.find(v => v.id == volunteeringId);
+        if (!volunteering) return;
+
+        const shareUrl = `${window.location.origin}/volunteering/${volunteeringId}`;
+        const shareText = `¡Únete a este voluntariado solidario! ${volunteering.title}`;
+
+        shareSection.innerHTML = `
+          <div style="margin-top: 1.5rem; padding: 1rem; background: #f8fafc; border-radius: 8px; border: 1px solid #e5e7eb;">
+            <h4 style="margin-bottom: 1rem; color: var(--primary); font-weight: 600;">Compartir voluntariado</h4>
+            <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+              <button onclick="copyToClipboard('${shareUrl}')" class="btn btn-outline" style="font-size: 0.9rem; padding: 0.4rem 0.8rem; border: 1px solid #d1d5db; background: white; color: #374151; border-radius: 6px; cursor: pointer;">
+                <i class="fas fa-link"></i> Copiar enlace
+              </button>
+              <a href="https://wa.me/?text=${encodeURIComponent(shareText + ' ' + shareUrl)}" target="_blank" class="btn btn-outline" style="font-size: 0.9rem; padding: 0.4rem 0.8rem; border: 1px solid #d1d5db; background: white; color: #374151; border-radius: 6px; text-decoration: none; display: inline-flex; align-items: center; gap: 0.3rem;">
+                <i class="fab fa-whatsapp"></i> WhatsApp
+              </a>
+              <a href="https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText)}&url=${encodeURIComponent(shareUrl)}" target="_blank" class="btn btn-outline" style="font-size: 0.9rem; padding: 0.4rem 0.8rem; border: 1px solid #d1d5db; background: white; color: #374151; border-radius: 6px; text-decoration: none; display: inline-flex; align-items: center; gap: 0.3rem;">
+                <i class="fab fa-twitter"></i> Twitter
+              </a>
+            </div>
+          </div>
+        `;
+      };
+
+      // --- Función para copiar al portapapeles ---
+      window.copyToClipboard = function(text) {
+        navigator.clipboard.writeText(text).then(() => {
+          showToast('Enlace copiado al portapapeles', 'success');
+        }).catch(() => {
+          showToast('Error al copiar enlace', 'error');
+        });
+      };
+
+      // --- MODAL DE CHALLENGE - Implementación completa igual a challenges/index.njk ---
+      window.showChallengeModal = async function(challengeId) {
+        const challenge = window.challenges?.find(c => c.id == challengeId);
+        if (!challenge) {
+          console.error('❌ Reto no encontrado:', challengeId);
+          return;
+        }
+
+        const progress = challenge.goal ? Math.min(Math.round((challenge.raised / challenge.goal) * 100), 100) : 0;
         const createdDate = new Date(challenge.created_at).toLocaleDateString('es-ES', {
           year: 'numeric',
           month: 'long',
@@ -1859,8 +1106,44 @@
           tipoIcon = 'fa-lightbulb';
         }
 
-        document.getElementById('challengeModalBody').innerHTML = `
-          <div class="modal-task-container">
+        // Información de la causa vinculada si existe
+        let causeInfo = '';
+        if (challenge.cause_id && window.causesMap && window.causesMap[challenge.cause_id]) {
+          const cause = window.causesMap[challenge.cause_id];
+          causeInfo = `
+            <div class="linked-cause-section" style="margin-bottom:1.5rem;">
+              <h3 class="content-title" style="font-size:1.2rem; font-weight:600; color:var(--primary); margin-bottom:0.9rem; display:flex; align-items:center; gap:0.7rem;">
+                <i class="fas fa-link"></i> Vinculado a la causa
+              </h3>
+              <div style="display:flex; align-items:center; gap:1.2rem; background:#f8fafc; padding:1rem; border-radius:8px; border:1px solid #e5e7eb;">
+                <img src="${cause.photo_url || '/img/causa-default.jpg'}"
+                     alt="Imagen de la causa vinculada"
+                     style="width:80px; height:80px; object-fit:cover; border-radius:6px;"
+                     onerror="this.src='/img/causa-default.jpg'">
+                <div style="flex:1; min-width:0;">
+                  <div style="font-weight:700; color:var(--primary); font-size:1.05rem; margin-bottom:0.2rem;">
+                    ${cause.title}
+                  </div>
+                  <div style="color:#6b7280; font-size:0.97rem;">
+                    ${cause.short_description || 'Sin resumen disponible'}
+                  </div>
+                </div>
+                <a href="/causes/${challenge.cause_id}"
+                   class="btn btn-primary"
+                   style="margin-left:1.2rem; white-space:nowrap; font-size:0.97rem; padding:0.5rem 1.1rem;">
+                  <i class="fas fa-arrow-right"></i> Ver causa
+                </a>
+              </div>
+            </div>
+          `;
+        }
+
+        // Obtener o crear el modal
+        const modal = getOrCreateChallengeModal();
+        const modalBody = modal.querySelector('#challengeModalBody');
+
+        modalBody.innerHTML = `
+          <div class="modal-task-container" style="text-align:left;">
             <h1 class="modal-task-title" style="font-size:2rem; font-weight:800; color:var(--primary); margin-bottom:2.7rem; text-align:center; width:100%;">${challenge.title}</h1>
             <div class="modal-task-header" style="display:flex; gap:2.5rem; margin-bottom:2.7rem;">
               <div class="modal-task-image-wrapper" style="flex:1; min-width:320px; height:300px; border-radius:12px; overflow:hidden; position:relative; box-shadow:0 4px 12px rgba(0,0,0,0.08);">
@@ -1902,51 +1185,27 @@
               </div>
             </div>
             ${causeInfo}
-            <!-- SECCIÓN DE RESUMEN -->
             <div class="content-section" style="margin-bottom:2.2rem;">
               <h3 class="content-title" style="font-size:1.2rem; font-weight:600; color:var(--primary); margin-bottom:0.9rem; display:flex; align-items:center; gap:0.7rem;">
                 <i class="fas fa-align-left"></i> Resumen
               </h3>
-              <p class="content-text" style="line-height:1.7; color:#4b5563; font-size:1.05rem; margin-left:0; margin-right:0; text-align:justify;">
+              <div class="content-text" style="line-height:1.7; color:#4b5563; font-size:1.05rem; text-align:justify;">
                 ${challenge.summary || 'No hay resumen disponible para este reto.'}
-              </p>
+              </div>
             </div>
             <div class="modal-task-content" style="margin-top:0;">
               <div class="content-section" style="margin-bottom:2.2rem;">
                 <h3 class="content-title" style="font-size:1.2rem; font-weight:600; color:var(--primary); margin-bottom:0.9rem; display:flex; align-items:center; gap:0.7rem;">
-                  <i class="fas fa-align-left"></i> Descripción
+                  <i class="fas fa-info-circle"></i> Descripción completa
                 </h3>
-                <p class="content-text" style="line-height:1.7; color:#4b5563; font-size:1.05rem; margin-left:0; margin-right:0; text-align:justify;">${challenge.description || 'No hay descripción disponible para este reto.'}</p>
-              </div>
-              <div class="content-section" style="margin-bottom:2.2rem;">
-                <h3 class="content-title" style="font-size:1.2rem; font-weight:600; color:var(--primary); margin-bottom:0.9rem; display:flex; align-items:center; gap:0.7rem;">
-                  <i class="fas fa-info-circle"></i> Detalles adicionales
-                </h3>
-                <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem;">
-                  <div>
-                    <p style="font-weight:600; color:#4b5563; margin-bottom:0.3rem;">Fecha de creación</p>
-                    <p style="color:#6b7280;">${createdDate}</p>
-                  </div>
-                  <div>
-                    <p style="font-weight:600; color:#4b5563; margin-bottom:0.3rem;">Estado</p>
-                    <p style="color:#6b7280;">${challenge.status === 'completed' ? 'Completado' : 'En progreso'}</p>
-                  </div>
-                  <div>
-                    <p style="font-weight:600; color:#4b5563; margin-bottom:0.3rem;">Prioridad</p>
-                    <p style="color:#6b7280;">${challenge.is_urgent ? 'Alta prioridad' : 'Prioridad normal'}</p>
-                  </div>
-                  <div>
-                    <p style="font-weight:600; color:#4b5563; margin-bottom:0.3rem;">Tipo</p>
-                    <p style="color:#6b7280;">${tipo}</p>
-                  </div>
-                </div>
+                <div class="content-text" style="line-height:1.7; color:#4b5563; font-size:1.05rem; text-align:justify;">${challenge.description || 'No hay descripción disponible para este reto.'}</div>
               </div>
             </div>
             <div class="task-actions" style="display:flex; gap:0.8rem; margin-top:2.2rem;">
               <button class="btn btn-primary btn-aceptar" data-challenge-id="${challenge.id}" style="flex:1;">
                 <i class="fas fa-hand-holding-heart"></i> Aceptar reto
               </button>
-              <button class="btn btn-accent" style="flex:1;" onclick="showShareOptionsChallenge('${challenge.id}')">
+              <button class="btn btn-accent" style="flex:1;" onclick="showChallengeShareOptions('${challenge.id}')">
                 <i class="fas fa-share-alt"></i> Compartir
               </button>
             </div>
@@ -1956,1240 +1215,50 @@
 
         modal.style.display = 'flex';
         document.body.style.overflow = 'hidden';
-
-        // Consulta si el usuario ya participa en este reto
-        let isParticipating = false;
-        if (userId) {
-          const { data: membership } = await supabase
-            .from('challenges_members')
-            .select('id')
-            .eq('challenge_id', challenge.id)
-            .eq('user_id', userId)
-            .eq('status', 'active')
-            .maybeSingle();
-          isParticipating = !!membership;
-        }
-
-        const modalBtn = document.querySelector('#challengeModal .btn-aceptar');
-        if (modalBtn) {
-          if (isParticipating) {
-            modalBtn.innerHTML = '<i class="fas fa-check"></i> Participando';
-            modalBtn.disabled = true;
-            modalBtn.style.opacity = "0.7";
-            modalBtn.style.cursor = "not-allowed";
-          } else {
-            modalBtn.addEventListener('click', function(e) {
-              e.preventDefault();
-              participateInChallenge(challenge.id, this);
-            });
-          }
-        }
       };
 
-      // Función para mostrar opciones de compartir para retos
-      window.showShareOptionsChallenge = function(challengeId) {
-        let challenge = window.allActivities?.find(c => c.id == challengeId && c.type === 'challenge');
-        if (!challenge) return;
-        
+      // --- Función para mostrar opciones de compartir challenge ---
+      window.showChallengeShareOptions = function(challengeId) {
         const shareSection = document.getElementById('shareSectionChallenge');
+        if (!shareSection) return;
+
+        const challenge = window.challenges?.find(c => c.id == challengeId);
+        if (!challenge) return;
+
+        const shareUrl = `${window.location.origin}/challenges/${challengeId}`;
+        const shareText = `¡Acepta este reto solidario! ${challenge.title}`;
+
         shareSection.innerHTML = `
-          <h3 class="share-title" style="font-size:1.3rem;font-weight:600;color:var(--primary);margin-bottom:1.5rem;text-align:center;margin-top:2rem;">
-            <i class="fas fa-share-alt"></i> Ayuda a difundir este reto
-          </h3>
-          <div class="share-content" style="background:#f8fafc;border-radius:12px;padding:1.5rem;margin-bottom:1.5rem;position:relative;">
-            <p class="share-text" style="font-size:1rem;line-height:1.6;color:#4b5563;margin-bottom:1rem;">
-              <span style="color:var(--primary);font-weight:600;">"${challenge.summary || challenge.description?.substring(0, 120) + '...' || 'Únete a este reto solidario'}"</span><br><br>
-              ¡Cada participante suma impacto!
-            </p>
-            <div class="share-buttons" style="display:flex;justify-content:center;gap:1rem;flex-wrap:wrap;">
-              <a href="#" class="share-btn" style="display:flex;align-items:center;gap:0.7rem;padding:0.8rem 1.5rem;border-radius:8px;font-weight:600;color:white;transition:all 0.2s;text-decoration:none;background:#3b5998;" onclick="shareOnSocialChallenge('facebook', '${challenge.id}')">
-                <i class="fab fa-facebook-f"></i> Facebook
-              </a>
-              <a href="#" class="share-btn" style="display:flex;align-items:center;gap:0.7rem;padding:0.8rem 1.5rem;border-radius:8px;font-weight:600;color:white;transition:all 0.2s;text-decoration:none;background:#1da1f2;" onclick="shareOnSocialChallenge('twitter', '${challenge.id}')">
-                <i class="fab fa-twitter"></i> Twitter
-              </a>
-              <a href="#" class="share-btn" style="display:flex;align-items:center;gap:0.7rem;padding:0.8rem 1.5rem;border-radius:8px;font-weight:600;color:white;transition:all 0.2s;text-decoration:none;background:#25d366;" onclick="shareOnSocialChallenge('whatsapp', '${challenge.id}')">
+          <div style="margin-top: 1.5rem; padding: 1rem; background: #f8fafc; border-radius: 8px; border: 1px solid #e5e7eb;">
+            <h4 style="margin-bottom: 1rem; color: var(--primary); font-weight: 600;">Compartir reto</h4>
+            <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+              <button onclick="copyToClipboard('${shareUrl}')" class="btn btn-outline" style="font-size: 0.9rem; padding: 0.4rem 0.8rem; border: 1px solid #d1d5db; background: white; color: #374151; border-radius: 6px; cursor: pointer;">
+                <i class="fas fa-link"></i> Copiar enlace
+              </button>
+              <a href="https://wa.me/?text=${encodeURIComponent(shareText + ' ' + shareUrl)}" target="_blank" class="btn btn-outline" style="font-size: 0.9rem; padding: 0.4rem 0.8rem; border: 1px solid #d1d5db; background: white; color: #374151; border-radius: 6px; text-decoration: none; display: inline-flex; align-items: center; gap: 0.3rem;">
                 <i class="fab fa-whatsapp"></i> WhatsApp
               </a>
-              <a href="#" class="share-btn" style="display:flex;align-items:center;gap:0.7rem;padding:0.8rem 1.5rem;border-radius:8px;font-weight:600;color:white;transition:all 0.2s;text-decoration:none;background:var(--primary);" onclick="copyChallengeLink('${challenge.id}')">
-                <i class="fas fa-link"></i> Copiar enlace
+              <a href="https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText)}&url=${encodeURIComponent(shareUrl)}" target="_blank" class="btn btn-outline" style="font-size: 0.9rem; padding: 0.4rem 0.8rem; border: 1px solid #d1d5db; background: white; color: #374151; border-radius: 6px; text-decoration: none; display: inline-flex; align-items: center; gap: 0.3rem;">
+                <i class="fab fa-twitter"></i> Twitter
               </a>
             </div>
           </div>
         `;
-        shareSection.scrollIntoView({ behavior: 'smooth' });
       };
 
-      // Función para compartir retos en redes sociales
-      window.shareOnSocialChallenge = function(platform, challengeId) {
-        let challenge = window.allActivities?.find(c => c.id == challengeId && c.type === 'challenge');
-        if (!challenge) return;
-        
-        const url = `${window.location.origin}/challenges/${challenge.id}`;
-        const text = `¡Participa en el reto: "${challenge.title}"! ${challenge.summary || challenge.description?.substring(0, 100) + '...' || ''} ${url}`;
-        let shareUrl;
-        
-        switch(platform) {
-          case 'facebook':
-            shareUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}&quote=${encodeURIComponent(text)}`;
-            break;
-          case 'twitter':
-            shareUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}`;
-            break;
-          case 'whatsapp':
-            shareUrl = `https://wa.me/?text=${encodeURIComponent(text)}`;
-            break;
-          default:
-            return;
-        }
-        
-        window.open(shareUrl, '_blank', 'width=600,height=400');
-      };
+      // --- Remover las funciones locales duplicadas ---
+      // Eliminar showVolunteeringShareOptions porque ya funciona con share-system.js
+      // Eliminar copyToClipboard local porque ya está en share-system.js
 
-      // Función para copiar enlace del reto
-      window.copyChallengeLink = function(challengeId) {
-        const url = `${window.location.origin}/challenges/${challengeId}`;
-        navigator.clipboard.writeText(url).then(() => {
-          showToast('¡Enlace copiado!', 'success');
-        }).catch(() => {
-          prompt('Por favor, copia este enlace:', url);
-        });
-      };
-
-      // Función para participar en un reto
-      window.participateInChallenge = async function(challengeId, btn = null) {
-        const { data: { session } } = await supabase.auth.getSession();
-        if (!session?.user) {
-          showToast('Debes iniciar sesión para participar en este reto', 'error');
-          return;
-        }
-        
-        const userId = session.user.id;
-        
-        // Intenta insertar como miembro (único por usuario y reto)
-        const { error } = await supabase
-          .from('challenges_members')
-          .insert([{ challenge_id: challengeId, user_id: userId, role: 'member', status: 'active' }]);
-
-        if (error) {
-          if (error.code === '23505' || error.status === 409) {
-            showToast('Ya estás participando en este reto', 'info');
-          } else {
-            showToast('Error al participar en el reto', 'error');
-          }
-          return;
-        }
-
-        showToast('¡Te has unido al reto!', 'success');
-        
-        // Actualiza el botón inmediatamente
-        if (btn) {
-          btn.innerHTML = '<i class="fas fa-check"></i> Participando';
-          btn.disabled = true;
-          btn.style.opacity = "0.7";
-          btn.style.cursor = "not-allowed";
-        }
-        
-        // Recargar las actividades para reflejar los cambios
-        setTimeout(() => {
-          loadUserActivities();
-        }, 1000);
-      };
-
-      // --- Load causes map for challenges ---
-      async function loadCausesMap() {
-        const { data: causes } = await supabase.from('causes').select('id, title, photo_url');
-        if (causes) {
-          window.causesMap = {};
-          causes.forEach(c => {
-            window.causesMap[c.id] = {
-              title: c.title,
-              photo_url: c.photo_url
-            };
-          });
-        }
-      }
-
-      // Load causes map before loading activities
-      await loadCausesMap();
-
-      // --- Obtener actividades al cargar ---
+      // --- Cargar actividades al inicializar ---
       await loadUserActivities();
 
-      // --- Formulario de edición de actividad ---
-      document.getElementById('editCauseForm').addEventListener('submit', async function(e) {
-        e.preventDefault();
-        const activityId = this.dataset.activityId;
-        const activityType = this.dataset.activityType;
-        if (!activityId || !activityType) return;
-
-        // Recoge los datos del formulario
-        const updated = {
-          title: document.getElementById('editTitle').value.trim(),
-          short_description: document.getElementById('editShortDescription').value.trim(),
-          description: document.getElementById('editDescription').value.trim(),
-          goal: Number(document.getElementById('editGoal').value),
-          beneficiaries: Number(document.getElementById('editBeneficiaries').value),
-          city: document.getElementById('editCity').value.trim(),
-          country: document.getElementById('editCountry').value.trim(),
-          points: Number(document.getElementById('editPoints').value),
-          lat: document.getElementById('editLat').value,
-          lng: document.getElementById('editLng').value
-        }; // <--- CIERRA EL OBJETO Y LA INSTRUCCIÓN
-
-        // Si se subió una nueva foto, primero sube la imagen y luego actualiza la actividad
-        if (this.querySelector('input[type="file"]').files.length > 0) {
-          const file = this.querySelector('input[type="file"]').files[0];
-          const fileName = `activity_${activityId}_${Date.now()}`;
-          const { data: uploadData, error: uploadError } = await supabase
-            .storage
-            .from('activity-photos')
-            .upload(fileName, file, {
-              cacheControl: '3600',
-              upsert: true
-            });
-
-          if (uploadError) {
-            showToast('Error al subir la foto. Intenta de nuevo.', 'error');
-            return;
-          }
-
-          // Obtiene la URL de la foto subida
-          const { publicURL, error: urlError } = supabase
-            .storage
-            .from('activity-photos')
-            .getPublicUrl(fileName);
-
-          if (urlError) {
-            showToast('Error al obtener la URL de la foto. Intenta de nuevo.', 'error');
-            return;
-          }
-
-          updated.photo_url = publicURL;
-        }
-
-        // Actualiza la actividad en la base de datos
-        const { error: updateError } = await supabase
-          .from(activityType === 'cause' ? 'causes' : activityType === 'task' ? 'tasks' : 'challenges')
-          .update(updated)
-          .eq('id', activityId);
-
-        if (updateError) {
-          showToast('Error al actualizar la actividad. Intenta de nuevo.', 'error');
-          return;
-        }
-
-        showToast('Actividad actualizada con éxito.', 'success');
-
-        // Actualiza la actividad en la lista global y vuelve a renderizar
-        const index = window.allActivities.findIndex(a => a.id === activityId && a.type === activityType);
-        if (index !== -1) {
-          window.allActivities[index] = { ...window.allActivities[index], ...updated };
-          renderActivities();
-        }
-
-        // Cierra el modal
-        document.getElementById('adminModal').classList.remove('active');
-        document.body.style.overflow = '';
-      });
-
-      // --- MODALES "VER MÁS" universales para cada tipo de actividad ---
-
-      // Utilidad para crear y mostrar un modal único por tipo
-      function ensureModal(modalId, maxWidth = '650px') {
-        let modal = document.getElementById(modalId);
-        if (!modal) {
-          modal = document.createElement('div');
-          modal.id = modalId;
-          modal.className = 'modal-bg';
-          modal.innerHTML = `
-            <div class="modal-content" style="max-width:${maxWidth};">
-              <button class="close-modal" id="close${modalId.charAt(0).toUpperCase() + modalId.slice(1)}" title="Cerrar">&times;</button>
-              <div id="${modalId}Body"></div>
-            </div>
-          `;
-          document.body.appendChild(modal);
-          document.getElementById(`close${modalId.charAt(0).toUpperCase() + modalId.slice(1)}`).onclick = () => {
-            modal.classList.remove('active');
-            document.body.style.overflow = '';
-          };
-          modal.onclick = function(e) {
-            if (e.target === modal) {
-              modal.classList.remove('active');
-              document.body.style.overflow = '';
-            }
-          };
-          document.addEventListener('keydown', function(e) {
-            if (e.key === 'Escape' && modal.style.display === 'flex') {
-              modal.style.display = 'none';
-              document.body.style.overflow = '';
-            }
-          });
-        }
-        return modal;
-      }
-
-      // --- MODAL DE CAUSA ---
-      window.showCauseModal = async function(causeId) {
-        // Crear/asegurar que existe el modal
-        let modal = document.getElementById('causeModal');
-        if (!modal) {
-          modal = document.createElement('div');
-          modal.id = 'causeModal';
-          modal.style.cssText = 'display:none; position:fixed; z-index:9999; left:0; top:0; width:100vw; height:100vh; background:rgba(0,0,0,0.35); align-items:center; justify-content:center;';
-          modal.innerHTML = `
-            <div class="modal-content" style="background:#fff; border-radius:18px; max-width:800px; width:95vw; padding:2rem; box-shadow:0 8px 32px rgba(74,111,165,0.13); position:relative; max-height:90vh; overflow-y:auto;">
-              <button id="closeCauseModal" style="position:absolute; top:1.5rem; right:1.5rem; background:none; border:none; font-size:1.8rem; color:#6b7280; cursor:pointer; transition:color 0.2s;" onmouseover="this.style.color='#4a6fa5'" onmouseout="this.style.color='#6b7280'">&times;</button>
-              <div id="modalBody">
-                <!-- Contenido dinámico -->
-              </div>
-            </div>
-          `;
-          document.body.appendChild(modal);
-          
-          // Agregar evento para cerrar
-          document.getElementById('closeCauseModal').onclick = function() {
-            modal.style.display = 'none';
-            document.body.style.overflow = '';
-          };
-          
-          // Cerrar al hacer clic fuera
-          modal.onclick = function(e) {
-            if (e.target === modal) {
-              modal.style.display = 'none';
-              document.body.style.overflow = '';
-            }
-          };
-          
-          // Cerrar con Escape
-          document.addEventListener('keydown', function(e) {
-            if (e.key === 'Escape' && modal.style.display === 'flex') {
-              modal.style.display = 'none';
-              document.body.style.overflow = '';
-            }
-          });
-        }
-
-        // Carga los datos de la causa
-        const { data: cause, error } = await supabase
-          .from('causes')
-          .select('*')
-          .eq('id', causeId)
-          .single();
-
-        if (error || !cause) {
-          document.getElementById('modalBody').innerHTML = '<div style="color:#e53e3e;text-align:center;padding:1.5rem;">No se pudo cargar la causa.</div>';
-          modal.style.display = 'flex';
-          document.body.style.overflow = 'hidden';
-          return;
-        }
-
-        const progress = cause.goal ? Math.min(Math.round((cause.raised / cause.goal) * 100), 100) : 0;
-        const createdDate = new Date(cause.created_at).toLocaleDateString('es-ES', {
-          year: 'numeric',
-          month: 'long',
-          day: 'numeric'
-        });
-
-        document.getElementById('modalBody').innerHTML = `
-          <div class="modal-cause-container">
-            <!-- Título principal centrado, más espacio abajo -->
-            <h1 class="modal-cause-title" style="font-size:2rem; font-weight:800; color:var(--primary); margin-bottom:2.7rem; text-align:center; width:100%;">${cause.title}</h1>
-            <div class="modal-cause-header" style="display:flex; gap:2.5rem; margin-bottom:2.7rem;">
-              <div class="modal-cause-image-wrapper" style="flex:1; min-width:320px; height:300px; border-radius:12px; overflow:hidden; position:relative; box-shadow:0 4px 12px rgba(0,0,0,0.08);">
-                <!-- Badge arriba a la izquierda, verde -->
-                <div class="modal-cause-badge" style="top:1.2rem; left:1.2rem; right:auto; background:var(--accent); color:white; position:absolute;">
-                  <i class="fas fa-hands-helping"></i> Causa Solidaria
-                </div>
-                <img class="modal-cause-image" src="${cause.photo_url || '/img/causa-default.jpg'}" 
-                     alt="Imagen de la causa ${cause.title}"
-                     style="width:100%;height:100%;object-fit:cover;"
-                     onerror="this.src='/img/causa-default.jpg'">
-                ${cause.urgent ? `
-                <div class="modal-cause-badge urgent" style="right:1.2rem; left:auto; top:1.2rem; background:var(--urgent); color:white; border-radius:50px; padding:0.5rem 1rem; font-size:0.9rem; font-weight:600; display:flex; align-items:center; gap:0.6rem; box-shadow:0 2px 8px rgba(0,0,0,0.1); z-index:2;">
-                  <i class="fas fa-exclamation-circle"></i> Urgente
-                </div>` : ''}
-              </div>
-              <!-- Info a la derecha de la foto -->
-              <div class="modal-cause-info" style="flex:1.5; display:flex; flex-direction:column; justify-content:flex-start;">
-                <div class="modal-cause-progress-container" style="background:#f8fafc; padding:1.2rem; border-radius:12px; margin-bottom:1.2rem; border:1px solid #e5e7eb;">
-                  <div class="progress-bar">
-                    <div class="progress-fill" style="width: ${progress}%"></div>
-                  </div>
-                  <div class="progress-info">
-                    <span>${progress}% completado</span>
-                    <span>${cause.raised || 0} € de ${cause.goal || 0} €</span>
-                  </div>
-                </div>
-                <!-- Meta compacta en dos columnas -->
-                <div class="modal-cause-meta-grid" style="display:grid; grid-template-columns:1fr 1fr; gap:0.7rem 1.2rem; margin-bottom:1.2rem;">
-                  <div class="meta-item">
-                    <span class="meta-icon"><i class="fas fa-map-marker-alt"></i></span>
-                    <span>${cause.city || 'Sin ubicación'}${cause.country ? ', ' + cause.country : ''}</span>
-                  </div>
-                  <div class="meta-item">
-                    <span class="meta-icon"><i class="fas fa-users"></i></span>
-                    <span>${cause.donors || 0} donantes</span>
-                  </div>
-                  <div class="meta-item">
-                    <span class="meta-icon"><i class="fas fa-heart"></i></span>
-                    <span>${cause.beneficiaries || 0} beneficiarios</span>
-                  </div>
-                  <div class="meta-item">
-                    <span class="meta-icon"><i class="fas fa-calendar-alt"></i></span>
-                    <span>${createdDate}</span>
-                  </div>
-                </div>
-                <div class="points-notice" style="background:#f0f9ff; border-left:4px solid var(--accent); padding:0.8rem; border-radius:0 8px 8px 0; font-size:0.97rem; display:flex; align-items:center; gap:0.7rem;">
-                  <i class="fas fa-star" style="color: var(--accent);"></i>
-                  Cada euro donado recibirá <strong>${cause.points || 20} puntos</strong> de impacto
-                </div>
-              </div>
-            </div>
-            <!-- Resumen y descripción debajo, con más espacio entre bloques -->
-            <div class="modal-cause-content" style="margin-top:0;">
-              <div class="content-section" style="margin-bottom:2.2rem;">
-                <h3 class="content-title" style="font-size:1.2rem; font-weight:600; color:var(--primary); margin-bottom:0.9rem; display:flex; align-items:center; gap:0.7rem;">
-                  <i class="fas fa-align-left"></i> Resumen
-                </h3>
-                <p class="content-text" style="line-height:1.7; color:#4b5563; font-size:1.05rem; margin-left:0; margin-right:0; text-align:justify;">
-                  ${cause.short_description || 'No hay resumen disponible para esta causa.'}
-                </p>
-              </div>
-              <div class="content-section" style="margin-bottom:2.2rem;">
-                <h3 class="content-title" style="font-size:1.2rem; font-weight:600; color:var(--primary); margin-bottom:0.9rem; display:flex; align-items:center; gap:0.7rem;">
-                  <i class="fas fa-info-circle"></i> Descripción completa
-                </h3>
-                <p class="content-text" style="line-height:1.7; color:#4b5563; font-size:1.05rem; margin-left:0; margin-right:0; text-align:justify;">${cause.description || 'No hay descripción detallada disponible para esta causa.'}</p>
-              </div>
-            </div>
-            <!-- Botones abajo, con más espacio arriba -->
-            <div class="cause-actions" style="display:flex; gap:0.8rem; margin-top:2.2rem;">
-  <button class="btn btn-primary" style="flex:1;" onclick="donateToCause('${cause.id}')">
-    <i class="fas fa-donate"></i> Donar ahora
-  </button>
-  <button class="btn btn-accent" style="flex:1;" onclick="joinCause('${cause.id}')">
-    <i class="fas fa-hands-helping"></i> Participar
-  </button>
-  <button class="btn btn-outline" style="flex:1;" onclick="showShareOptionsCause('${cause.id}')">
-    <i class="fas fa-share-alt"></i> Compartir
-  </button>
-</div>
-<div class="share-section" id="shareSectionCause"></div>
-        `;
-        modal.style.display = 'flex';
-        document.body.style.overflow = 'hidden';
-      };
-
-      // --- MODAL DE TAREA ---
-      window.showTaskModal = async function(taskId) {
-        // Crear/asegurar que existe el modal
-        let modal = document.getElementById('taskModal');
-        if (!modal) {
-          modal = document.createElement('div');
-          modal.id = 'taskModal';
-          modal.style.cssText = 'display:none; position:fixed; z-index:9999; left:0; top:0; width:100vw; height:100vh; background:rgba(0,0,0,0.35); align-items:center; justify-content:center;';
-          
-          modal.innerHTML = `
-            <div class="modal-content" style="background:#fff; border-radius:18px; max-width:800px; width:95vw; padding:2rem; box-shadow:0 8px 32px rgba(74,111,165,0.13); position:relative; max-height:90vh; overflow-y:auto;">
-              <button id="closeTaskModal" style="position:absolute; top:1.5rem; right:1.5rem; background:none; border:none; font-size:1.8rem; color:#6b7280; cursor:pointer; transition:color 0.2s;" onmouseover="this.style.color='#4a6fa5'" onmouseout="this.style.color='#6b7280'">&times;</button>
-              <div id="taskModalBody">
-                <!-- Contenido dinámico -->
-              </div>
-            </div>
-          `;
-          document.body.appendChild(modal);
-          
-          // Agregar evento para cerrar
-          document.getElementById('closeTaskModal').onclick = function() {
-            modal.style.display = 'none';
-            document.body.style.overflow = '';
-          };
-          
-          // Cerrar al hacer clic fuera
-          modal.onclick = function(e) {
-            if (e.target === modal) {
-              modal.style.display = 'none';
-              document.body.style.overflow = '';
-            }
-          };
-          
-          // Cerrar con Escape
-          document.addEventListener('keydown', function(e) {
-            if (e.key === 'Escape' && modal.style.display === 'flex') {
-              modal.style.display = 'none';
-              document.body.style.overflow = '';
-            }
-          });
-        }
-
-        // Carga los datos de la tarea
-        const { data: task, error } = await supabase
-          .from('tasks')
-          .select('*')
-          .eq('id', taskId)
-          .single();
-
-        if (error || !task) {
-          document.getElementById('taskModalBody').innerHTML = '<div style="color:#e53e3e;text-align:center;padding:1.5rem;">No se pudo cargar la tarea.</div>';
-          modal.style.display = 'flex';
-          document.body.style.overflow = 'hidden';
-          return;
-        }
-
-        // Causa vinculada
-        let causeInfo = '';
-        if (task.cause_id) {
-          const { data: cause } = await supabase
-            .from('causes')
-            .select('title, short_description, photo_url')
-            .eq('id', task.cause_id)
-            .single();
-          if (cause) {
-            causeInfo = `
-              <div class="linked-cause-section" style="margin-bottom:1.5rem;">
-                <h3 class="content-title" style="font-size:1.2rem; font-weight:600; color:var(--primary); margin-bottom:0.9rem; display:flex; align-items:center; gap:0.7rem;">
-                  <i class="fas fa-link"></i> Vinculado a la causa
-                </h3>
-                <div style="display:flex; align-items:center; gap:1.2rem; background:#f8fafc; padding:1rem; border-radius:8px; border:1px solid #e5e7eb;">
-                  <img src="${cause.photo_url || '/img/causa-default.jpg'}"
-                       alt="Imagen de la causa vinculada"
-                       style="width:80px; height:80px; object-fit:cover; border-radius:6px;"
-                       onerror="this.src='/img/causa-default.jpg'">
-                  <div style="flex:1; min-width:0;">
-                    <div style="font-weight:700; color:var(--primary); font-size:1.05rem; margin-bottom:0.2rem; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">
-                      ${cause.title}
-                    </div>
-                    <div style="color:#6b7280; font-size:0.97rem; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:260px;">
-                      ${cause.short_description || 'Sin resumen disponible'}
-                    </div>
-                  </div>
-                  <a href="/causes/${task.cause_id}"
-                     class="btn btn-primary"
-                     style="margin-left:1.2rem; white-space:nowrap; font-size:0.97rem; padding:0.5rem 1.1rem; display:flex; align-items:center; gap:0.5rem;">
-                    <i class="fas fa-arrow-right"></i> Ver causa
-                  </a>
-                </div>
-              </div>
-            `;
-          }
-        }
-
-        // Formatear fechas
-        const createdDate = new Date(task.created_at).toLocaleDateString('es-ES', {
-          year: 'numeric',
-          month: 'long',
-          day: 'numeric'
-        });
-        
-        const endDate = task.end_date ? new Date(task.end_date).toLocaleDateString('es-ES', {
-          year: 'numeric',
-          month: 'long',
-          day: 'numeric'
-        }) : 'Sin fecha límite';
-
-        // Calcular progreso
-        const progress = task.beneficiaries ? Math.min(Math.round((task.participants / task.beneficiaries) * 100), 100) : 0;
-
-        // Obtener participantes
-        const { data: members, error: membersError } = await supabase
-          .from('task_members')
-          .select('user_id, profiles(username, photo_url)')
-          .eq('task_id', taskId);
-
-        let participantsHtml = '';
-        if (members && members.length > 0) {
-          participantsHtml = `
-            <div class="content-section" style="margin-bottom:2.2rem;">
-              <h3 class="content-title" style="font-size:1.2rem; font-weight:600; color:var(--primary); margin-bottom:0.9rem; display:flex; align-items:center; gap:0.7rem;">
-                <i class="fas fa-users"></i> Participantes
-              </h3>
-              <div style="display:flex; flex-wrap:wrap; gap:1rem;">
-                ${members.map(m => `
-                  <div style="display:flex; align-items:center; gap:0.6rem; background:#f8fafc; border-radius:8px; padding:0.5rem 1rem; border:1px solid #e5e7eb;">
-                    <img src="${m.profiles?.photo_url || '/img/avatar-default.png'}" alt="${m.profiles?.username || 'Usuario'}" style="width:36px; height:36px; border-radius:50%; object-fit:cover; border:1px solid #e5e7eb;">
-                    <span style="font-weight:600; color:var(--primary);">${m.profiles?.username || 'Usuario'}</span>
-                  </div>
-                `).join('')}
-              </div>
-            </div>
-          `;
-        } else {
-          participantsHtml = `
-            <div class="content-section" style="margin-bottom:2.2rem;">
-              <h3 class="content-title" style="font-size:1.2rem; font-weight:600; color:var(--primary); margin-bottom:0.9rem; display:flex; align-items:center; gap:0.7rem;">
-                <i class="fas fa-users"></i> Participantes
-              </h3>
-              <div style="color:#6b7280;">Aún no hay participantes en esta tarea.</div>
-            </div>
-          `;
-        }
-
-        document.getElementById('taskModalBody').innerHTML = `
-          <div class="modal-task-container">
-            <!-- Título principal centrado -->
-            <h1 class="modal-task-title" style="font-size:2rem; font-weight:800; color:var(--primary); margin-bottom:2.7rem; text-align:center; width:100%;">${task.title}</h1>
-            
-            <div class="modal-task-header" style="display:flex; gap:2.5rem; margin-bottom:2.7rem;">
-              <div class="modal-task-image-wrapper" style="flex:1; min-width:320px; height:300px; border-radius:12px; overflow:hidden; position:relative; box-shadow:0 4px 12px rgba(0,0,0,0.08);">
-                <!-- Badge arriba a la izquierda -->
-                <div class="modal-cause-badge" style="top:1.2rem; left:1.2rem; right:auto; background:var(--accent); color:white; position:absolute; border-radius:50px; padding:0.5rem 1rem; font-size:0.9rem; font-weight:600; display:flex; align-items:center; gap:0.6rem; box-shadow:0 2px 8px rgba(0,0,0,0.1); z-index:2;">
-                  <i class="fas fa-tasks"></i> Tarea Solidaria
-                </div>
-                
-                <img class="modal-task-image" src="${task.photo_url || '/img/task-default.jpg'}" 
-                     alt="Imagen de la tarea ${task.title}"
-                     style="width:100%;height:100%;object-fit:cover;"
-                     onerror="this.src='/img/task-default.jpg'">
-                     
-                ${task.is_urgent ? `
-                <div class="modal-cause-badge urgent" style="right:1.2rem; left:auto; top:1.2rem; background:var(--urgent); color:white; border-radius:50px; padding:0.5rem 1rem; font-size:0.9rem; font-weight:600; display:flex; align-items:center; gap:0.6rem; box-shadow:0 2px 8px rgba(0,0,0,0.1); z-index:2;">
-                  <i class="fas fa-exclamation-circle"></i> Urgente
-                </div>` : ''}
-              </div>
-              
-              <!-- Info a la derecha de la foto -->
-              <div class="modal-task-info" style="flex:1.5; display:flex; flex-direction:column; justify-content:flex-start;">
-                <!-- Barra de progreso -->
-                <div class="modal-cause-progress-container" style="background:#f8fafc; padding:1.5rem; border-radius:12px; margin-bottom:1.5rem; border:1px solid #e5e7eb;">
-                  <div class="progress-bar">
-                    <div class="progress-fill" style="width: ${progress}%"></div>
-                  </div>
-                  <div class="progress-info">
-                    <span>${progress}% completado</span>
-                    <span>${task.participants || 0} de ${task.beneficiaries || 0} participantes</span>
-                  </div>
-                </div>
-                
-                <!-- Meta compacta en dos columnas -->
-                <div class="modal-task-meta-grid" style="display:grid; grid-template-columns:1fr 1fr; gap:0.7rem 1.2rem; margin-bottom:1.2rem;">
-                  <div class="meta-item">
-                    <span class="meta-icon"><i class="fas fa-map-marker-alt"></i></span>
-                    <span>${task.city || 'Sin ubicación'}${task.country ? ', ' + task.country : ''}</span>
-                  </div>
-                  <div class="meta-item">
-                    <span class="meta-icon"><i class="fas fa-users"></i></span>
-                    <span>${task.participants || 0} participantes</span>
-                  </div>
-                  <div class="meta-item">
-                    <span class="meta-icon"><i class="fas fa-heart"></i></span>
-                    <span>${task.beneficiaries || 0} beneficiarios</span>
-                  </div>
-                  <div class="meta-item">
-                    <span class="meta-icon"><i class="fas fa-calendar-alt"></i></span>
-                    <span>${task.end_date ? endDate : 'Sin fecha límite'}</span>
-                  </div>
-                </div>
-                
-                <div class="points-notice" style="background:#f0f9ff; border-left:4px solid var(--accent); padding:0.8rem; border-radius:0 8px 8px 0; font-size:0.97rem; display:flex; align-items:center; gap:0.7rem;">
-                  <i class="fas fa-star" style="color: var(--accent);"></i>
-                  Participar en esta tarea otorgará <strong>${task.points || 20} puntos</strong> de impacto
-                </div>
-              </div>
-            </div>
-            
-            ${causeInfo}
-            
-            <!-- Resumen y descripción -->
-            <div class="modal-task-content" style="margin-top:0;">
-              <div class="content-section" style="margin-bottom:2.2rem;">
-                <h3 class="content-title" style="font-size:1.2rem; font-weight:600; color:var(--primary); margin-bottom:0.9rem; display:flex; align-items:center; gap:0.7rem;">
-                  <i class="fas fa-align-left"></i> Resumen
-                </h3>
-                <p class="content-text" style="line-height:1.7; color:#4b5563; font-size:1.05rem; text-align:justify; font-weight:400; margin-bottom:2.2rem;">
-                  ${task.summary || 'No hay resumen disponible para esta tarea.'}
-                </p>
-                
-                <h3 class="content-title" style="font-size:1.2rem; font-weight:600; color:var(--primary); margin-bottom:0.9rem; display:flex; align-items:center; gap:0.7rem;">
-                  <i class="fas fa-info-circle"></i> Descripción completa
-                </h3>
-                <p class="content-text" style="line-height:1.7; color:#4b5563; font-size:1.05rem; text-align:justify;">
-                  ${task.description || 'No hay descripción disponible para esta tarea.'}
-                </p>
-              </div>
-              
-              ${participantsHtml}
-              
-              <div class="content-section" style="margin-bottom:2.2rem;">
-                <h3 class="content-title" style="font-size:1.2rem; font-weight:600; color:var(--primary); margin-bottom:0.9rem; display:flex; align-items:center; gap:0.7rem;">
-                  <i class="fas fa-info-circle"></i> Detalles adicionales
-                </h3>
-                <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem;">
-                  <div>
-                    <p style="font-weight:600; color:#4b5563; margin-bottom:0.3rem;">Fecha de creación</p>
-                    <p style="color:#6b7280;">${createdDate}</p>
-                  </div>
-                  <div>
-                    <p style="font-weight:600; color:#4b5563; margin-bottom:0.3rem;">Estado</p>
-                    <p style="color:#6b7280;">${task.is_completed ? 'Completada' : 'En progreso'}</p>
-                  </div>
-                  <div>
-                    <p style="font-weight:600; color:#4b5563; margin-bottom:0.3rem;">Prioridad</p>
-                    <p style="color:#6b7280;">${task.is_urgent ? 'Alta prioridad' : 'Prioridad normal'}</p>
-                  </div>
-                  <div>
-                    <p style="font-weight:600; color:#4b5563; margin-bottom:0.3rem;">Tipo</p>
-                    <p style="color:#6b7280;">${task.type || 'Tarea general'}</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-            
-            <!-- Botones abajo -->
-            <div class="task-actions" style="display:flex; gap:0.8rem; margin-top:2.2rem;">
-              <button class="btn btn-primary" style="flex:1;" onclick="participateInTask('${task.id}')">
-                <i class="fas fa-hand-holding-heart"></i> Participar
-              </button>
-              <button class="btn btn-accent" style="flex:1;" onclick="showShareOptionsTask('${task.id}')">
-                <i class="fas fa-share-alt"></i> Compartir
-              </button>
-            </div>
-            <div class="share-section" id="shareSectionTask"></div>
-          </div>
-        `;
-
-        modal.style.display = 'flex';
-        document.body.style.overflow = 'hidden';
-      };
-// --- COMPARTIR CAUSA ---
-window.showShareOptionsCause = function(causeId) {
-  let cause = window.allActivities?.find(c => c.id == causeId && c.type === 'cause');
-  if (!cause) return;
-  const shareSection = document.getElementById('shareSectionCause');
-  shareSection.innerHTML = `
-    <h3 class="share-title" style="font-size:1.3rem;font-weight:600;color:var(--primary);margin-bottom:1.5rem;text-align:center;margin-top:2rem;">
-      <i class="fas fa-share-alt"></i> Ayuda a difundir esta causa
-    </h3>
-    <div class="share-content" style="background:#f8fafc;border-radius:12px;padding:1.5rem;margin-bottom:1.5rem;position:relative;">
-      <p class="share-text" style="font-size:1rem;line-height:1.6;color:#4b5563;margin-bottom:1rem;">
-        <span style="color:var(--primary);font-weight:600;">"${cause.short_description || cause.description?.substring(0, 120) + '...' || 'Únete a esta causa solidaria'}"</span><br><br>
-        ¡Cada donante suma impacto!
-      </p>
-      <div class="share-buttons" style="display:flex;justify-content:center;gap:1rem;flex-wrap:wrap;">
-        <a href="#" class="share-btn" style="display:flex;align-items:center;gap:0.7rem;padding:0.8rem 1.5rem;border-radius:8px;font-weight:600;color:white;transition:all 0.2s;text-decoration:none;background:#3b5998;" onclick="shareOnSocialCause('facebook', '${cause.id}')">
-          <i class="fab fa-facebook-f"></i> Facebook
-        </a>
-        <a href="#" class="share-btn" style="display:flex;align-items:center;gap:0.7rem;padding:0.8rem 1.5rem;border-radius:8px;font-weight:600;color:white;transition:all 0.2s;text-decoration:none;background:#1da1f2;" onclick="shareOnSocialCause('twitter', '${cause.id}')">
-          <i class="fab fa-twitter"></i> Twitter
-        </a>
-        <a href="#" class="share-btn" style="display:flex;align-items:center;gap:0.7rem;padding:0.8rem 1.5rem;border-radius:8px;font-weight:600;color:white;transition:all 0.2s;text-decoration:none;background:#25d366;" onclick="shareOnSocialCause('whatsapp', '${cause.id}')">
-          <i class="fab fa-whatsapp"></i> WhatsApp
-        </a>
-        <a href="#" class="share-btn" style="display:flex;align-items:center;gap:0.7rem;padding:0.8rem 1.5rem;border-radius:8px;font-weight:600;color:white;transition:all 0.2s;text-decoration:none;background:var(--primary);" onclick="copyCauseLink('${cause.id}')">
-          <i class="fas fa-link"></i> Copiar enlace
-        </a>
-      </div>
-    </div>
-  `;
-  shareSection.scrollIntoView({ behavior: 'smooth' });
-};
-
-window.shareOnSocialCause = function(platform, causeId) {
-  let cause = window.allActivities?.find(c => c.id == causeId && c.type === 'cause');
-  if (!cause) return;
-  const url = `${window.location.origin}/causes/${cause.id}`;
-  const text = `¡Colabora en la causa: "${cause.title}"! ${cause.short_description || cause.description?.substring(0, 100) + '...' || ''} ${url}`;
-  let shareUrl;
-  switch(platform) {
-    case 'facebook':
-      shareUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}&quote=${encodeURIComponent(text)}`;
-      break;
-    case 'twitter':
-      shareUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}`;
-      break;
-    case 'whatsapp':
-      shareUrl = `https://wa.me/?text=${encodeURIComponent(text)}`;
-      break;
-    default:
-      return;
-  }
-  window.open(shareUrl, '_blank', 'width=600,height=400');
-};
-
-window.copyCauseLink = function(causeId) {
-  const url = `${window.location.origin}/causes/${causeId}`;
-  navigator.clipboard.writeText(url).then(() => {
-    showToast('¡Enlace copiado!', 'success');
-  }).catch(() => {
-    prompt('Por favor, copia este enlace:', url);
-  });
-};
-
-// --- COMPARTIR TAREA ---
-window.showShareOptionsTask = function(taskId) {
-  let task = window.allActivities?.find(t => t.id == taskId && t.type === 'task');
-  if (!task) return;
-  const shareSection = document.getElementById('shareSectionTask');
-  shareSection.innerHTML = `
-    <h3 class="share-title" style="font-size:1.3rem;font-weight:600;color:var(--primary);margin-bottom:1.5rem;text-align:center;margin-top:2rem;">
-      <i class="fas fa-share-alt"></i> Ayuda a difundir esta tarea
-    </h3>
-    <div class="share-content" style="background:#f8fafc;border-radius:12px;padding:1.5rem;margin-bottom:1.5rem;position:relative;">
-      <p class="share-text" style="font-size:1rem;line-height:1.6;color:#4b5563;margin-bottom:1rem;">
-        <span style="color:var(--primary);font-weight:600;">"${task.summary || task.description?.substring(0, 120) + '...' || 'Únete a esta tarea solidaria'}"</span><br><br>
-        ¡Cada participante suma impacto!
-      </p>
-      <div class="share-buttons" style="display:flex;justify-content:center;gap:1rem;flex-wrap:wrap;">
-        <a href="#" class="share-btn" style="display:flex;align-items:center;gap:0.7rem;padding:0.8rem 1.5rem;border-radius:8px;font-weight:600;color:white;transition:all 0.2s;text-decoration:none;background:#3b5998;" onclick="shareOnSocialTask('facebook', '${task.id}')">
-          <i class="fab fa-facebook-f"></i> Facebook
-        </a>
-        <a href="#" class="share-btn" style="display:flex;align-items:center;gap:0.7rem;padding:0.8rem 1.5rem;border-radius:8px;font-weight:600;color:white;transition:all 0.2s;text-decoration:none;background:#1da1f2;" onclick="shareOnSocialTask('twitter', '${task.id}')">
-          <i class="fab fa-twitter"></i> Twitter
-        </a>
-        <a href="#" class="share-btn" style="display:flex;align-items:center;gap:0.7rem;padding:0.8rem 1.5rem;border-radius:8px;font-weight:600;color:white;transition:all 0.2s;text-decoration:none;background:#25d366;" onclick="shareOnSocialTask('whatsapp', '${task.id}')">
-          <i class="fab fa-whatsapp"></i> WhatsApp
-        </a>
-        <a href="#" class="share-btn" style="display:flex;align-items:center;gap:0.7rem;padding:0.8rem 1.5rem;border-radius:8px;font-weight:600;color:white;transition:all 0.2s;text-decoration:none;background:var(--primary);" onclick="copyTaskLink('${task.id}')">
-          <i class="fas fa-link"></i> Copiar enlace
-        </a>
-      </div>
-    </div>
-  `;
-  shareSection.scrollIntoView({ behavior: 'smooth' });
-};
-
-window.shareOnSocialTask = function(platform, taskId) {
-  let task = window.allActivities?.find(t => t.id == taskId && t.type === 'task');
-  if (!task) return;
-  const url = `${window.location.origin}/tasks/${task.id}`;
-  const text = `¡Participa en la tarea: "${task.title}"! ${task.summary || task.description?.substring(0, 100) + '...' || ''} ${url}`;
-  let shareUrl;
-  switch(platform) {
-    case 'facebook':
-      shareUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}&quote=${encodeURIComponent(text)}`;
-      break;
-    case 'twitter':
-      shareUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}`;
-      break;
-    case 'whatsapp':
-      shareUrl = `https://wa.me/?text=${encodeURIComponent(text)}`;
-      break;
-    default:
-      return;
-  }
-  window.open(shareUrl, '_blank', 'width=600,height=400');
-};
-
-window.copyTaskLink = function(taskId) {
-  const url = `${window.location.origin}/tasks/${taskId}`;
-  navigator.clipboard.writeText(url).then(() => {
-    showToast('¡Enlace copiado!', 'success');
-  }).catch(() => {
-    prompt('Por favor, copia este enlace:', url);
-  });
-};
-
-// --- MODAL DE VOLUNTARIADO ---
-window.showVolunteeringModal = async function(volunteeringId) {
-  // Crear/asegurar que existe el modal
-  let modal = document.getElementById('volunteeringModal');
-  if (!modal) {
-    modal = document.createElement('div');
-    modal.id = 'volunteeringModal';
-    modal.style.cssText = 'display:none; position:fixed; z-index:9999; left:0; top:0; width:100vw; height:100vh; background:rgba(0,0,0,0.35); align-items:center; justify-content:center;';
-    
-    modal.innerHTML = `
-      <div class="modal-content" style="background:#fff; border-radius:18px; max-width:800px; width:95vw; padding:2rem; box-shadow:0 8px 32px rgba(74,111,165,0.13); position:relative; max-height:90vh; overflow-y:auto;">
-        <button id="closeVolunteeringModal" style="position:absolute; top:1.5rem; right:1.5rem; background:none; border:none; font-size:1.8rem; color:#6b7280; cursor:pointer; transition:color 0.2s;" onmouseover="this.style.color='#4a6fa5'" onmouseout="this.style.color='#6b7280'">&times;</button>
-        <div id="volunteeringModalBody">
-          <!-- Contenido dinámico -->
-        </div>
-      </div>
-    `;
-    document.body.appendChild(modal);
-    
-    // Agregar evento para cerrar
-    document.getElementById('closeVolunteeringModal').onclick = function() {
-      modal.style.display = 'none';
-      document.body.style.overflow = '';
-    };
-    
-    // Cerrar al hacer clic fuera
-    modal.onclick = function(e) {
-      if (e.target === modal) {
-        modal.style.display = 'none';
-        document.body.style.overflow = '';
-      }
-    };
-    
-    // Cerrar con Escape (MOVIDO AQUÍ DENTRO DEL BLOQUE)
-    document.addEventListener('keydown', function(e) {
-      if (e.key === 'Escape' && modal.style.display === 'flex') {
-        modal.style.display = 'none';
-        document.body.style.overflow = '';
-      }
-    });
-  }
-
-  // Carga los datos del voluntariado
-  const { data: volunteering, error } = await supabase
-    .from('volunteering')
-    .select('*')
-    .eq('id', volunteeringId)
-    .single();
-
-  if (error || !volunteering) {
-    document.getElementById('volunteeringModalBody').innerHTML = '<div style="color:#e53e3e;text-align:center;padding:1.5rem;">No se pudo cargar el voluntariado.</div>';
-    modal.style.display = 'flex';
-    document.body.style.overflow = 'hidden';
-    return;
-  }
-
-  // Causa vinculada
-  let causeInfo = '';
-  if (volunteering.cause_id) {
-    const { data: cause } = await supabase
-      .from('causes')
-      .select('title, short_description, photo_url')
-      .eq('id', volunteering.cause_id)
-      .single();
-    if (cause) {
-      causeInfo = `
-        <div class="linked-cause-section" style="margin-bottom:1.5rem;">
-          <h3 class="content-title" style="font-size:1.2rem; font-weight:600; color:var(--primary); margin-bottom:0.9rem; display:flex; align-items:center; gap:0.7rem;">
-            <i class="fas fa-link"></i> Vinculado a la causa
-          </h3>
-          <div style="display:flex; align-items:center; gap:1.2rem; background:#f8fafc; padding:1rem; border-radius:8px; border:1px solid #e5e7eb;">
-            <img src="${cause.photo_url || '/img/causa-default.jpg'}"
-                 alt="Imagen de la causa vinculada"
-                 style="width:80px; height:80px; object-fit:cover; border-radius:6px;"
-                 onerror="this.src='/img/causa-default.jpg'">
-            <div style="flex:1; min-width:0;">
-              <div style="font-weight:700; color:var(--primary); font-size:1.05rem; margin-bottom:0.2rem; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">
-                ${cause.title}
-              </div>
-              <div style="color:#6b7280; font-size:0.97rem; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:260px;">
-                ${cause.short_description || 'Sin resumen disponible'}
-              </div>
-            </div>
-            <a href="/causes/${volunteering.cause_id}"
-               class="btn btn-primary"
-               style="margin-left:1.2rem; white-space:nowrap; font-size:0.97rem; padding:0.5rem 1.1rem; display:flex; align-items:center; gap:0.5rem;">
-              <i class="fas fa-arrow-right"></i> Ver causa
-            </a>
-          </div>
-        </div>
-      `;
-    }
-  }
-
-  const startDate = volunteering.start_date ? new Date(volunteering.start_date).toLocaleDateString('es-ES', {
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric'
-  }) : 'Sin fecha de inicio';
-  
-  const endDate = volunteering.end_date ? new Date(volunteering.end_date).toLocaleDateString('es-ES', {
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric'
-  }) : 'Sin fecha de fin';
-
-  const createdDate = new Date(volunteering.created_at).toLocaleDateString('es-ES', {
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric'
-  });
-
-  const progress = volunteering.volunteers_needed ? Math.min(Math.round((volunteering.volunteers / volunteering.volunteers_needed) * 100), 100) : 0;
-
-  // Obtener voluntarios participantes
-  const { data: volunteers, error: volunteersError } = await supabase
-    .from('volunteering_members')
-    .select('user_id, profiles(username, photo_url)')
-    .eq('volunteering_id', volunteeringId);
-
-  let volunteersHtml = '';
-  if (volunteers && volunteers.length > 0) {
-    volunteersHtml = `
-      <div class="content-section" style="margin-bottom:2.2rem;">
-        <h3 class="content-title" style="font-size:1.2rem; font-weight:600; color:var(--primary); margin-bottom:0.9rem; display:flex; align-items:center; gap:0.7rem;">
-          <i class="fas fa-users"></i> Voluntarios
-        </h3>
-        <div style="display:flex; flex-wrap:wrap; gap:1rem;">
-          ${volunteers.map(v => `
-            <div style="display:flex; align-items:center; gap:0.6rem; background:#f8fafc; border-radius:8px; padding:0.5rem 1rem; border:1px solid #e5e7eb;">
-              <img src="${v.profiles?.photo_url || '/img/avatar-default.png'}" alt="${v.profiles?.username || 'Usuario'}" style="width:36px; height:36px; border-radius:50%; object-fit:cover; border:1px solid #e5e7eb;">
-              <span style="font-weight:600; color:var(--primary);">${v.profiles?.username || 'Usuario'}</span>
-            </div>
-          `).join('')}
-        </div>
-      </div>
-    `;
-  } else {
-    volunteersHtml = `
-      <div class="content-section" style="margin-bottom:2.2rem;">
-        <h3 class="content-title" style="font-size:1.2rem; font-weight:600; color:var(--primary); margin-bottom:0.9rem; display:flex; align-items:center; gap:0.7rem;">
-          <i class="fas fa-users"></i> Voluntarios
-        </h3>
-        <div style="color:#6b7280;">Aún no hay voluntarios inscritos.</div>
-      </div>
-    `;
-  }
-
-  document.getElementById('volunteeringModalBody').innerHTML = `
-    <div class="modal-task-container">
-      <!-- Título principal centrado -->
-      <h1 class="modal-task-title" style="font-size:2rem; font-weight:800; color:var(--primary); margin-bottom:2.7rem; text-align:center; width:100%;">${volunteering.title}</h1>
-      
-      <div class="modal-task-header" style="display:flex; gap:2.5rem; margin-bottom:2.7rem;">
-        <div class="modal-task-image-wrapper" style="flex:1; min-width:320px; height:300px; border-radius:12px; overflow:hidden; position:relative; box-shadow:0 4px 12px rgba(0,0,0,0.08);">
-          <!-- Badge arriba a la izquierda -->
-          <div class="modal-cause-badge" style="top:1.2rem; left:1.2rem; right:auto; background:var(--volunteering-dark); color:white; position:absolute; border-radius:50px; padding:0.5rem 1rem; font-size:0.9rem; font-weight:600; display:flex; align-items:center; gap:0.6rem; box-shadow:0 2px 8px rgba(0,0,0,0.1); z-index:2;">
-            <i class="fas fa-hands-helping"></i> Voluntariado
-          </div>
-          
-          <img class="modal-task-image" src="${volunteering.photo_url || '/img/volunteer-default.jpg'}" 
-               alt="Imagen del voluntariado ${volunteering.title}"
-               style="width:100%;height:100%;object-fit:cover;"
-               onerror="this.src='/img/volunteer-default.jpg'">
-               
-          ${volunteering.is_urgent ? `
-          <div class="modal-cause-badge urgent" style="right:1.2rem; left:auto; top:1.2rem; background:var(--urgent); color:white; border-radius:50px; padding:0.5rem 1rem; font-size:0.9rem; font-weight:600; display:flex; align-items:center; gap:0.6rem; box-shadow:0 2px 8px rgba(0,0,0,0.1); z-index:2;">
-            <i class="fas fa-exclamation-circle"></i> Urgente
-          </div>` : ''}
-        </div>
-        
-        <!-- Info a la derecha de la foto -->
-        <div class="modal-task-info" style="flex:1.5; display:flex; flex-direction:column; justify-content:flex-start;">
-          <!-- Barra de progreso -->
-          <div class="modal-cause-progress-container" style="background:#f8fafc; padding:1.5rem; border-radius:12px; margin-bottom:1.5rem; border:1px solid #e5e7eb;">
-            <div class="progress-bar">
-              <div class="progress-fill" style="width: ${progress}%"></div>
-            </div>
-            <div class="progress-info">
-              <span>${progress}% completado</span>
-              <span>${volunteering.volunteers || 0} de ${volunteering.volunteers_needed || 0} voluntarios</span>
-            </div>
-          </div>
-          
-          <!-- Meta compacta en dos columnas -->
-          <div class="modal-task-meta-grid" style="display:grid; grid-template-columns:1fr 1fr; gap:0.7rem 1.2rem; margin-bottom:1.2rem;">
-            <div class="meta-item">
-              <span class="meta-icon"><i class="fas fa-map-marker-alt"></i></span>
-              <span>${volunteering.city || 'Sin ubicación'}${volunteering.country ? ', ' + volunteering.country : ''}</span>
-            </div>
-            <div class="meta-item">
-              <span class="meta-icon"><i class="fas fa-users"></i></span>
-              <span>${volunteering.volunteers || 0} voluntarios</span>
-            </div>
-            <div class="meta-item">
-              <span class="meta-icon"><i class="fas fa-heart"></i></span>
-              <span>${volunteering.beneficiaries || 0} beneficiarios</span>
-            </div>
-            <div class="meta-item">
-              <span class="meta-icon"><i class="fas fa-calendar-alt"></i></span>
-              <span>${startDate}</span>
-            </div>
-          </div>
-          
-          <div class="points-notice" style="background:#f0f9ff; border-left:4px solid var(--volunteering-dark); padding:0.8rem; border-radius:0 8px 8px 0; font-size:0.97rem; display:flex; align-items:center; gap:0.7rem;">
-            <i class="fas fa-star" style="color: var(--volunteering-dark);"></i>
-            Participar otorgará <strong>${volunteering.points || 20} puntos</strong> por hora
-          </div>
-        </div>
-      </div>
-      
-      ${causeInfo}
-      
-      <!-- Resumen y descripción -->
-      <div class="modal-task-content" style="margin-top:0;">
-        <div class="content-section" style="margin-bottom:2.2rem;">
-          <h3 class="content-title" style="font-size:1.2rem; font-weight:600; color:var(--primary); margin-bottom:0.9rem; display:flex; align-items:center; gap:0.7rem;">
-            <i class="fas fa-align-left"></i> Resumen
-          </h3>
-          <p class="content-text" style="line-height:1.7; color:#4b5563; font-size:1.05rem; text-align:justify; font-weight:400; margin-bottom:2.2rem;">
-            ${volunteering.summary || 'No hay resumen disponible para este voluntariado.'}
-          </p>
-          
-          <h3 class="content-title" style="font-size:1.2rem; font-weight:600; color:var(--primary); margin-bottom:0.9rem; display:flex; align-items:center; gap:0.7rem;">
-            <i class="fas fa-info-circle"></i> Descripción completa
-          </h3>
-          <p class="content-text" style="line-height:1.7; color:#4b5563; font-size:1.05rem; text-align:justify;">
-            ${volunteering.description || 'No hay descripción disponible para este voluntariado.'}
-          </p>
-        </div>
-        
-        ${volunteersHtml}
-        
-        <div class="content-section" style="margin-bottom:2.2rem;">
-          <h3 class="content-title" style="font-size:1.2rem; font-weight:600; color:var(--primary); margin-bottom:0.9rem; display:flex; align-items:center; gap:0.7rem;">
-            <i class="fas fa-info-circle"></i> Detalles adicionales
-          </h3>
-          <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem;">
-            <div>
-              <p style="font-weight:600; color:#4b5563; margin-bottom:0.3rem;">Fecha de inicio</p>
-              <p style="color:#6b7280;">${startDate}</p>
-            </div>
-            <div>
-              <p style="font-weight:600; color:#4b5563; margin-bottom:0.3rem;">Fecha de fin</p>
-              <p style="color:#6b7280;">${endDate}</p>
-            </div>
-            <div>
-              <p style="font-weight:600; color:#4b5563; margin-bottom:0.3rem;">Fecha de creación</p>
-              <p style="color:#6b7280;">${createdDate}</p>
-            </div>
-            <div>
-              <p style="font-weight:600; color:#4b5563; margin-bottom:0.3rem;">Estado</p>
-              <p style="color:#6b7280;">${volunteering.status === 'completed' ? 'Completado' : 'En progreso'}</p>
-            </div>
-          </div>
-        </div>
-      </div>
-      
-      <!-- Botones abajo -->
-      <div class="task-actions" style="display:flex; gap:0.8rem; margin-top:2.2rem;">
-        <button class="btn btn-primary" style="flex:1;" onclick="participateInVolunteering('${volunteering.id}')">
-          <i class="fas fa-hand-holding-heart"></i> Unirme como voluntario
-        </button>
-        <button class="btn btn-accent" style="flex:1;" onclick="showShareOptionsVolunteering('${volunteering.id}')">
-          <i class="fas fa-share-alt"></i> Compartir
-        </button>
-      </div>
-      <div class="share-section" id="shareSectionVolunteering"></div>
-    </div>
-  `;
-  
-  modal.style.display = 'flex';
-  document.body.style.overflow = 'hidden';
-};
-
-// ...existing code...
-
-// Función para mostrar opciones de compartir para voluntariados
-window.showShareOptionsVolunteering = function(volunteeringId) {
-  let volunteering = window.allActivities?.find(v => v.id == volunteeringId && v.type === 'volunteering');
-  if (!volunteering) return;
-  
-  const shareSection = document.getElementById('shareSectionVolunteering');
-  shareSection.innerHTML = `
-    <h3 class="share-title" style="font-size:1.3rem;font-weight:600;color:var(--primary);margin-bottom:1.5rem;text-align:center;margin-top:2rem;">
-      <i class="fas fa-share-alt"></i> Ayuda a difundir este voluntariado
-    </h3>
-    <div class="share-content" style="background:#f8fafc;border-radius:12px;padding:1.5rem;margin-bottom:1.5rem;position:relative;">
-      <p class="share-text" style="font-size:1rem;line-height:1.6;color:#4b5563;margin-bottom:1rem;">
-        <span style="color:var(--primary);font-weight:600;">"${volunteering.summary || volunteering.description?.substring(0, 120) + '...' || 'Únete a este voluntariado'}"</span><br><br>
-        ¡Cada voluntario cuenta!
-      </p>
-      <div class="share-buttons" style="display:flex;justify-content:center;gap:1rem;flex-wrap:wrap;">
-        <a href="#" class="share-btn" style="display:flex;align-items:center;gap:0.7rem;padding:0.8rem 1.5rem;border-radius:8px;font-weight:600;color:white;transition:all 0.2s;text-decoration:none;background:#3b5998;" onclick="shareOnSocialVolunteering('facebook', '${volunteering.id}')">
-          <i class="fab fa-facebook-f"></i> Facebook
-        </a>
-        <a href="#" class="share-btn" style="display:flex;align-items:center;gap:0.7rem;padding:0.8rem 1.5rem;border-radius:8px;font-weight:600;color:white;transition:all 0.2s;text-decoration:none;background:#1da1f2;" onclick="shareOnSocialVolunteering('twitter', '${volunteering.id}')">
-          <i class="fab fa-twitter"></i> Twitter
-        </a>
-        <a href="#" class="share-btn" style="display:flex;align-items:center;gap:0.7rem;padding:0.8rem 1.5rem;border-radius:8px;font-weight:600;color:white;transition:all 0.2s;text-decoration:none;background:#25d366;" onclick="shareOnSocialVolunteering('whatsapp', '${volunteering.id}')">
-          <i class="fab fa-whatsapp"></i> WhatsApp
-        </a>
-        <a href="#" class="share-btn" style="display:flex;align-items:center;gap:0.7rem;padding:0.8rem 1.5rem;border-radius:8px;font-weight:600;color:white;transition:all 0.2s;text-decoration:none;background:var(--primary);" onclick="copyVolunteeringLink('${volunteering.id}')">
-          <i class="fas fa-link"></i> Copiar enlace
-        </a>
-      </div>
-    </div>
-  `;
-  shareSection.scrollIntoView({ behavior: 'smooth' });
-};
-
-// Función para compartir voluntariados en redes sociales
-window.shareOnSocialVolunteering = function(platform, volunteeringId) {
-  let volunteering = window.allActivities?.find(v => v.id == volunteeringId && v.type === 'volunteering');
-  if (!volunteering) return;
-  
-  const url = `${window.location.origin}/volunteering/${volunteering.id}`;
-  const text = `¡Únete como voluntario: "${volunteering.title}"! ${volunteering.summary || volunteering.description?.substring(0, 100) + '...' || ''} ${url}`;
-  let shareUrl;
-  
-  switch(platform) {
-    case 'facebook':
-      shareUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}&quote=${encodeURIComponent(text)}`;
-      break;
-    case 'twitter':
-      shareUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}`;
-      break;
-    case 'whatsapp':
-      shareUrl = `https://wa.me/?text=${encodeURIComponent(text)}`;
-      break;
-    default:
-      return;
-  }
-  
-  window.open(shareUrl, '_blank', 'width=600,height=400');
-};
-
-// Función para copiar enlace del voluntariado
-window.copyVolunteeringLink = function(volunteeringId) {
-  const url = `${window.location.origin}/volunteering/${volunteeringId}`;
-  navigator.clipboard.writeText(url).then(() => {
-    showToast('¡Enlace copiado!', 'success');
-  }).catch(() => {
-    prompt('Por favor, copia este enlace:', url);
-  });
-};
-
-// Función para participar en un voluntariado
-window.participateInVolunteering = async function(volunteeringId, btn = null) {
-  const { data: { session } } = await supabase.auth.getSession();
-  if (!session?.user) {
-    showToast('Debes iniciar sesión para participar en este voluntariado', 'error');
-    return;
-  }
-  
-  const userId = session.user.id;
-  
-  // Intenta insertar como voluntario
-  const { error } = await supabase
-    .from('volunteering_members')
-    .insert([{ volunteering_id: volunteeringId, user_id: userId, role: 'member', status: 'active' }]);
-
-  if (error) {
-    if (error.code === '23505' || error.status === 409) {
-      showToast('Ya estás participando en este voluntariado', 'info');
-    } else {
-      showToast('Error al unirse al voluntariado', 'error');
-    }
-    return;
-  }
-
-  showToast('¡Te has unido como voluntario!', 'success');
-  
-  // Recargar las actividades para reflejar los cambios
-  setTimeout(() => {
-    loadUserActivities();
-  }, 1000);
-};
-
-      // --- EVENTOS ---
-      document.addEventListener('click', async function(e) {
-        const btn = e.target.closest('.view-more-btn');
-        if (!btn) return;
-        const type = btn.dataset.type;
-        const id = btn.dataset.id;
-        if (!type || !id) return;
-
-        if (type === 'cause') {
-          showCauseModal(id);
-        } else if (type === 'task') {
-          showTaskModal(id);
-        } else if (type === 'challenge') {
-          showChallengeModal(id);
-        } else if (type === 'volunteering') {
-          showVolunteeringModal(id);
-        }
-      });
-
-      // --- Búsqueda ---
+      // --- Búsqueda (placeholder) ---
       document.getElementById('search-input')?.addEventListener('input', function(e) {
         const query = e.target.value.toLowerCase();
-        if (!query) {
-          filteredActivities = [...window.allActivities];
-        } else {
-          filteredActivities = window.allActivities.filter(activity => 
-            activity.title?.toLowerCase().includes(query) ||
-            activity.description?.toLowerCase().includes(query) ||
-            activity.short_description?.toLowerCase().includes(query)
-          );
+        if (query) {
+          showToast('Funcionalidad de búsqueda en desarrollo', 'info');
         }
-        renderActivities();
       });
     });
   </script>
