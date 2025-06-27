@@ -713,12 +713,15 @@
     </div>
   </div>
 
-  <!-- Modal de Causa -->
+  <!-- Modal de Causa (compatible con causes-renderer.js) -->
   <div id="causeModal" class="modal" style="display:none; position:fixed; z-index:9999; left:0; top:0; width:100vw; height:100vh; background:rgba(0,0,0,0.35); align-items:center; justify-content:center;">
-    <div class="modal-content" style="background:#fff; border-radius:18px; max-width:800px; width:95vw; padding:2rem; box-shadow:0 8px 32px rgba(74,111,165,0.13); position:relative; max-height:90vh; overflow-y:auto;">
-      <button id="closeModal" style="position:absolute; top:1.5rem; right:1.5rem; background:none; border:none; font-size:1.8rem; color:#6b7280; cursor:pointer; transition:color 0.2s;" onmouseover="this.style.color='#4a6fa5'" onmouseout="this.style.color='#6b7280'">&times;</button>
-      <div id="modalBody" style="padding:0.5rem;">
-        <!-- Contenido dinámico -->
+    <div class="modal-content" style="background:#fff; border-radius:18px; max-width:900px; width:95vw; padding:0; position:relative; max-height:90vh; overflow-y:auto;">
+      <button onclick="window.causesRenderer ? window.causesRenderer.closeModal() : (this.closest('.modal').style.display='none', document.body.style.overflow='')" 
+              style="position:absolute; top:1rem; right:1rem; background:none; border:none; font-size:1.5rem; cursor:pointer; z-index:10; color:#666; width:2rem; height:2rem; display:flex; align-items:center; justify-content:center; border-radius:50%; transition:all 0.2s;" 
+              onmouseover="this.style.background='#f3f4f6'" 
+              onmouseout="this.style.background='none'">&times;</button>
+      <div id="modalBody" style="padding:2rem;">
+        <!-- El contenido se genera dinámicamente por causes-renderer.js -->
       </div>
     </div>
   </div>
@@ -823,22 +826,165 @@
 
 {% block scripts %}
 {{ super() }}
+<script src="/js/compartir.js"></script>
+<script src="/js/modules/causes-renderer.js"></script>
 <script>
-let currentFilter = "all";
+// Función para compartir causas (reutiliza compartir.js)
+window.mostrarCompartir = function(causeId) {
+  const cause = window.causes?.find(c => c.id == causeId);
+  if (!cause) {
+    console.error('❌ No se encontró la causa con ID:', causeId);
+    return;
+  }
+  
+  renderCompartir({
+    title: cause.title,
+    summary: cause.short_description || cause.description?.substring(0, 120) + '...',
+    photo_url: cause.photo_url || '/img/causa-default.jpg',
+    link: `${window.location.origin}/causes/${cause.id}`,
+    type: 'causa'
+  }, 'shareSection');
+  
+  document.getElementById('shareSection').scrollIntoView({ 
+    behavior: 'smooth', 
+    block: 'center' 
+  });
+};
 
 document.addEventListener('DOMContentLoaded', async function() {
-  // 1. DETECTAR URL ESPECÍFICA PRIMERO
+  // Detectar URL específica y abrir modal
   const urlPath = window.location.pathname;
   const causeMatch = urlPath.match(/\/causes\/([^\/]+)$/);
-  let specificCauseId = null;
   
   if (causeMatch) {
-    specificCauseId = causeMatch[1];
+    const specificCauseId = causeMatch[1];
     console.log('🎯 URL detectada para causa específica:', specificCauseId);
+    
+    // Cargar causas y luego abrir modal usando el renderer
+    await loadCausesFromSupabase();
+    
+    if (window.causes && window.causes.length > 0) {
+      const found = window.causes.find(c => c.id === specificCauseId);
+      if (found) {
+        setTimeout(() => {
+          if (window.causesRenderer) {
+            window.causesRenderer.showModal(specificCauseId, window.causes);
+          } else {
+            showCauseModal(specificCauseId);
+          }
+        }, 500);
+      } else {
+        window.location.href = '/causes';
+      }
+    }
+  } else {
+    // Cargar causas normalmente
+    await loadCausesFromSupabase();
   }
 
-  // 2. CONFIGURAR EVENT LISTENERS
-  // Abrir modal de crear causa
+  // Event listeners para crear causa
+  setupCreateCauseListeners();
+  
+  // Event listeners para tabs y búsqueda
+  setupTabsAndSearch();
+});
+
+// Función que usa el renderer si está disponible, sino fallback
+async function loadCausesFromSupabase(filter = "all", searchTerm = "") {
+  if (window.causesRenderer) {
+    const { causes, error } = await window.causesRenderer.loadCausesFromSupabase(filter, searchTerm);
+    
+    if (error) {
+      document.getElementById('causesList').innerHTML = '<div style="color:#e53e3e;text-align:center;">Error al cargar las causas.</div>';
+      return;
+    }
+    
+    const container = document.getElementById('causesList');
+    window.causesRenderer.renderGrid(causes, container);
+    window.causes = causes;
+  } else {
+    // Fallback al código original
+    await loadCausesFromSupabaseOriginal(filter, searchTerm);
+  }
+}
+
+// Función original como fallback
+async function loadCausesFromSupabaseOriginal(filter = "all", searchTerm = "") {
+  let query = supabase
+    .from('causes')
+    .select('*')
+    .order('created_at', { ascending: false });
+
+  if (filter !== "all") {
+    query = query.eq('category', filter);
+  }
+  if (searchTerm && searchTerm.trim() !== "") {
+    query = query.or(`title.ilike.%${searchTerm}%,description.ilike.%${searchTerm}%,city.ilike.%${searchTerm}%,country.ilike.%${searchTerm}%`);
+  }
+  
+  const { data: causes, error } = await query;
+  const causesList = document.getElementById('causesList');
+  
+  if (error) {
+    causesList.innerHTML = '<div style="color:#e53e3e;text-align:center;">Error al cargar las causas.</div>';
+    return;
+  }
+  
+  causesList.innerHTML = '';
+  
+  if (!causes || causes.length === 0) {
+    causesList.innerHTML = '<div style="color:#6b7280;text-align:center;padding:2rem;grid-column:1/-1;">No se encontraron causas.</div>';
+    return;
+  }
+  
+  causes.forEach(cause => {
+    const progress = cause.goal ? Math.min(Math.round((cause.raised / cause.goal) * 100), 100) : 0;
+    const urgentBadge = cause.urgent ? `<div class="cause-badge urgent"><i class="fas fa-exclamation-circle"></i> Urgente</div>` : "";
+    const pointsBadge = `<div class="cause-badge points"><i class="fas fa-star"></i> +${cause.points || 0} pts</div>`;
+    const location = cause.city && cause.country ? `${cause.city}, ${cause.country}` : "";
+    
+    const card = document.createElement('div');
+    card.className = 'cause-card';
+    card.innerHTML = `
+      <div class="cause-image">
+        <img src="${cause.photo_url || '/img/causa-default.jpg'}" alt="${cause.title}" 
+             onerror="if (!this._defaulted) { this._defaulted = true; this.src='/img/causa-default.jpg'; }">
+        ${urgentBadge}
+        ${pointsBadge}
+      </div>
+      <div class="cause-content">
+        <h3>${cause.title}</h3>
+        <p>${cause.short_description || ''}</p>
+        <div class="cause-meta">
+          <div class="meta-item"><i class="fas fa-map-marker-alt"></i> ${location}</div>
+          <div class="meta-item"><i class="fas fa-users"></i> ${cause.donors || 0} donantes</div>
+          <div class="beneficiaries-count">
+            <i class="fas fa-heart"></i> Beneficia a ${cause.beneficiaries || 0} personas
+          </div>
+        </div>
+        <div class="cause-progress">
+          <div class="progress-bar">
+            <div class="progress-fill" style="width: ${progress}%"></div>
+          </div>
+          <div class="progress-info">
+            <span>${progress}% completado</span>
+            <span>${cause.raised || 0} € de ${cause.goal || 0} €</span>
+          </div>
+        </div>
+        <div class="cause-actions">
+          <button class="btn btn-primary view-cause-btn" data-cause-id="${cause.id}">Ver más</button>
+          <a href="#" class="btn btn-accent">Donar</a>
+        </div>
+      </div>
+    `;
+    causesList.appendChild(card);
+  });
+  
+  window.causes = causes;
+}
+
+// Configurar listeners para crear causa
+function setupCreateCauseListeners() {
   document.getElementById('create-cause-btn').onclick = async function(e) {
     e.preventDefault();
     const { data: { session } } = await supabase.auth.getSession();
@@ -850,7 +996,6 @@ document.addEventListener('DOMContentLoaded', async function() {
     }
   };
 
-  // Cerrar modal de crear causa
   document.getElementById('closeCreateCauseModal').onclick = function() {
     document.getElementById('createCauseModal').classList.remove('active');
     document.body.style.overflow = '';
@@ -860,7 +1005,6 @@ document.addEventListener('DOMContentLoaded', async function() {
     document.getElementById('afterCreate').style.display = 'none';
   };
 
-  // Cerrar modal al hacer click fuera del contenido
   document.getElementById('createCauseModal').onclick = function(e) {
     if (e.target === this) {
       this.classList.remove('active');
@@ -870,27 +1014,12 @@ document.addEventListener('DOMContentLoaded', async function() {
     }
   };
 
-  // Modal login
   document.getElementById('cancelModal').onclick = function() {
     document.getElementById('loginModal').classList.remove('active');
   };
   document.getElementById('loginModal').onclick = function(e) {
     if (e.target === this) this.classList.remove('active');
   };
-
-  // Tabs
-  document.querySelectorAll('.tab').forEach(tab => {
-    tab.addEventListener('click', function() {
-      document.querySelector('.tab.active').classList.remove('active');
-      this.classList.add('active');
-      loadCausesFromSupabase(this.getAttribute('data-filter'));
-    });
-  });
-
-  // Búsqueda
-  document.getElementById('search-input').addEventListener('input', function() {
-    loadCausesFromSupabase(currentFilter, this.value);
-  });
 
   // Vista previa de imagen
   document.getElementById('photo').addEventListener('change', function(e) {
@@ -915,7 +1044,11 @@ document.addEventListener('DOMContentLoaded', async function() {
     document.getElementById('pointsText').innerHTML = `<i class="fas fa-star"></i> Colaborar en esta causa otorgará <strong>${val} puntos</strong> a cada participante.`;
   });
 
-  // Envío del formulario - CORREGIDO
+  // Geocodificación
+  document.getElementById('city').addEventListener('change', geocodeCityCountry);
+  document.getElementById('country').addEventListener('change', geocodeCityCountry);
+
+  // Form submission
   document.getElementById('causeForm').addEventListener('submit', async function(e) {
     e.preventDefault();
     
@@ -957,7 +1090,6 @@ document.addEventListener('DOMContentLoaded', async function() {
     const lat = document.getElementById('lat').value;
     const lng = document.getElementById('lng').value;
 
-    // ✅ CORREGIR ESTA LÍNEA:
     const datosCausa = {
       title,
       short_description,
@@ -994,118 +1126,38 @@ document.addEventListener('DOMContentLoaded', async function() {
 
     document.getElementById('causeForm').style.display = 'none';
     document.getElementById('afterCreate').style.display = 'block';
-    loadCausesFromSupabase();
+    await loadCausesFromSupabase();
+  });
+}
+
+// Configurar tabs y búsqueda
+function setupTabsAndSearch() {
+  document.querySelectorAll('.tab').forEach(tab => {
+    tab.addEventListener('click', function() {
+      document.querySelector('.tab.active').classList.remove('active');
+      this.classList.add('active');
+      loadCausesFromSupabase(this.getAttribute('data-filter'));
+    });
   });
 
-  // 3. CARGAR CAUSAS Y LUEGO BUSCAR LA ESPECÍFICA
-  await loadCausesFromSupabase();
-  
-  // 4. SI HAY UNA CAUSA ESPECÍFICA, ABRIRLA
-  if (specificCauseId) {
-    console.log('🔍 Buscando causa específica después de cargar...');
-    
-    let attempts = 0;
-    const maxAttempts = 10;
-    
-    const waitAndShowCause = () => {
-      attempts++;
-      console.log(`🔄 Intento ${attempts}: Buscando causa...`);
-      
-      if (window.causes && window.causes.length > 0) {
-        const specificCause = window.causes.find(c => c.id === specificCauseId);
-        
-        if (specificCause) {
-          console.log('✅ Causa encontrada, abriendo modal...', specificCause);
-          setTimeout(() => {
-            showCauseModal(specificCauseId);
-          }, 300);
-        } else {
-          console.error('❌ Causa no encontrada con ID:', specificCauseId);
-          console.log('🔄 Redirigiendo a la página principal...');
-          window.location.href = '/causes';
-        }
-      } else if (attempts < maxAttempts) {
-        setTimeout(waitAndShowCause, 500);
-      } else {
-        console.error('❌ Timeout buscando causa');
-        window.location.href = '/causes';
-      }
-    };
-    
-    // Esperar un poco y luego buscar
-    setTimeout(waitAndShowCause, 1000);
+  document.getElementById('search-input').addEventListener('input', function() {
+    loadCausesFromSupabase(document.querySelector('.tab.active').getAttribute('data-filter'), this.value);
+  });
+}
+
+// Event listener para botones "Ver más"
+document.addEventListener('click', function(e) {
+  if (e.target.classList.contains('view-cause-btn')) {
+    const causeId = e.target.getAttribute('data-cause-id');
+    if (window.causesRenderer) {
+      window.causesRenderer.showModal(causeId, window.causes);
+    } else {
+      showCauseModal(causeId);
+    }
   }
 });
 
-async function loadCausesFromSupabase(filter = "all", searchTerm = "") {
-  currentFilter = filter;
-  let query = supabase
-    .from('causes')
-    .select('*')
-    .order('created_at', { ascending: false });
-
-  if (filter !== "all") {
-    query = query.eq('category', filter);
-  }
-  if (searchTerm && searchTerm.trim() !== "") {
-    query = query.or(`title.ilike.%${searchTerm}%,description.ilike.%${searchTerm}%,city.ilike.%${searchTerm}%,country.ilike.%${searchTerm}%`);
-  }
-  const { data: causes, error } = await query;
-  const causesList = document.getElementById('causesList');
-  if (error) {
-    causesList.innerHTML = '<div style="color:#e53e3e;text-align:center;">Error al cargar las causas.</div>';
-    return;
-  }
-  causesList.innerHTML = '';
-  if (!causes || causes.length === 0) {
-    causesList.innerHTML = '<div style="color:#6b7280;text-align:center;padding:2rem;grid-column:1/-1;">No se encontraron causas.</div>';
-    return;
-  }
-  causes.forEach(cause => {
-    const progress = cause.goal ? Math.min(Math.round((cause.raised / cause.goal) * 100), 100) : 0;
-    const urgentBadge = cause.urgent ? `<div class="cause-badge urgent"><i class="fas fa-exclamation-circle"></i> Urgente</div>` : "";
-    const pointsBadge = `<div class="cause-badge points"><i class="fas fa-star"></i> +${cause.points || 0} pts</div>`;
-    const location = cause.city && cause.country ? `${cause.city}, ${cause.country}` : "";
-    const card = document.createElement('div');
-    card.className = 'cause-card';
-    card.innerHTML = `
-      <div class="cause-image">
-        <img src="${cause.photo_url || '/img/causa-default.jpg'}" alt="${cause.title}" 
-  onerror="if (!this._defaulted) { this._defaulted = true; this.src='/img/causa-default.jpg'; }">
-        ${urgentBadge}
-        ${pointsBadge}
-      </div>
-      <div class="cause-content">
-        <h3>${cause.title}</h3>
-        <p>${cause.short_description || ''}</p>
-        <div class="cause-meta">
-          <div class="meta-item"><i class="fas fa-map-marker-alt"></i> ${location}</div>
-          <div class="meta-item"><i class="fas fa-users"></i> ${cause.donors || 0} donantes</div>
-          <div class="beneficiaries-count">
-            <i class="fas fa-heart"></i> Beneficia a ${cause.beneficiaries || 0} personas
-          </div>
-        </div>
-        <div class="cause-progress">
-          <div class="progress-bar">
-            <div class="progress-fill" style="width: ${progress}%"></div>
-          </div>
-          <div class="progress-info">
-            <span>${progress}% completado</span>
-            <span>${cause.raised || 0} € de ${cause.goal || 0} €</span>
-          </div>
-        </div>
-        <div class="cause-actions">
-          <button class="btn btn-primary view-cause-btn" data-cause-id="${cause.id}">Ver más</button>
-          <a href="#" class="btn btn-accent">Donar</a>
-        </div>
-      </div>
-    `;
-    causesList.appendChild(card);
-  });
-  window.causes = causes;
-}
-
-// Geocodificación automática al cambiar ciudad o país
+// Geocodificación automática
 async function geocodeCityCountry() {
   const city = document.getElementById('city').value.trim();
   const country = document.getElementById('country').value.trim();
@@ -1130,176 +1182,56 @@ async function geocodeCityCountry() {
   }
 }
 
-document.getElementById('city').addEventListener('change', geocodeCityCountry);
-document.getElementById('country').addEventListener('change', geocodeCityCountry);
-
-// Ver detalles de causa
-document.addEventListener('click', async function(e) {
-  if (e.target.classList.contains('view-cause-btn')) {
-    const causeId = e.target.getAttribute('data-cause-id');
-    showCauseModal(causeId);
-  }
-});
-
-// Cerrar el modal
-document.getElementById('closeModal').onclick = function() {
-  document.getElementById('causeModal').style.display = 'none';
-  document.body.style.overflow = '';
-};
-
-// Opcional: cerrar al hacer click fuera del modal
-document.getElementById('causeModal').onclick = function(e) {
-  if (e.target === this) {
-    this.style.display = 'none';
-    document.body.style.overflow = '';
-  }
-};
-
-// Función para mostrar el modal con los detalles de la causa
-async function showCauseModal(causeId) {
-  const cause = window.causes.find(c => c.id == causeId);
+// Función fallback para mostrar modal (solo si no hay renderer)
+function showCauseModal(causeId) {
+  const cause = window.causes?.find(c => c.id == causeId);
   if (!cause) {
     console.error('❌ Causa no encontrada:', causeId);
     return;
   }
   
-  const progress = cause.goal ? Math.min(Math.round((cause.raised / cause.goal) * 100), 100) : 0;
-  const createdDate = new Date(cause.created_at).toLocaleDateString('es-ES', {
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric'
-  });
-
-  document.getElementById('modalBody').innerHTML = `
-    <div class="modal-cause-container">
-      <!-- Título principal centrado, más espacio abajo -->
-      <h1 class="modal-cause-title" style="font-size:2rem; font-weight:800; color:var(--primary); margin-bottom:2.7rem; text-align:center; width:100%;">${cause.title}</h1>
-      <div class="modal-cause-header" style="display:flex; gap:2.5rem; margin-bottom:2.7rem;">
-        <div class="modal-cause-image-wrapper" style="flex:1; min-width:320px; height:300px; border-radius:12px; overflow:hidden; position:relative; box-shadow:0 4px 12px rgba(0,0,0,0.08);">
-          <!-- Badge arriba a la izquierda, verde -->
-          <div class="modal-cause-badge" style="top:1.2rem; left:1.2rem; right:auto; background:var(--accent); color:white; position:absolute;">
-            <i class="fas fa-hands-helping"></i> Causa Solidaria
-          </div>
-          <img class="modal-cause-image" src="${cause.photo_url || '/img/causa-default.jpg'}" 
-               alt="Imagen de la causa ${cause.title}"
-               style="width:100%;height:100%;object-fit:cover;"
-               onerror="this.src='/img/causa-default.jpg'">
-          ${cause.urgent ? `
-          <div class="modal-cause-badge urgent" style="right:1.2rem; left:auto; top:1.2rem; background:var(--urgent); color:white;">
-            <i class="fas fa-exclamation-circle"></i> Urgente
-          </div>` : ''}
-        </div>
-        <!-- Info a la derecha de la foto -->
-        <div class="modal-cause-info" style="flex:1.5; display:flex; flex-direction:column; justify-content:flex-start;">
-          <div class="modal-cause-progress-container" style="background:#f8fafc; padding:1.2rem; border-radius:12px; margin-bottom:1.2rem; border:1px solid #e5e7eb;">
-            <div class="progress-bar">
-              <div class="progress-fill" style="width: ${progress}%"></div>
-            </div>
-            <div class="progress-info">
-              <span>${progress}% completado</span>
-              <span>${cause.raised || 0} € de ${cause.goal || 0} €</span>
-            </div>
-          </div>
-          <!-- Meta compacta en dos columnas -->
-          <div class="modal-cause-meta-grid" style="display:grid; grid-template-columns:1fr 1fr; gap:0.7rem 1.2rem; margin-bottom:1.2rem;">
-            <div class="meta-item">
-              <span class="meta-icon"><i class="fas fa-map-marker-alt"></i></span>
-              <span>${cause.city || 'Sin ubicación'}${cause.country ? ', ' + cause.country : ''}</span>
-            </div>
-            <div class="meta-item">
-              <span class="meta-icon"><i class="fas fa-users"></i></span>
-              <span>${cause.donors || 0} donantes</span>
-            </div>
-            <div class="meta-item">
-              <span class="meta-icon"><i class="fas fa-heart"></i></span>
-              <span>${cause.beneficiaries || 0} beneficiarios</span>
-            </div>
-            <div class="meta-item">
-              <span class="meta-icon"><i class="fas fa-calendar-alt"></i></span>
-              <span>${createdDate}</span>
-            </div>
-          </div>
-          <div class="points-notice" style="background:#f0f9ff; border-left:4px solid var(--accent); padding:0.8rem; border-radius:0 8px 8px 0; font-size:0.97rem; display:flex; align-items:center; gap:0.7rem;">
-            <i class="fas fa-star" style="color: var(--accent);"></i>
-            Cada euro donado recibirá <strong>${cause.points || 20} puntos</strong> de impacto
-          </div>
-        </div>
-      </div>
-      <!-- Resumen y descripción debajo, con más espacio entre bloques -->
-      <div class="modal-cause-content" style="margin-top:0;">
-        <div class="content-section" style="margin-bottom:2.2rem;">
-          <h3 class="content-title" style="font-size:1.2rem; font-weight:600; color:var(--primary); margin-bottom:0.9rem; display:flex; align-items:center; gap:0.7rem;">
-            <i class="fas fa-align-left"></i> Resumen
-          </h3>
-          <p class="content-text" style="line-height:1.7; color:#4b5563; font-size:1.05rem; margin-left:0; margin-right:0; text-align:justify;">${cause.short_description || 'No hay resumen disponible para esta causa.'}</p>
-        </div>
-        <div class="content-section" style="margin-bottom:2.2rem;">
-          <h3 class="content-title" style="font-size:1.2rem; font-weight:600; color:var(--primary); margin-bottom:0.9rem; display:flex; align-items:center; gap:0.7rem;">
-            <i class="fas fa-info-circle"></i> Descripción completa
-          </h3>
-          <p class="content-text" style="line-height:1.7; color:#4b5563; font-size:1.05rem; margin-left:0; margin-right:0; text-align:justify;">${cause.description || 'No hay descripción detallada disponible para esta causa.'}</p>
-        </div>
-      </div>
-      <!-- Botones abajo, con más espacio arriba -->
-      <div class="cause-actions" style="display:flex; gap:0.8rem; margin-top:2.2rem;">
-        <button class="btn btn-primary" style="flex:1;" onclick="donateToCause('${cause.id}')">
-          <i class="fas fa-donate"></i> Donar ahora
-        </button>
-        <button class="btn btn-accent" style="flex:1;" onclick="joinCause('${cause.id}')">
-          <i class="fas fa-hands-helping"></i> Participar
-        </button>
-        <button class="btn btn-outline" style="flex:1;" onclick="mostrarCompartir('${cause.id}')">
-          <i class="fas fa-share-alt"></i> Compartir
-        </button>
-      </div>
-      <div class="share-section" id="shareSection"></div>
+  // Crear modal básico como fallback
+  const modal = document.getElementById('causeModal');
+  if (!modal) return;
+  
+  modal.innerHTML = `
+    <div class="modal-content" style="background:#fff; border-radius:18px; max-width:600px; width:95vw; padding:2rem; position:relative;">
+      <button onclick="this.closest('.modal').style.display='none'; document.body.style.overflow=''" style="position:absolute; top:1rem; right:1rem; background:none; border:none; font-size:1.5rem; cursor:pointer;">&times;</button>
+      <h2>${cause.title}</h2>
+      <p>${cause.description || cause.short_description}</p>
+      <div id="shareSection"></div>
     </div>
   `;
-
-  document.getElementById('causeModal').style.display = 'flex';
+  
+  modal.style.display = 'flex';
   document.body.style.overflow = 'hidden';
 }
 
-// Función para compartir
-window.mostrarCompartir = function(causeId) {
-  const cause = window.causes?.find(c => c.id == causeId);
-  if (!cause) {
-    console.error('❌ No se encontró la causa con ID:', causeId);
-    return;
-  }
-  
-  console.log('🔗 Compartiendo causa:', cause);
-  console.log('🔗 Link generado:', `${window.location.origin}/causes/${cause.id}`);
-  
-  renderCompartir({
-    title: cause.title,
-    summary: cause.short_description || cause.description?.substring(0, 120) + '...',
-    photo_url: cause.photo_url || '/img/causa-default.jpg',
-    link: `${window.location.origin}/causes/${cause.id}`
-  }, 'shareSection');
-  
-  document.getElementById('shareSection').scrollIntoView({ 
-    behavior: 'smooth', 
-    block: 'center' 
-  });
+// Funciones globales para los botones de acción
+window.donateToCause = function(causeId) {
+  alert('Funcionalidad de donación próximamente.');
 };
 
-// Funciones auxiliares
-function donateToCause(causeId) {
-  alert('Funcionalidad de donación próximamente.');
-}
-
-async function joinCause(causeId) {
+window.joinCause = async function(causeId) {
   const { data: { session } } = await supabase.auth.getSession();
   if (!session?.user) {
     alert('Debes iniciar sesión para participar.');
     return;
   }
-  const userId = session.user.id;
-  await supabase
+  
+  const { error } = await supabase
     .from('causes_members')
-    .insert([{ cause_id: causeId, user_id: userId, role: 'member', status: 'active' }]);
-  alert('¡Ahora eres miembro de esta causa!');
-}
+    .insert([{ cause_id: causeId, user_id: session.user.id, role: 'member', status: 'active' }]);
+    
+  if (error) {
+    console.error('Error al unirse:', error);
+    alert('Error al unirse a la causa');
+  } else {
+    alert('¡Ahora eres miembro de esta causa!');
+    if (window.causesRenderer && window.causesRenderer.closeModal) {
+      window.causesRenderer.closeModal();
+    }
+  }
+};
 </script>
 {% endblock %}
