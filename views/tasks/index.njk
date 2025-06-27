@@ -441,7 +441,6 @@
           <label for="cause_id">Vinculado a causa (opcional)</label>
           <select id="cause-select" name="cause_id">
             <option value="">Selecciona una causa</option>
-            <!-- Las opciones se cargan dinámicamente -->
           </select>
         </div>
         <div class="form-inline-group">
@@ -495,25 +494,7 @@
     </div>
   </div>
 
-  <!-- Modal de Tarea -->
-  <div id="taskModal" class="modal" style="display:none; position:fixed; z-index:9999; left:0; top:0; width:100vw; height:100vh; background:rgba(0,0,0,0.35); align-items:center; justify-content:center;">
-    <div class="modal-content" style="background:#fff; border-radius:18px; max-width:800px; width:95vw; padding:2rem; box-shadow:0 8px 32px rgba(74,111,165,0.13); position:relative; max-height:90vh; overflow-y:auto;">
-      <button id="closeTaskModal" style="position:absolute; top:1.5rem; right:1.5rem; background:none; border:none; font-size:1.8rem; color:#6b7280; cursor:pointer; transition:color 0.2s;" onmouseover="this.style.color='#4a6fa5'" onmouseout="this.style.color='#6b7280'">&times;</button>
-      <div id="taskModalBody" style="padding:0.5rem;">
-        <!-- Contenido dinámico -->
-      </div>
-    </div>
-  </div>
-
-  <!-- Modal de Causa (reutilizable) -->
-  <div id="causeModal" class="modal-bg">
-    <div class="modal-content" id="causeModalContent" style="max-width:500px;">
-      <button class="close-modal" id="closeCauseModal" title="Cerrar">&times;</button>
-      <div id="causeModalBody"></div>
-    </div>
-  </div>
-
-  <!-- Sección de introducción a las tareas solidarias (espaciado igual que retos y volunteering) -->
+  <!-- Sección de introducción a las tareas solidarias -->
   <div class="main-container">
     <div class="tasks-intro">
       <div class="tasks-intro-content">
@@ -549,7 +530,7 @@
       <button class="tab" data-filter="community">Comunidad</button>
     </div>
     <div class="tasks-grid" id="tasksList">
-      <!-- Las tareas se cargarán dinámicamente desde Supabase -->
+      <!-- Las tareas se cargarán dinámicamente usando el renderer -->
     </div>
   </div>
 {% endblock %}
@@ -559,11 +540,23 @@
 <script src="https://cdn.jsdelivr.net/npm/choices.js/public/assets/scripts/choices.min.js"></script>
 <script src="/js/share-system.js"></script>
 <script src="/js/compartir.js"></script>
+<script src="/js/modules/tasks-renderer.js"></script>
 <script>
 let currentFilter = "all";
 let causeChoices = null;
 
 document.addEventListener('DOMContentLoaded', async function() {
+  // Inicializar eventos del modal de crear tarea
+  initCreateTaskModal();
+  
+  // Inicializar eventos de búsqueda y filtros
+  initSearchAndFilters();
+  
+  // Cargar tareas al iniciar usando el renderer
+  await loadTasksFromSupabase();
+});
+
+function initCreateTaskModal() {
   // Abrir modal de crear tarea
   document.getElementById('create-task-btn').onclick = async function(e) {
     e.preventDefault();
@@ -579,21 +572,13 @@ document.addEventListener('DOMContentLoaded', async function() {
 
   // Cerrar modal de crear tarea
   document.getElementById('closeCreateTaskModal').onclick = function() {
-    document.getElementById('createTaskModal').classList.remove('active');
-    document.body.style.overflow = '';
-    document.getElementById('taskForm').reset();
-    document.getElementById('previewImg').style.display = 'none';
-    document.getElementById('taskForm').style.display = 'block';
-    document.getElementById('afterCreate').style.display = 'none';
+    closeCreateTaskModal();
   };
 
   // Cerrar modal al hacer click fuera del contenido
   document.getElementById('createTaskModal').onclick = function(e) {
     if (e.target === this) {
-      this.classList.remove('active');
-      document.body.style.overflow = '';
-      document.getElementById('taskForm').style.display = 'block';
-      document.getElementById('afterCreate').style.display = 'none';
+      closeCreateTaskModal();
     }
   };
 
@@ -604,20 +589,6 @@ document.addEventListener('DOMContentLoaded', async function() {
   document.getElementById('loginModal').onclick = function(e) {
     if (e.target === this) this.classList.remove('active');
   };
-
-  // Tabs
-  document.querySelectorAll('.tab').forEach(tab => {
-    tab.addEventListener('click', function() {
-      document.querySelector('.tab.active').classList.remove('active');
-      this.classList.add('active');
-      loadTasksFromSupabase(this.getAttribute('data-filter'));
-    });
-  });
-
-  // Búsqueda
-  document.getElementById('search-input').addEventListener('input', function() {
-    loadTasksFromSupabase(currentFilter, this.value);
-  });
 
   // Vista previa de imagen
   document.getElementById('photo').addEventListener('change', function(e) {
@@ -645,96 +616,41 @@ document.addEventListener('DOMContentLoaded', async function() {
   // Crear otra tarea tras éxito
   document.getElementById('createAnother').onclick = function(e) {
     e.preventDefault();
-    document.getElementById('taskForm').reset();
-    document.getElementById('previewImg').style.display = 'none';
-    document.getElementById('taskForm').style.display = 'block';
-    document.getElementById('afterCreate').style.display = 'none';
+    resetCreateTaskForm();
   };
 
   // Envío del formulario
-  document.getElementById('taskForm').addEventListener('submit', async function(e) {
-    e.preventDefault();
-    // Recoge los datos del formulario
-    const title = document.getElementById('title').value.trim();
-    const summary = document.getElementById('summary').value.trim();
-    const description = document.getElementById('description').value.trim();
-    const city = document.getElementById('city').value.trim();
-    const country = document.getElementById('country').value.trim();
-    const points = parseInt(document.getElementById('points').value, 10);
-    const beneficiaries = parseInt(document.getElementById('beneficiaries').value, 10);
-    const is_urgent = document.getElementById('is_urgent').checked;
-    const cause_id = document.getElementById('cause-select').value || null;
-    const photoFile = document.getElementById('photo').files[0];
-    let photo_url = null;
-    const end_date_input = document.getElementById('end_date').value;
-    // Si el usuario no pone fecha, envía null
-    const end_date = end_date_input ? end_date_input : null;
+  document.getElementById('taskForm').addEventListener('submit', createTask);
+}
 
-    // Sube la foto a Supabase Storage si existe
-    if (photoFile) {
-      const fileExt = photoFile.name.split('.').pop();
-      const fileName = `${Date.now()}-${Math.random().toString(36).substr(2, 9)}.${fileExt}`;
-      const filePath = `public/${fileName}`;
-      const { error: uploadError } = await supabase.storage
-        .from('tasks')
-        .upload(filePath, photoFile, { upsert: true });
-      if (uploadError) {
-        alert('Error subiendo la foto: ' + uploadError.message);
-        return;
-      }
-      const { data } = supabase.storage.from('tasks').getPublicUrl(filePath);
-      photo_url = data.publicUrl;
-    }
-
-    // Guarda la tarea en la tabla
-    const { data: { session } } = await supabase.auth.getSession();
-    const user = session?.user;
-    if (!user) {
-      alert('Debes iniciar sesión para crear una tarea.');
-      return;
-    }
-
-    const lat = document.getElementById('lat').value;
-    const lng = document.getElementById('lng').value;
-
-    const datosTarea = {
-      title,
-      summary,
-      description,
-      city,
-      country,
-      points,
-      beneficiaries,
-      is_urgent,
-      photo_url,
-      participants: 0,
-      cause_id,
-      type: 'tarea',
-      lat: lat ? parseFloat(lat) : null,
-      lng: lng ? parseFloat(lng) : null,
-      end_date
-    };
-
-    const { data: newTask, error: taskError } = await supabase
-      .from('tasks')
-      .insert([{ ...datosTarea, user_id: user.id }])
-      .select()
-      .single();
-
-    if (!taskError && newTask) {
-      await supabase
-        .from('task_members')
-        .insert([{ task_id: newTask.id, user_id: user.id, role: 'founder', status: 'active' }]);
-    }
-
-    document.getElementById('taskForm').style.display = 'none';
-    document.getElementById('afterCreate').style.display = 'block';
-    loadTasksFromSupabase();
+function initSearchAndFilters() {
+  // Tabs
+  document.querySelectorAll('.tab').forEach(tab => {
+    tab.addEventListener('click', function() {
+      document.querySelector('.tab.active').classList.remove('active');
+      this.classList.add('active');
+      loadTasksFromSupabase(this.getAttribute('data-filter'));
+    });
   });
 
-  // Cargar tareas al iniciar
-  await loadTasksFromSupabase();
-});
+  // Búsqueda
+  document.getElementById('search-input').addEventListener('input', function() {
+    loadTasksFromSupabase(currentFilter, this.value);
+  });
+}
+
+function closeCreateTaskModal() {
+  document.getElementById('createTaskModal').classList.remove('active');
+  document.body.style.overflow = '';
+  resetCreateTaskForm();
+}
+
+function resetCreateTaskForm() {
+  document.getElementById('taskForm').reset();
+  document.getElementById('previewImg').style.display = 'none';
+  document.getElementById('taskForm').style.display = 'block';
+  document.getElementById('afterCreate').style.display = 'none';
+}
 
 async function loadTasksFromSupabase(filter = "all", searchTerm = "") {
   currentFilter = filter;
@@ -749,30 +665,20 @@ async function loadTasksFromSupabase(filter = "all", searchTerm = "") {
   if (searchTerm && searchTerm.trim() !== "") {
     query = query.or(`title.ilike.%${searchTerm}%,description.ilike.%${searchTerm}%,city.ilike.%${searchTerm}%,country.ilike.%${searchTerm}%`);
   }
+
   const { data: tasks, error } = await query;
   const tasksList = document.getElementById('tasksList');
+
   if (error) {
     tasksList.innerHTML = '<div style="color:#e53e3e;text-align:center;">Error al cargar las tareas.</div>';
     return;
   }
-  tasksList.innerHTML = '';
-  if (!tasks || tasks.length === 0) {
-    tasksList.innerHTML = '<div style="color:#6b7280;text-align:center;padding:2rem;grid-column:1/-1;">No se encontraron tareas.</div>';
-    return;
-  }
-  
-  // 1. Carga todas las causas una sola vez antes de renderizar las tareas
-  const { data: causes } = await supabase.from('causes').select('id, title, photo_url');
-  const causesMap = {};
-  if (causes) {
-    causes.forEach(c => causesMap[c.id] = c);
-  }
 
-  // 1. Obtén el usuario actual UNA SOLA VEZ
+  // Obtener el usuario actual para verificar participación
   const { data: { session } } = await supabase.auth.getSession();
   const userId = session?.user?.id;
 
-  // 2. Obtén los task_ids donde el usuario ya participa UNA SOLA VEZ
+  // Obtener participaciones del usuario
   let userTaskIds = [];
   if (userId) {
     const { data: memberships } = await supabase
@@ -782,346 +688,235 @@ async function loadTasksFromSupabase(filter = "all", searchTerm = "") {
     userTaskIds = memberships ? memberships.map(m => m.task_id) : [];
   }
 
-  // Guardar las tareas en una variable global para acceder desde el modal
-  window.tasks = tasks;
-  
-  for (const task of tasks) {
-    const urgentBadge = task.is_urgent ? `<div class="task-badge urgent"><i class="fas fa-exclamation-circle"></i> Urgente</div>` : "";
-    const pointsBadge = `<div class="task-badge points"><i class="fas fa-star"></i> +${task.points || 0} pts</div>`;
-    const location = task.city && task.country ? `${task.city}, ${task.country}` : "";
-    let causeHtml = '';
-    if (task.cause_id && causesMap[task.cause_id]) {
-      const cause = causesMap[task.cause_id];
-      causeHtml = `
-        <div class="linked-cause" style="display:flex;align-items:center;gap:0.5rem;">
-          <i class="fas fa-link" style="color:var(--primary);"></i>
-          <img src="${cause.photo_url || '/img/causa-default.jpg'}" alt="${cause.title}" style="width:22px;height:22px;object-fit:cover;border-radius:50%;border:1px solid #e5e7eb;">
-          <span style="color:var(--primary);font-weight:600;">${cause.title}</span>
-        </div>
-      `;
-    }
-    // ¿El usuario ya participa?
-    const isParticipating = userTaskIds.includes(task.id);
-
-    // Renderiza el botón según corresponda
-    const participateBtn = isParticipating
-      ? `<button class="btn btn-accent participate-btn" data-task-id="${task.id}" disabled style="opacity:0.7;cursor:not-allowed;">Participando</button>`
-      : `<button class="btn btn-accent participate-btn" data-task-id="${task.id}">Participar</button>`;
-
-    const card = document.createElement('div');
-    card.className = 'task-card';
-    card.innerHTML = `
-      <div class="task-image">
-        <img src="${task.photo_url || '/img/task-default.jpg'}" alt="${task.title}" onerror="this.src='/img/task-default.jpg'">
-        ${urgentBadge}
-        ${pointsBadge}
-      </div>
-      <div class="task-content">
-        <h3>${task.title}</h3>
-        <p>${task.summary ? task.summary : (task.description.substring(0, 100) + (task.description.length > 100 ? '...' : ''))}</p>
-        ${causeHtml}
-        <div class="task-meta">
-          <div class="meta-item"><i class="fas fa-map-marker-alt"></i> ${location}</div>
-          <div class="meta-item"><i class="fas fa-users"></i> ${task.participants || 0} participantes</div>
-          <div class="beneficiaries-count">
-            <i class="fas fa-heart"></i> Beneficia a ${task.beneficiaries || 0} personas
-          </div>
-        </div>
-        <div class="task-progress">
-          <div class="progress-bar">
-            <div class="progress-fill" style="width: ${Math.min(Math.round((task.participants / task.beneficiaries) * 100), 100)}%"></div>
-          </div>
-          <div class="progress-info">
-            <span>${task.participants || 0} participantes</span>
-            <span>Meta: ${task.beneficiaries || 0}</span>
-          </div>
-        </div>
-        <div class="task-actions">
-          <button class="btn btn-primary view-task-btn" data-task-id="${task.id}">Ver más</button>
-          ${participateBtn}
-        </div>
-      </div>
-    `;
-    tasksList.appendChild(card);
+  // Cargar causas para mostrar vinculaciones
+  const { data: causes } = await supabase.from('causes').select('id, title, photo_url');
+  const causesMap = {};
+  if (causes) {
+    causes.forEach(c => causesMap[c.id] = c);
   }
-  
-  // Agregar event listeners para los botones de ver más
-  document.querySelectorAll('.view-task-btn').forEach(btn => {
-    btn.addEventListener('click', function(e) {
-      e.preventDefault();
-      const taskId = this.getAttribute('data-task-id');
-      showTaskModal(taskId);
-    });
-  });
-  
-  // Agregar event listeners para los botones de participar
-  document.querySelectorAll('.participate-btn').forEach(btn => {
-    btn.addEventListener('click', function(e) {
-      e.preventDefault();
-      const taskId = this.getAttribute('data-task-id');
-      participateInTask(taskId);
-    });
-  });
+
+  // Procesar tareas con información adicional
+  const tasksWithInfo = tasks ? tasks.map(task => ({
+    ...task,
+    isParticipating: userTaskIds.includes(task.id),
+    linkedCause: task.cause_id && causesMap[task.cause_id] ? causesMap[task.cause_id] : null
+  })) : [];
+
+  // Usar el renderer para mostrar las tareas
+  if (window.tasksRenderer) {
+    window.tasksRenderer.renderGrid(tasksWithInfo, tasksList);
+  } else {
+    tasksList.innerHTML = '<div style="color:#e53e3e;text-align:center;">Error: Renderer no disponible.</div>';
+  }
 }
 
-// Función para mostrar el modal con los detalles de la tarea
-async function showTaskModal(taskId) {
-  const { data: task, error } = await supabase
-    .from('tasks')
-    .select('*')
-    .eq('id', taskId)
-    .single();
+async function createTask(e) {
+  e.preventDefault();
+  
+  try {
+    // Recoge los datos del formulario
+    const formData = {
+      title: document.getElementById('title').value.trim(),
+      summary: document.getElementById('summary').value.trim(),
+      description: document.getElementById('description').value.trim(),
+      city: document.getElementById('city').value.trim(),
+      country: document.getElementById('country').value.trim(),
+      points: parseInt(document.getElementById('points').value, 10),
+      beneficiaries: parseInt(document.getElementById('beneficiaries').value, 10),
+      is_urgent: document.getElementById('is_urgent').checked,
+      cause_id: document.getElementById('cause-select').value || null,
+      end_date: document.getElementById('end_date').value || null
+    };
 
-  if (error) {
-    alert('Error al cargar la tarea: ' + error.message);
+    // Sube la foto a Supabase Storage si existe
+    const photoFile = document.getElementById('photo').files[0];
+    let photo_url = null;
+    
+    if (photoFile) {
+      const fileExt = photoFile.name.split('.').pop();
+      const fileName = `${Date.now()}-${Math.random().toString(36).substr(2, 9)}.${fileExt}`;
+      const filePath = `public/${fileName}`;
+      
+      const { error: uploadError } = await supabase.storage
+        .from('tasks')
+        .upload(filePath, photoFile, { upsert: true });
+        
+      if (uploadError) {
+        alert('Error subiendo la foto: ' + uploadError.message);
+        return;
+      }
+      
+      const { data } = supabase.storage.from('tasks').getPublicUrl(filePath);
+      photo_url = data.publicUrl;
+    }
+
+    // Verificar usuario logueado
+    const { data: { session } } = await supabase.auth.getSession();
+    const user = session?.user;
+    
+    if (!user) {
+      alert('Debes iniciar sesión para crear una tarea.');
+      return;
+    }
+
+    // Obtener coordenadas si están disponibles
+    const lat = document.getElementById('lat').value;
+    const lng = document.getElementById('lng').value;
+
+    // Preparar datos de la tarea
+    const taskData = {
+      ...formData,
+      photo_url,
+      participants: 0,
+      type: 'tarea',
+      lat: lat ? parseFloat(lat) : null,
+      lng: lng ? parseFloat(lng) : null,
+      user_id: user.id
+    };
+
+    // Insertar tarea
+    const { data: newTask, error: taskError } = await supabase
+      .from('tasks')
+      .insert([taskData])
+      .select()
+      .single();
+
+    if (taskError) {
+      alert('Error creando la tarea: ' + taskError.message);
+      return;
+    }
+
+    // Agregar al creador como miembro fundador
+    if (newTask) {
+      await supabase
+        .from('task_members')
+        .insert([{ 
+          task_id: newTask.id, 
+          user_id: user.id, 
+          role: 'founder', 
+          status: 'active' 
+        }]);
+    }
+
+    // Mostrar mensaje de éxito
+    document.getElementById('taskForm').style.display = 'none';
+    document.getElementById('afterCreate').style.display = 'block';
+    
+    // Recargar tareas
+    loadTasksFromSupabase();
+    
+  } catch (error) {
+    console.error('Error creando tarea:', error);
+    alert('Error al crear la tarea');
+  }
+}
+
+async function loadCausesForSelect() {
+  try {
+    const { data: causes } = await supabase
+      .from('causes')
+      .select('id, title')
+      .order('title');
+
+    const select = document.getElementById('cause-select');
+    select.innerHTML = '<option value="">Selecciona una causa</option>';
+    
+    if (causes) {
+      causes.forEach(cause => {
+        const option = document.createElement('option');
+        option.value = cause.id;
+        option.textContent = cause.title;
+        select.appendChild(option);
+      });
+    }
+
+    // Inicializar Choices.js si no está ya inicializado
+    if (!causeChoices) {
+      causeChoices = new Choices(select, {
+        searchEnabled: true,
+        searchPlaceholderValue: 'Buscar causa...',
+        noResultsText: 'No se encontraron causas',
+        itemSelectText: 'Presiona para seleccionar'
+      });
+    }
+  } catch (error) {
+    console.error('Error cargando causas:', error);
+  }
+}
+
+// Función para participar en tarea (será llamada por el renderer)
+async function participateInTask(taskId) {
+  if (!supabase) {
+    alert('Error: Supabase no está disponible');
     return;
   }
 
-  // Si tu tarea tiene un campo "goal" y "raised" como en causas, usa esos para la barra de progreso
-  // Si no, puedes dejarlo en 0/goal o adaptar según tu modelo
-  const progress = task.goal
-    ? Math.min(Math.round((task.raised / task.goal) * 100), 100)
-    : 0;
+  try {
+    const { data: { session } } = await supabase.auth.getSession();
+    if (!session?.user) {
+      alert('Debes iniciar sesión para participar en tareas');
+      window.location.href = '/login?return=' + encodeURIComponent(window.location.pathname);
+      return;
+    }
 
-  const createdDate = new Date(task.created_at).toLocaleDateString('es-ES', {
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric'
-  });
-
-  const endDate = task.end_date ? new Date(task.end_date).toLocaleDateString('es-ES', {
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric'
-  }) : 'Sin fecha límite';
-
-  // Obtener información de la causa vinculada si existe
-  let causeInfo = '';
-  if (task.cause_id) {
-    const { data: cause } = await supabase
-      .from('causes')
-      .select('title, short_description, photo_url')
-      .eq('id', task.cause_id)
+    // Verificar si ya participa
+    const { data: existing } = await supabase
+      .from('task_members')
+      .select('id')
+      .eq('task_id', taskId)
+      .eq('user_id', session.user.id)
       .single();
 
-    if (cause) {
-      causeInfo = `
-        <div class="linked-cause-section" style="margin-bottom:1.5rem;">
-          <h3 class="content-title" style="font-size:1.2rem; font-weight:600; color:var(--primary); margin-bottom:0.9rem; display:flex; align-items:center; gap:0.7rem;">
-            <i class="fas fa-link"></i> Vinculado a la causa
-          </h3>
-          <div style="display:flex; align-items:center; gap:1.2rem; background:#f8fafc; padding:1rem; border-radius:8px; border:1px solid #e5e7eb;">
-            <img src="${cause.photo_url || '/img/causa-default.jpg'}"
-                 alt="Imagen de la causa vinculada"
-                 style="width:80px; height:80px; object-fit:cover; border-radius:6px;"
-                 onerror="this.src='/img/causa-default.jpg'">
-            <div style="flex:1; min-width:0;">
-              <div style="font-weight:700; color:var(--primary); font-size:1.05rem; margin-bottom:0.2rem; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">
-                ${cause.title}
-              </div>
-              <div style="color:#6b7280; font-size:0.97rem; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:260px;">
-                ${cause.short_description || 'Sin resumen disponible'}
-              </div>
-            </div>
-            <a href="/causes/${task.cause_id}"
-               class="btn btn-primary"
-               style="margin-left:1.2rem; white-space:nowrap; font-size:0.97rem; padding:0.5rem 1.1rem; display:flex; align-items:center; gap:0.5rem;"
-               onclick="showCauseModal('${task.cause_id}'); return false;">
-              <i class="fas fa-arrow-right"></i> Ver causa
-            </a>
-          </div>
-        </div>
-      `;
+    if (existing) {
+      alert('Ya participas en esta tarea');
+      return;
     }
+
+    // Agregar participación
+    const { error } = await supabase
+      .from('task_members')
+      .insert([{
+        task_id: taskId,
+        user_id: session.user.id,
+        role: 'member',
+        status: 'active'
+      }]);
+
+    if (error) {
+      alert('Error al participar: ' + error.message);
+      return;
+    }
+
+    // Actualizar contador de participantes
+    const { error: updateError } = await supabase
+      .from('tasks')
+      .update({ 
+        participants: supabase.sql`participants + 1`
+      })
+      .eq('id', taskId);
+
+    if (!updateError) {
+      alert('¡Te has unido a la tarea exitosamente!');
+      // Recargar las tareas
+      await loadTasksFromSupabase(currentFilter);
+    }
+
+  } catch (error) {
+    console.error('Error participando en tarea:', error);
+    alert('Error al participar en la tarea');
   }
-
-  // Obtener participantes (user_id, username, photo_url)
-  const { data: members, error: membersError } = await supabase
-    .from('task_members')
-    .select('user_id, profiles(username, photo_url)')
-    .eq('task_id', taskId);
-
-  let participantsHtml = '';
-  if (members && members.length > 0) {
-    participantsHtml = `
-      <div class="content-section" style="margin-bottom:2.2rem;">
-        <h3 class="content-title" style="font-size:1.2rem; font-weight:600; color:var(--primary); margin-bottom:0.9rem; display:flex; align-items:center; gap:0.7rem;">
-          <i class="fas fa-users"></i> Participantes
-        </h3>
-        <div style="display:flex; flex-wrap:wrap; gap:1rem;">
-          ${members.map(m => `
-            <div style="display:flex; align-items:center; gap:0.6rem; background:#f8fafc; border-radius:8px; padding:0.5rem 1rem; border:1px solid #e5e7eb;">
-              <img src="${m.profiles?.photo_url || '/img/avatar-default.png'}" alt="${m.profiles?.username || 'Usuario'}" style="width:36px; height:36px; border-radius:50%; object-fit:cover; border:1px solid #e5e7eb;">
-              <span style="font-weight:600; color:var(--primary);">${m.profiles?.username || 'Usuario'}</span>
-            </div>
-          `).join('')}
-        </div>
-      </div>
-    `;
-  } else {
-    participantsHtml = `
-      <div class="content-section" style="margin-bottom:2.2rem;">
-        <h3 class="content-title" style="font-size:1.2rem; font-weight:600; color:var(--primary); margin-bottom:0.9rem; display:flex; align-items:center; gap:0.7rem;">
-          <i class="fas fa-users"></i> Participantes
-        </h3>
-        <div style="color:#6b7280;">Aún no hay participantes en esta tarea.</div>
-      </div>
-    `;
-  }
-
-  document.getElementById('taskModalBody').innerHTML = `
-    <div class="modal-task-container">
-      <!-- Título principal centrado, más espacio abajo -->
-      <h1 class="modal-task-title" style="font-size:2rem; font-weight:800; color:var(--primary); margin-bottom:2.7rem; text-align:center; width:100%;">${task.title}</h1>
-      <div class="modal-task-header" style="display:flex; gap:2.5rem; margin-bottom:2.7rem;">
-        <div class="modal-task-image-wrapper" style="flex:1; min-width:320px; height:300px; border-radius:12px; overflow:hidden; position:relative; box-shadow:0 4px 12px rgba(0,0,0,0.08);">
-          <!-- Badge arriba a la izquierda, verde y redondeado igual que causas -->
-          <div class="modal-cause-badge" style="top:1.2rem; left:1.2rem; right:auto; background:var(--accent); color:white; position:absolute; border-radius:50px; padding:0.5rem 1rem; font-size:0.9rem; font-weight:600; display:flex; align-items:center; gap:0.6rem; box-shadow:0 2px 8px rgba(0,0,0,0.1); z-index:2;">
-            <i class="fas fa-tasks"></i> Tarea Solidaria
-          </div>
-          <img class="modal-task-image" src="${task.photo_url || '/img/task-default.jpg'}" 
-               alt="Imagen de la tarea ${task.title}"
-               style="width:100%;height:100%;object-fit:cover;"
-               onerror="this.src='/img/task-default.jpg'">
-          ${task.is_urgent ? `
-          <div class="modal-cause-badge urgent" style="right:1.2rem; left:auto; top:1.2rem; background:var(--urgent); color:white; border-radius:50px; padding:0.5rem 1rem; font-size:0.9rem; font-weight:600; display:flex; align-items:center; gap:0.6rem; box-shadow:0 2px 8px rgba(0,0,0,0.1); z-index:2;">
-            <i class="fas fa-exclamation-circle"></i> Urgente
-          </div>` : ''}
-        </div>
-        <!-- Info a la derecha de la foto -->
-        <div class="modal-task-info" style="flex:1.5; display:flex; flex-direction:column; justify-content:flex-start;">
-          <!-- Barra de progreso igual que causas -->
-          <div class="modal-cause-progress-container" style="background:#f8fafc; padding:1.5rem; border-radius:12px; margin-bottom:1.5rem; border:1px solid #e5e7eb;">
-            <div class="progress-bar">
-              <div class="progress-fill" style="width: ${progress}%"></div>
-            </div>
-            <div class="progress-info">
-              <span>${progress}% completado</span>
-              <span>${task.raised || 0} € de ${task.goal || 0} €</span>
-            </div>
-          </div>
-          <!-- Meta compacta en dos columnas -->
-          <div class="modal-task-meta-grid" style="display:grid; grid-template-columns:1fr 1fr; gap:0.7rem 1.2rem; margin-bottom:1.2rem;">
-            <div class="meta-item">
-              <span class="meta-icon"><i class="fas fa-map-marker-alt"></i></span>
-              <span>${task.city || 'Sin ubicación'}${task.country ? ', ' + task.country : ''}</span>
-            </div>
-            <div class="meta-item">
-              <span class="meta-icon"><i class="fas fa-users"></i></span>
-              <span>${task.participants || 0} participantes</span>
-            </div>
-            <div class="meta-item">
-              <span class="meta-icon"><i class="fas fa-heart"></i></span>
-              <span>${task.beneficiaries || 0} beneficiarios</span>
-            </div>
-            <div class="meta-item">
-              <span class="meta-icon"><i class="fas fa-calendar-alt"></i></span>
-              <span>${task.end_date ? new Date(task.end_date).toLocaleDateString('es-ES', { year: 'numeric', month: 'long', day: 'numeric' }) : 'Sin fecha límite'}</span>
-            </div>
-          </div>
-          <div class="points-notice" style="background:#f0f9ff; border-left:4px solid var(--accent); padding:0.8rem; border-radius:0 8px 8px 0; font-size:0.97rem; display:flex; align-items:center; gap:0.7rem;">
-            <i class="fas fa-star" style="color: var(--accent);"></i>
-            Participar en esta tarea otorgará <strong>${task.points || 20} puntos</strong> de impacto
-          </div>
-        </div>
-      </div>
-      ${causeInfo}
-      <!-- Resumen y descripción debajo, con más espacio entre bloques -->
-      <div class="modal-task-content" style="margin-top:0;">
-        <div class="content-section" style="margin-bottom:2.2rem;">
-          <h3 class="content-title" style="font-size:1.2rem; font-weight:600; color:var(--primary); margin-bottom:0.9rem; display:flex; align-items:center; gap:0.7rem;">
-            <i class="fas fa-align-left"></i> Resumen
-          </h3>
-          <p class="content-text" style="line-height:1.7; color:#4b5563; font-size:1.05rem; margin-left:0; margin-right:0; text-align:justify; font-weight:400; margin-bottom:2.2rem;">
-            ${task.summary || 'No hay resumen disponible para esta tarea.'}
-          </p>
-          <h3 class="content-title" style="font-size:1.2rem; font-weight:600; color:var(--primary); margin-bottom:0.9rem; display:flex; align-items:center; gap:0.7rem;">
-            <i class="fas fa-info-circle"></i> Descripción completa
-          </h3>
-          <p class="content-text" style="line-height:1.7; color:#4b5563; font-size:1.05rem; margin-left:0; margin-right:0; text-align:justify;">
-            ${task.description || 'No hay descripción disponible para esta tarea.'}
-          </p>
-        </div>
-        ${participantsHtml}
-        <div class="content-section" style="margin-bottom:2.2rem;">
-          <h3 class="content-title" style="font-size:1.2rem; font-weight:600; color:var(--primary); margin-bottom:0.9rem; display:flex; align-items:center; gap:0.7rem;">
-            <i class="fas fa-info-circle"></i> Detalles adicionales
-          </h3>
-          <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem;">
-            <div>
-              <p style="font-weight:600; color:#4b5563; margin-bottom:0.3rem;">Fecha de creación</p>
-              <p style="color:#6b7280;">${createdDate}</p>
-            </div>
-            <div>
-              <p style="font-weight:600; color:#4b5563; margin-bottom:0.3rem;">Estado</p>
-              <p style="color:#6b7280;">${task.is_completed ? 'Completada' : 'En progreso'}</p>
-            </div>
-            <div>
-              <p style="font-weight:600; color:#4b5563; margin-bottom:0.3rem;">Prioridad</p>
-              <p style="color:#6b7280;">${task.is_urgent ? 'Alta prioridad' : 'Prioridad normal'}</p>
-            </div>
-            <div>
-              <p style="font-weight:600; color:#4b5563; margin-bottom:0.3rem;">Tipo</p>
-              <p style="color:#6b7280;">${task.type || 'Tarea general'}</p>
-            </div>
-          </div>
-        </div>
-      </div>
-      <!-- Botones abajo, con más espacio arriba -->
-      <div class="task-actions" style="display:flex; gap:0.8rem; margin-top:2.2rem;">
-        <button class="btn btn-primary" style="flex:1;" onclick="participateInTask('${task.id}')">
-          <i class="fas fa-hand-holding-heart"></i> Participar
-        </button>
-        <button class="btn btn-accent" style="flex:1;" onclick="mostrarCompartirTarea('${task.id}')">
-          <i class="fas fa-share-alt"></i> Compartir
-        </button>
-      </div>
-      <div class="share-section" id="shareSection"></div>
-    </div>
-  `;
-
-  document.getElementById('taskModal').style.display = 'flex';
-  document.body.style.overflow = 'hidden';
 }
 
-// Función para compartir tareas (nueva, con preview)
+// Función para compartir tareas (será llamada por el renderer)
 window.mostrarCompartirTarea = function(taskId) {
-  window.universalShare('tarea', taskId);
+  if (window.universalShare) {
+    window.universalShare('tarea', taskId);
+  } else if (window.mostrarCompartir) {
+    window.mostrarCompartir(taskId, 'task');
+  }
 };
 
-// ✅ NO sobrescribir showTaskModal, solo hacerla accesible globalmente
-window.showTaskModal = showTaskModal;
-
-// ✅ CERRAR MODAL de tarea
-document.addEventListener('DOMContentLoaded', function() {
-  // Cerrar modal de tarea
-  document.getElementById('closeTaskModal').addEventListener('click', function() {
-    document.getElementById('taskModal').style.display = 'none';
-    document.body.style.overflow = '';
-    
-    // ✅ LIMPIAR URL cuando se cierra el modal
-    if (window.location.pathname.includes('/tasks/') && window.location.pathname !== '/tasks') {
-      window.history.pushState({}, '', '/tasks');
-    }
-  });
-
-  // Click fuera del modal para cerrar
-  document.getElementById('taskModal').addEventListener('click', function(e) {
-    if (e.target === this) {
-      this.style.display = 'none';
-      document.body.style.overflow = '';
-      
-      // ✅ LIMPIAR URL cuando se cierra el modal
-      if (window.location.pathname.includes('/tasks/') && window.location.pathname !== '/tasks') {
-        window.history.pushState({}, '', '/tasks');
-      }
-    }
-  });
-});
-
-// Reemplazar la función antigua de compartir
-window.showShareOptionsTask = function(taskId) {
-  window.mostrarCompartirTarea(taskId);
-};
+// Hacer funciones globales para que las use el renderer
+window.participateInTask = participateInTask;
 </script>
 {% endblock %}
