@@ -7,6 +7,9 @@ function renderCompartir({ title, summary, photo_url, link, type = 'causa' }, co
   const container = document.getElementById(containerId);
   if (!container) return;
 
+  // Limpiar cualquier contenido previo en este contenedor
+  container.innerHTML = '';
+
   // Configuración de textos por tipo
   const typeConfig = {
     causa: {
@@ -62,7 +65,7 @@ function renderCompartir({ title, summary, photo_url, link, type = 'causa' }, co
   const cleanLink = link || window.location.href;
 
   // Debug: verificar datos
-  console.log(`🔗 Datos para compartir ${type}:`, { cleanTitle, cleanSummary, cleanPhoto, cleanLink });
+  // console.log(`🔗 Datos para compartir ${type}:`, { cleanTitle, cleanSummary, cleanPhoto, cleanLink });
 
   // Función para obtener el HTML de la preview según la red
   function getPreviewHtml(network) {
@@ -275,15 +278,17 @@ function renderCompartir({ title, summary, photo_url, link, type = 'causa' }, co
     </style>
   `;
 
-  // Event listeners para los botones
+  // Event listeners para los botones - versión mejorada
   const buttons = container.querySelectorAll('.share-btn');
   buttons.forEach(btn => {
     const network = btn.dataset.network;
-    const containerIdBtn = btn.dataset.container;
-    
-    btn.addEventListener('click', () => {
+    // Eliminar cualquier event listener previo
+    btn.replaceWith(btn.cloneNode(true));
+    const newBtn = container.querySelector(`.share-btn[data-network="${network}"]`);
+    newBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
       // Mostrar preview
-      const previewDiv = document.getElementById(containerIdBtn + '-preview');
+      const previewDiv = document.getElementById(containerId + '-preview');
       if (previewDiv) {
         previewDiv.style.opacity = '0.7';
         setTimeout(() => {
@@ -291,12 +296,10 @@ function renderCompartir({ title, summary, photo_url, link, type = 'causa' }, co
           previewDiv.style.opacity = '1';
         }, 200);
       }
-      
       // Feedback visual
-      btn.style.transform = 'scale(0.95)';
+      newBtn.style.transform = 'scale(0.95)';
       setTimeout(() => {
-        btn.style.transform = '';
-        
+        newBtn.style.transform = '';
         // Compartir después de mostrar preview
         if (network === 'copy') {
           copyCompartirLink(cleanLink);

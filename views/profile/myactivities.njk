@@ -894,6 +894,10 @@
 
       // --- MODAL DE VOLUNTEERING - Implementación completa ---
       window.showVolunteeringModal = async function(volunteeringId) {
+        // Limpiar antes de mostrar nuevo modal
+        cleanUpModals();
+
+        // Resto del código existente...
         const volunteering = window.volunteering?.find(v => v.id == volunteeringId);
         if (!volunteering) {
           console.error('❌ Voluntariado no encontrado:', volunteeringId);
@@ -1071,6 +1075,10 @@
 
       // --- MODAL DE CHALLENGE - Implementación completa igual a challenges/index.njk ---
       window.showChallengeModal = async function(challengeId) {
+        // Limpiar antes de mostrar nuevo modal
+        cleanUpModals();
+
+        // Resto del código existente...
         const challenge = window.challenges?.find(c => c.id == challengeId);
         if (!challenge) {
           console.error('❌ Reto no encontrado:', challengeId);
@@ -1246,9 +1254,27 @@
         `;
       };
 
-      // --- Remover las funciones locales duplicadas ---
-      // Eliminar showVolunteeringShareOptions porque ya funciona con share-system.js
-      // Eliminar copyToClipboard local porque ya está en share-system.js
+      // --- Función para limpiar completamente los modales ---
+      function cleanUpModals() {
+        // Limpiar contenido de los modales
+        const challengeModalBody = document.getElementById('challengeModalBody');
+        const volunteeringModalBody = document.getElementById('volunteeringModalBody');
+        
+        if (challengeModalBody) challengeModalBody.innerHTML = '';
+        if (volunteeringModalBody) volunteeringModalBody.innerHTML = '';
+        
+        // Eliminar cualquier sección de compartir residual
+        const oldShareSections = document.querySelectorAll('.share-section');
+        oldShareSections.forEach(section => section.remove());
+        
+        // Limpiar cualquier evento de compartir anterior
+        const oldShareButtons = document.querySelectorAll('.share-btn');
+        oldShareButtons.forEach(btn => {
+          btn.replaceWith(btn.cloneNode(true)); // Clonar para eliminar event listeners
+        });
+        
+        console.log('✅ Modales y secciones de compartir limpiados');
+      }
 
       // --- Cargar actividades al inicializar ---
       await loadUserActivities();
@@ -1260,6 +1286,33 @@
           showToast('Funcionalidad de búsqueda en desarrollo', 'info');
         }
       });
+
+      // --- Event listeners para cerrar modales y limpiar ---
+      document.addEventListener('click', function(e) {
+        // Cerrar modales al hacer clic en el botón de cerrar o fuera
+        if (
+          e.target.closest('#closeChallengeModal') ||
+          (e.target.id === 'challengeModal' && e.target !== document.getElementById('challengeModalBody'))
+        ) {
+          cleanUpModals();
+          const modal = document.getElementById('challengeModal');
+          if (modal) modal.style.display = 'none';
+          document.body.style.overflow = '';
+        }
+
+        if (
+          e.target.closest('#closeVolunteeringModal') ||
+          (e.target.id === 'volunteeringModal' && e.target !== document.getElementById('volunteeringModalBody'))
+        ) {
+          cleanUpModals();
+          const modal = document.getElementById('volunteeringModal');
+          if (modal) modal.style.display = 'none';
+          document.body.style.overflow = '';
+        }
+      });
+
+      // Limpiar al cambiar de ruta (SPA)
+      window.addEventListener('beforeunload', cleanUpModals);
     });
   </script>
 {% endblock %}
