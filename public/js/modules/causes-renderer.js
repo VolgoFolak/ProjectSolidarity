@@ -289,9 +289,7 @@ class CausesRenderer {
         if (typeof window.openAdminModal === 'function') {
           const cause = window.causes?.find(c => c.id == activityId);
           if (cause) window.openAdminModal(cause);
-        } else {
-          alert('Función de administración no disponible.');
-        }
+        } 
       });
     });
   }
