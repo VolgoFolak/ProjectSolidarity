@@ -1147,6 +1147,71 @@
 {% block scripts %}
   {{ super() }}
   <script>
+    window.getCategoryName = function(category) {
+      const categories = {
+        'medio_ambiente': 'Medio Ambiente',
+        'educacion': 'Educación',
+        'salud': 'Salud',
+        'animales': 'Animales',
+        'comunidad': 'Comunidad',
+        'otros': 'Otros'
+      };
+      return categories[category] || 'General';
+    };
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="/js/compartir.js"></script>
+  <script src="/js/modules/teams-renderer.js"></script>
+  <script>
+    // ...tu código de inicialización y showTeamModal...
+
+    window.mostrarCompartirEquipo = function(teamId) {
+      const team =
+        (window.allTeams?.find(t => t.id == teamId)) ||
+        (window.teams?.find(t => t.id == teamId)) ||
+        (window._currentTeam && window._currentTeam.id == teamId ? window._currentTeam : null);
+
+      if (!team) {
+        console.error('❌ No se encontró la comunidad con ID:', teamId);
+        return;
+      }
+
+      if (window.renderCompartir) {
+        window.renderCompartir({
+          title: team.name,
+          summary: team.summary || (team.description?.substring(0, 120) + '...'),
+          photo_url: team.photo || 'https://via.placeholder.com/350x180?text=Comunidad',
+          link: `${window.location.origin}/teams/${team.id}`,
+          type: 'comunidad'
+        }, 'shareSectionTeam');
+
+        document.getElementById('shareSectionTeam').scrollIntoView({
+          behavior: 'smooth',
+          block: 'center'
+        });
+      } else {
+        const link = `${window.location.origin}/teams/${team.id}`;
+        navigator.clipboard.writeText(link).then(() => {
+          alert('¡Enlace copiado!');
+        }).catch(() => {
+          prompt('Copia este enlace:', link);
+        });
+      }
+    };
+
+    if (typeof window.mostrarCompartirEquipo === 'function') {
+      window.showShareOptionsTeam = function(teamId, teamObj) {
+        window.mostrarCompartirEquipo(teamId);
+      };
+    }
+  </script>
+  <script>
+    window.initTeamsRenderer({
+      supabase,
+      session: null, // o la sesión si la tienes
+      onShowTeamModal: showTeamModal
+    });
+
     document.addEventListener('DOMContentLoaded', async function() {
       let currentPage = 1;
       const itemsPerPage = 9;
@@ -1236,7 +1301,9 @@
             ...teams.map(team => {
               const membership = memberships.find(m => m.team_id === team.id);
               allTeamIds.add(team.id);
-              const role = membership ? membership.role : (team.creator_id === userId ? 'founder' : 'member');
+              const role = (team.creator_id === userId)
+                ? 'founder'
+                : (membership ? membership.role : 'member');
               return {
                 ...team,
                 user_role: role,
@@ -1257,7 +1324,7 @@
                 tags: Array.isArray(team.tags) ? team.tags : [],
               }))
           ];
-
+          window.allTeams = allTeams;
           filteredTeams = [...allTeams];
           currentPage = 1;
           renderTeams();
@@ -1771,7 +1838,7 @@
         if (currentAdminTeam) createChallenge(currentAdminTeam.id);
       });
       document.getElementById('createVolunteeringBtnTab').addEventListener('click', function() {
-        if (currentAdminTeam) createVolunteering(currentAdminTeam.id);
+        if ( currentAdminTeam) createVolunteering(currentAdminTeam.id);
       });
 
       // Permite cerrar el modal "Ver más" con la cruz o haciendo clic fuera
@@ -1795,7 +1862,7 @@
         }
       });
 
-      function getCategoryName(category) {
+      window.getCategoryName = function(category) {
         const categories = {
           'medio_ambiente': 'Medio Ambiente',
           'educacion': 'Educación',
@@ -1805,7 +1872,7 @@
           'otros': 'Otros'
         };
         return categories[category] || 'General';
-      }
+      };
     }); // Fin del DOMContentLoaded
   </script>
 {% endblock %}
