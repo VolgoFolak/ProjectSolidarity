@@ -249,8 +249,11 @@
   height: 100%;
   background-color: rgba(0,0,0,0.5);
   z-index: 9999;
-  justify-content: center;
-  align-items: center;
+  /* justify-content: center; */
+  /* align-items: center; */
+  display: flex;
+  justify-content: flex-start; /* <-- Cambia a la izquierda */
+  align-items: flex-start;     /* <-- Arriba */
 }
 
 .modal-content {
@@ -264,6 +267,7 @@
   box-shadow: 0 8px 32px rgba(74,111,165,0.13);
   position: relative;
   font-family: 'Poppins', sans-serif;
+  margin: 2.5rem 0 0 2.5rem; /* Opcional: separa del borde superior/izquierdo */
 }
 
 /* --- Responsive Design para renderers --- */

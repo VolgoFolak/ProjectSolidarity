@@ -259,7 +259,7 @@ class VolunteeringRenderer {
 
     // Llenar contenido del modal
     modalBody.innerHTML = `
-      <h1 style="font-size:2rem; font-weight:800; color:var(--primary); margin-bottom:2rem; text-align:center;">${volunteering.title}</h1>
+      <h1 style="font-size:2rem; font-weight:800; color:var(--primary); margin-bottom:2rem; text-align:left;">${volunteering.title}</h1>
       <div style="display:flex; gap:2rem; margin-bottom:2rem; flex-wrap:wrap;">
         <div style="flex:1; min-width:320px; height:300px; border-radius:12px; overflow:hidden; position:relative;">
           <img src="${volunteering.photo_url || '/img/volunteering-default.jpg'}" 
@@ -303,17 +303,17 @@ class VolunteeringRenderer {
         </div>
       </div>
       ${causeInfo}
-      <div style="margin-bottom:2rem;">
-        <h3 style="font-size:1.2rem; font-weight:600; color:var(--primary); margin-bottom:0.9rem;">
+      <div style="margin-bottom:2rem; text-align:left;">
+        <h3 style="font-size:1.2rem; font-weight:600; color:var(--primary); margin-bottom:0.9rem; text-align:left;">
           <i class="fas fa-align-left"></i> Resumen
         </h3>
-        <p style="line-height:1.7; color:#4b5563; margin-bottom:2rem;">
+        <p style="line-height:1.7; color:#4b5563; margin-bottom:2rem; text-align:left;">
           ${volunteering.summary || 'No hay resumen disponible para este voluntariado.'}
         </p>
-        <h3 style="font-size:1.2rem; font-weight:600; color:var(--primary); margin-bottom:0.9rem;">
+        <h3 style="font-size:1.2rem; font-weight:600; color:var(--primary); margin-bottom:0.9rem; text-align:left;">
           <i class="fas fa-info-circle"></i> Descripción completa
         </h3>
-        <p style="line-height:1.7; color:#4b5563;">
+        <p style="line-height:1.7; color:#4b5563; text-align:left;">
           ${volunteering.description || 'No hay descripción disponible para este voluntariado.'}
         </p>
       </div>
@@ -370,11 +370,13 @@ class VolunteeringRenderer {
         summary: volunteering.summary || volunteering.description?.substring(0, 120) + '...',
         photo_url: volunteering.photo_url || '/img/volunteering-default.jpg',
         link: `${window.location.origin}/volunteering/${volunteering.id}`,
-        type: 'voluntariado'
+        type: 'voluntariado',
+        align: 'left' // <-- Añade esto si tu función lo soporta
       }, 'shareSection');
       
       const shareSection = document.getElementById('shareSection');
       if (shareSection) {
+        shareSection.style.textAlign = 'left';
         shareSection.scrollIntoView({ 
           behavior: 'smooth', 
           block: 'center' 
