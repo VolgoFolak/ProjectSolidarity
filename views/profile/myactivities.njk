@@ -2586,131 +2586,198 @@
       });
 
       window.openAdminActivityModal = async function(activity) {
-        // Elimina cualquier mensaje de error anterior
-        const oldError = document.getElementById('adminModalError');
-        if (oldError) oldError.remove();
-
-        // Tabs estilo myteams
-        document.querySelectorAll('.admin-tab').forEach(tab => tab.classList.remove('active'));
-        document.querySelectorAll('.admin-tab-content').forEach(tab => tab.classList.remove('active'));
-        document.querySelector('.admin-tab[data-tab="overview"]').classList.add('active');
-        document.getElementById('overviewTab').classList.add('active');
-
-        // Título
-        document.getElementById('adminModalTitle').textContent = `Administrar ${activity.title || 'Causa'}`;
-
-        // Resumen
-        document.getElementById('membersCount').textContent = activity.members_count || activity.members?.length || '1';
-        document.getElementById('activitiesCount').textContent = '1';
-        document.getElementById('impactPoints').textContent = activity.points || activity.impact_points || '0';
-        document.getElementById('beneficiariesCount').textContent = activity.beneficiaries || '0';
-        let percent = 0, goal = 0, raised = 0;
-        if (activity.goal && activity.raised) {
-          goal = activity.goal;
-          raised = activity.raised;
-          percent = Math.min(100, Math.round((raised / goal) * 100));
-        }
-        document.getElementById('communityProgress').style.width = percent + '%';
-        document.getElementById('progressPercent').textContent = percent + '% completado';
-        document.getElementById('progressAmount').textContent = `${raised} € de ${goal} €`;
-
-        // Miembros (puedes mejorar la consulta si quieres más info)
-        const membersList = document.getElementById('membersList');
-        membersList.innerHTML = '<div style="color:#888;">Cargando miembros...</div>';
-        let members = [];
-        if (activity.userRole === 'founder' || activity.userRole === 'admin' || activity.userRole === 'coordinator') {
-          const { data } = await supabase.from('causes_members').select('user_id, role, status').eq('cause_id', activity.id);
-          members = data || [];
-        }
-        membersList.innerHTML = members.length
-          ? members.map(m => `<div class="member-item"><span class="member-name">${m.user_id}</span><span class="role-badge ${m.role}">${m.role}</span></div>`).join('')
-          : '<div style="color:#888;">Sin miembros</div>';
-
-        // Configuración (estructura igual a crear causa, scroll interno)
-        const form = document.getElementById('activitySettingsForm');
-        form.reset();
-        form.scrollTop = 0;
-        form.querySelector('#editActivityName').value = activity.title || '';
-        form.querySelector('#editActivityCategory').value = activity.category || '';
-        form.querySelector('#editActivityPrivacy').value = activity.privacy || 'public';
-        form.querySelector('#editActivityGoal').value = activity.goal || '';
-        form.querySelector('#editActivityTags').value = activity.tags || '';
-        form.querySelector('#editActivityDesc').value = activity.description || '';
-        if (activity.photo_url) {
-          form.querySelector('#editActivityPhotoPreview').src = activity.photo_url;
-          form.querySelector('#editActivityPhotoPreview').style.display = 'block';
-        } else {
-          form.querySelector('#editActivityPhotoPreview').style.display = 'none';
-        }
-
-        // Imagen editable
-        form.querySelector('#editActivityPhoto').onchange = function(e) {
-          const file = e.target.files[0];
-          if (file) {
-            const reader = new FileReader();
-            reader.onload = function(ev) {
-              form.querySelector('#editActivityPhotoPreview').src = ev.target.result;
-              form.querySelector('#editActivityPhotoPreview').style.display = 'block';
-            };
-            reader.readAsDataURL(file);
-          }
-        };
-
-        // Guardar cambios en Supabase
-        form.onsubmit = async function(e) {
-          e.preventDefault();
-          const updates = {
-            title: form.querySelector('#editActivityName').value,
-            category: form.querySelector('#editActivityCategory').value,
-            privacy: form.querySelector('#editActivityPrivacy').value,
-            goal: Number(form.querySelector('#editActivityGoal').value) || 0,
-            tags: form.querySelector('#editActivityTags').value,
-            description: form.querySelector('#editActivityDesc').value
-          };
-          // Imagen: solo si se selecciona una nueva
-          const fileInput = form.querySelector('#editActivityPhoto');
-          if (fileInput.files[0]) {
-            // Aquí deberías subir la imagen a Supabase Storage y guardar la URL
-            // Este ejemplo solo muestra la preview, implementa el upload real según tu backend
-            showToast('Subida de imagen no implementada en este ejemplo', 'info');
-          }
-          const { error } = await supabase.from('causes').update(updates).eq('id', activity.id);
-          if (!error) {
-            showToast('Causa actualizada correctamente');
-            document.getElementById('adminModal').classList.remove('active');
-            document.body.style.overflow = '';
-            // Opcional: recarga actividades
-            if (typeof loadUserActivities === 'function') loadUserActivities();
-          } else {
-            showToast('Error al guardar cambios', 'error');
-          }
-        };
-
-        // Mensaje/contenido
-        document.getElementById('activityMessage').value = activity.message || '';
-
-        // Mostrar modal
+        // Abrir modal y setear título
+        document.getElementById('adminModalTitle').textContent = `Administrar ${activity.title}`;
         document.getElementById('adminModal').classList.add('active');
         document.body.style.overflow = 'hidden';
 
-        // Tabs navegación estilo myteams
+        // ----------- PESTAÑA MIEMBROS -----------
+        // Traer miembros de la causa y sus perfiles
+        const membersList = document.getElementById('membersList');
+        membersList.innerHTML = '<div style="color:#888;">Cargando miembros...</div>';
+        let members = [];
+        const { data: memberRows } = await supabase
+          .from('causes_members')
+          .select('user_id, role, status')
+          .eq('cause_id', activity.id);
+
+        if (memberRows && memberRows.length > 0) {
+          const userIds = memberRows.map(m => m.user_id);
+          const { data: profiles } = await supabase
+            .from('profiles')
+            .select('id, username, photo_url')
+            .in('id', userIds);
+
+          members = memberRows.map(m => {
+            const profile = profiles?.find(p => p.id === m.user_id) || {};
+            return {
+              ...m,
+              username: profile.username || m.user_id,
+              photo_url: profile.photo_url || 'https://via.placeholder.com/40?text=U'
+            };
+          });
+        }
+        membersList.innerHTML = members.length
+          ? members.map(member => `
+          <div class="member-item" style="display:flex;align-items:center;gap:1rem;margin-bottom:1rem;">
+            <img src="${member.photo_url}" alt="${member.username}" style="width:40px;height:40px;border-radius:50%;object-fit:cover;border:1.5px solid #e2e8f0;">
+            <span style="font-weight:600;">${member.username}</span>
+            <span class="role-badge ${member.role === 'founder' ? 'admin' : 'member'}" style="margin-left:auto;">
+              <i class="fas fa-user"></i> ${member.role}
+            </span>
+          </div>
+        `).join('')
+        : '<div style="color:#888;">No hay miembros en esta causa.</div>';
+
+        // ----------- PESTAÑA CONFIGURACIÓN -----------
+        // Replica el formulario de crear causa
+        const formGrid = document.getElementById('activitySettingsForm').querySelector('.form-grid');
+        formGrid.innerHTML = `
+          <div class="form-group">
+            <label for="editActivityTitle">Título de la causa</label>
+            <input type="text" id="editActivityTitle" name="editActivityTitle" required value="${activity.title || ''}">
+          </div>
+          <div class="form-group">
+            <label for="editActivityPhoto">Foto principal</label>
+            <input type="file" id="editActivityPhoto" name="editActivityPhoto" accept="image/*">
+            <img id="editActivityPhotoPreview" class="preview-img" alt="Vista previa de la foto" src="${activity.photo_url || ''}" style="${activity.photo_url ? 'display:block;' : 'display:none;'}">
+          </div>
+          <div class="form-group">
+            <label for="editActivitySummary">Descripción corta (máx. 3 líneas)</label>
+            <textarea id="editActivitySummary" name="editActivitySummary" maxlength="180" required>${activity.short_description || ''}</textarea>
+          </div>
+          <div class="form-group">
+            <label for="editActivityDesc">Descripción exhaustiva</label>
+            <textarea id="editActivityDesc" name="editActivityDesc" required>${activity.description || ''}</textarea>
+          </div>
+          <div class="form-inline-group">
+            <div class="form-group">
+              <label for="editActivityGoal">Meta de recaudación (€)</label>
+              <input type="number" id="editActivityGoal" name="editActivityGoal" min="1" step="0.01" required value="${activity.goal || ''}">
+            </div>
+            <div class="form-group">
+              <label for="editActivityBeneficiaries">Nº de beneficiarios</label>
+              <input type="number" id="editActivityBeneficiaries" name="editActivityBeneficiaries" min="1" required value="${activity.beneficiaries || ''}">
+            </div>
+          </div>
+          <div class="form-inline-group">
+            <div class="form-group">
+              <label for="editActivityCity">Ciudad</label>
+              <input type="text" id="editActivityCity" name="editActivityCity" required value="${activity.city || ''}">
+            </div>
+            <div class="form-group">
+              <label for="editActivityCountry">País</label>
+              <input type="text" id="editActivityCountry" name="editActivityCountry" required value="${activity.country || ''}">
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="editActivityPoints">Puntos por colaborar</label>
+            <input type="number" id="editActivityPoints" name="editActivityPoints" min="1" max="1000" required value="${activity.points || 50}">
+            <div class="points-info" id="editPointsText">
+              <i class="fas fa-star"></i>
+              Colaborar en esta causa otorgará <strong>${activity.points || 50} puntos</strong> a cada participante.
+            </div>
+          </div>
+        `;
+
+        // Preview imagen
+        document.getElementById('editActivityPhoto').addEventListener('change', function(e) {
+          const file = e.target.files[0];
+          const preview = document.getElementById('editActivityPhotoPreview');
+          if (file) {
+            const reader = new FileReader();
+            reader.onload = function(evt) {
+              preview.src = evt.target.result;
+              preview.style.display = 'block';
+            };
+            reader.readAsDataURL(file);
+          } else {
+            preview.src = '';
+            preview.style.display = 'none';
+          }
+        });
+
+        // Actualizar texto de puntos
+        document.getElementById('editActivityPoints').addEventListener('input', function() {
+          const val = this.value || 0;
+          document.getElementById('editPointsText').innerHTML = `<i class="fas fa-star"></i> Colaborar en esta causa otorgará <strong>${val} puntos</strong> a cada participante.`;
+        });
+
+        // Guardar cambios en Supabase
+        document.getElementById('activitySettingsForm').onsubmit = async function(e) {
+          e.preventDefault();
+          // Recoge los valores del formulario
+          const updates = {
+            title: document.getElementById('editActivityTitle').value.trim(),
+            short_description: document.getElementById('editActivitySummary').value.trim(),
+            description: document.getElementById('editActivityDesc').value.trim(),
+            goal: parseFloat(document.getElementById('editActivityGoal').value),
+            beneficiaries: parseInt(document.getElementById('editActivityBeneficiaries').value, 10),
+            city: document.getElementById('editActivityCity').value.trim(),
+            country: document.getElementById('editActivityCountry').value.trim(),
+            points: parseInt(document.getElementById('editActivityPoints').value, 10)
+          };
+          // Imagen: solo si se selecciona una nueva
+          const fileInput = document.getElementById('editActivityPhoto');
+          if (fileInput.files[0]) {
+            const file = fileInput.files[0];
+            const fileExt = file.name.split('.').pop();
+            const fileName = `${Date.now()}-${Math.random().toString(36).substr(2, 9)}.${fileExt}`;
+            const filePath = `public/${fileName}`;
+            const { error: uploadError } = await supabase.storage
+              .from('causes')
+              .upload(filePath, file, { upsert: true });
+            if (uploadError) {
+              alert('Error subiendo la foto: ' + uploadError.message);
+              return;
+            }
+            const { data } = supabase.storage.from('causes').getPublicUrl(filePath);
+            updates.photo_url = data.publicUrl;
+          }
+          // Actualiza en Supabase
+          const { error } = await supabase
+            .from('causes')
+            .update(updates)
+            .eq('id', activity.id);
+          if (!error) {
+            alert('Causa actualizada correctamente');
+            document.getElementById('adminModal').classList.remove('active');
+            document.body.style.overflow = '';
+            if (typeof loadUserActivities === 'function') loadUserActivities();
+          } else {
+            alert('Error al guardar cambios: ' + error.message);
+          }
+        };
+
+        // --- Rellenar stats del resumen ---
+        document.getElementById('membersCount').textContent = members.length;
+        document.getElementById('activitiesCount').textContent = 1; // O el número real de actividades si lo tienes
+        document.getElementById('impactPoints').textContent = activity.points || 0;
+        document.getElementById('beneficiariesCount').textContent = activity.beneficiaries || 0;
+        document.getElementById('progressPercent').textContent = activity.goal ? `${Math.round((activity.raised || 0) / activity.goal * 100)}% completado` : '0% completado';
+        document.getElementById('progressAmount').textContent = `${activity.raised || 0} € de ${activity.goal || 0} €`;
+        document.getElementById('communityProgress').style.width = activity.goal ? `${Math.round((activity.raised || 0) / activity.goal * 100)}%` : '0%';
+
+        // --- Tabs funcionales ---
         document.querySelectorAll('.admin-tab').forEach(tab => {
           tab.onclick = function() {
             document.querySelectorAll('.admin-tab').forEach(t => t.classList.remove('active'));
             document.querySelectorAll('.admin-tab-content').forEach(c => c.classList.remove('active'));
-            tab.classList.add('active');
-            document.getElementById(tab.dataset.tab + 'Tab').classList.add('active');
+            this.classList.add('active');
+            const tabId = this.getAttribute('data-tab');
+            document.getElementById(tabId + 'Tab').classList.add('active');
           };
         });
 
-        // Cerrar modal
+        // --- Cerrar modal ---
         document.getElementById('closeAdminModal').onclick = function() {
           document.getElementById('adminModal').classList.remove('active');
           document.body.style.overflow = '';
         };
+        // Cerrar al hacer clic fuera del modal
         document.getElementById('adminModal').onclick = function(e) {
           if (e.target === this) {
-            this.classList.remove('active');
+            document.getElementById('adminModal').classList.remove('active');
             document.body.style.overflow = '';
           }
         };
