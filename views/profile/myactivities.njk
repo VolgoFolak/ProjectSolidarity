@@ -223,6 +223,74 @@
       background: var(--accent-dark);
       transform: translateY(-2px);
     }
+
+    /* Añade esto dentro del bloque <style> */
+    .cause-actions, .task-actions, .challenge-actions, .volunteering-actions {
+      display: flex;
+      gap: 0.8rem;
+      margin-top: auto;
+    }
+
+    .cause-actions .btn, 
+    .task-actions .btn, 
+    .challenge-actions .btn, 
+    .volunteering-actions .btn {
+      flex: 1;
+      text-align: center;
+      justify-content: center;
+      padding: 0.8rem 1.2rem;      /* Igual que causas */
+      border-radius: 50px;
+      font-weight: 600;
+      font-size: 1rem;             /* Igual que causas */
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;                 /* Un poco más de espacio entre icono y texto */
+      transition: all 0.3s ease;
+      border: none;
+      cursor: pointer;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.08);
+    }
+
+    .cause-actions .btn:hover, 
+    .task-actions .btn:hover, 
+    .challenge-actions .btn:hover, 
+    .volunteering-actions .btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(0,0,0,0.12);
+    }
+
+    .btn-primary {
+      background: var(--primary);
+      color: white;
+    }
+    .btn-primary:hover {
+      background: var(--primary-dark);
+    }
+
+    .btn-accent {
+      background: var(--accent);
+      color: white;
+    }
+    .btn-accent:hover {
+      background: var(--accent-dark);
+    }
+
+    .btn-warning {
+      background: var(--challenge);
+      color: #333;
+    }
+    .btn-warning:hover {
+      background: var(--challenge-dark);
+      color: white;
+    }
+
+    .btn-secondary {
+      background: var(--volunteering);
+      color: white;
+    }
+    .btn-secondary:hover {
+      background: var(--volunteering-dark);
+    }
     /* Responsive */
     @media (max-width: 768px) {
       .activities-grid, .tasks-grid {
@@ -1494,6 +1562,7 @@
               <h3 class="content-title" style="font-size:1.2rem; font-weight:600; color:var(--primary); margin-bottom:0.9rem; display:flex; align-items:center; gap:0.7rem;">
                 <i class="fas fa-link"></i> Vinculado a la causa
               </h3>
+             
               <div style="display:flex; align-items:center; gap:1.2rem; background:#f8fafc; padding:1rem; border-radius:8px; border:1px solid #e5e7eb;">
                 <img src="${cause.photo_url || '/img/causa-default.jpg'}"
                      alt="Imagen de la causa vinculada"
