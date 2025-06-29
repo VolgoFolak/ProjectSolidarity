@@ -232,6 +232,12 @@
         flex-direction: column;
       }
     }
+
+    .force-left {
+      text-align: left !important;
+      justify-content: flex-start !important;
+      align-items: flex-start !important;
+    }
   </style>
 {% endblock %}
 
@@ -1364,12 +1370,14 @@
                 ${volunteering.summary || 'No hay resumen disponible para este voluntariado.'}
               </div>
             </div>
-            <div class="modal-task-content" style="margin-top:0; text-align:left;">
+            <div class="modal-task-content" style="margin-top:0;">
               <div class="content-section" style="margin-bottom:2.2rem; text-align:left;">
                 <h3 class="content-title" style="font-size:1.2rem; font-weight:600; color:var(--primary); margin-bottom:0.9rem; display:flex; align-items:center; gap:0.7rem; text-align:left;">
                   <i class="fas fa-info-circle"></i> Descripción completa
                 </h3>
-                <div class="content-text" style="line-height:1.7; color:#4b5563; font-size:1.05rem; text-align:left;">${volunteering.description || 'No hay descripción disponible para este voluntariado.'}</div>
+                <div class="content-text" style="line-height:1.7; color:#4b5563; font-size:1.05rem; text-align:left;">
+                  ${volunteering.description || 'No hay descripción disponible para este voluntariado.'}
+                </div>
               </div>
             </div>
             <div class="task-actions" style="display:flex; gap:0.8rem; margin-top:2.2rem; text-align:left;">
@@ -1380,7 +1388,9 @@
                 <i class="fas fa-share-alt"></i> Compartir
               </button>
             </div>
-            <div class="share-section" id="shareSectionVolunteering" style="text-align:left;"></div>
+            <div class="share-section" id="shareSectionVolunteering" style="text-align:left;">
+              <!-- Contenido dinámico de compartir -->
+            </div>
           </div>
         `;
         
@@ -1394,7 +1404,7 @@
             window.shareItem('volunteering', volunteering.id, volunteering.title, `/volunteering/${volunteering.id}`);
           });
         }
-      };
+      }
 
       // --- Función para mostrar opciones de compartir volunteering ---
       window.showVolunteeringShareOptions = function(volunteeringId) {
@@ -1410,14 +1420,14 @@
         shareSection.innerHTML = `
           <div style="margin-top: 1.5rem; padding: 1rem; background: #f8fafc; border-radius: 8px; border: 1px solid #e5e7eb; text-align:left;">
             <h4 style="margin-bottom: 1rem; color: var(--primary); font-weight: 600; text-align:left;">Compartir voluntariado</h4>
-            <div style="display: flex; gap: 0.5rem; flex-wrap: wrap; text-align:left; justify-content:flex-start;">
-              <button onclick="copyToClipboard('${shareUrl}')" class="btn btn-outline" style="font-size: 0.9rem; padding: 0.4rem 0.8rem; border: 1px solid #d1d5db; background: white; color: #374151; border-radius: 6px; cursor: pointer;">
+            <div style="display: flex; gap: 0.5rem; flex-wrap: wrap; justify-content: flex-start !important; text-align: left !important;">
+              <button onclick="copyToClipboard('${shareUrl}')" class="btn btn-outline" style="font-size: 0.9rem; padding: 0.4rem 0.8rem; border: 1px solid #d1d5db; background: white; color: #374151; border-radius: 6px; cursor: pointer; text-align:left;">
                 <i class="fas fa-link"></i> Copiar enlace
               </button>
-              <a href="https://wa.me/?text=${encodeURIComponent(shareText + ' ' + shareUrl)}" target="_blank" class="btn btn-outline" style="font-size: 0.9rem; padding: 0.4rem 0.8rem; border: 1px solid #d1d5db; background: white; color: #374151; border-radius: 6px; text-decoration: none; display: inline-flex; align-items: center; gap: 0.3rem;">
+              <a href="https://wa.me/?text=${encodeURIComponent(shareText + ' ' + shareUrl)}" target="_blank" class="btn btn-outline" style="font-size: 0.9rem; padding: 0.4rem 0.8rem; border: 1px solid #d1d5db; background: white; color: #374151; border-radius: 6px; text-decoration: none; display: inline-flex; align-items: center; gap: 0.3rem; text-align:left;">
                 <i class="fab fa-whatsapp"></i> WhatsApp
               </a>
-              <a href="https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText)}&url=${encodeURIComponent(shareUrl)}" target="_blank" class="btn btn-outline" style="font-size: 0.9rem; padding: 0.4rem 0.8rem; border: 1px solid #d1d5db; background: white; color: #374151; border-radius: 6px; text-decoration: none; display: inline-flex; align-items: center; gap: 0.3rem;">
+              <a href="https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText)}&url=${encodeURIComponent(shareUrl)}" target="_blank" class="btn btn-outline" style="font-size: 0.9rem; padding: 0.4rem 0.8rem; border: 1px solid #d1d5db; background: white; color: #374151; border-radius: 6px; text-decoration: none; display: inline-flex; align-items: center; gap: 0.3rem; text-align:left;">
                 <i class="fab fa-twitter"></i> Twitter
               </a>
             </div>
@@ -1607,7 +1617,7 @@
               <button onclick="copyToClipboard('${shareUrl}')" class="btn btn-outline" style="font-size: 0.9rem; padding: 0.4rem 0.8rem; border: 1px solid #d1d5db; background: white; color: #374151; border-radius: 6px; cursor: pointer;">
                 <i class="fas fa-link"></i> Copiar enlace
               </button>
-              <a href="https://wa.me/?text=${encodeURIComponent(shareText + ' ' + shareUrl)}" target="_blank" class="btn btn-outline" style="font-size: 0.9rem; padding: 0.4rem 0.8rem; border: 1px solid #d1d5db; background: white; color: #374151; border-radius: 6px; text-decoration: none; display: inline-flex; align-items: center; gap: 0.3rem;">
+              <a href="https://wa.me/?text=${encodeURIComponent(shareText)}&url=${encodeURIComponent(shareUrl)}" target="_blank" class="btn btn-outline" style="font-size: 0.9rem; padding: 0.4rem 0.8rem; border: 1px solid #d1d5db; background: white; color: #374151; border-radius: 6px; text-decoration: none; display: inline-flex; align-items: center; gap: 0.3rem;">
                 <i class="fab fa-whatsapp"></i> WhatsApp
               </a>
               <a href="https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText)}&url=${encodeURIComponent(shareUrl)}" target="_blank" class="btn btn-outline" style="font-size: 0.9rem; padding: 0.4rem 0.8rem; border: 1px solid #d1d5db; background: white; color: #374151; border-radius: 6px; text-decoration: none; display: inline-flex; align-items: center; gap: 0.3rem;">
@@ -1665,7 +1675,7 @@
                      style="width:80px; height:80px; object-fit:cover; border-radius:6px;"
                      onerror="this.src='/img/causa-default.jpg'">
                 <div style="flex:1; min-width:0;">
-                  <div style="font-weight:700; color:var(--primary); font-size:1.05rem; margin-bottom:0.2rem; text-align:left;">
+                  <div style="font-weight:700; color:var(--primary); font-size:1.05rem; margin-bottom:0.2rem;">
                     ${cause.title}
                   </div>
                   <div style="color:#6b7280; font-size:0.97rem; text-align:left;">
@@ -1730,7 +1740,7 @@
             </div>
             ${causeInfo}
             <div class="content-section" style="margin-bottom:2.2rem; text-align:left;">
-              <h3 class="content-title" style="font-size:1.2rem; font-weight:600; color:var(--primary); margin-bottom:0.9rem; display:flex; align-items:center; gap:0.7rem;">
+              <h3 class="content-title" style="font-size:1.2rem; font-weight:600; color:var(--primary); margin-bottom:0.9rem; display:flex; align-items:center; gap:0.7rem; text-align:left;">
                 <i class="fas fa-align-left"></i> Resumen
               </h3>
               <div class="content-text" style="line-height:1.7; color:#4b5563; font-size:1.05rem; text-align:left;">
@@ -1739,7 +1749,7 @@
             </div>
             <div class="modal-task-content" style="margin-top:0;">
               <div class="content-section" style="margin-bottom:2.2rem; text-align:left;">
-                <h3 class="content-title" style="font-size:1.2rem; font-weight:600; color:var(--primary); margin-bottom:0.9rem; display:flex; align-items:center; gap:0.7rem;">
+                <h3 class="content-title" style="font-size:1.2rem; font-weight:600; color:var(--primary); margin-bottom:0.9rem; display:flex; align-items:center; gap:0.7rem; text-align:left;">
                   <i class="fas fa-info-circle"></i> Descripción completa
                 </h3>
                 <div class="content-text" style="line-height:1.7; color:#4b5563; font-size:1.05rem; text-align:left;">${task.description || 'No hay descripción disponible para esta tarea.'}</div>
