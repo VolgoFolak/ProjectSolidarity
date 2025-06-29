@@ -46,11 +46,11 @@ class CausesRenderer {
     const urgentBadge = cause.urgent ? `<div class="cause-badge urgent"><i class="fas fa-exclamation-circle"></i> Urgente</div>` : "";
     const pointsBadge = `<div class="cause-badge points"><i class="fas fa-star"></i> +${cause.points || 0} pts</div>`;
     const location = cause.city && cause.country ? `${cause.city}, ${cause.country}` : "";
+    const isAdmin = ['founder','admin','coordinator'].includes(cause.userRole);
 
     const card = document.createElement('div');
     card.className = 'cause-card';
     
-    // ✅ TEMPLATE EXACTO del código original
     card.innerHTML = `
       <div class="cause-image">
         <img src="${cause.photo_url || '/img/causa-default.jpg'}" alt="${cause.title}" 
@@ -79,7 +79,13 @@ class CausesRenderer {
         </div>
         <div class="cause-actions">
           <button class="btn btn-primary view-cause-btn" data-cause-id="${cause.id}">Ver más</button>
-          <a href="#" class="btn btn-accent">Donar</a>
+          ${isAdmin ? `
+            <button class="btn btn-accent admin-activity-btn" data-activity-type="cause" data-activity-id="${cause.id}">
+              <i class="fas fa-cog"></i> Administrar
+            </button>
+          ` : `
+            <a href="#" class="btn btn-accent">Donar</a>
+          `}
         </div>
       </div>
     `;
@@ -273,6 +279,19 @@ class CausesRenderer {
         e.preventDefault();
         const causeId = btn.getAttribute('data-cause-id');
         this.showModal(causeId);
+      });
+    });
+
+    container.querySelectorAll('.admin-activity-btn').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.preventDefault();
+        const activityId = btn.getAttribute('data-activity-id');
+        if (typeof window.openAdminModal === 'function') {
+          const cause = window.causes?.find(c => c.id == activityId);
+          if (cause) window.openAdminModal(cause);
+        } else {
+          alert('Función de administración no disponible.');
+        }
       });
     });
   }

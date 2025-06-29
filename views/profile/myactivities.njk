@@ -306,6 +306,457 @@
       justify-content: flex-start !important;
       align-items: flex-start !important;
     }
+
+    /* --- ESTILOS DEL MODAL DE ADMINISTRACIÓN --- */
+    .admin-modal {
+      display: none;
+      position: fixed;
+      z-index: 10000;
+      left: 0;
+      top: 0;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(0, 0, 0, 0.7);
+      align-items: center;
+      justify-content: center;
+      overflow-y: auto;
+    }
+
+    .admin-modal.active {
+      display: flex;
+    }
+
+    .admin-modal-content {
+      background: #fff;
+      border-radius: 12px;
+      padding: 2rem;
+      max-width: 900px;
+      width: 90vw;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+      position: relative;
+    }
+
+    .close-admin-modal {
+      position: absolute;
+      top: 1rem;
+      right: 1rem;
+      background: none;
+      border: none;
+      font-size: 1.5rem;
+      color: #6b7280;
+      cursor: pointer;
+      transition: color 0.2s;
+    }
+
+    .close-admin-modal:hover {
+      color: var(--primary);
+    }
+
+    .admin-tabs {
+      display: flex;
+      gap: 0.5rem;
+      margin-bottom: 1.2rem;
+      border-bottom: 2px solid #e2e8f0;
+      overflow-x: auto;
+      scrollbar-width: none;
+    }
+    .admin-tabs::-webkit-scrollbar { display: none; }
+    .admin-tab {
+      flex: none;
+      padding: 0.7rem 1.2rem;
+      border-radius: 8px 8px 0 0;
+      background: none;
+      color: #4a5568;
+      font-weight: 600;
+      border: none;
+      border-bottom: 2px solid transparent;
+      cursor: pointer;
+      transition: background 0.2s, color 0.2s, border-bottom 0.2s;
+    }
+    .admin-tab.active {
+      background: #fff;
+      color: var(--primary);
+      border-bottom: 2px solid var(--primary);
+      box-shadow: 0 2px 8px #4a6fa511;
+      z-index: 2;
+    }
+
+    .admin-tab-content {
+      display: none;
+    }
+
+    .admin-tab-content.active {
+      display: block;
+    }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+      gap: 1.5rem;
+      margin-bottom: 2rem;
+    }
+
+    .stat-card {
+      background: #f9fafb;
+      border-radius: 10px;
+      padding: 1.5rem;
+      text-align: center;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .stat-value {
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: var(--primary);
+      margin-bottom: 0.5rem;
+    }
+
+    .stat-label {
+      font-size: 0.9rem;
+      color: #6b7280;
+    }
+
+    .progress-bar {
+      height: 8px;
+      background: #e2e8f0;
+      border-radius: 4px;
+      overflow: hidden;
+      margin-bottom: 0.5rem;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: var(--primary);
+      border-radius: 4px;
+    }
+
+    .progress-info {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.9rem;
+      color: #6b7280;
+    }
+
+    /* Estilos específicos para el modal de administración */
+    .admin-modal h2 {
+      font-size: 1.8rem;
+      margin-bottom: 1.5rem;
+      color: var(--primary);
+      text-align: center;
+    }
+
+    .admin-modal .btn {
+      width: 100%;
+      padding: 0.8rem;
+      border-radius: 50px;
+      font-weight: 600;
+      font-size: 1rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      transition: all 0.3s ease;
+    }
+
+    .admin-modal .btn-primary {
+      background: var(--primary);
+      color: white;
+    }
+
+    .admin-modal .btn-primary:hover {
+      background: var(--primary-dark);
+    }
+
+    .admin-modal .btn-accent {
+      background: var(--accent);
+      color: white;
+    }
+
+    .admin-modal .btn-accent:hover {
+      background: var(--accent-dark);
+    }
+
+    .admin-modal .btn-warning {
+      background: var(--challenge);
+      color: #333;
+    }
+
+    .admin-modal .btn-warning:hover {
+      background: var(--challenge-dark);
+      color: white;
+    }
+
+    .admin-modal .btn-secondary {
+      background: var(--volunteering);
+      color: white;
+    }
+
+    .admin-modal .btn-secondary:hover {
+      background: var(--volunteering-dark);
+    }
+
+    /* Estilos para el formulario de configuración de actividad */
+    .solidarity-form {
+      background: #f9fafb;
+      padding: 2rem;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      margin-top: 1rem;
+    }
+
+    .solidarity-form .form-section-title {
+      font-size: 1.5rem;
+      margin-bottom: 1.5rem;
+      color: var(--primary);
+    }
+
+    .solidarity-form .form-group {
+      margin-bottom: 1.5rem;
+    }
+
+    .solidarity-form label {
+      font-weight: 500;
+      margin-bottom: 0.5rem;
+      display: block;
+      color: #4a5568;
+    }
+
+    .solidarity-form input,
+    .solidarity-form select,
+    .solidarity-form textarea {
+      width: 100%;
+      padding: 0.8rem;
+      border-radius: 8px;
+      border: 1.5px solid var(--gray);
+      font-size: 1rem;
+      outline: none;
+      transition: border 0.2s;
+      background: #fff;
+    }
+
+    .solidarity-form input:focus,
+    .solidarity-form select:focus,
+    .solidarity-form textarea:focus {
+      border-color: var(--primary);
+    }
+
+    .solidarity-form .btn {
+      width: auto;
+      padding: 0.7rem 1.2rem;
+      border-radius: 50px;
+      font-weight: 600;
+      font-size: 1rem;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      transition: all 0.3s ease;
+    }
+
+    .solidarity-form .btn-primary {
+      background: var(--primary);
+      color: white;
+    }
+
+    .solidarity-form .btn-primary:hover {
+      background: var(--primary-dark);
+    }
+
+    .solidarity-form .btn-accent {
+      background: var(--accent);
+      color: white;
+    }
+
+    .solidarity-form .btn-accent:hover {
+      background: var(--accent-dark);
+    }
+
+    .solidarity-form .btn-warning {
+      background: var(--challenge);
+      color: #333;
+    }
+
+    .solidarity-form .btn-warning:hover {
+      background: var(--challenge-dark);
+      color: white;
+    }
+
+    .solidarity-form .btn-secondary {
+      background: var(--volunteering);
+      color: white;
+    }
+
+    .solidarity-form .btn-secondary:hover {
+      background: var(--volunteering-dark);
+    }
+
+    /* Estilos para las tarjetas de actividad en el modal de administración */
+    .activity-cards-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+      gap: 1rem;
+    }
+
+    .activity-card {
+      background: #fff;
+      border-radius: 12px;
+      padding: 1.5rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      transition: transform 0.2s;
+    }
+
+    .activity-card:hover {
+      transform: translateY(-4px);
+    }
+
+    .activity-card img {
+      width: 50px;
+      height: 50px;
+      margin-bottom: 1rem;
+    }
+
+    /* Estilos para la lista de miembros */
+    .members-list {
+      max-height: 300px;
+      overflow-y: auto;
+      margin-bottom: 1.5rem;
+    }
+
+    .member-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.8rem;
+      background: #f9fafb;
+      border-radius: 8px;
+      margin-bottom: 0.7rem;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .member-info {
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+    }
+
+    .member-avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      object-fit: cover;
+    }
+
+    .member-name {
+      font-weight: 500;
+      color: #2d3748;
+    }
+
+    .role-badge {
+      padding: 0.3rem 0.6rem;
+      border-radius: 12px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .role-badge.founder {
+      background: #4a6fa5;
+      color: white;
+    }
+
+    .role-badge.coordinator {
+      background: #3da58a;
+      color: white;
+    }
+
+    .role-badge.admin {
+      background: #166088;
+      color: white;
+    }
+
+    /* Estilos para los movimientos recientes */
+    #recentActivities {
+      max-height: 300px;
+      overflow-y: auto;
+    }
+
+    .activity-item {
+      display: flex;
+      align-items: center;
+      padding: 0.8rem;
+      background: #f9fafb;
+      border-radius: 8px;
+      margin-bottom: 0.7rem;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .activity-item i {
+      font-size: 1.5rem;
+      color: var(--primary);
+      flex-shrink: 0;
+    }
+
+    .activity-item div {
+      flex-grow: 1;
+      text-align: left;
+    }
+
+    .activity-item .badge {
+      background: var(--primary);
+      color: white;
+      padding: 0.4rem 0.8rem;
+      border-radius: 10px;
+      font-size: 0.85rem;
+    }
+
+    /* Tabs estilo myteams */
+    .admin-tabs {
+      display: flex;
+      gap: 0.5rem;
+      margin-bottom: 1.2rem;
+      border-bottom: 2px solid #e2e8f0;
+      overflow-x: auto;
+      scrollbar-width: none;
+    }
+    .admin-tabs::-webkit-scrollbar { display: none; }
+    .admin-tab {
+      flex: none;
+      padding: 0.7rem 1.2rem;
+      border-radius: 8px 8px 0 0;
+      background: none;
+      color: #4a5568;
+      font-weight: 600;
+      border: none;
+      border-bottom: 2px solid transparent;
+      cursor: pointer;
+      transition: background 0.2s, color 0.2s, border-bottom 0.2s;
+    }
+    .admin-tab.active {
+      background: #fff;
+      color: var(--primary);
+      border-bottom: 2px solid var(--primary);
+      box-shadow: 0 2px 8px #4a6fa511;
+      z-index: 2;
+    }
+
+    /* Scroll interno para el formulario de configuración */
+    #settingsTab .solidarity-form {
+      max-height: 60vh;
+      overflow-y: auto;
+      padding-right: 1rem;
+    }
+    @media (max-width: 600px) {
+      #settingsTab .solidarity-form {
+        max-height: 45vh;
+        padding: 1rem 0.5rem;
+      }
+    }
   </style>
 {% endblock %}
 
@@ -408,6 +859,166 @@
       <div class="activities-grid" id="volunteeringGrid"></div>
     </section>
   </div>
+
+  <!-- Modal de administración para actividades (puedes ponerlo justo antes de cerrar el main-container o al final del block content) -->
+  <div class="admin-modal" id="adminModal">
+    <div class="admin-modal-content">
+      <button class="close-admin-modal" id="closeAdminModal">&times;</button>
+      <h2 id="adminModalTitle">Administrar Actividad</h2>
+      <div class="admin-tabs">
+        <button class="admin-tab active" data-tab="overview">Resumen</button>
+        <button class="admin-tab" data-tab="crearactividad">Crear actividad</button>
+        <button class="admin-tab" data-tab="members">Miembros</button>
+        <button class="admin-tab" data-tab="settings">Configuración</button>
+        <button class="admin-tab" data-tab="content">Contenido</button>
+      </div>
+      <div class="admin-tab-content active" id="overviewTab">
+        <div class="stats-grid">
+          <div class="stat-card">
+            <div class="stat-value" id="membersCount">0</div>
+            <div class="stat-label">Miembros</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-value" id="activitiesCount">0</div>
+            <div class="stat-label">Actividades</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-value" id="impactPoints">0</div>
+            <div class="stat-label">Puntos de Impacto</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-value" id="beneficiariesCount">0</div>
+            <div class="stat-label">Beneficiarios</div>
+          </div>
+        </div>
+        <h3>Progreso de la actividad</h3>
+        <div class="progress-bar">
+          <div class="progress-fill" id="communityProgress" style="width: 0%"></div>
+        </div>
+        <div class="progress-info">
+          <span id="progressPercent">0% completado</span>
+          <span id="progressAmount">0 € de 0 €</span>
+        </div>
+      </div>
+      <div class="admin-tab-content" id="crearactividadTab">
+        <h3 style="margin-bottom:1.5rem;">Crear nueva actividad</h3>
+        <div class="activity-cards-grid">
+          <div class="activity-card" style="background:linear-gradient(135deg,#e3f0ff 0%,#f8fafc 100%);border-radius:14px;padding:1.7rem 1.5rem;display:flex;flex-direction:column;align-items:center;box-shadow:0 4px 16px #4a6fa511;min-width:170px;max-width:320px;">
+            <div style="background:#4a6fa5;padding:1rem;border-radius:50%;margin-bottom:1rem;box-shadow:0 2px 8px #4a6fa522;">
+              <img src="https://cdn-icons-png.flaticon.com/512/833/833472.png" alt="Causa" style="width:44px;height:44px;">
+            </div>
+            <button class="btn btn-primary btn-lg" id="createCauseBtnTab" style="width:100%;margin-bottom:0.7rem;">
+              <i class="fas fa-heart"></i> Crear Causa
+            </button>
+            <span style="color:#4a6fa5;font-size:1em;text-align:center;">Apoya una causa solidaria</span>
+          </div>
+          <div class="activity-card" style="background:linear-gradient(135deg,#e6fff7 0%,#f8fafc 100%);border-radius:14px;padding:1.7rem 1.5rem;display:flex;flex-direction:column;align-items:center;box-shadow:0 4px 16px #4fc3a122;min-width:170px;max-width:320px;">
+            <div style="background:#4fc3a1;padding:1rem;border-radius:50%;margin-bottom:1rem;box-shadow:0 2px 8px #4fc3a122;">
+              <img src="https://cdn-icons-png.flaticon.com/512/3079/3079165.png" alt="Tarea" style="width:44px;height:44px;">
+            </div>
+            <button class="btn btn-accent btn-lg" id="createTaskBtnTab" style="width:100%;margin-bottom:0.7rem;background:#4fc3a1;color:#fff;">
+              <i class="fas fa-tasks"></i> Crear Tarea
+            </button>
+            <span style="color:#249e7a;font-size:1em;text-align:center;">Organiza tareas concretas</span>
+          </div>
+          <div class="activity-card" style="background:linear-gradient(135deg,#fffbe6 0%,#fffdf7 100%);border-radius:14px;padding:1.7rem 1.5rem;display:flex;flex-direction:column;align-items:center;box-shadow:0 4px 16px #ffe06644;min-width:170px;max-width:320px;">
+            <div style="background:#ffe066;padding:1rem;border-radius:50%;margin-bottom:1rem;box-shadow:0 2px 8px #ffe06688;">
+              <img src="https://cdn-icons-png.flaticon.com/512/2278/2278992.png" alt="Reto" style="width:44px;height:44px;">
+            </div>
+            <button class="btn btn-warning btn-lg" id="createChallengeBtnTab" style="width:100%;margin-bottom:0.7rem;background:#ffe066;color:#a67c00;border:none;">
+              <i class="fas fa-trophy"></i> Crear Reto
+            </button>
+            <span style="color:#a67c00;font-size:1em;text-align:center;">Lanza un reto divertido</span>
+          </div>
+          <div class="activity-card" style="background:linear-gradient(135deg,#e6faff 0%,#f8fafc 100%);border-radius:14px;padding:1.7rem 1.5rem;display:flex;flex-direction:column;align-items:center;box-shadow:0 4px 16px #4fc3a122;min-width:170px;max-width:320px;">
+            <div style="background:#00bcd4;padding:1rem;border-radius:50%;margin-bottom:1rem;box-shadow:0 2px 8px #00bcd422;">
+              <img src="https://cdn-icons-png.flaticon.com/512/616/616494.png" alt="Voluntariado" style="width:44px;height:44px;">
+            </div>
+            <button class="btn btn-info btn-lg" id="createVolunteeringBtnTab" style="width:100%;margin-bottom:0.7rem;background:#00bcd4;color:#fff;border:none;">
+              <i class="fas fa-hands-helping"></i> Crear Voluntariado
+            </button>
+            <span style="color:#249e7a;font-size:1em;text-align:center;">Convoca voluntariado</span>
+          </div>
+        </div>
+      </div>
+      <div class="admin-tab-content" id="membersTab">
+        <h3>Miembros actuales</h3>
+        <div class="members-list" id="membersList"></div>
+        <h3 style="margin-top: 2rem;">Invitar nuevos miembros</h3>
+        <div class="invite-form">
+          <input type="email" id="inviteEmail" placeholder="Correo electrónico del usuario a invitar">
+          <select id="inviteRole" class="form-control">
+            <option value="member">Miembro</option>
+            <option value="coordinator">Coordinador</option>
+            <option value="founder">Fundador</option>
+          </select>
+          <button class="btn btn-primary" id="sendInviteBtn" style="margin-top: 1rem;">
+            <i class="fas fa-paper-plane"></i> Enviar Invitación
+          </button>
+        </div>
+      </div>
+      <div class="admin-tab-content" id="settingsTab">
+        <form id="activitySettingsForm" class="solidarity-form">
+          <h3 class="form-section-title"><i class="fas fa-cog"></i> Configuración de la actividad</h3>
+          <div class="form-grid">
+            <div class="form-group">
+              <label for="editActivityName"><i class="fas fa-users"></i> Nombre de la actividad</label>
+              <input type="text" id="editActivityName" name="editActivityName" required>
+            </div>
+            <div class="form-group">
+              <label for="editActivityCategory"><i class="fas fa-layer-group"></i> Categoría</label>
+              <select id="editActivityCategory" name="editActivityCategory" required>
+                <option value="medio_ambiente">Medio Ambiente</option>
+                <option value="educacion">Educación</option>
+                <option value="salud">Salud</option>
+                <option value="animales">Animales</option>
+                <option value="comunidad">Comunidad</option>
+                <option value="otros">Otros</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="editActivityPrivacy"><i class="fas fa-lock"></i> Privacidad</label>
+              <select id="editActivityPrivacy" name="editActivityPrivacy" required>
+                <option value="public">Pública</option>
+                <option value="private">Privada</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="editActivityGoal"><i class="fas fa-euro-sign"></i> Meta de recaudación (€)</label>
+              <input type="number" id="editActivityGoal" name="editActivityGoal" min="0">
+            </div>
+            <div class="form-group">
+              <label for="editActivityTags"><i class="fas fa-tags"></i> Etiquetas (separadas por comas)</label>
+              <input type="text" id="editActivityTags" name="editActivityTags">
+            </div>
+            <div class="form-group form-group-full">
+              <label for="editActivityDesc"><i class="fas fa-align-left"></i> Descripción</label>
+              <textarea id="editActivityDesc" name="editActivityDesc" rows="4" required></textarea>
+            </div>
+            <div class="form-group form-group-full">
+              <label for="editActivityPhoto"><i class="fas fa-image"></i> Foto/logo de la actividad</label>
+              <input type="file" id="editActivityPhoto" name="editActivityPhoto" accept="image/*">
+              <img id="editActivityPhotoPreview" style="max-width: 200px; margin-top: 1rem; display: none; border-radius: 12px;">
+            </div>
+          </div>
+          <div class="form-actions">
+            <button type="submit" class="btn btn-primary">
+              <i class="fas fa-save"></i> Guardar Cambios
+            </button>
+          </div>
+        </form>
+      </div>
+      <div class="admin-tab-content" id="contentTab">
+        <h3>Mensaje para la actividad</h3>
+        <textarea id="activityMessage" rows="5" style="width: 100%; margin-bottom: 1rem;"></textarea>
+        <button class="btn btn-primary" id="saveMessageBtn">
+          <i class="fas fa-bullhorn"></i> Publicar Mensaje
+        </button>
+        <h3 style="margin-top: 2rem;">Movimientos recientes</h3>
+        <div id="recentActivities"></div>
+      </div>
+    </div>
+  </div>
 {% endblock %}
 
 {% block scripts %}
@@ -417,7 +1028,6 @@
   <script src="/js/modules/tasks-renderer.js"></script>
   <script src="/js/modules/challenges-renderer.js"></script>
   <script src="/js/modules/volunteering-renderer.js"></script>
-  <script src="/js/modules/share-system.js"></script>
   <script>
     document.addEventListener('DOMContentLoaded', async function() {
       // --- Funciones auxiliares básicas ---
@@ -1138,7 +1748,7 @@
             }, 200);
           } else if (type === 'volunteering' && window.volunteeringRenderer) {
             // Asegurarse de que el grid tenga las clases CSS correctas
-            if (!grid.classList.contains('volunteering-grid')) {
+            if (! grid.classList.contains('volunteering-grid')) {
               grid.classList.add('volunteering-grid');
             }
             
@@ -1430,8 +2040,8 @@
               </div>
             </div>
             ${causeInfo}
-            <div class="content-section" style="margin-bottom:2.2rem; text-align:left;">
-              <h3 class="content-title" style="font-size:1.2rem; font-weight:600; color:var(--primary); margin-bottom:0.9rem; display:flex; align-items:center; gap:0.7rem; text-align:left;">
+            <div class="content-section" style="margin-bottom:2.2rem;">
+              <h3 class="content-title" style="font-size:1.2rem; font-weight:600; color:var(--primary); margin-bottom:0.9rem; display:flex; align-items:center; gap:0.7rem;">
                 <i class="fas fa-align-left"></i> Resumen
               </h3>
               <div class="content-text" style="line-height:1.7; color:#4b5563; font-size:1.05rem; text-align:left;">
@@ -1439,8 +2049,8 @@
               </div>
             </div>
             <div class="modal-task-content" style="margin-top:0;">
-              <div class="content-section" style="margin-bottom:2.2rem; text-align:left;">
-                <h3 class="content-title" style="font-size:1.2rem; font-weight:600; color:var(--primary); margin-bottom:0.9rem; display:flex; align-items:center; gap:0.7rem; text-align:left;">
+              <div class="content-section" style="margin-bottom:2.2rem;">
+                <h3 class="content-title" style="font-size:1.2rem; font-weight:600; color:var(--primary); margin-bottom:0.9rem; display:flex; align-items:center; gap:0.7rem;">
                   <i class="fas fa-info-circle"></i> Descripción completa
                 </h3>
                 <div class="content-text" style="line-height:1.7; color:#4b5563; font-size:1.05rem; text-align:left;">
@@ -1958,6 +2568,156 @@
 
       // Limpiar al cambiar de ruta (SPA)
       window.addEventListener('beforeunload', cleanUpModals);
+
+      // --- ADMIN - Manejo de actividades (botones en tarjetas) ---
+      document.querySelectorAll('.admin-activity-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+          const activityType = btn.getAttribute('data-activity-type');
+          const activityId = btn.getAttribute('data-activity-id');
+          let activity = null;
+          if (activityType === 'cause') {
+            activity = window.causes?.find(c => c.id == activityId);
+          } else if (activityType === 'task') {
+            activity = window.tasks?.find(t => t.id == activityId);
+          } else if (activityType === 'challenge') {
+            activity = window.challenges?.find(c => c.id == activityId);
+          } else if (activityType === 'volunteering') {
+            activity = window.volunteerings?.find(v => v.id == activityId);
+          }
+          if (activity) openAdminActivityModal(activity);
+        });
+      });
+
+      window.openAdminActivityModal = async function(activity) {
+        // Elimina cualquier mensaje de error anterior
+        const oldError = document.getElementById('adminModalError');
+        if (oldError) oldError.remove();
+
+        // Tabs estilo myteams
+        document.querySelectorAll('.admin-tab').forEach(tab => tab.classList.remove('active'));
+        document.querySelectorAll('.admin-tab-content').forEach(tab => tab.classList.remove('active'));
+        document.querySelector('.admin-tab[data-tab="overview"]').classList.add('active');
+        document.getElementById('overviewTab').classList.add('active');
+
+        // Título
+        document.getElementById('adminModalTitle').textContent = `Administrar ${activity.title || 'Causa'}`;
+
+        // Resumen
+        document.getElementById('membersCount').textContent = activity.members_count || activity.members?.length || '1';
+        document.getElementById('activitiesCount').textContent = '1';
+        document.getElementById('impactPoints').textContent = activity.points || activity.impact_points || '0';
+        document.getElementById('beneficiariesCount').textContent = activity.beneficiaries || '0';
+        let percent = 0, goal = 0, raised = 0;
+        if (activity.goal && activity.raised) {
+          goal = activity.goal;
+          raised = activity.raised;
+          percent = Math.min(100, Math.round((raised / goal) * 100));
+        }
+        document.getElementById('communityProgress').style.width = percent + '%';
+        document.getElementById('progressPercent').textContent = percent + '% completado';
+        document.getElementById('progressAmount').textContent = `${raised} € de ${goal} €`;
+
+        // Miembros (puedes mejorar la consulta si quieres más info)
+        const membersList = document.getElementById('membersList');
+        membersList.innerHTML = '<div style="color:#888;">Cargando miembros...</div>';
+        let members = [];
+        if (activity.userRole === 'founder' || activity.userRole === 'admin' || activity.userRole === 'coordinator') {
+          const { data } = await supabase.from('causes_members').select('user_id, role, status').eq('cause_id', activity.id);
+          members = data || [];
+        }
+        membersList.innerHTML = members.length
+          ? members.map(m => `<div class="member-item"><span class="member-name">${m.user_id}</span><span class="role-badge ${m.role}">${m.role}</span></div>`).join('')
+          : '<div style="color:#888;">Sin miembros</div>';
+
+        // Configuración (estructura igual a crear causa, scroll interno)
+        const form = document.getElementById('activitySettingsForm');
+        form.reset();
+        form.scrollTop = 0;
+        form.querySelector('#editActivityName').value = activity.title || '';
+        form.querySelector('#editActivityCategory').value = activity.category || '';
+        form.querySelector('#editActivityPrivacy').value = activity.privacy || 'public';
+        form.querySelector('#editActivityGoal').value = activity.goal || '';
+        form.querySelector('#editActivityTags').value = activity.tags || '';
+        form.querySelector('#editActivityDesc').value = activity.description || '';
+        if (activity.photo_url) {
+          form.querySelector('#editActivityPhotoPreview').src = activity.photo_url;
+          form.querySelector('#editActivityPhotoPreview').style.display = 'block';
+        } else {
+          form.querySelector('#editActivityPhotoPreview').style.display = 'none';
+        }
+
+        // Imagen editable
+        form.querySelector('#editActivityPhoto').onchange = function(e) {
+          const file = e.target.files[0];
+          if (file) {
+            const reader = new FileReader();
+            reader.onload = function(ev) {
+              form.querySelector('#editActivityPhotoPreview').src = ev.target.result;
+              form.querySelector('#editActivityPhotoPreview').style.display = 'block';
+            };
+            reader.readAsDataURL(file);
+          }
+        };
+
+        // Guardar cambios en Supabase
+        form.onsubmit = async function(e) {
+          e.preventDefault();
+          const updates = {
+            title: form.querySelector('#editActivityName').value,
+            category: form.querySelector('#editActivityCategory').value,
+            privacy: form.querySelector('#editActivityPrivacy').value,
+            goal: Number(form.querySelector('#editActivityGoal').value) || 0,
+            tags: form.querySelector('#editActivityTags').value,
+            description: form.querySelector('#editActivityDesc').value
+          };
+          // Imagen: solo si se selecciona una nueva
+          const fileInput = form.querySelector('#editActivityPhoto');
+          if (fileInput.files[0]) {
+            // Aquí deberías subir la imagen a Supabase Storage y guardar la URL
+            // Este ejemplo solo muestra la preview, implementa el upload real según tu backend
+            showToast('Subida de imagen no implementada en este ejemplo', 'info');
+          }
+          const { error } = await supabase.from('causes').update(updates).eq('id', activity.id);
+          if (!error) {
+            showToast('Causa actualizada correctamente');
+            document.getElementById('adminModal').classList.remove('active');
+            document.body.style.overflow = '';
+            // Opcional: recarga actividades
+            if (typeof loadUserActivities === 'function') loadUserActivities();
+          } else {
+            showToast('Error al guardar cambios', 'error');
+          }
+        };
+
+        // Mensaje/contenido
+        document.getElementById('activityMessage').value = activity.message || '';
+
+        // Mostrar modal
+        document.getElementById('adminModal').classList.add('active');
+        document.body.style.overflow = 'hidden';
+
+        // Tabs navegación estilo myteams
+        document.querySelectorAll('.admin-tab').forEach(tab => {
+          tab.onclick = function() {
+            document.querySelectorAll('.admin-tab').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.admin-tab-content').forEach(c => c.classList.remove('active'));
+            tab.classList.add('active');
+            document.getElementById(tab.dataset.tab + 'Tab').classList.add('active');
+          };
+        });
+
+        // Cerrar modal
+        document.getElementById('closeAdminModal').onclick = function() {
+          document.getElementById('adminModal').classList.remove('active');
+          document.body.style.overflow = '';
+        };
+        document.getElementById('adminModal').onclick = function(e) {
+          if (e.target === this) {
+            this.classList.remove('active');
+            document.body.style.overflow = '';
+          }
+        };
+      };
     });
   </script>
 {% endblock %}
