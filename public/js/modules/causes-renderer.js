@@ -191,7 +191,7 @@ class CausesRenderer {
             <i class="fas fa-share-alt"></i> Compartir
           </button>
         </div>
-        <div class="share-section" id="shareSection"></div>
+        <div class="share-section" id="shareSection" style="text-align:left;"></div>
       </div>
     `;
 

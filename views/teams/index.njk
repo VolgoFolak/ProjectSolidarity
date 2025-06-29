@@ -577,7 +577,7 @@
     <div class="modal-content" style="background:#fff; border-radius:18px; max-width:800px; width:95vw; padding:2rem; box-shadow:0 8px 32px rgba(74,111,165,0.13); position:relative; max-height:90vh; overflow-y:auto;">
       <button id="closeTeamModal" style="position:absolute; top:1.5rem; right:1.5rem; background:none; border:none; font-size:1.8rem; color:#6b7280; cursor:pointer; transition:color 0.2s;" onmouseover="this.style.color='#4a6fa5'" onmouseout="this.style.color='#6b7280'">&times;</button>
       <div id="teamModalBody" style="padding:0.5rem;">
-        <!-- Contenido dinámico -->
+        <!-- Contenido dinámico generado por showTeamModal -->
       </div>
     </div>
   </div>
@@ -661,435 +661,229 @@
 {% endblock %}
 
 {% block scripts %}
-{{ super() }}
-<script src="/js/share-system.js"></script>
-<script>
-// Función para compartir (específica de cada sección)
-window.mostrarCompartir[SECTION] = function(itemId) {
-  window.universalShare('[SECTION_TYPE]', itemId);
-};
+  {{ super() }}
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="/js/modules/teams-renderer.js"></script>
+  <script src="/js/compartir.js"></script>
+  <script>
 
-// Función para mostrar modal (adaptar según cada sección)
-window.show[SECTION]Modal = function(itemId) {
-  const item = window.[GLOBAL_VAR]?.find(i => i.id == itemId);
-  if (!item) {
-    console.error('❌ [SECTION] no encontrado:', itemId);
-    return;
-  }
-  
-  // Tu lógica actual de mostrar modal
-  // ... código del modal ...
-  
-  // Agregar botón de compartir en el modal
-  const shareButton = `
-    <button class="btn btn-outline" onclick="mostrarCompartir[SECTION]('${item.id}')">
-      <i class="fas fa-share-alt"></i> Compartir
-    </button>
-  `;
-  
-  // Agregar a los botones de acción del modal
-};
+     // Obtén la sesión actual
+    let session = null;
+    (async () => {
+      const { data } = await supabase.auth.getSession();
+      session = data.session;
 
-document.addEventListener('DOMContentLoaded', function() {
-      // Variables para paginación
-      let currentPage = 1;
-      const itemsPerPage = 9;
-      let allTeams = [];
-      let filteredTeams = [];
-      
-      // Inicializar
-      loadTeams();
-      
-      // Modal para crear equipo
-      document.getElementById('create-team-btn').onclick = async function(e) {
-        e.preventDefault();
+      // Inicializa el renderer de equipos
+      window.initTeamsRenderer({
+        supabase,
+        session,
+        onShowTeamModal: showTeamModal
+      });
+    })();
+
+    // Función para mostrar el modal de detalle de comunidad (usa tu HTML COMPLETO)
+    async function showTeamModal(teamId) {
+      // 1. Carga la comunidad
+      const { data: team, error } = await supabase
+        .from('teams')
+        .select('*')
+        .eq('id', teamId)
+        .single();
+
+      if (error || !team) {
+        alert('Error al cargar la comunidad');
+        return;
+      }
+
+      window._currentTeam = team;
+
+      // 2. Prepara datos
+      const createdDate = new Date(team.created_at).toLocaleDateString('es-ES', {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric'
+      });
+      const recaudado = team.funds_raised || 0;
+      const meta = team.goal || 0;
+      const porcentaje = meta ? Math.min(100, Math.round((recaudado / meta) * 100)) : 0;
+      const beneficiaries = team.beneficiaries || 0;
+      const impact = team.impact || 0;
+      const category = getCategoryName(team.category);
+      const privacy = team.privacy === 'private' ? 'Privada' : 'Pública';
+
+      // 2.1 Cargar miembros de la comunidad con perfil
+      const { data: members } = await supabase
+        .from('team_members')
+        .select(`
+          id,
+          role,
+          joined_at,
+          profiles:user_id (
+            id,
+            username,
+            photo_url
+          )
+        `)
+        .eq('team_id', teamId)
+        .order('joined_at', { ascending: true });
+
+      // 3. Renderiza el modal (usa tu HTML COMPLETO, igual que ahora)
+      document.getElementById('teamModalBody').innerHTML = `
+  <div class="modal-cause-container">
+    <h1 class="modal-cause-title" style="font-size:2rem; font-weight:800; color:var(--primary); margin-bottom:2.7rem; text-align:center; width:100%;">${team.name}</h1>
+    <div class="modal-cause-header" style="display:flex; gap:2.5rem; margin-bottom:2.7rem;">
+      <div class="modal-cause-image-wrapper" style="flex:1; min-width:320px; height:300px; border-radius:12px; overflow:hidden; position:relative; box-shadow:0 4px 12px rgba(0,0,0,0.08);">
+        <div class="modal-cause-badge" style="top:1.5rem; left:1.5rem; right:auto; background:var(--accent); color:white; position:absolute; padding:0.5rem 1rem; border-radius:50px; font-size:0.9rem; font-weight:600; display:flex; align-items:center; gap:0.6rem; box-shadow:0 2px 8px rgba(0,0,0,0.1); z-index:2;">
+          <i class="fas fa-users"></i> Comunidad
+        </div>
+        ${team.privacy === 'private' ? `
+        <div class="modal-cause-badge" style="right:1.5rem; left:auto; top:1.5rem; background:var(--gray); color:var(--primary-dark); position:absolute; padding:0.5rem 1rem; border-radius:50px; font-size:0.9rem; font-weight:600; display:flex; align-items:center; gap:0.6rem; box-shadow:0 2px 8px rgba(0,0,0,0.1); z-index:2;">
+          <i class="fas fa-lock"></i> Privada
+        </div>` : ''}
+        <img class="modal-cause-image" src="${team.photo || 'https://via.placeholder.com/350x180?text=Comunidad'}"
+             alt="Imagen de la comunidad ${team.name}"
+             style="width:100%;height:100%;object-fit:cover;"
+             onerror="this.src='https://via.placeholder.com/350x180?text=Comunidad'">
+      </div>
+      <div class="modal-cause-info" style="flex:1.5; display:flex; flex-direction:column; justify-content:flex-start;">
+        <div class="modal-cause-progress-container" style="background:#f8fafc; padding:1.2rem; border-radius:12px; margin-bottom:1.2rem; border:1px solid #e5e7eb;">
+          <div class="progress-bar">
+            <div class="progress-fill" style="width:${porcentaje}%"></div>
+          </div>
+          <div class="progress-info">
+            <span>${porcentaje}% completado</span>
+            <span>${recaudado} € de ${meta} €</span>
+          </div>
+        </div>
+        <div class="modal-cause-meta-grid" style="display:grid; grid-template-columns:1fr 1fr; gap:1.2rem; margin-bottom:1.5rem;">
+          <div class="meta-item">
+            <span class="meta-icon" style="color:var(--primary);font-size:1.1rem;width:1.5rem;text-align:center;"><i class="fas fa-users"></i></span>
+            <span style="color:#6b7280;font-size:0.95rem;">${members?.length || 0} miembros</span>
+          </div>
+          <div class="meta-item">
+            <span class="meta-icon" style="color:var(--primary);font-size:1.1rem;width:1.5rem;text-align:center;"><i class="fas fa-heart"></i></span>
+            <span style="color:#6b7280;font-size:0.95rem;">${beneficiaries} beneficiarios</span>
+          </div>
+          <div class="meta-item">
+            <span class="meta-icon" style="color:var(--primary);font-size:1.1rem;width:1.5rem;text-align:center;"><i class="fas fa-layer-group"></i></span>
+            <span style="color:#6b7280;font-size:0.95rem;">${category}</span>
+          </div>
+          <div class="meta-item">
+            <span class="meta-icon" style="color:var(--primary);font-size:1.1rem;width:1.5rem;text-align:center;"><i class="fas fa-calendar-alt"></i></span>
+            <span style="color:#6b7280;font-size:0.95rem;">${createdDate}</span>
+          </div>
+        </div>
+        <div class="points-notice" style="background:#f0f9ff; border-left:4px solid var(--accent); padding:1rem; border-radius:0 8px 8px 0; font-size:0.95rem; display:flex; align-items:center; gap:0.7rem;">
+          <i class="fas fa-bolt" style="color: var(--accent);"></i>
+          Participar en esta comunidad otorgará <strong>${impact} puntos</strong> de impacto
+        </div>
+      </div>
+    </div>
+    <div class="modal-cause-content" style="margin-top:0;">
+      <div class="content-section" style="margin-bottom:2.2rem;">
+        <h3 class="content-title" style="font-size:1.2rem; font-weight:600; color:var(--primary); margin-bottom:0.9rem; display:flex; align-items:center; gap:0.7rem;">
+          <i class="fas fa-quote-left"></i> Resumen
+        </h3>
+        <p class="content-text" style="line-height:1.7; color:#4b5563; font-size:1.05rem; margin-left:0; margin-right:0; text-align:justify;">${team.summary || 'Sin resumen.'}</p>
+      </div>
+      <div class="content-section" style="margin-bottom:2.2rem;">
+        <h3 class="content-title" style="font-size:1.2rem; font-weight:600; color:var(--primary); margin-bottom:0.9rem; display:flex; align-items:center; gap:0.7rem;">
+          <i class="fas fa-align-left"></i> Descripción
+        </h3>
+        <p class="content-text" style="line-height:1.7; color:#4b5563; font-size:1.05rem; margin-left:0; margin-right:0; text-align:justify;">${team.description || 'Esta comunidad no tiene descripción.'}</p>
+      </div>
+      <div class="content-section" style="margin-bottom:2.2rem;">
+        <h3 class="content-title" style="font-size:1.1rem;font-weight:600;color:var(--primary);margin-bottom:1rem;display:flex;align-items:center;gap:0.7rem;">
+          <i class="fas fa-users"></i> Miembros (${members?.length || 0})
+        </h3>
+        <div class="members-grid" style="display:grid;grid-template-columns:repeat(auto-fill, minmax(140px, 1fr));gap:1.2rem;">
+          ${
+            members && members.length > 0
+              ? members.map(member => `
+                <div class="member-card" style="display:flex;flex-direction:column;align-items:center;gap:0.5rem;">
+                  <img src="${member.profiles?.photo_url || ("https://ui-avatars.com/api/?name=" + encodeURIComponent(member.profiles?.username || "U") + "&background=4a6fa5&color=fff&size=64")}"
+                       alt="${member.profiles?.username || "Usuario"}"
+                       style="width:60px;height:60px;border-radius:50%;object-fit:cover;border:2px solid #e2e8f0;">
+                  <div style="text-align:center;">
+                    <div style="font-weight:600;font-size:0.95rem;">
+                      ${member.profiles?.username || 'Usuario'}
+                    </div>
+                    <div style="font-size:0.85rem;color:#6b7280;">
+                      ${member.role === 'admin' ? 'Administrador' : member.role === 'moderator' ? 'Moderador' : 'Miembro'}
+                    </div>
+                  </div>
+                </div>
+              `).join('')
+              : `<div style="text-align:center;color:#6b7280;grid-column:1/-1;padding:1rem;">
+                  Esta comunidad aún no tiene miembros
+                </div>`
+          }
+        </div>
+      </div>
+      <div class="content-section" style="margin-bottom:2.2rem;">
+        <h3 class="content-title" style="font-size:1.1rem;font-weight:600;color:var(--primary);margin-bottom:0.5rem;display:flex;align-items:center;gap:0.7rem;">
+          <i class="fas fa-info-circle"></i> Detalles adicionales
+        </h3>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;">
+          <div>
+            <p style="font-weight:600;color:var(--primary);margin-bottom:0.3rem;">Privacidad</p>
+            <p style="color:#6b7280;">${privacy}</p>
+          </div>
+          <div>
+            <p style="font-weight:600;color:var(--primary);margin-bottom:0.3rem;">Meta de recaudación</p>
+            <p style="color:#6b7280;">${meta} €</p>
+          </div>
+          <div>
+            <p style="font-weight:600;color:var(--primary);margin-bottom:0.3rem;">ID</p>
+            <p style="color:#6b7280;">${team.id}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="cause-actions" style="display:flex; gap:0.8rem; margin-top:2.2rem;">
+      <button class="btn btn-primary" style="flex:1;" id="joinTeamBtn">
+        <i class="fas fa-user-plus"></i> Unirse
+      </button>
+      <button class="btn btn-accent" style="flex:1;" id="shareTeamBtn">
+        <i class="fas fa-share-alt"></i> Compartir
+      </button>
+    </div>
+    <div class="share-section" id="shareSectionTeam"></div>
+  </div>
+`;
+
+      document.getElementById('teamModal').classList.add('active');
+      document.body.style.overflow = 'hidden';
+
+      // Botón Unirse (puedes mantener tu lógica actual)
+      document.getElementById('joinTeamBtn').onclick = async function() {
         const { data: { session } } = await supabase.auth.getSession();
-        if (session?.user) {
-          document.getElementById('createTeamModal').classList.add('active');
-          document.body.style.overflow = 'hidden';
-        } else {
-          document.getElementById('loginModal').classList.add('active');
+        if (!session?.user) {
+          alert('Debes iniciar sesión para unirte a la comunidad.');
+          return;
         }
+        alert('¡Solicitud de unión enviada! (Aquí puedes poner tu lógica real)');
       };
-      document.getElementById('closeCreateTeamModal').onclick = function() {
-        document.getElementById('createTeamModal').classList.remove('active');
+
+      // Botón Compartir
+      document.getElementById('shareTeamBtn').onclick = function() {
+        window.mostrarCompartirEquipo(team.id);
+      };
+
+      // Cerrar modal
+      document.getElementById('closeTeamModal').onclick = function() {
+        document.getElementById('teamModal').classList.remove('active');
         document.body.style.overflow = '';
-        document.getElementById('teamForm').reset();
-        document.getElementById('previewTeamImg').style.display = 'none';
-        document.getElementById('teamForm').style.display = 'block';
-        document.getElementById('afterCreateTeam').style.display = 'none';
+        window.history.pushState({}, '', '/teams');
       };
-      document.getElementById('createTeamModal').onclick = function(e) {
+      document.getElementById('teamModal').onclick = function(e) {
         if (e.target === this) {
           this.classList.remove('active');
           document.body.style.overflow = '';
-          document.getElementById('teamForm').style.display = 'block';
-          document.getElementById('afterCreateTeam').style.display = 'none';
         }
       };
-      document.getElementById('cancelModal').onclick = function() {
-        document.getElementById('loginModal').classList.remove('active');
-      };
-      document.getElementById('loginModal').onclick = function(e) {
-        if (e.target === this) this.classList.remove('active');
-      };
-      // Vista previa de imagen
-      document.getElementById('teamPhoto').addEventListener('change', function(e) {
-        const file = e.target.files[0];
-        const preview = document.getElementById('previewTeamImg');
-        if (file) {
-          const reader = new FileReader();
-          reader.onload = function(evt) {
-            preview.src = evt.target.result;
-            preview.style.display = 'block';
-          };
-          reader.readAsDataURL(file);
-        } else {
-          preview.src = '';
-          preview.style.display = 'none';
-        }
-      });
 
-      // Envío del formulario de creación de comunidad
-      document.getElementById('teamForm').addEventListener('submit', async function(e) {
-        e.preventDefault();
-        const { data: { session } } = await supabase.auth.getSession();
-        if (!session?.user) {
-          alert('Debes iniciar sesión para crear una comunidad');
-          return;
-        }
-
-        const name = document.getElementById('teamName').value;
-        const description = document.getElementById('teamDesc').value;
-        const summary = document.getElementById('teamSummary').value;
-        const category = document.getElementById('teamCategory').value;
-        const privacy = document.getElementById('teamPrivacy').value;
-        const tags = document.getElementById('teamTags').value
-          .split(',')
-          .map(t => t.trim())
-          .filter(Boolean);
-        const goal = document.getElementById('teamGoal').value || null;
-        // Si usas ciudad, país, beneficiarios:
-        // const city = document.getElementById('teamCity').value;
-        // const country = document.getElementById('teamCountry').value;
-        // const beneficiaries = parseInt(document.getElementById('teamBeneficiaries').value) || 0;
-
-        const fileInput = document.getElementById('teamPhoto');
-        let photo = null;
-
-        try {
-          // Subir imagen si existe
-          if (fileInput.files && fileInput.files[0]) {
-            const file = fileInput.files[0];
-            const fileExt = file.name.split('.').pop();
-            const fileName = `${Date.now()}_${Math.random().toString(36).substring(2)}.${fileExt}`;
-            const filePath = `teams/${fileName}`;
-            const { error: uploadError } = await supabase.storage
-              .from('teams')
-              .upload(filePath, file);
-            if (uploadError) throw uploadError;
-            const { data: urlData } = supabase.storage
-              .from('teams')
-              .getPublicUrl(filePath);
-            photo = urlData.publicUrl;
-          }
-
-          // Crear la comunidad
-          const { data, error } = await supabase
-            .from('teams')
-            .insert([{
-              name,
-              description,
-              summary,
-              category,
-              privacy,
-              tags,
-              photo,
-              goal,
-              creator_id: session.user.id,
-              created_at: new Date().toISOString()
-              // city,
-              // country,
-              // beneficiaries
-            }])
-            .select();
-
-          if (error) throw error;
-
-          // Añadir al usuario como admin de la comunidad
-          await supabase
-            .from('team_members')
-            .insert([{
-              team_id: data[0].id,
-              user_id: session.user.id,
-              role: 'admin',
-              joined_at: new Date().toISOString()
-            }]);
-
-          document.getElementById('teamForm').style.display = 'none';
-          document.getElementById('afterCreateTeam').style.display = 'block';
-          document.getElementById('inviteMembersBtn').href = `/teams/${data[0].id}/invite`;
-          await loadTeams(); // O la función que recarga los equipos desde Supabase
-
-        } catch (error) {
-          console.error('Error creating team:', error);
-          alert(`Error al crear la comunidad: ${error.message}`);
-        }
-      });
-
-      // Tabs de categorías
-      document.querySelectorAll('.tab').forEach(tab => {
-        tab.addEventListener('click', function() {
-          document.querySelector('.tab.active').classList.remove('active');
-          this.classList.add('active');
-          currentPage = 1; // Resetear a primera página
-          filterAndRenderTeams();
-        });
-      });
-
-      // Búsqueda
-      document.getElementById('search-input').addEventListener('input', function() {
-        currentPage = 1; // Resetear a primera página
-        filterAndRenderTeams();
-      });
-
-      // Paginación
-      document.getElementById('prevPage').addEventListener('click', function() {
-        if (currentPage > 1) {
-          currentPage--;
-          renderTeams();
-        }
-      });
-
-      document.getElementById('nextPage').addEventListener('click', function() {
-        const totalPages = Math.ceil(filteredTeams.length / itemsPerPage);
-        if (currentPage < totalPages) {
-          currentPage++;
-          renderTeams();
-        }
-      });
-
-      // Función para cargar equipos desde Supabase
-      async function loadTeams() {
-        try {
-          const { data: teams, error } = await supabase
-            .from('teams')
-            .select('*, team_members(user_id)')
-            .order('created_at', { ascending: false });
-
-          if (error) throw error;
-
-          allTeams = teams || [];
-          filteredTeams = [...allTeams];
-          currentPage = 1;
-          renderTeams();
-
-        } catch (error) {
-          console.error('Error loading teams:', error);
-          allTeams = [];
-          filteredTeams = [];
-          renderTeams();
-        }
-      }
-
-      // Función para cargar equipos del usuario
-      async function loadUserTeams() {
-        try {
-          // 1. Obtener los equipos donde el usuario es miembro
-          const { data: memberships, error: membershipsError } = await supabase
-            .from('team_members')
-            .select('team_id, role')
-            .eq('user_id', session.user.id);
-
-          if (membershipsError) throw membershipsError;
-
-          // 2. Obtener los equipos donde el usuario es el creador
-          const { data: createdTeams, error: createdTeamsError } = await supabase
-            .from('teams')
-            .select('*')
-            .eq('created_by', session.user.id); // Asegúrate de tener este campo en tu tabla teams
-
-          if (createdTeamsError) throw createdTeamsError;
-
-          // 3. Obtener los detalles de los equipos donde es miembro
-          const teamIds = memberships.map(m => m.team_id);
-          let { data: teams, error: teamsError } = await supabase
-            .from('teams')
-            .select('*')
-            .in('id', teamIds)
-            .order('created_at', { ascending: false });
-
-          if (teamsError) throw teamsError;
-
-          // 4. Combinar y eliminar duplicados (si el creador también es miembro)
-          let allTeams = [
-            ...teams.map(team => ({
-              ...team,
-              user_role: memberships.find(m => m.team_id === team.id)?.role,
-              is_admin: memberships.find(m => m.team_id === team.id)?.role === 'admin',
-              is_moderator: memberships.find(m => m.team_id === team.id)?.role === 'moderator'
-            })),
-            ...createdTeams
-              .filter(team => !teamIds.includes(team.id))
-              .map(team => ({
-                ...team,
-                user_role: 'founder',
-                is_admin: true,
-                is_moderator: false
-              }))
-          ]; // <-- CORRECTO
-
-          filteredTeams = [...allTeams];
-          currentPage = 1;
-          renderTeams();
-
-        } catch (error) {
-          console.error('Error loading user teams:', error);
-          showEmptyState();
-        }
-      }
-
-      // Función para filtrar equipos
-      function filterAndRenderTeams() {
-        const activeFilter = document.querySelector('.tab.active').getAttribute('data-filter');
-        const searchTerm = document.getElementById('search-input').value.toLowerCase();
-        
-        filteredTeams = allTeams.filter(team => {
-          // Filtrar por categoría
-          if (activeFilter !== 'all' && team.category !== activeFilter) {
-            return false;
-          }
-          
-          // Filtrar por búsqueda
-          if (searchTerm) {
-            const matchesName = team.name && team.name.toLowerCase().includes(searchTerm);
-            const matchesDesc = team.description && team.description.toLowerCase().includes(searchTerm);
-            const matchesTags = team.tags && team.tags.some(tag => tag && tag.toLowerCase().includes(searchTerm));
-            return matchesName || matchesDesc || matchesTags;
-          }
-          
-          return true;
-        });
-        
-        renderTeams();
-      }
-
-      // Función para renderizar equipos con paginación
-      async function renderTeams() {
-        const { data: { session } } = await supabase.auth.getSession();
-        const userId = session?.user?.id;
-
-        const startIdx = (currentPage - 1) * itemsPerPage;
-        const endIdx = startIdx + itemsPerPage;
-        const paginatedTeams = filteredTeams.slice(startIdx, endIdx);
-
-        const container = document.getElementById('teamsGrid');
-        container.className = 'teams-grid-classic';
-        container.innerHTML = '';
-
-        if (paginatedTeams.length === 0) {
-          container.innerHTML = `
-            <div class="empty-state">
-              <i class="fas fa-users-slash"></i>
-              <h3>No se encontraron comunidades</h3>
-              <p>No hay comunidades que coincidan con tu búsqueda.</p>
-              <button id="createTeamEmptyBtn" class="btn btn-primary">
-                <i class="fas fa-plus"></i> Crear primera comunidad
-              </button>
-            </div>
-          `;
-          document.getElementById('createTeamEmptyBtn').addEventListener('click', () => {
-            document.getElementById('create-team-btn').click();
-          });
-          document.getElementById('pagination').style.display = 'none';
-          return;
-        }
-
-        document.getElementById('pagination').style.display = 'flex';
-
-        paginatedTeams.forEach(team => {
-          // Calcula badges y tags
-          const membersCount = team.members_count || 0;
-          const tagsHtml = team.tags?.length
-            ? `<div class="team-tags-classic" style="margin-bottom:0.8em;">${team.tags.slice(0, 4).map(tag => `<span class="team-tag-classic">${tag}</span>`).join('')}${team.tags.length > 4 ? `<span class="team-tag-classic tag-more">+${team.tags.length - 4}</span>` : ''}</div>`
-            : '';
-          const isTrending = membersCount >= 20 || (team.impact || 0) >= 1000;
-          const recaudado = team.funds_raised || 0;
-          const meta = team.goal || 1000;
-          const porcentaje = meta ? Math.min(100, Math.round((recaudado / meta) * 100)) : 0;
-          let badgePrivada = team.privacy === 'private'
-            ? `<div class="team-badge-classic" style="top:1rem;right:1rem;background:var(--gray);color:var(--primary-dark);"><i class="fas fa-lock"></i> Privada</div>`
-            : '';
-          let badgeTrending = isTrending
-            ? `<div class="team-badge-classic" style="top:${team.privacy === 'private' ? '3.2rem' : '1rem'};right:1rem;background:#ffe600;color:#b8860b;"><i class="fas fa-arrow-trend-up"></i> Trending</div>`
-            : '';
-
-          // ¿Es miembro?
-          const isMember = team.team_members?.some(m => m.user_id === userId);
-
-          const joinBtnHtml = isMember
-            ? `<button class="btn btn-outline join-team-btn" data-team-id="${team.id}" disabled>
-                <i class="fas fa-user-check"></i> Miembro
-              </button>`
-            : `<button class="btn btn-accent join-team-btn" data-team-id="${team.id}">
-                <i class="fas fa-user-plus"></i> Unirse
-              </button>`;
-
-          const card = document.createElement('div');
-          card.className = 'team-card-classic';
-          card.setAttribute('data-team-id', team.id);
-          card.innerHTML = `
-            <div class="team-image-classic">
-              <img src="${team.photo || 'https://via.placeholder.com/350x180?text=Comunidad'}" alt="${team.name}">
-              <div class="team-badge-classic points" style="top:1rem;left:1rem;right:auto;background:var(--primary);color:#fff;">
-                <i class="fas fa-bolt"></i> +${team.impact || 0} pts
-              </div>
-              ${badgePrivada}${badgeTrending}
-            </div>
-            <div class="team-content-classic">
-              <h3>${team.name}</h3>
-              <p>${team.summary || 'Esta comunidad no tiene resumen aún.'}</p>
-              <div class="team-meta-classic" style="margin-bottom:1em;">
-                <div class="meta-item-classic"><i class="fas fa-layer-group"></i> ${getCategoryName(team.category)}</div>
-                <div class="meta-item-classic"><i class="fas fa-tasks"></i> ${team.activities_count || 0} actividades</div>
-                <div class="meta-item-classic"><i class="fas fa-heart"></i> ${team.beneficiaries || 0} beneficiarios</div>
-                <div class="meta-item-classic">
-                  <i class="fas fa-users"></i> <span class="members-count-classic">${membersCount}</span> miembros
-                </div>
-              </div>
-              ${tagsHtml}
-              <div class="team-progress-classic" style="margin-bottom:1.2em;">
-                <div class="progress-bar">
-                  <div class="progress-fill" style="width:${porcentaje}%;">${porcentaje > 10 ? porcentaje + '%' : ''}</div>
-                </div>
-                <div class="progress-info">
-                  <span>${porcentaje}% completado</span>
-                  <span>${recaudado} € de ${meta} €</span>
-                </div>
-              </div>
-              <div class="team-actions-classic" style="margin-top:1.2em;">
-                <button class="btn btn-primary btn-vermas-team" data-team-id="${team.id}">
-                  <i class="fas fa-eye"></i> Ver más
-                </button>
-                ${joinBtnHtml}
-              </div>
-            </div>
-          `;
-          container.appendChild(card);
-        });
-        
-        updatePagination();
-      }
-      
-      // Función para actualizar controles de paginación
-      function updatePagination() {
-        const totalPages = Math.max(1, Math.ceil(filteredTeams.length / itemsPerPage));
-        document.getElementById('pageInfo').textContent = `${currentPage} / ${totalPages}`;
-        document.getElementById('prevPage').disabled = currentPage <= 1;
-        document.getElementById('nextPage').disabled = currentPage >= totalPages;
-      }
-      
-      // Función auxiliar para nombres de categoría
+      // Función auxiliar para nombres de categoría (puedes moverla a un módulo si quieres)
       function getCategoryName(category) {
         const categories = {
           'medio_ambiente': 'Medio Ambiente',
@@ -1101,421 +895,185 @@ document.addEventListener('DOMContentLoaded', function() {
         };
         return categories[category] || 'General';
       }
+    }
 
-      // Crear causa asociada a una comunidad y actualizar contador
-      async function crearCausa({ title, description, teamId }) {
-        // 1. Crear la causa con el team_id
-        const { data, error } = await supabase
-          .from('causes')
-          .insert([{ title, description, team_id: teamId }]);
-        if (error) {
-          alert('Error al crear causa');
-          return;
-        }
-        // Ya no se llama a la función RPC para el contador
-      }
-
-      // Crear tarea asociada a una comunidad y actualizar contador
-      async function crearTarea({ title, description, teamId }) {
-        // 1. Crear la tarea con el team_id
-        await supabase
-          .from('tasks')
-          .insert([{ title, description, team_id: teamId }]);
-        // Ya no se llama a la función RPC para el contador
-      }
-
-      // Crear reto asociado a una comunidad y actualizar contador
-      async function crearReto({ title, description, teamId }) {
-        // 1. Crear el reto con el team_id
-        await supabase
-          .from('challenges')
-          .insert([{ title, description, team_id: teamId }]);
-        // Ya no se llama a la función RPC para el contador
-      }
-
-      // Crear voluntariado asociado a una comunidad y actualizar contador
-      async function crearVoluntariado({ title, description, teamId }) {
-        // 1. Crear el voluntariado con el team_id
-        await supabase
-          .from('volunteering')
-          .insert([{ title, description, team_id: teamId }]);
-        // Ya no se llama a la función RPC para el contador
-      }
-
-      // Crear o actualizar el contador de beneficiarios en una comunidad
-      async function actualizarBeneficiarios(teamId, delta) {
-        // 1. Actualizar el campo beneficiaries de la comunidad
-        await supabase
-          .from('teams')
-          .update({ beneficiaries: supabase.raw(`beneficiaries + ${delta}`) })
-          .eq('id', teamId);
-        // Ya no se llama a la función RPC para el contador
-      }
-
-      // Abrir modal de ver más comunidad
-      document.addEventListener('click', function(e) {
-        const verMasBtn = e.target.closest('.btn-vermas-team');
-        if (verMasBtn) {
-          e.preventDefault();
-          e.stopPropagation();
-          const teamId = verMasBtn.dataset.teamId;
-          showTeamModal(teamId);
-        }
-      });
-
-      // Función para mostrar el modal de detalle de comunidad
-      async function showTeamModal(teamId) {
-        // 1. Carga la comunidad
-        const { data: team, error } = await supabase
-          .from('teams')
-          .select('*')
-          .eq('id', teamId)
-          .single();
-
-        if (error || !team) {
-          alert('Error al cargar la comunidad');
-          return;
-        }
-
-        // 2. Prepara datos
-        const createdDate = new Date(team.created_at).toLocaleDateString('es-ES', {
-          year: 'numeric',
-          month: 'long',
-          day: 'numeric'
-        });
-        const recaudado = team.funds_raised || 0;
-        const meta = team.goal || 0;
-        const porcentaje = meta ? Math.min(100, Math.round((recaudado / meta) * 100)) : 0;
-        const beneficiaries = team.beneficiaries || 0;
-        const membersCount = team.members?.length || 1;
-        const impact = team.impact || 0;
-        const category = getCategoryName(team.category);
-        const privacy = team.privacy === 'private' ? 'Privada' : 'Pública';
-
-        // 2.1 Cargar miembros de la comunidad con perfil
-        const { data: members, error: membersError } = await supabase
-          .from('team_members')
-          .select(`
-            id,
-            role,
-            joined_at,
-            profiles:user_id (
-              id,
-              username,
-              photo_url
-            )
-          `)
-          .eq('team_id', teamId)
-          .order('joined_at', { ascending: true });
-
-        if (membersError) {
-          console.error('Error cargando miembros:', membersError);
-        }
-
-        // 3. Renderiza el modal (estructura igual que causas)
-        document.getElementById('teamModalBody').innerHTML = `
-          <div class="modal-cause-container">
-            <h1 class="modal-cause-title" style="font-size:2rem; font-weight:800; color:var(--primary); margin-bottom:2.7rem; text-align:center; width:100%;">${team.name}</h1>
-            <div class="modal-cause-header" style="display:flex; gap:2.5rem; margin-bottom:2.7rem;">
-              <div class="modal-cause-image-wrapper" style="flex:1; min-width:320px; height:300px; border-radius:12px; overflow:hidden; position:relative; box-shadow:0 4px 12px rgba(0,0,0,0.08);">
-                <div class="modal-cause-badge" style="top:1.5rem; left:1.5rem; right:auto; background:var(--accent); color:white; position:absolute; padding:0.5rem 1rem; border-radius:50px; font-size:0.9rem; font-weight:600; display:flex; align-items:center; gap:0.6rem; box-shadow:0 2px 8px rgba(0,0,0,0.1); z-index:2;">
-                  <i class="fas fa-users"></i> Comunidad
-                </div>
-                ${team.privacy === 'private' ? `
-                <div class="modal-cause-badge" style="right:1.5rem; left:auto; top:1.5rem; background:var(--gray); color:var(--primary-dark); position:absolute; padding:0.5rem 1rem; border-radius:50px; font-size:0.9rem; font-weight:600; display:flex; align-items:center; gap:0.6rem; box-shadow:0 2px 8px rgba(0,0,0,0.1); z-index:2;">
-                  <i class="fas fa-lock"></i> Privada
-                </div>` : ''}
-                <img class="modal-cause-image" src="${team.photo || 'https://via.placeholder.com/350x180?text=Comunidad'}"
-                     alt="Imagen de la comunidad ${team.name}"
-                     style="width:100%;height:100%;object-fit:cover;"
-                     onerror="this.src='https://via.placeholder.com/350x180?text=Comunidad'">
-              </div>
-              <div class="modal-cause-info" style="flex:1.5; display:flex; flex-direction:column; justify-content:flex-start;">
-                <div class="modal-cause-progress-container" style="background:#f8fafc; padding:1.2rem; border-radius:12px; margin-bottom:1.2rem; border:1px solid #e5e7eb;">
-                  <div class="progress-bar">
-                    <div class="progress-fill" style="width:${porcentaje}%"></div>
-                  </div>
-                  <div class="progress-info">
-                    <span>${porcentaje}% completado</span>
-                    <span>${recaudado} € de ${meta} €</span>
-                  </div>
-                </div>
-                <div class="modal-cause-meta-grid" style="display:grid; grid-template-columns:1fr 1fr; gap:1.2rem; margin-bottom:1.5rem;">
-                  <div class="meta-item">
-                    <span class="meta-icon" style="color:var(--primary);font-size:1.1rem;width:1.5rem;text-align:center;"><i class="fas fa-users"></i></span>
-                    <span style="color:#6b7280;font-size:0.95rem;">${members?.length || 0} miembros</span>
-                  </div>
-                  <div class="meta-item">
-                    <span class="meta-icon" style="color:var(--primary);font-size:1.1rem;width:1.5rem;text-align:center;"><i class="fas fa-heart"></i></span>
-                    <span style="color:#6b7280;font-size:0.95rem;">${beneficiaries} beneficiarios</span>
-                  </div>
-                  <div class="meta-item">
-                    <span class="meta-icon" style="color:var(--primary);font-size:1.1rem;width:1.5rem;text-align:center;"><i class="fas fa-layer-group"></i></span>
-                    <span style="color:#6b7280;font-size:0.95rem;">${category}</span>
-                  </div>
-                  <div class="meta-item">
-                    <span class="meta-icon" style="color:var(--primary);font-size:1.1rem;width:1.5rem;text-align:center;"><i class="fas fa-calendar-alt"></i></span>
-                    <span style="color:#6b7280;font-size:0.95rem;">${createdDate}</span>
-                  </div>
-                </div>
-                <div class="points-notice" style="background:#f0f9ff; border-left:4px solid var(--accent); padding:1rem; border-radius:0 8px 8px 0; font-size:0.95rem; display:flex; align-items:center; gap:0.7rem;">
-                  <i class="fas fa-bolt" style="color: var(--accent);"></i>
-                  Participar en esta comunidad otorgará <strong>${impact} puntos</strong> de impacto
-                </div>
-              </div>
-            </div>
-            <div class="modal-cause-content" style="margin-top:0;">
-              <div class="content-section" style="margin-bottom:2.2rem;">
-                <h3 class="content-title" style="font-size:1.2rem; font-weight:600; color:var(--primary); margin-bottom:0.9rem; display:flex; align-items:center; gap:0.7rem;">
-                  <i class="fas fa-quote-left"></i> Resumen
-                </h3>
-                <p class="content-text" style="line-height:1.7; color:#4b5563; font-size:1.05rem; margin-left:0; margin-right:0; text-align:justify;">${team.summary || 'Sin resumen.'}</p>
-              </div>
-              <div class="content-section" style="margin-bottom:2.2rem;">
-                <h3 class="content-title" style="font-size:1.2rem; font-weight:600; color:var(--primary); margin-bottom:0.9rem; display:flex; align-items:center; gap:0.7rem;">
-                  <i class="fas fa-align-left"></i> Descripción
-                </h3>
-                <p class="content-text" style="line-height:1.7; color:#4b5563; font-size:1.05rem; margin-left:0; margin-right:0; text-align:justify;">${team.description || 'Esta comunidad no tiene descripción.'}</p>
-              </div>
-              <div class="content-section" style="margin-bottom:2.2rem;">
-                <h3 class="content-title" style="font-size:1.1rem;font-weight:600;color:var(--primary);margin-bottom:1rem;display:flex;align-items:center;gap:0.7rem;">
-                  <i class="fas fa-users"></i> Miembros (${members?.length || 0})
-                </h3>
-                <div class="members-grid" style="display:grid;grid-template-columns:repeat(auto-fill, minmax(140px, 1fr));gap:1.2rem;">
-                  ${
-                    members && members.length > 0
-                      ? members.map(member => `
-                        <div class="member-card" style="display:flex;flex-direction:column;align-items:center;gap:0.5rem;">
-                          <img src="${member.profiles?.photo_url || ("https://ui-avatars.com/api/?name=" + encodeURIComponent(member.profiles?.username || "U") + "&background=4a6fa5&color=fff&size=64")}"
-                               alt="${member.profiles?.username || "Usuario"}"
-                               style="width:60px;height:60px;border-radius:50%;object-fit:cover;border:2px solid #e2e8f0;">
-                          <div style="text-align:center;">
-                            <div style="font-weight:600;font-size:0.95rem;">
-                              ${member.profiles?.username || 'Usuario'}
-                            </div>
-                            <div style="font-size:0.85rem;color:#6b7280;">
-                              ${member.role === 'admin' ? 'Administrador' : member.role === 'moderator' ? 'Moderador' : 'Miembro'}
-                            </div>
-                          </div>
-                        </div>
-                      `).join('')
-                      : `<div style="text-align:center;color:#6b7280;grid-column:1/-1;padding:1rem;">
-                          Esta comunidad aún no tiene miembros
-                        </div>`
-                  }
-                </div>
-              </div>
-              <div class="content-section" style="margin-bottom:2.2rem;">
-                <h3 class="content-title" style="font-size:1.1rem;font-weight:600;color:var(--primary);margin-bottom:0.5rem;display:flex;align-items:center;gap:0.7rem;">
-                  <i class="fas fa-info-circle"></i> Detalles adicionales
-                </h3>
-                <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;">
-                  <div>
-                    <p style="font-weight:600;color:var(--primary);margin-bottom:0.3rem;">Privacidad</p>
-                    <p style="color:#6b7280;">${privacy}</p>
-                  </div>
-                  <div>
-                    <p style="font-weight:600;color:var(--primary);margin-bottom:0.3rem;">Meta de recaudación</p>
-                    <p style="color:#6b7280;">${meta} €</p>
-                  </div>
-                  <div>
-                    <p style="font-weight:600;color:var(--primary);margin-bottom:0.3rem;">ID</p>
-                    <p style="color:#6b7280;">${team.id}</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="cause-actions" style="display:flex; gap:0.8rem; margin-top:2.2rem;">
-              <button class="btn btn-primary" style="flex:1;" id="joinTeamBtn">
-                <i class="fas fa-user-plus"></i> Unirse
-              </button>
-              <button class="btn btn-accent" style="flex:1;" id="shareTeamBtn">
-                <i class="fas fa-share-alt"></i> Compartir
-              </button>
-            </div>
-            <div class="share-section" id="shareSectionTeam"></div>
-          </div>
-        `;
-
-        document.getElementById('teamModal').classList.add('active');
-        document.body.style.overflow = 'hidden';
-
-        // Botón Unirse
-        document.getElementById('joinTeamBtn').onclick = async function() {
-          const { data: { session } } = await supabase.auth.getSession();
-          if (!session?.user) {
-            alert('Debes iniciar sesión para unirte a la comunidad.');
-            return;
-          }
-          alert('¡Solicitud de unión enviada! (Aquí puedes poner tu lógica real)');
-        };
-
-        // Botón Compartir
-        document.getElementById('shareTeamBtn').onclick = function() {
-          showShareOptionsTeam(team.id, team);
-        };
-      }
-
-      // Cerrar modal de ver más
-      document.getElementById('closeTeamModal').onclick = function() {
-        document.getElementById('teamModal').classList.remove('active');
-        document.body.style.overflow = '';
+    document.addEventListener('DOMContentLoaded', function() {
+  // --- MODAL CREAR COMUNIDAD ---
+  document.getElementById('create-team-btn').onclick = async function(e) {
+    e.preventDefault();
+    const { data: { session } } = await supabase.auth.getSession();
+    if (session?.user) {
+      document.getElementById('createTeamModal').classList.add('active');
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.getElementById('loginModal').classList.add('active');
+    }
+  };
+  document.getElementById('closeCreateTeamModal').onclick = function() {
+    document.getElementById('createTeamModal').classList.remove('active');
+    document.body.style.overflow = '';
+    document.getElementById('teamForm').reset();
+    document.getElementById('previewTeamImg').style.display = 'none';
+    document.getElementById('teamForm').style.display = 'block';
+    document.getElementById('afterCreateTeam').style.display = 'none';
+  };
+  document.getElementById('createTeamModal').onclick = function(e) {
+    if (e.target === this) {
+      this.classList.remove('active');
+      document.body.style.overflow = '';
+      document.getElementById('teamForm').style.display = 'block';
+      document.getElementById('afterCreateTeam').style.display = 'none';
+    }
+  };
+  document.getElementById('cancelModal').onclick = function() {
+    document.getElementById('loginModal').classList.remove('active');
+  };
+  document.getElementById('loginModal').onclick = function(e) {
+    if (e.target === this) this.classList.remove('active');
+  };
+  // Vista previa de imagen
+  document.getElementById('teamPhoto').addEventListener('change', function(e) {
+    const file = e.target.files[0];
+    const preview = document.getElementById('previewTeamImg');
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = function(evt) {
+        preview.src = evt.target.result;
+        preview.style.display = 'block';
       };
-      document.getElementById('teamModal').onclick = function(e) {
-        if (e.target === this) {
-          this.classList.remove('active');
-          document.body.style.overflow = '';
-        }
-      };
+      reader.readAsDataURL(file);
+    } else {
+      preview.src = '';
+      preview.style.display = 'none';
+    }
+  });
 
-      // Compartir comunidad (idéntico a tareas, botones con fondo de color y letras blancas)
-      function showShareOptionsTeam(teamId, teamObj) {
-        let team = teamObj || (window.allTeams || []).find(t => t.id == teamId);
-        if (!team) return;
-        const shareSection = document.getElementById('shareSectionTeam');
-        shareSection.innerHTML = `
-          <h3 class="share-title">
-            <i class="fas fa-share-alt"></i> Ayuda a difundir esta comunidad
-          </h3>
-          <div class="share-content">
-            <p class="share-text">
-              <span class="share-highlight">"${team.summary ? team.summary.substring(0, 120) + '...' : 'Únete a esta comunidad solidaria'}"</span><br><br>
-              Cada nuevo miembro suma impacto colectivo.
-            </p>
-            <div class="share-buttons">
-              <a href="#" class="share-btn share-btn-facebook" onclick="shareOnSocialTeam('facebook', '${team.id}')">
-                <i class="fab fa-facebook-f"></i> Facebook
-              </a>
-              <a href="#" class="share-btn share-btn-twitter" onclick="shareOnSocialTeam('twitter', '${team.id}')">
-                <i class="fab fa-twitter"></i> Twitter
-              </a>
-              <a href="#" class="share-btn share-btn-whatsapp" onclick="shareOnSocialTeam('whatsapp', '${team.id}')">
-                <i class="fab fa-whatsapp"></i> WhatsApp
-              </a>
-              <a href="#" class="share-btn share-btn-link" onclick="copyTeamLink('${team.id}')">
-                <i class="fas fa-link"></i> Copiar enlace
-              </a>
-            </div>
-          </div>
-        `;
-        shareSection.scrollIntoView({ behavior: 'smooth' });
+  // Envío del formulario de creación de comunidad
+  document.getElementById('teamForm').addEventListener('submit', async function(e) {
+    e.preventDefault();
+    const { data: { session } } = await supabase.auth.getSession();
+    if (!session?.user) {
+      alert('Debes iniciar sesión para crear una comunidad');
+      return;
+    }
+
+    const name = document.getElementById('teamName').value;
+    const description = document.getElementById('teamDesc').value;
+    const summary = document.getElementById('teamSummary').value;
+    const category = document.getElementById('teamCategory').value;
+    const privacy = document.getElementById('teamPrivacy').value;
+    const tags = document.getElementById('teamTags').value
+      .split(',')
+      .map(t => t.trim())
+      .filter(Boolean);
+    const goal = document.getElementById('teamGoal').value || null;
+
+    const fileInput = document.getElementById('teamPhoto');
+    let photo = null;
+
+    try {
+      // Subir imagen si existe
+      if (fileInput.files && fileInput.files[0]) {
+        const file = fileInput.files[0];
+        const fileExt = file.name.split('.').pop();
+        const fileName = `${Date.now()}_${Math.random().toString(36).substring(2)}.${fileExt}`;
+        const filePath = `teams/${fileName}`;
+        const { error: uploadError } = await supabase.storage
+          .from('teams')
+          .upload(filePath, file);
+        if (uploadError) throw uploadError;
+        const { data: urlData } = supabase.storage
+          .from('teams')
+          .getPublicUrl(filePath);
+        photo = urlData.publicUrl;
       }
 
-      // Función para compartir en redes sociales
-      function shareOnSocialTeam(platform, teamId) {
-        let team = (window.allTeams || []).find(t => t.id == teamId);
-        if (!team) return;
-        const url = `${window.location.origin}/teams/${team.id}`;
-        const text = `Únete a la comunidad: "${team.name}" - ${team.summary ? team.summary.substring(0, 100) + '...' : 'Haz la diferencia en equipo!'} ${url}`;
-        let shareUrl;
-        switch(platform) {
-          case 'facebook':
-            shareUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}&quote=${encodeURIComponent(text)}`;
-            break;
-          case 'twitter':
-            shareUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}`;
-            break;
-          case 'whatsapp':
-            shareUrl = `https://wa.me/?text=${encodeURIComponent(text)}`;
-            break;
-          default:
-            return;
-        }
-        window.open(shareUrl, '_blank', 'width=600,height=400');
-      }
+      // Crear la comunidad
+      const { data, error } = await supabase
+        .from('teams')
+        .insert([{
+          name,
+          description,
+          summary,
+          category,
+          privacy,
+          tags,
+          photo,
+          goal,
+          creator_id: session.user.id,
+          created_at: new Date().toISOString()
+        }])
+        .select();
 
-      function copyTeamLink(teamId) {
-        const url = `${window.location.origin}/teams/${teamId}`;
-        navigator.clipboard.writeText(url).then(() => {
-          alert('¡Enlace copiado!');
-        }).catch(() => {
-          prompt('Por favor, copia este enlace:', url);
-        });
-      }
+      if (error) throw error;
 
-      // Unirse a la comunidad
-      function joinTeam(teamId) {
-        // Puedes reutilizar tu lógica de unirse aquí
-        alert('Funcionalidad de unirse próximamente.');
-      }
+      // Añadir al usuario como admin de la comunidad
+      await supabase
+        .from('team_members')
+        .insert([{
+          team_id: data[0].id,
+          user_id: session.user.id,
+          role: 'admin',
+          joined_at: new Date().toISOString()
+        }]);
 
-      // --- Gestión centralizada de canales realtime ---
-      if (!window.teamChannels) window.teamChannels = {};
+      document.getElementById('teamForm').style.display = 'none';
+      document.getElementById('afterCreateTeam').style.display = 'block';
+      document.getElementById('inviteMembersBtn').href = `/teams/${data[0].id}/invite`;
+      if (typeof loadTeams === 'function') await loadTeams();
 
-      document.addEventListener('click', async (e) => {
-        const joinBtn = e.target.closest('.join-team-btn');
-        if (!joinBtn || joinBtn.disabled) return;
-        console.log('Click en Unirse detectado', joinBtn); // <-- Añadido para depuración
-        const teamId = joinBtn.dataset.teamId;
-        const { data: { session } } = await supabase.auth.getSession();
+    } catch (error) {
+      console.error('Error creating team:', error);
+      alert(`Error al crear la comunidad: ${error.message}`);
+    }
+  });
 
-        if (!session?.user) {
-          document.getElementById('loginModal').classList.add('active');
-          return;
-        }
+  // Botón "Invitar miembros"
+  document.getElementById('inviteMembersBtn').addEventListener('click', function(e) {
+    // Puedes personalizar la lógica aquí
+    // Por defecto, va al enlace generado
+  });
 
-        // Bloquear UI para evitar dobles clics
-        const originalText = joinBtn.innerHTML;
-        joinBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
-        joinBtn.disabled = true;
+  // Abrir modal automáticamente si la URL es /teams/:id
+  const match = window.location.pathname.match(/^\/teams\/([a-zA-Z0-9\-]+)$/);
+  if (match && typeof showTeamModal === 'function') {
+    showTeamModal(match[1]);
+  }
+});
 
-        try {
-          // 1. Intentar insertar la membresía directamente
-          const { error: insertError } = await supabase
-            .from('team_members')
-            .insert({
-              team_id: teamId,
-              user_id: session.user.id,
-              role: 'member',
-              joined_at: new Date().toISOString()
-            });
 
-          // Si ya es miembro (error 23505), solo actualiza UI y contador real
-          if (insertError && insertError.code === '23505') {
-            // Ya es miembro
-          } else if (insertError) {
-            throw insertError;
-          }
+window.mostrarCompartirEquipo = function(teamId) {
+  const team =
+    (window.allTeams?.find(t => t.id == teamId)) ||
+    (window.teams?.find(t => t.id == teamId)) ||
+    (window._currentTeam && window._currentTeam.id == teamId ? window._currentTeam : null);
 
-          // 2. Obtener el valor real actualizado desde Supabase
-          const { data: updatedTeam, error: fetchError } = await supabase
-            .from('teams')
-            .select('members_count')
-            .eq('id', teamId)
-            .single();
+  if (!team) {
+    console.error('❌ No se encontró la comunidad con ID:', teamId);
+    return;
+  }
 
-          if (fetchError) throw fetchError;
+  if (window.renderCompartir) {
+    window.renderCompartir({
+      title: team.name,
+      summary: team.summary || (team.description?.substring(0, 120) + '...'),
+      photo_url: team.photo || 'https://via.placeholder.com/350x180?text=Comunidad',
+      link: `${window.location.origin}/teams/${team.id}`,
+      type: 'comunidad'
+    }, 'shareSectionTeam');
 
-          // 3. Actualizar el contador en todas las tarjetas de este equipo
-          document.querySelectorAll(`.team-card-classic[data-team-id="${teamId}"] .members-count-classic`).forEach(el => {
-             el.textContent = updatedTeam.members_count;
-          });
-
-          // 4. Cambiar el botón a "Miembro"
-          joinBtn.innerHTML = '<i class="fas fa-user-check"></i> Miembro';
-          joinBtn.classList.remove('btn-accent');
-          joinBtn.classList.add('btn-outline');
-          joinBtn.disabled = true;
-
-        } catch (error) {
-          console.error('Error al unirse:', error);
-          joinBtn.innerHTML = originalText;
-          joinBtn.disabled = false;
-          alert(error.message || 'Error al unirse');
-        }
-      });
-
-      // --- Limpieza automática de canales realtime ---
-      window.addEventListener('beforeunload', () => {
-        if (window.teamChannels) {
-          Object.values(window.teamChannels).forEach(channel => {
-            if (channel?.unsubscribe) {
-              channel.unsubscribe();
-            }
-          });
-          window.teamChannels = {};
-        }
-      });
+    document.getElementById('shareSectionTeam').scrollIntoView({
+      behavior: 'smooth',
+      block: 'center'
     });
+  } else {
+    const link = `${window.location.origin}/teams/${team.id}`;
+    navigator.clipboard.writeText(link).then(() => {
+      alert('¡Enlace copiado!');
+    }).catch(() => {
+      prompt('Copia este enlace:', link);
+    });
+  }
+};
   </script>
 {% endblock %}
