@@ -623,6 +623,26 @@
       font-size: 1.1rem;
       line-height: 1.6;
     }
+
+    /* Estilos específicos para el modal de creación de causas */
+    #createCauseModal .modal-content form,
+    #createCauseModal .modal-content .cause-form,
+    #createCauseModal .modal-content .form-group,
+    #createCauseModal .modal-content .form-inline-group,
+    #createCauseModal .modal-content label,
+    #createCauseModal .modal-content input,
+    #createCauseModal .modal-content textarea,
+    #createCauseModal .modal-content select,
+    #createCauseModal .modal-content .points-info,
+    #createCauseModal .modal-content .after-create {
+      text-align: left !important;
+      align-items: flex-start !important;
+      justify-content: flex-start !important;
+    }
+
+    #createCauseModal .modal-content .create-cause-title {
+      text-align: center !important;
+    }
   </style>
 {% endblock %}
 
@@ -648,23 +668,28 @@
         <i class="fas fa-plus-circle"></i> Crear Nueva Causa Solidaria
       </div>
       <form class="cause-form" id="causeForm" autocomplete="off">
+        <!-- Título de la causa -->
         <div class="form-group">
           <label for="title">Título de la causa</label>
           <input type="text" id="title" name="title" placeholder="Ej: Agua limpia para todos" required>
         </div>
-        <div class="form-group">
-          <label for="short_description">Descripción corta (máx. 3 líneas)</label>
-          <textarea id="short_description" name="short_description" maxlength="180" placeholder="Resumen breve para mostrar en la tarjeta..." required></textarea>
-        </div>
-        <div class="form-group">
-          <label for="description">Descripción exhaustiva</label>
-          <textarea id="description" name="description" placeholder="Describe la causa, el objetivo, contexto, cómo se usará la ayuda..." required></textarea>
-        </div>
+        <!-- Foto principal (ahora justo después del título) -->
         <div class="form-group">
           <label for="photo">Foto principal</label>
           <input type="file" id="photo" name="photo" accept="image/*">
           <img id="previewImg" class="preview-img" alt="Vista previa de la foto" style="display:none;">
         </div>
+        <!-- Resumen corto -->
+        <div class="form-group">
+          <label for="short_description">Descripción corta (máx. 3 líneas)</label>
+          <textarea id="short_description" name="short_description" maxlength="180" placeholder="Resumen breve para mostrar en la tarjeta..." required></textarea>
+        </div>
+        <!-- Descripción larga -->
+        <div class="form-group">
+          <label for="description">Descripción exhaustiva</label>
+          <textarea id="description" name="description" placeholder="Describe la causa, el objetivo, contexto, cómo se usará la ayuda..." required></textarea>
+        </div>
+        <!-- Meta y beneficiarios -->
         <div class="form-inline-group">
           <div class="form-group">
             <label for="goal">Meta de recaudación (€)</label>
@@ -675,6 +700,7 @@
             <input type="number" id="beneficiaries" name="beneficiaries" min="1" placeholder="Ej: 100" required>
           </div>
         </div>
+        <!-- Ciudad y país -->
         <div class="form-inline-group">
           <div class="form-group">
             <label for="city">Ciudad</label>
@@ -685,6 +711,7 @@
             <input type="text" id="country" name="country" placeholder="Ej: España" required>
           </div>
         </div>
+        <!-- Puntos -->
         <div class="form-group">
           <label for="points">Puntos por colaborar</label>
           <input type="number" id="points" name="points" min="1" max="1000" value="50" required>
