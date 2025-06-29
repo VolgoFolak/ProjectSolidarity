@@ -352,8 +352,8 @@ app.get('/challenges', (req, res) => {
 app.get('/teams', (req, res) => {
     res.render('teams/index.njk');
 });
-app.get('/teams/myteams', (req, res) => {
-    res.render('teams/myteams.njk');
+app.get('/myteams', (req, res) => {
+    res.render('myteams/myteams.njk');
 });
 app.get('/ranking', (req, res) => {
     res.render('ranking/index.njk');
