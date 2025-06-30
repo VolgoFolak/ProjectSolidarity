@@ -315,7 +315,7 @@ const TasksRenderer = {
 
     // Llenar contenido del modal
     document.getElementById('taskModalBody').innerHTML = `
-      <h1 style="font-size:2rem; font-weight:800; color:var(--primary); margin-bottom:2rem; text-align:center;">${task.title}</h1>
+    <h1 style="font-size:2rem; font-weight:800; color:var(--primary); margin-bottom:2rem; text-align:left !important;">${task.title}</h1>
       <div style="display:flex; gap:2rem; margin-bottom:2rem;">
         <div style="flex:1; min-width:320px; height:300px; border-radius:12px; overflow:hidden; position:relative;">
           <img src="${task.photo_url || '/img/task-default.jpg'}" 
@@ -423,6 +423,18 @@ const TasksRenderer = {
         link: `${window.location.origin}/tasks/${task.id}`,
         type: 'tarea'
       }, 'shareSection');
+      
+      // 🚀 FORZAR ALINEACIÓN IZQUIERDA DESPUÉS DEL RENDER 🚀
+      setTimeout(() => {
+        const shareSection = document.getElementById('shareSection');
+        if (shareSection) {
+          const allElements = shareSection.querySelectorAll('*');
+          allElements.forEach(el => {
+            el.style.textAlign = 'left';
+          });
+        }
+      }, 100);
+      
       document.getElementById('shareSection').scrollIntoView({ 
         behavior: 'smooth', 
         block: 'center' 
