@@ -69,7 +69,10 @@ const ChallengesRenderer = {
           ${causeHtml}
           <div class="challenge-meta">
             <div class="meta-item"><i class="fas fa-map-marker-alt"></i> ${location}</div>
-            <div class="meta-item"><i class="fas fa-users"></i> ${challenge.participants || 0} participantes</div>
+            <span class="meta-item">
+              <i class="fas fa-users"></i>
+              ${challenge.participants || 0} participantes
+            </span>
             <div class="beneficiaries-count">
               <i class="fas fa-heart"></i> Beneficia a ${challenge.beneficiaries || 0} personas
             </div>
