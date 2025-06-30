@@ -336,6 +336,230 @@
       position: relative;
     }
 
+    /* 🎨 MEJORAS ESTÉTICAS ESPECÍFICAS DEL MODAL ADMIN 🎨 */
+    .admin-modal h2,
+    .admin-modal h3 {
+      color: var(--primary) !important;
+      font-weight: 700;
+      margin-bottom: 1.2rem;
+    }
+
+    .admin-modal h2 {
+      font-size: 1.8rem;
+      text-align: center;
+      border-bottom: 2px solid var(--gray);
+      padding-bottom: 1rem;
+    }
+
+    .admin-modal h3 {
+      font-size: 1.3rem;
+      display: flex;
+      align-items: center;
+      gap: 0.7rem;
+    }
+
+    .admin-modal h3 i {
+      color: var(--accent);
+      font-size: 1.1rem;
+    }
+
+    /* Mejorar miembros con roles específicos */
+    .admin-modal .member-item .member-name {
+      font-weight: 600;
+      color: #2d3748;
+    }
+
+    .admin-modal .member-item .member-name.founder {
+      color: var(--primary) !important;
+      font-weight: 700;
+    }
+
+    .admin-modal .member-item .member-name.coordinator {
+      color: var(--accent) !important;
+      font-weight: 700;
+    }
+
+    /* Mejorar barras de progreso en el modal */
+    .admin-modal .progress-bar {
+      height: 10px;
+      background: #f1f5f9;
+      border-radius: 5px;
+      overflow: hidden;
+      margin-bottom: 0.8rem;
+      border: 1px solid #e2e8f0;
+    }
+
+    .admin-modal .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--primary) 0%, var(--accent) 100%);
+      border-radius: 4px;
+      min-width: 2px; /* Mostrar al menos algo aunque sea 0% */
+      transition: width 0.3s ease;
+    }
+
+    .admin-modal .progress-fill[style*="width: 0%"] {
+      background: #e2e8f0;
+      min-width: 100%;
+      opacity: 0.5;
+    }
+
+    .admin-modal .progress-info {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.9rem;
+      color: #4a5568;
+      font-weight: 500;
+    }
+
+    /* Mejorar stats cards */
+    .admin-modal .stat-card {
+      background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+      border-radius: 12px;
+      padding: 1.5rem;
+      text-align: center;
+      box-shadow: 0 2px 8px rgba(74, 111, 165, 0.08);
+      border: 1px solid #e2e8f0;
+    }
+
+    .admin-modal .stat-value {
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: var(--primary);
+      margin-bottom: 0.5rem;
+    }
+
+    .admin-modal .stat-label {
+      font-size: 0.9rem;
+      color: #64748b;
+      font-weight: 500;
+    }
+
+    /* Mejorar tabs */
+    .admin-modal .admin-tab {
+      flex: none;
+      padding: 0.8rem 1.4rem;
+      border-radius: 8px 8px 0 0;
+      background: none;
+      color: #64748b;
+      font-weight: 600;
+      border: none;
+      border-bottom: 2px solid transparent;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .admin-modal .admin-tab:hover {
+      color: var(--primary);
+      background: #f8fafc;
+    }
+
+    .admin-modal .admin-tab.active {
+      background: #fff;
+      color: var(--primary);
+      border-bottom: 2px solid var(--primary);
+      box-shadow: 0 2px 8px rgba(74, 111, 165, 0.11);
+      z-index: 2;
+    }
+
+    /* Mejorar formularios en el modal */
+    .admin-modal .solidarity-form {
+      background: linear-gradient(135deg, #f8fafc 0%, #ffffff 100%);
+      padding: 2rem;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(74, 111, 165, 0.08);
+      margin-top: 1rem;
+      border: 1px solid #e2e8f0;
+    }
+
+    .admin-modal .form-section-title {
+      font-size: 1.4rem;
+      margin-bottom: 1.5rem;
+      color: var(--primary) !important;
+      display: flex;
+      align-items: center;
+      gap: 0.7rem;
+    }
+
+    .admin-modal .form-section-title i {
+      color: var(--accent);
+    }
+
+    /* Mejorar member items específicamente */
+    .admin-modal .member-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1rem;
+      background: linear-gradient(135deg, #f8fafc 0%, #ffffff 100%);
+      border-radius: 10px;
+      margin-bottom: 0.8rem;
+      box-shadow: 0 2px 8px rgba(74, 111, 165, 0.06);
+      border: 1px solid #e2e8f0;
+    }
+
+    .admin-modal .member-avatar {
+      width: 45px;
+      height: 45px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 2px solid #e2e8f0;
+    }
+
+    .admin-modal .role-badge {
+      padding: 0.4rem 0.8rem;
+      border-radius: 15px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .admin-modal .role-badge.founder,
+    .admin-modal .role-badge.admin {
+      background: var(--primary);
+      color: white;
+    }
+
+    .admin-modal .role-badge.coordinator {
+      background: var(--accent);
+      color: white;
+    }
+
+    .admin-modal .role-badge.member {
+      background: #e2e8f0;
+      color: #4a5568;
+    }
+
+    /* --- ESTILOS DEL MODAL DE ADMINISTRACIÓN --- */
+    .admin-modal {
+      display: none;
+      position: fixed;
+      z-index: 10000;
+      left: 0;
+      top: 0;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(0, 0, 0, 0.7);
+      align-items: center;
+      justify-content: center;
+      overflow-y: auto;
+    }
+
+    .admin-modal.active {
+      display: flex;
+    }
+
+    .admin-modal-content {
+      background: #fff;
+      border-radius: 12px;
+      padding: 2rem;
+      max-width: 900px;
+      width: 90vw;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+      position: relative;
+    }
+
     .close-admin-modal {
       position: absolute;
       top: 1rem;
@@ -778,6 +1002,29 @@
         padding: 1rem 0.5rem;
       }
     }
+
+    /* Color azul Solidarity solo para los labels del formulario de configuración del modal admin */
+#adminModal #settingsTab .solidarity-form label {
+  color: #166088 !important; /* Azul Solidarity */
+}
+/* Corrige iconos y barras de progreso de causas y tareas al azul Solidarity */
+.causes-section .meta-item i,
+.cause-card .meta-item i,
+#causeModal .meta-item i,
+.tasks-section .meta-item i,
+.task-card .meta-item i,
+#taskModal .meta-item i {
+  color: var(--primary) !important;
+}
+
+.causes-section .progress-fill,
+.cause-card .progress-fill,
+#causeModal .progress-fill,
+.tasks-section .progress-fill,
+.task-card .progress-fill,
+#taskModal .progress-fill {
+  background: var(--primary) !important;
+}
   </style>
 {% endblock %}
 
