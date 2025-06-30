@@ -1,4 +1,8 @@
-// Renderer modular para desafíos
+/**
+ * Módulo para renderizar tarjetas y modales de retos/challenges
+ * Con soporte completo para administración y funcionalidades unificadas
+ */
+
 const ChallengesRenderer = {
   // Renderizar una sola tarjeta de desafío
   renderCard(challenge) {
@@ -23,13 +27,34 @@ const ChallengesRenderer = {
       `;
     }
 
-    // ¿El usuario ya participa?
+    // ✅ VERIFICAR ROL DE ADMINISTRADOR PRIMERO
+    const isAdmin = ['founder','admin','coordinator','creator'].includes(challenge.userRole) || challenge.isCreator;
     const isParticipating = challenge.isParticipating;
 
-    // Renderiza el botón según corresponda
-    const participateBtn = isParticipating
-      ? `<button class="btn btn-accent participate-btn" data-challenge-id="${challenge.id}" disabled style="opacity:0.7;cursor:not-allowed;">Participando</button>`
-      : `<button class="btn btn-accent participate-btn" data-challenge-id="${challenge.id}">Participar</button>`;
+    // ✅ BOTONES CON CLASES CSS CORRECTAS Y FUNCIONALIDAD PRESERVADA
+    let actionButtons = '';
+    if (isAdmin) {
+      actionButtons = `
+        <button class="btn btn-primary view-challenge-btn" data-challenge-id="${challenge.id}">Ver más</button>
+        <button class="btn btn-accent admin-activity-btn" data-activity-type="challenge" data-activity-id="${challenge.id}">
+          <i class="fas fa-cog"></i> Administrar
+        </button>
+      `;
+    } else if (isParticipating) {
+      actionButtons = `
+        <button class="btn btn-primary view-challenge-btn" data-challenge-id="${challenge.id}">Ver más</button>
+        <button class="btn btn-success participate-btn" data-challenge-id="${challenge.id}" disabled style="opacity:0.7;cursor:not-allowed;">
+          <i class="fas fa-check"></i> Participando
+        </button>
+      `;
+    } else {
+      actionButtons = `
+        <button class="btn btn-primary view-challenge-btn" data-challenge-id="${challenge.id}">Ver más</button>
+        <button class="btn btn-accent participate-btn" data-challenge-id="${challenge.id}">
+          <i class="fas fa-bolt"></i> Participar
+        </button>
+      `;
+    }
 
     const card = `
       <div class="challenge-card">
@@ -59,8 +84,7 @@ const ChallengesRenderer = {
             </div>
           </div>
           <div class="challenge-actions">
-            <button class="btn btn-primary view-challenge-btn" data-challenge-id="${challenge.id}">Ver más</button>
-            ${participateBtn}
+            ${actionButtons}
           </div>
         </div>
       </div>
@@ -80,6 +104,9 @@ const ChallengesRenderer = {
       return;
     }
 
+    // ✅ INYECTAR ESTILOS CSS ANTES DE RENDERIZAR
+    this.injectStyles();
+
     // Guardar los desafíos en una variable global para acceder desde el modal
     window.challenges = challenges;
     
@@ -88,28 +115,333 @@ const ChallengesRenderer = {
       container.innerHTML += cardHtml;
     }
     
-    // Agregar event listeners para los botones de ver más
-    document.querySelectorAll('.view-challenge-btn').forEach(btn => {
-      btn.addEventListener('click', function(e) {
+    // ✅ AGREGAR TODOS LOS EVENT LISTENERS CORRECTAMENTE
+    this.attachEventListeners(container);
+
+    // Verificar si hay que abrir un modal específico desde la URL
+    this.checkForModalFromURL();
+  },
+
+  // ✅ FUNCTION SEPARADA PARA ADJUNTAR EVENT LISTENERS
+  attachEventListeners(container) {
+    // Event listeners para botones "Ver más"
+    container.querySelectorAll('.view-challenge-btn').forEach(btn => {
+      btn.addEventListener('click', (e) => {
         e.preventDefault();
-        const challengeId = this.getAttribute('data-challenge-id');
-        ChallengesRenderer.showChallengeModal(challengeId);
+        const challengeId = btn.getAttribute('data-challenge-id');
+        this.showChallengeModal(challengeId);
       });
     });
     
-    // Agregar event listeners para los botones de participar
-    document.querySelectorAll('.participate-btn').forEach(btn => {
-      btn.addEventListener('click', function(e) {
+    // ✅ EVENT LISTENERS PARA BOTÓN ADMINISTRAR (igual que causes-renderer.js)
+    container.querySelectorAll('.admin-activity-btn').forEach(btn => {
+      btn.addEventListener('click', (e) => {
         e.preventDefault();
-        const challengeId = this.getAttribute('data-challenge-id');
+        const activityId = btn.getAttribute('data-activity-id');
+        if (typeof window.openAdminActivityModal === 'function') {
+          const challenge = window.challenges?.find(c => c.id == activityId);
+          if (challenge) window.openAdminActivityModal(challenge);
+        } else if (typeof window.openAdminModal === 'function') {
+          // Fallback para compatibilidad
+          const challenge = window.challenges?.find(c => c.id == activityId);
+          if (challenge) window.openAdminModal(challenge);
+        }
+      });
+    });
+    
+    // Event listeners para botones "Participar"
+    container.querySelectorAll('.participate-btn:not([disabled])').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.preventDefault();
+        const challengeId = btn.getAttribute('data-challenge-id');
         if (window.participateInChallenge) {
           window.participateInChallenge(challengeId);
         }
       });
     });
+  },
 
-    // Verificar si hay que abrir un modal específico desde la URL
-    this.checkForModalFromURL();
+  // ✅ INYECTAR ESTILOS CSS NECESARIOS
+  injectStyles() {
+    if (document.getElementById('challenges-renderer-styles')) return;
+    
+    const style = document.createElement('style');
+    style.id = 'challenges-renderer-styles';
+    style.textContent = `
+      /* Variables CSS */
+      :root {
+        --primary: #4a6fa5;
+        --primary-dark: #166088;
+        --gray: #e2e8f0;
+        --white: #fff;
+        --accent: #4fc3a1;
+        --accent-dark: #3da58a;
+        --urgent: #e53e3e;
+        --challenge: #ffe066;
+        --challenge-dark: #a67c00;
+        --success: #10b981;
+        --success-dark: #059669;
+      }
+
+      .challenges-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+        gap: 2rem;
+      }
+
+      .challenge-card {
+        background: white;
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        transition: all 0.3s ease;
+        border: 1px solid var(--gray);
+        display: flex;
+        flex-direction: column;
+      }
+
+      .challenge-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+      }
+
+      .challenge-image {
+        height: 180px;
+        overflow: hidden;
+        position: relative;
+      }
+
+      .challenge-image img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.3s ease;
+      }
+
+      .challenge-card:hover .challenge-image img {
+        transform: scale(1.05);
+      }
+
+      .challenge-badge {
+        position: absolute;
+        top: 1rem;
+        right: 1rem;
+        background: rgba(255, 255, 255, 0.9);
+        padding: 0.3rem 0.8rem;
+        border-radius: 50px;
+        font-size: 0.8rem;
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+      }
+
+      .challenge-badge.urgent {
+        background: var(--urgent);
+        color: white;
+      }
+
+      .challenge-badge.points {
+        background: var(--challenge-dark);
+        color: white;
+        left: 1rem;
+        right: auto;
+      }
+
+      .challenge-content {
+        padding: 1.5rem;
+        display: flex;
+        flex-direction: column;
+        flex: 1;
+      }
+
+      .challenge-content h3 {
+        font-size: 1.3rem;
+        margin-bottom: 0.8rem;
+        color: #2d3748;
+      }
+
+      .challenge-content p {
+        color: #6b7280;
+        margin-bottom: 1.5rem;
+        font-size: 0.95rem;
+        line-height: 1.6;
+        flex-grow: 1;
+      }
+
+      .challenge-meta {
+        display: flex;
+        gap: 1rem;
+        margin-bottom: 1.5rem;
+        font-size: 0.85rem;
+        flex-wrap: wrap;
+      }
+
+      .meta-item {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        color: #6b7280;
+      }
+
+      .meta-item i {
+        color: var(--challenge-dark);
+      }
+
+      .beneficiaries-count {
+        display: inline-flex;
+        align-items: center;
+        background: #f0f0ff;
+        color: var(--primary);
+        padding: 0.3rem 0.8rem;
+        border-radius: 50px;
+        font-size: 0.85rem;
+        font-weight: 600;
+      }
+
+      .beneficiaries-count i {
+        margin-right: 0.3rem;
+      }
+
+      .linked-cause {
+        display: inline-flex;
+        align-items: center;
+        background: #f0f9ff;
+        color: var(--primary);
+        padding: 0.3rem 0.8rem;
+        border-radius: 50px;
+        font-size: 0.85rem;
+        font-weight: 600;
+        margin-bottom: 1rem;
+      }
+
+      .linked-cause img {
+        width: 22px;
+        height: 22px;
+        object-fit: cover;
+        border-radius: 50%;
+        border: 1px solid #e5e7eb;
+        margin-right: 0.4em;
+      }
+
+      .challenge-progress {
+        margin-bottom: 1.5rem;
+      }
+
+      .progress-bar {
+        height: 8px;
+        background: var(--gray);
+        border-radius: 4px;
+        overflow: hidden;
+        margin-bottom: 0.5rem;
+      }
+
+      .progress-fill {
+        height: 100%;
+        background: var(--challenge-dark);
+        border-radius: 4px;
+      }
+
+      .progress-info {
+        display: flex;
+        justify-content: space-between;
+        font-size: 0.9rem;
+        color: #6b7280;
+      }
+
+      .challenge-actions {
+        display: flex;
+        gap: 0.8rem;
+      }
+
+      .challenge-actions .btn {
+        flex: 1;
+        text-align: center;
+        justify-content: center;
+      }
+
+      /* ✅ ESTILOS DE BOTONES COMPLETOS Y CORRECTOS */
+      .btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.6rem 1.2rem;
+        border-radius: 8px;
+        font-weight: 600;
+        text-decoration: none;
+        border: none;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        font-size: 0.9rem;
+        justify-content: center;
+      }
+
+      .btn-primary {
+        background: var(--primary);
+        color: white;
+      }
+
+      .btn-primary:hover {
+        background: var(--primary-dark);
+        transform: translateY(-2px);
+      }
+
+      .btn-accent {
+        background: var(--accent);
+        color: white;
+      }
+
+      .btn-accent:hover {
+        background: var(--accent-dark);
+        transform: translateY(-2px);
+      }
+
+      .btn-success {
+        background: var(--success);
+        color: white;
+      }
+
+      .btn-success:hover {
+        background: var(--success-dark);
+        transform: translateY(-2px);
+      }
+
+      .btn-warning {
+        background: var(--challenge);
+        color: #333;
+      }
+
+      .btn-warning:hover {
+        background: var(--challenge-dark);
+        color: white;
+        transform: translateY(-2px);
+      }
+
+      .btn-outline {
+        background: transparent;
+        color: var(--primary);
+        border: 1px solid var(--primary);
+      }
+
+      .btn-outline:hover {
+        background: var(--primary);
+        color: white;
+        transform: translateY(-2px);
+      }
+
+      /* Responsive */
+      @media (max-width: 768px) {
+        .challenges-grid {
+          grid-template-columns: 1fr;
+        }
+        
+        .challenge-actions {
+          flex-direction: column;
+        }
+      }
+    `;
+    document.head.appendChild(style);
   },
 
   // Verificar si hay que abrir modal desde URL
@@ -351,12 +683,20 @@ const ChallengesRenderer = {
         <button class="btn btn-primary" style="flex:1;" onclick="window.participateInChallenge('${challenge.id}')">
           <i class="fas fa-hand-holding-heart"></i> Participar
         </button>
-        <button class="btn btn-accent" style="flex:1;" onclick="ChallengesRenderer.shareChallenge('${challenge.id}')">
+        <button class="btn btn-outline share-btn-challenge" style="flex:1;" data-type="challenge" data-id="${challenge.id}" data-title="${challenge.title}" data-url="/challenges/${challenge.id}">
           <i class="fas fa-share-alt"></i> Compartir
         </button>
       </div>
-      <div class="share-section" id="shareSection"></div>
+      <div class="share-section" id="shareSection" style="text-align:left;"></div>
     `;
+
+    // ✅ AGREGAR EVENT LISTENER PARA COMPARTIR EN EL MODAL
+    const shareBtn = modal.querySelector('.share-btn-challenge');
+    if (shareBtn) {
+      shareBtn.addEventListener('click', () => {
+        this.shareChallenge(challengeId);
+      });
+    }
 
     // Mostrar modal
     modal.style.display = 'flex';
@@ -382,7 +722,7 @@ const ChallengesRenderer = {
     }
   },
 
-  // Función para compartir desafío
+  // ✅ FUNCIÓN PARA COMPARTIR DESAFÍO USANDO COMPARTIR.JS
   shareChallenge(challengeId) {
     const challenge = window.challenges?.find(c => c.id == challengeId);
     if (!challenge) {
@@ -392,6 +732,7 @@ const ChallengesRenderer = {
     
     console.log('🔗 Compartiendo desafío:', challenge);
     
+    // ✅ USAR COMPARTIR.JS SIGUIENDO EL PATRÓN HOMOGÉNEO
     if (window.renderCompartir) {
       window.renderCompartir({
         title: challenge.title,
@@ -419,42 +760,14 @@ const ChallengesRenderer = {
 
 // Exportar para uso global
 window.challengesRenderer = ChallengesRenderer;
+window.ChallengesRenderer = ChallengesRenderer;
 
-// Función para compartir desafíos
+// ✅ FUNCIÓN GLOBAL PARA COMPARTIR DESAFÍOS (HOMOGÉNEA CON TODA LA PÁGINA)
 window.mostrarCompartirChallenge = function(challengeId) {
-  const challenge = window.challenges?.find(c => c.id == challengeId);
-  if (!challenge) {
-    console.error('❌ No se encontró el desafío con ID:', challengeId);
-    return;
-  }
-  
-  console.log('🔗 Compartiendo desafío:', challenge);
-  
-  if (window.renderCompartir) {
-    window.renderCompartir({
-      title: challenge.title,
-      summary: challenge.summary || challenge.description?.substring(0, 120) + '...',
-      photo_url: challenge.photo_url || '/img/challenge-default.jpg',
-      link: `${window.location.origin}/challenges/${challenge.id}`,
-      type: 'desafío'
-    }, 'shareSection');
-    
-    document.getElementById('shareSection').scrollIntoView({ 
-      behavior: 'smooth', 
-      block: 'center' 
-    });
-  } else {
-    // Fallback si no está compartir.js
-    const link = `${window.location.origin}/challenges/${challenge.id}`;
-    navigator.clipboard.writeText(link).then(() => {
-      alert('¡Enlace copiado!');
-    }).catch(() => {
-      prompt('Copia este enlace:', link);
-    });
-  }
+  ChallengesRenderer.shareChallenge(challengeId);
 };
 
-// Función auxiliar para participar en desafíos
+// ✅ FUNCIÓN AUXILIAR PARA PARTICIPAR EN DESAFÍOS
 window.participateInChallenge = async function(challengeId) {
   const { data: { session } } = await supabase.auth.getSession();
   if (!session?.user) {
