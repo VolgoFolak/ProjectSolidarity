@@ -779,25 +779,34 @@ window.participateInChallenge = async function(challengeId, btnElement) {
     return;
   }
   const userId = session.user.id;
-  
-  const { data, error } = await supabase
-    .from('challenge_members')  // ✅ CORREGIDO: era 'challenges_members'
-    .insert([{ challenge_id: challengeId, user_id: userId, role: 'member', status: 'active' }]);
 
-  if (error) {
-    console.error('Error al unirse al desafío:', error);
-    if (error.code === '23505') {
-      alert('Ya estás participando en este desafío.');
-    } else {
-      alert('No se pudo unir al desafío. Inténtalo nuevamente más tarde.');
-    }
+  // Verifica si ya participa antes de insertar
+  const { data: existing, error } = await supabase
+    .from('challenges_members')
+    .select('id')
+    .eq('challenge_id', challengeId)
+    .eq('user_id', userId)
+    .maybeSingle();
+
+  if (existing) {
+    // Modal bonito o mensaje elegante
+    showAlreadyParticipatingModal();
     return;
   }
 
-  alert('¡Ahora participas en este desafío!');
-  ChallengesRenderer.closeModal();
-  
-  // Recargar página si hay función disponible
+  const { error: insertError } = await supabase
+    .from('challenges_members')
+    .insert([{ challenge_id: challengeId, user_id: userId, role: 'member', status: 'active' }]);
+
+  if (insertError) {
+    alert('Error al participar: ' + insertError.message);
+    return;
+  }
+
+  // Modal bonito de éxito
+  showSuccessModal();
+
+  // Recarga la lista de retos
   if (window.loadChallengesFromSupabase) {
     window.loadChallengesFromSupabase();
   }
@@ -807,3 +816,65 @@ window.participateInChallenge = async function(challengeId, btnElement) {
 if (typeof module !== 'undefined' && module.exports) {
   module.exports = ChallengesRenderer;
 }
+
+function showSuccessModal() {
+  // Si ya existe el modal, solo muéstralo
+  let modal = document.getElementById('challengeSuccessModal');
+  if (!modal) {
+    modal = document.createElement('div');
+    modal.id = 'challengeSuccessModal';
+    modal.style.cssText = `
+      position:fixed; z-index:99999; left:0; top:0; width:100vw; height:100vh;
+      background:rgba(0,0,0,0.35); display:flex; align-items:center; justify-content:center;
+    `;
+    modal.innerHTML = `
+      <div style="background:#fff; border-radius:18px; max-width:420px; width:95vw; padding:2.5rem 1.5rem 2rem 1.5rem; box-shadow:0 8px 32px rgba(74,111,165,0.13); position:relative; text-align:center;">
+        <button id="closeChallengeSuccessModal" style="position:absolute; top:1.1rem; right:1.3rem; background:none; border:none; font-size:2rem; color:#aaa; cursor:pointer;">&times;</button>
+        <div style="font-size:3rem; color:var(--accent,#4fc3a1); margin-bottom:1rem;">
+          <i class="fas fa-bolt"></i>
+        </div>
+        <h2 style="color:var(--primary,#4a6fa5); font-weight:800; margin-bottom:0.7rem;">¡Reto aceptado!</h2>
+        <p style="color:#444; font-size:1.1rem; margin-bottom:1.5rem;">
+          ¡Enhorabuena por sumarte a este desafío solidario!<br>
+          ¿Por qué no creas tu propio reto y retas a tus amigos a participar?
+        </p>
+        <a href="#" id="openCreateChallengeModalBtn" class="btn btn-accent" style="margin-bottom:0.7rem;">
+          <i class="fas fa-plus"></i> Crear un reto
+        </a>
+        <br>
+        <button class="btn btn-outline" id="closeChallengeSuccessBtn" style="margin-top:0.7rem;">
+          Seguir explorando retos
+        </button>
+      </div>
+    `;
+    document.body.appendChild(modal);
+
+    // Cerrar modal
+    modal.querySelector('#closeChallengeSuccessModal').onclick =
+    modal.querySelector('#closeChallengeSuccessBtn').onclick = function() {
+      modal.style.display = 'none';
+      document.body.style.overflow = '';
+    };
+
+    // Abrir modal de crear reto al hacer click en el botón
+    modal.querySelector('#openCreateChallengeModalBtn').onclick = function(e) {
+      e.preventDefault();
+      modal.style.display = 'none';
+      document.body.style.overflow = '';
+      // Abre el modal de crear reto si existe
+      const createModal = document.getElementById('createChallengeModal');
+      if (createModal) {
+        createModal.classList.add('active');
+        document.body.style.overflow = 'hidden';
+      } else {
+        // Si no existe, redirige como fallback
+        window.location.href = '/challenges/create';
+      }
+    };
+  }
+  modal.style.display = 'flex';
+  document.body.style.overflow = 'hidden';
+}
+
+// Hazla global si la llamas desde fuera:
+window.showSuccessModal = showSuccessModal;
