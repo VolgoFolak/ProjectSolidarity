@@ -714,7 +714,6 @@
       background: var(--volunteering);
       color: white;
     }
-
     .admin-modal .btn-secondary:hover {
       background: var(--volunteering-dark);
     }
@@ -1024,6 +1023,25 @@
 .task-card .progress-fill,
 #taskModal .progress-fill {
   background: var(--primary) !important;
+}
+/* Subtítulos y labels de configuración del modal admin igual que myteams.njk */
+#adminModal #settingsTab .form-section-title,
+#adminModal #settingsTab label {
+  font-family: 'Inter', 'Segoe UI', Arial, sans-serif;
+  font-size: 1.08rem;
+  font-weight: 600;
+  color: #166088;
+  letter-spacing: 0.01em;
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  margin-bottom: 1rem;
+}
+
+#adminModal #settingsTab .form-section-title i {
+  font-size: 1.1em;
+  color: #166088;
+  margin-right: 0.4em;
 }
   </style>
 {% endblock %}
@@ -2242,112 +2260,111 @@
         // Campos comunes para todos los tipos
         const commonFields = `
           <div class="form-group">
-            <label for="editActivityTitle">Título de la actividad</label>
+            <label for="editActivityTitle"><i class="fas fa-heading"></i> Título de la actividad</label>
             <input type="text" id="editActivityTitle" name="editActivityTitle" required value="${activity.title || ''}">
           </div>
           <div class="form-group">
-            <label for="editActivityPhoto">Foto principal</label>
+            <label for="editActivityPhoto"><i class="fas fa-image"></i> Foto principal</label>
             <input type="file" id="editActivityPhoto" name="editActivityPhoto" accept="image/*">
             <img id="editActivityPhotoPreview" class="preview-img" alt="Vista previa de la foto" src="${activity.photo_url || ''}" style="${activity.photo_url ? 'display:block; max-width:200px; margin-top:1rem; border-radius:12px;' : 'display:none;'}">
           </div>
           <div class="form-group">
-            <label for="editActivitySummary">Descripción corta</label>
+            <label for="editActivitySummary"><i class="fas fa-align-left"></i> Descripción corta</label>
             <textarea id="editActivitySummary" name="editActivitySummary" maxlength="180" required>${activity.short_description || activity.summary || ''}</textarea>
           </div>
           <div class="form-group">
-            <label for="editActivityDesc">Descripción completa</label>
+            <label for="editActivityDesc"><i class="fas fa-align-left"></i> Descripción completa</label>
             <textarea id="editActivityDesc" name="editActivityDesc" required>${activity.description || ''}</textarea>
           </div>
         `;
 
-        // Campos específicos según el tipo
-        let specificFields = '';
-        if (activityType === 'cause') {
-          specificFields = `
-            <div class="form-inline-group">
-              <div class="form-group">
-                <label for="editActivityGoal">Meta de recaudación (€)</label>
-                <input type="number" id="editActivityGoal" name="editActivityGoal" min="1" step="0.01" required value="${activity.goal || ''}">
-              </div>
-              <div class="form-group">
-                <label for="editActivityBeneficiaries">Nº de beneficiarios</label>
-                <input type="number" id="editActivityBeneficiaries" name="editActivityBeneficiaries" min="1" required value="${activity.beneficiaries || ''}">
-              </div>
-            </div>
-          `;
-        } else if (activityType === 'task') {
-          specificFields = `
-            <div class="form-inline-group">
-              <div class="form-group">
-                <label for="editActivityDeadline">Fecha límite</label>
-                <input type="date" id="editActivityDeadline" name="editActivityDeadline" value="${activity.deadline ? activity.deadline.split('T')[0] : ''}">
-              </div>
-              <div class="form-group">
-                <label for="editActivityHours">Horas requeridas</label>
-                <input type="number" id="editActivityHours" name="editActivityHours" min="1" value="${activity.hours_required || ''}">
-              </div>
-            </div>
-          `;
-        } else if (activityType === 'challenge') {
-          specificFields = `
-            <div class="form-inline-group">
-              <div class="form-group">
-                <label for="editActivityDeadline">Fecha límite</label>
-                <input type="date" id="editActivityDeadline" name="editActivityDeadline" value="${activity.deadline ? activity.deadline.split('T')[0] : ''}">
-              </div>
-              <div class="form-group">
-                <label for="editActivityType">Tipo de reto</label>
-                <select id="editActivityType" name="editActivityType">
-                  <option value="general" ${activity.challenge_type === 'general' ? 'selected' : ''}>General</option>
-                  <option value="duel" ${activity.challenge_type === 'duel' ? 'selected' : ''}>Duelo 1vs1</option>
-                  <option value="open" ${activity.challenge_type === 'open' ? 'selected' : ''}>Abierto</option>
-                  <option value="community" ${activity.challenge_type === 'community' ? 'selected' : ''}>Comunitario</option>
-                  <option value="creative" ${activity.challenge_type === 'creative' ? 'selected' : ''}>Creativo</option>
-                </select>
-              </div>
-            </div>
-          `;
-        } else if (activityType === 'volunteering') {
-          specificFields = `
-            <div class="form-inline-group">
-              <div class="form-group">
-                <label for="editActivityStartDate">Fecha de inicio</label>
-                <input type="date" id="editActivityStartDate" name="editActivityStartDate" value="${activity.start_date ? activity.start_date.split('T')[0] : ''}">
-              </div>
-              <div class="form-group">
-                <label for="editActivityEndDate">Fecha de fin</label>
-                <input type="date" id="editActivityEndDate" name="editActivityEndDate" value="${activity.end_date ? activity.end_date.split('T')[0] : ''}">
-              </div>
-            </div>
-            <div class="form-group">
-              <label for="editActivityHours">Horas requeridas</label>
-              <input type="number" id="editActivityHours" name="editActivityHours" min="1" value="${activity.hours_required || ''}">
-            </div>
-          `;
-        }
+let specificFields = '';
+if (activityType === 'cause') {
+  specificFields = `
+    <div class="form-inline-group">
+      <div class="form-group">
+        <label for="editActivityGoal"><i class="fas fa-euro-sign"></i> Meta de recaudación (€)</label>
+        <input type="number" id="editActivityGoal" name="editActivityGoal" min="1" step="0.01" required value="${activity.goal || ''}">
+      </div>
+      <div class="form-group">
+        <label for="editActivityBeneficiaries"><i class="fas fa-users"></i> Nº de beneficiarios</label>
+        <input type="number" id="editActivityBeneficiaries" name="editActivityBeneficiaries" min="1" required value="${activity.beneficiaries || ''}">
+      </div>
+    </div>
+  `;
+} else if (activityType === 'task') {
+  specificFields = `
+    <div class="form-inline-group">
+      <div class="form-group">
+        <label for="editActivityDeadline"><i class="fas fa-calendar-alt"></i> Fecha límite</label>
+        <input type="date" id="editActivityDeadline" name="editActivityDeadline" value="${activity.deadline ? activity.deadline.split('T')[0] : ''}">
+      </div>
+      <div class="form-group">
+        <label for="editActivityHours"><i class="fas fa-clock"></i> Horas requeridas</label>
+        <input type="number" id="editActivityHours" name="editActivityHours" min="1" value="${activity.hours_required || ''}">
+      </div>
+    </div>
+  `;
+} else if (activityType === 'challenge') {
+  specificFields = `
+    <div class="form-inline-group">
+      <div class="form-group">
+        <label for="editActivityDeadline"><i class="fas fa-calendar-alt"></i> Fecha límite</label>
+        <input type="date" id="editActivityDeadline" name="editActivityDeadline" value="${activity.deadline ? activity.deadline.split('T')[0] : ''}">
+      </div>
+      <div class="form-group">
+        <label for="editActivityType"><i class="fas fa-bolt"></i> Tipo de reto</label>
+        <select id="editActivityType" name="editActivityType">
+          <option value="general" ${activity.challenge_type === 'general' ? 'selected' : ''}>General</option>
+          <option value="duel" ${activity.challenge_type === 'duel' ? 'selected' : ''}>Duelo 1vs1</option>
+          <option value="open" ${activity.challenge_type === 'open' ? 'selected' : ''}>Abierto</option>
+          <option value="community" ${activity.challenge_type === 'community' ? 'selected' : ''}>Comunitario</option>
+          <option value="creative" ${activity.challenge_type === 'creative' ? 'selected' : ''}>Creativo</option>
+        </select>
+      </div>
+    </div>
+  `;
+} else if (activityType === 'volunteering') {
+  specificFields = `
+    <div class="form-inline-group">
+      <div class="form-group">
+        <label for="editActivityStartDate"><i class="fas fa-calendar-plus"></i> Fecha de inicio</label>
+        <input type="date" id="editActivityStartDate" name="editActivityStartDate" value="${activity.start_date ? activity.start_date.split('T')[0] : ''}">
+      </div>
+      <div class="form-group">
+        <label for="editActivityEndDate"><i class="fas fa-calendar-check"></i> Fecha de fin</label>
+        <input type="date" id="editActivityEndDate" name="editActivityEndDate" value="${activity.end_date ? activity.end_date.split('T')[0] : ''}">
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="editActivityHours"><i class="fas fa-clock"></i> Horas requeridas</label>
+      <input type="number" id="editActivityHours" name="editActivityHours" min="1" value="${activity.hours_required || ''}">
+    </div>
+  `;
+}
 
-        const locationAndPointsFields = `
-          <div class="form-inline-group">
-            <div class="form-group">
-              <label for="editActivityCity">Ciudad</label>
-              <input type="text" id="editActivityCity" name="editActivityCity" required value="${activity.city || ''}">
-            </div>
-            <div class="form-group">
-              <label for="editActivityCountry">País</label>
-              <input type="text" id="editActivityCountry" name="editActivityCountry" required value="${activity.country || ''}">
-            </div>
-          </div>
-          <div class="form-group">
-            <label for="editActivityPoints">Puntos por colaborar</label>
-            <input type="number" id="editActivityPoints" name="editActivityPoints" min="1" max="1000" required value="${activity.points || 50}">
-            <div class="points-info" id="editPointsText">
-              <i class="fas fa-star"></i>
-              Colaborar en esta actividad otorgará <strong>${activity.points || 50} puntos</strong> a cada participante.
-            </div>
-          </div>
-        `;
+const locationAndPointsFields = `
+  <div class="form-inline-group">
+    <div class="form-group">
+      <label for="editActivityCity"><i class="fas fa-city"></i> Ciudad</label>
+      <input type="text" id="editActivityCity" name="editActivityCity" required value="${activity.city || ''}">
+    </div>
+    <div class="form-group">
+      <label for="editActivityCountry"><i class="fas fa-flag"></i> País</label>
+      <input type="text" id="editActivityCountry" name="editActivityCountry" required value="${activity.country || ''}">
+    </div>
+  </div>
+  <div class="form-group">
+    <label for="editActivityPoints"><i class="fas fa-star"></i> Puntos por colaborar</label>
+    <input type="number" id="editActivityPoints" name="editActivityPoints" min="1" max="1000" required value="${activity.points || 50}">
+    <div class="points-info" id="editPointsText">
+      <i class="fas fa-star"></i>
+      Colaborar en esta actividad otorgará <strong>${activity.points || 50} puntos</strong> a cada participante.
+    </div>
+  </div>
+`;
 
-        formGrid.innerHTML = commonFields + specificFields + locationAndPointsFields;
+formGrid.innerHTML = commonFields + specificFields + locationAndPointsFields;
 
         // Preview imagen
         document.getElementById('editActivityPhoto').addEventListener('change', function(e) {
