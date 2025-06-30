@@ -43,15 +43,15 @@ const ChallengesRenderer = {
     } else if (isParticipating) {
       actionButtons = `
         <button class="btn btn-primary view-challenge-btn" data-challenge-id="${challenge.id}">Ver más</button>
-        <button class="btn btn-success participate-btn" data-challenge-id="${challenge.id}" disabled style="opacity:0.7;cursor:not-allowed;">
-          <i class="fas fa-check"></i> Participando
+        <button class="btn btn-accent participate-btn" data-challenge-id="${challenge.id}" disabled style="opacity:0.7;cursor:not-allowed;">
+          <i class="fas fa-check"></i> Reto Aceptado!
         </button>
       `;
     } else {
       actionButtons = `
         <button class="btn btn-primary view-challenge-btn" data-challenge-id="${challenge.id}">Ver más</button>
-        <button class="btn btn-accent participate-btn" data-challenge-id="${challenge.id}">
-          <i class="fas fa-bolt"></i> Participar
+        <button class="btn btn-warning participate-btn" data-challenge-id="${challenge.id}">
+          <i class="fas fa-bolt"></i> Aceptar Reto
         </button>
       `;
     }
@@ -150,12 +150,12 @@ const ChallengesRenderer = {
     });
     
     // Event listeners para botones "Participar"
-    container.querySelectorAll('.participate-btn:not([disabled])').forEach(btn => {
-      btn.addEventListener('click', (e) => {
+    container.querySelectorAll('.participate-btn').forEach(btn => {
+      btn.addEventListener('click', function(e) {
         e.preventDefault();
-        const challengeId = btn.getAttribute('data-challenge-id');
+        const challengeId = this.getAttribute('data-challenge-id');
         if (window.participateInChallenge) {
-          window.participateInChallenge(challengeId);
+          window.participateInChallenge(challengeId, this); // <-- PASA EL BOTÓN
         }
       });
     });
@@ -569,9 +569,10 @@ const ChallengesRenderer = {
 
     // Obtener participantes
     const { data: members } = await supabase
-      .from('challenge_members')
-      .select('user_id, profiles(username, photo_url)')
-      .eq('challenge_id', challengeId);
+      .from('challenges_members')
+      .select('user_id, role, profiles:profiles(username, photo_url)')
+      .eq('challenge_id', challengeId)
+      .eq('status', 'active');
 
     let participantsHtml = '';
     if (members && members.length > 0) {
@@ -768,7 +769,7 @@ window.mostrarCompartirChallenge = function(challengeId) {
 };
 
 // ✅ FUNCIÓN AUXILIAR PARA PARTICIPAR EN DESAFÍOS
-window.participateInChallenge = async function(challengeId) {
+window.participateInChallenge = async function(challengeId, btnElement) {
   const { data: { session } } = await supabase.auth.getSession();
   if (!session?.user) {
     alert('Debes iniciar sesión para participar.');

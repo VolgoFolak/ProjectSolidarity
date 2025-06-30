@@ -570,65 +570,53 @@ async function loadCausesMap() {
 
 // ✅ CARGAR RETOS USANDO EL RENDERER (optimizado)
 async function loadChallengesFromSupabase(filter = "all", searchTerm = "") {
-  currentFilter = filter;
+  // 1. Cargar retos desde Supabase
   let query = supabase
     .from('challenges')
-    .select(`
-      *,
-      linkedCause:causes(id, title, photo_url)
-    `)
+    .select('*')
     .order('created_at', { ascending: false });
 
+  // 2. Filtros (si tienes)
   if (filter !== "all") {
-    query = query.eq('challenge_type', filter);
+    query = query.eq('category', filter);
   }
   if (searchTerm && searchTerm.trim() !== "") {
     query = query.or(`title.ilike.%${searchTerm}%,description.ilike.%${searchTerm}%,city.ilike.%${searchTerm}%,country.ilike.%${searchTerm}%`);
   }
 
-  // Obtener participación del usuario
-  let joinedChallengeIds = [];
-  if (currentUserId) {
-    const { data: memberships } = await supabase
-      .from('challenge_members')  // ✅ CORREGIDO: era 'challenges_members'
-      .select('challenge_id')
-      .eq('user_id', currentUserId)
-      .eq('status', 'active');
-    joinedChallengeIds = memberships ? memberships.map(m => m.challenge_id) : [];
-  }
-
   const { data: challenges, error } = await query;
   const challengesList = document.getElementById('challengesList');
-  
+
   if (error) {
-    console.error('❌ Error cargando challenges:', error);
-    challengesList.innerHTML = '<div style="color:#e53e3e;text-align:center;">Error al cargar los retos.</div>';
+    challengesList.innerHTML = '<div style="color:#e53e3e;text-align:center;">Error al cargar los desafíos.</div>';
     return;
   }
 
-  if (!challenges || challenges.length === 0) {
-    challengesList.innerHTML = '<div style="color:#6b7280;text-align:center;padding:2rem;grid-column:1/-1;">No se encontraron retos.</div>';
-    return;
+  // 3. Obtener usuario actual
+  const { data: { session } } = await supabase.auth.getSession();
+  const userId = session?.user?.id;
+
+  // 4. Obtener participaciones del usuario
+  let userChallengeIds = [];
+  if (userId) {
+    const { data: memberships } = await supabase
+      .from('challenges_members') // <-- NOMBRE CORRECTO DE LA TABLA
+      .select('challenge_id')
+      .eq('user_id', userId);
+    userChallengeIds = memberships ? memberships.map(m => m.challenge_id) : [];
   }
 
-  // Añadir información de participación
-  challenges.forEach(challenge => {
-    challenge.isParticipating = joinedChallengeIds.includes(challenge.id);
-    // Mapear linkedCause para compatibilidad con el renderer
-    if (challenge.linkedCause && challenge.linkedCause.length > 0) {
-      challenge.linkedCause = challenge.linkedCause[0];
-    }
-  });
+  // 5. Añadir isParticipating a cada challenge
+  const challengesWithInfo = challenges ? challenges.map(challenge => ({
+    ...challenge,
+    isParticipating: userChallengeIds.includes(challenge.id)
+  })) : [];
 
-  // ✅ GUARDAR LOS RETOS EN window.challenges
-  window.challenges = challenges;
-
-  // ✅ USAR EL RENDERER AQUÍ
+  // 6. Renderizar usando el renderer
   if (window.challengesRenderer) {
-    window.challengesRenderer.renderGrid(challenges, challengesList);
+    window.challengesRenderer.renderGrid(challengesWithInfo, challengesList);
   } else {
-    console.error('❌ ChallengesRenderer no disponible');
-    challengesList.innerHTML = '<div style="color:#e53e3e;text-align:center;">Error cargando el sistema de visualización.</div>';
+    challengesList.innerHTML = '<div style="color:#e53e3e;text-align:center;">Error: Renderer no disponible.</div>';
   }
 }
 
@@ -641,21 +629,35 @@ async function participateInChallenge(challengeId, btn = null) {
   }
   const userId = session.user.id;
 
-  const { error } = await supabase
-    .from('challenges_members')
-    .insert([{ challenge_id: challengeId, user_id: userId, role: 'member', status: 'active' }]);
+  // Verifica si ya participa antes de insertar
+  const { data: existing } = await supabase
+    .from('challenges_members') // <-- NOMBRE CORRECTO DE LA TABLA
+    .select('id')
+    .eq('challenge_id', challengeId)
+    .eq('user_id', userId)
+    .single();
 
-  if (error) {
-    console.error('❌ Error al participar:', error);
-    if (error.code === '23505' || error.status === 409) {
-      alert('Ya estás participando en este reto.');
-    } else {
-      alert('Error al participar: ' + error.message);
+  if (existing) {
+    if (btn) {
+      btn.textContent = "Participando";
+      btn.disabled = true;
+      btn.style.opacity = "0.7";
+      btn.style.cursor = "not-allowed";
     }
+    alert('Ya estás participando en este reto.');
     return;
   }
 
-  // Actualizar botón
+  const { error } = await supabase
+    .from('challenges_members') // <-- NOMBRE CORRECTO DE LA TABLA
+    .insert([{ challenge_id: challengeId, user_id: userId, role: 'member', status: 'active' }]);
+
+  if (error) {
+    alert('Error al participar: ' + error.message);
+    return;
+  }
+
+  // Actualizar botón al instante
   if (btn) {
     btn.textContent = "Participando";
     btn.disabled = true;
@@ -664,17 +666,12 @@ async function participateInChallenge(challengeId, btn = null) {
   }
 
   alert('¡Has aceptado el reto!');
-  
-  // Cerrar modal si está abierto
+
   if (window.challengesRenderer) {
     window.challengesRenderer.closeModal();
   }
-  
-  // Recargar retos para actualizar estado
   loadChallengesFromSupabase(currentFilter);
 }
-
-// ✅ EXPONER FUNCIÓN GLOBALMENTE PARA EL RENDERER
 window.participateInChallenge = participateInChallenge;
 </script>
 {% endblock %}
