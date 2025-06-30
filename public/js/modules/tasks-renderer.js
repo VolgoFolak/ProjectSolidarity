@@ -7,7 +7,7 @@ const TasksRenderer = {
     const urgentBadge = task.is_urgent ? `<div class="task-badge urgent"><i class="fas fa-exclamation-circle"></i> Urgente</div>` : "";
     const pointsBadge = `<div class="task-badge points"><i class="fas fa-star"></i> +${task.points || 0} pts</div>`;
     const location = task.city && task.country ? `${task.city}, ${task.country}` : "";
-    
+
     // Progreso basado en participantes/beneficiarios
     const progress = task.beneficiaries ? Math.min(Math.round((task.participants / task.beneficiaries) * 100), 100) : 0;
 
@@ -26,12 +26,36 @@ const TasksRenderer = {
     // ¿El usuario ya participa?
     const isParticipating = task.isParticipating;
 
-    // Renderiza el botón según corresponda
+    // ¿Es admin?
+    const isAdmin = ['owner', 'admin', 'coordinator', 'founder'].includes(task.userRole);
+
+    // Botón participar o participando
     const participateBtn = isParticipating
       ? `<button class="btn btn-accent participate-btn" data-task-id="${task.id}" disabled style="opacity:0.7;cursor:not-allowed;">Participando</button>`
       : `<button class="btn btn-accent participate-btn" data-task-id="${task.id}">Participar</button>`;
 
-    const card = `
+    // Botón administrar solo si es admin
+    const adminBtn = isAdmin
+      ? `<button class="btn btn-accent admin-activity-btn" data-activity-type="task" data-activity-id="${task.id}">
+          <i class="fas fa-cog"></i> Administrar
+        </button>`
+      : '';
+
+    // Mostrar solo los botones según el rol
+    let actionsHtml = '';
+    if (isAdmin) {
+      actionsHtml = `
+        <button class="btn btn-primary view-task-btn" data-task-id="${task.id}">Ver más</button>
+        ${adminBtn}
+      `;
+    } else {
+      actionsHtml = `
+        <button class="btn btn-primary view-task-btn" data-task-id="${task.id}">Ver más</button>
+        ${participateBtn}
+      `;
+    }
+
+    return `
       <div class="task-card">
         <div class="task-image">
           <img src="${task.photo_url || '/img/task-default.jpg'}" alt="${task.title}" onerror="this.src='/img/task-default.jpg'">
@@ -59,36 +83,32 @@ const TasksRenderer = {
             </div>
           </div>
           <div class="task-actions">
-            <button class="btn btn-primary view-task-btn" data-task-id="${task.id}">Ver más</button>
-            ${participateBtn}
+            ${actionsHtml}
           </div>
         </div>
       </div>
     `;
-    
-    return card;
   },
 
   // Renderizar grid completo de tareas
   renderGrid(tasks, container) {
     if (!container) return;
-    
+
     container.innerHTML = '';
-    
+
     if (!tasks || tasks.length === 0) {
       container.innerHTML = '<div style="color:#6b7280;text-align:center;padding:2rem;grid-column:1/-1;">No se encontraron tareas.</div>';
       return;
     }
 
-    // Guardar las tareas en una variable global para acceder desde el modal
     window.tasks = tasks;
-    
+
     for (const task of tasks) {
       const cardHtml = this.renderCard(task);
       container.innerHTML += cardHtml;
     }
-    
-    // Agregar event listeners para los botones de ver más
+
+    // Botón ver más
     document.querySelectorAll('.view-task-btn').forEach(btn => {
       btn.addEventListener('click', function(e) {
         e.preventDefault();
@@ -96,8 +116,8 @@ const TasksRenderer = {
         TasksRenderer.showTaskModal(taskId);
       });
     });
-    
-    // Agregar event listeners para los botones de participar
+
+    // Botón participar
     document.querySelectorAll('.participate-btn').forEach(btn => {
       btn.addEventListener('click', function(e) {
         e.preventDefault();
@@ -108,7 +128,19 @@ const TasksRenderer = {
       });
     });
 
-    // Verificar si hay que abrir un modal específico desde la URL
+    // Botón administrar (idéntico a causes)
+    document.querySelectorAll('.admin-activity-btn').forEach(btn => {
+      btn.addEventListener('click', function(e) {
+        e.preventDefault();
+        const activityId = this.getAttribute('data-activity-id');
+        if (typeof window.openAdminTaskModal === 'function') {
+          const task = window.tasks?.find(t => t.id == activityId);
+          if (task) window.openAdminTaskModal(task);
+        }
+      });
+    });
+
+    // Modal desde URL
     this.checkForModalFromURL();
   },
 
@@ -458,3 +490,10 @@ window.mostrarCompartirTarea = function(taskId) {
 if (typeof module !== 'undefined' && module.exports) {
   module.exports = TasksRenderer;
 }
+
+// Ejemplo básico de implementación
+window.openAdminTaskModal = function(task) {
+  // Aquí puedes abrir tu modal de administración real, sin alert.
+  // document.getElementById('adminTaskModal').style.display = 'block';
+  // ...rellenar campos con task...
+};
