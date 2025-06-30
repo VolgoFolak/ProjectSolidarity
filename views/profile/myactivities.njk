@@ -751,6 +751,27 @@
       overflow-y: auto;
       padding-right: 1rem;
     }
+    /* 🎯 SOLUCIÓN SÚPER ESPECÍFICA: SOLO TÍTULOS 🎯 */
+#taskModal h1:first-child,
+#challengeModal h1:first-child,
+#volunteeringModal h1:first-child,
+#taskModalBody > h1:first-child,
+#challengeModalBody > h1:first-child,
+#volunteeringModalBody > h1:first-child {
+  text-align: left !important;
+  margin-left: 0 !important;
+  margin-right: auto !important;
+}
+
+/* 🎯 SOLO PÁRRAFOS Y DIVS DE CONTENIDO 🎯 */
+#taskModalBody > p,
+#challengeModalBody > p,
+#volunteeringModalBody > p,
+#taskModalBody > div:not(.share-section):not(.modal-actions):not(.task-actions):not(.challenge-actions):not(.volunteering-actions),
+#challengeModalBody > div:not(.share-section):not(.modal-actions):not(.task-actions):not(.challenge-actions):not(.volunteering-actions),
+#volunteeringModalBody > div:not(.share-section):not(.modal-actions):not(.task-actions):not(.challenge-actions):not(.volunteering-actions) {
+  text-align: left !important;
+}
     @media (max-width: 600px) {
       #settingsTab .solidarity-form {
         max-height: 45vh;
