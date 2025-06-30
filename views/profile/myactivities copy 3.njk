@@ -836,25 +836,42 @@
         <h3 class="form-section-title"><i class="fas fa-cog"></i> Configuración de la actividad</h3>
         <div class="form-grid">
           <div class="form-group">
-            <label for="editActivityTitle"><i class="fas fa-heading"></i> Título</label>
-            <input type="text" id="editActivityTitle" name="editActivityTitle" required>
-          </div>
-          <div class="form-group">
-            <label for="editActivityGoal"><i class="fas fa-euro-sign"></i> Meta (€)</label>
-            <input type="number" id="editActivityGoal" name="editActivityGoal" min="0">
-          </div>
-          <div class="form-group form-group-full">
-            <label for="editActivityDesc"><i class="fas fa-align-left"></i> Descripción</label>
-            <textarea id="editActivityDesc" name="editActivityDesc" rows="4" required></textarea>
-          </div>
-        </div>
-        <div class="form-actions">
-          <button type="submit" class="btn btn-primary">
-            <i class="fas fa-save"></i> Guardar Cambios
-          </button>
-        </div>
-      </form>
+        <label for="editActivityTitle"><i class="fas fa-heading"></i> Título de la actividad</label>
+        <input type="text" id="editActivityTitle" name="editActivityTitle" required>
+      </div>
+      <div class="form-group">
+        <label for="editActivityCategory"><i class="fas fa-layer-group"></i> Categoría</label>
+        <select id="editActivityCategory" name="editActivityCategory" required>...</select>
+      </div>
+      <div class="form-group">
+        <label for="editActivityPrivacy"><i class="fas fa-lock"></i> Privacidad</label>
+        <select id="editActivityPrivacy" name="editActivityPrivacy" required>...</select>
+      </div>
+      <div class="form-group">
+        <label for="editActivityGoal"><i class="fas fa-euro-sign"></i> Meta de recaudación (€)</label>
+        <input type="number" id="editActivityGoal" name="editActivityGoal" min="0">
+      </div>
+      <div class="form-group">
+        <label for="editActivityTags"><i class="fas fa-tags"></i> Etiquetas (separadas por comas)</label>
+        <input type="text" id="editActivityTags" name="editActivityTags">
+      </div>
+      <div class="form-group form-group-full">
+        <label for="editActivityDesc"><i class="fas fa-align-left"></i> Descripción</label>
+        <textarea id="editActivityDesc" name="editActivityDesc" rows="4" required></textarea>
+      </div>
+      <div class="form-group form-group-full">
+        <label for="editActivityPhoto"><i class="fas fa-image"></i> Foto/logo de la actividad</label>
+        <input type="file" id="editActivityPhoto" name="editActivityPhoto" accept="image/*">
+        <img id="editActivityPhotoPreview" style="max-width: 200px; margin-top: 1rem; display: none; border-radius: 12px;">
+      </div>
     </div>
+    <div class="form-actions">
+      <button type="submit" class="btn btn-primary">
+        <i class="fas fa-save"></i> Guardar Cambios
+      </button>
+    </div>
+  </form>
+</div>
     <div class="admin-tab-content" id="contentTab">
       <h3>Mensaje para los participantes</h3>
       <textarea id="activityMessage" rows="5" style="width: 100%; margin-bottom: 1rem;"></textarea>
