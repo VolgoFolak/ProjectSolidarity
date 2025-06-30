@@ -573,7 +573,7 @@ async function loadChallengesFromSupabase(filter = "all", searchTerm = "") {
   // 1. Cargar retos desde Supabase
   let query = supabase
     .from('challenges')
-    .select('*')
+    .select('*, participants') // <-- asegúrate de traerlo
     .order('created_at', { ascending: false });
 
   // 2. Filtros (si tienes)
