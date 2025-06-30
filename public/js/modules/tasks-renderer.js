@@ -181,22 +181,17 @@ const TasksRenderer = {
 
       if (error || !task) {
         console.error('❌ Error cargando tarea desde URL:', error);
-        // Redirigir a la página general de tareas
         window.history.replaceState({}, '', '/tasks');
         return;
       }
 
-      // Añadir la tarea a window.tasks si no existe
       if (!window.tasks) {
         window.tasks = [];
       }
-      
-      // Verificar si ya existe para evitar duplicados
       if (!window.tasks.find(t => t.id === taskId)) {
         window.tasks.push(task);
       }
 
-      // Abrir el modal
       this.showTaskModal(taskId);
     } catch (error) {
       console.error('❌ Error cargando tarea:', error);
@@ -406,8 +401,6 @@ const TasksRenderer = {
     if (modal) {
       modal.style.display = 'none';
       document.body.style.overflow = '';
-      
-      // Limpiar URL si es necesario
       if (window.location.pathname.includes('/tasks/') && window.location.pathname !== '/tasks') {
         window.history.pushState({}, '', '/tasks');
       }
@@ -421,9 +414,7 @@ const TasksRenderer = {
       console.error('❌ No se encontró la tarea con ID:', taskId);
       return;
     }
-    
     console.log('🔗 Compartiendo tarea:', task);
-    
     if (window.renderCompartir) {
       window.renderCompartir({
         title: task.title,
@@ -432,13 +423,11 @@ const TasksRenderer = {
         link: `${window.location.origin}/tasks/${task.id}`,
         type: 'tarea'
       }, 'shareSection');
-      
       document.getElementById('shareSection').scrollIntoView({ 
         behavior: 'smooth', 
         block: 'center' 
       });
     } else {
-      // Fallback si no está compartir.js
       const link = `${window.location.origin}/tasks/${task.id}`;
       navigator.clipboard.writeText(link).then(() => {
         alert('¡Enlace copiado!');
@@ -459,9 +448,6 @@ window.mostrarCompartirTarea = function(taskId) {
     console.error('❌ No se encontró la tarea con ID:', taskId);
     return;
   }
-  
-  console.log('🔗 Compartiendo tarea:', task);
-  
   if (window.renderCompartir) {
     window.renderCompartir({
       title: task.title,
@@ -470,13 +456,11 @@ window.mostrarCompartirTarea = function(taskId) {
       link: `${window.location.origin}/tasks/${task.id}`,
       type: 'tarea'
     }, 'shareSection');
-    
     document.getElementById('shareSection').scrollIntoView({ 
       behavior: 'smooth', 
       block: 'center' 
     });
   } else {
-    // Fallback si no está compartir.js
     const link = `${window.location.origin}/tasks/${task.id}`;
     navigator.clipboard.writeText(link).then(() => {
       alert('¡Enlace copiado!');
@@ -491,9 +475,82 @@ if (typeof module !== 'undefined' && module.exports) {
   module.exports = TasksRenderer;
 }
 
-// Ejemplo básico de implementación
+// Modal de administración de tareas: función para abrir y cargar miembros
 window.openAdminTaskModal = function(task) {
-  // Aquí puedes abrir tu modal de administración real, sin alert.
-  // document.getElementById('adminTaskModal').style.display = 'block';
-  // ...rellenar campos con task...
+  // Eliminar modal anterior si existe para evitar duplicados
+  const existingModal = document.getElementById('adminTaskModal');
+  if (existingModal) {
+    existingModal.remove();
+  }
+
+    // Cerrar modal
+  modal.querySelector('#closeAdminTaskModal').addEventListener('click', () => {
+    modal.remove();
+    document.body.style.overflow = '';
+  });
+
+  // Cerrar al hacer clic fuera
+  modal.addEventListener('click', (e) => {
+    if (e.target === modal) {
+      modal.remove();
+      document.body.style.overflow = '';
+    }
+  });
+
+  // Tab único
+  modal.querySelector('#tabMiembrosBtn').addEventListener('click', () => {
+    window.loadTaskMembersAdminTab(task.id);
+  });
+
+  document.body.style.overflow = 'hidden';
+
+  // Cargar miembros al abrir el modal
+  window.loadTaskMembersAdminTab(task.id);
+};
+
+// Solo rellena el contenido, nunca crea modales ni HTML fuera del tab
+window.loadTaskMembersAdminTab = async function(taskId) {
+  const membersContainer = document.getElementById('adminTaskMembersTab');
+  if (!membersContainer) {
+    console.warn('⚠️ No existe el contenedor adminTaskMembersTab en el DOM');
+    return;
+  }
+
+  membersContainer.innerHTML = `<div style="color:#6b7280; padding:1rem; text-align:center;">Cargando miembros...</div>`;
+
+  try {
+    const { data: members, error } = await supabase
+      .from('task_members')
+      .select('user_id, role, profiles:profiles(username, photo_url)')
+      .eq('task_id', taskId);
+
+    if (error) {
+      console.error('❌ Error cargando miembros:', error);
+      membersContainer.innerHTML = `<div style="color:red; padding:1rem; text-align:center;">Error al cargar miembros: ${error.message}</div>`;
+      return;
+    }
+
+    if (!members || members.length === 0) {
+      membersContainer.innerHTML = `<div style="color:#6b7280; padding:1rem; text-align:center;">No hay miembros en esta tarea.</div>`;
+      return;
+    }
+
+    membersContainer.innerHTML = `
+      <div style="display:flex; flex-direction:column; gap:1rem;">
+        ${members.map(m => `
+          <div style="display:flex; align-items:center; gap:1rem; background:#f8fafc; border-radius:8px; padding:0.7rem 1rem;">
+            <img src="${m.profiles?.photo_url || '/img/avatar-default.png'}" 
+                 alt="${m.profiles?.username || 'Usuario'}" 
+                 style="width:38px; height:38px; border-radius:50%; object-fit:cover;"
+                 onerror="this.src='/img/avatar-default.png'">
+            <span style="font-weight:600; color:var(--primary);">${m.profiles?.username || 'Usuario desconocido'}</span>
+            <span style="margin-left:auto; background:#e5e7eb; color:#4a6fa5; border-radius:6px; padding:0.2rem 0.7rem; font-size:0.95rem;">${m.role || 'Sin rol'}</span>
+          </div>
+        `).join('')}
+      </div>
+    `;
+  } catch (error) {
+    console.error('❌ Error inesperado:', error);
+    membersContainer.innerHTML = `<div style="color:red; padding:1rem; text-align:center;">Error inesperado al cargar miembros.</div>`;
+  }
 };
