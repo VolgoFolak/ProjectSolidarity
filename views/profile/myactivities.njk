@@ -61,12 +61,13 @@
       border-color: var(--primary);
     }
 
-    /* --- CSS COMPLETO DE TAREAS (copiado de index.njk) --- */
+    /* Grid and card styles */
     .tasks-grid, .activities-grid {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
       gap: 2rem;
     }
+    
     .task-card {
       background: white;
       border-radius: 12px;
@@ -77,24 +78,29 @@
       display: flex;
       flex-direction: column;
     }
+    
     .task-card:hover {
       transform: translateY(-5px);
       box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
     }
+    
     .task-image {
       height: 180px;
       overflow: hidden;
       position: relative;
     }
+    
     .task-image img {
       width: 100%;
       height: 100%;
       object-fit: cover;
       transition: transform 0.3s ease;
     }
+    
     .task-card:hover .task-image img {
       transform: scale(1.05);
     }
+    
     .task-badge {
       position: absolute;
       top: 1rem;
@@ -109,27 +115,32 @@
       gap: 0.5rem;
       box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
     }
+    
     .task-badge.urgent {
       background: var(--urgent);
       color: white;
     }
+    
     .task-badge.points {
       background: var(--primary);
       color: white;
       left: 1rem;
       right: auto;
     }
+    
     .task-content {
       padding: 1.5rem;
       display: flex;
       flex-direction: column;
       flex: 1;
     }
+    
     .task-content h3 {
       font-size: 1.3rem;
       margin-bottom: 0.8rem;
       color: #2d3748;
     }
+    
     .task-content p {
       color: #6b7280;
       margin-bottom: 1.5rem;
@@ -137,6 +148,7 @@
       line-height: 1.6;
       flex-grow: 1;
     }
+    
     .task-meta {
       display: flex;
       gap: 1rem;
@@ -144,15 +156,18 @@
       font-size: 0.85rem;
       flex-wrap: wrap;
     }
+    
     .meta-item {
       display: flex;
       align-items: center;
       gap: 0.5rem;
       color: #6b7280;
     }
+    
     .meta-item i {
       color: var(--primary);
     }
+    
     .beneficiaries-count {
       display: inline-flex;
       align-items: center;
@@ -163,9 +178,11 @@
       font-size: 0.85rem;
       font-weight: 600;
     }
+    
     .beneficiaries-count i {
       margin-right: 0.3rem;
     }
+    
     .linked-cause {
       display: inline-flex;
       align-items: center;
@@ -177,6 +194,7 @@
       font-weight: 600;
       margin-bottom: 1rem;
     }
+    
     .linked-cause img {
       width: 22px;
       height: 22px;
@@ -185,46 +203,12 @@
       border: 1px solid #e5e7eb;
       margin-right: 0.4em;
     }
+    
     .task-progress {
       margin-bottom: 1.5rem;
     }
-    .progress-bar {
-      height: 8px;
-      background: var(--gray);
-      border-radius: 4px;
-      overflow: hidden;
-      margin-bottom: 0.5rem;
-    }
-    .progress-fill {
-      height: 100%;
-      background: var(--primary);
-      border-radius: 4px;
-    }
-    .progress-info {
-      display: flex;
-      justify-content: space-between;
-      font-size: 0.9rem;
-      color: #6b7280;
-    }
-    .task-actions {
-      display: flex;
-      gap: 0.8rem;
-    }
-    .task-actions .btn {
-      flex: 1;
-      text-align: center;
-      justify-content: center;
-    }
-    .btn-accent {
-      background: var(--accent);
-      color: white;
-    }
-    .btn-accent:hover {
-      background: var(--accent-dark);
-      transform: translateY(-2px);
-    }
 
-    /* Añade esto dentro del bloque <style> */
+    /* Button and action styles */
     .cause-actions, .task-actions, .challenge-actions, .volunteering-actions {
       display: flex;
       gap: 0.8rem;
@@ -238,13 +222,13 @@
       flex: 1;
       text-align: center;
       justify-content: center;
-      padding: 0.8rem 1.2rem;      /* Igual que causas */
+      padding: 0.8rem 1.2rem;
       border-radius: 50px;
       font-weight: 600;
-      font-size: 1rem;             /* Igual que causas */
+      font-size: 1rem;
       display: flex;
       align-items: center;
-      gap: 0.5rem;                 /* Un poco más de espacio entre icono y texto */
+      gap: 0.5rem;
       transition: all 0.3s ease;
       border: none;
       cursor: pointer;
@@ -273,6 +257,7 @@
     }
     .btn-accent:hover {
       background: var(--accent-dark);
+      transform: translateY(-2px);
     }
 
     .btn-warning {
@@ -291,6 +276,29 @@
     .btn-secondary:hover {
       background: var(--volunteering-dark);
     }
+
+    /* Progress bar styles */
+    .progress-bar {
+      height: 8px;
+      background: var(--gray);
+      border-radius: 4px;
+      overflow: hidden;
+      margin-bottom: 0.5rem;
+    }
+    
+    .progress-fill {
+      height: 100%;
+      background: var(--primary);
+      border-radius: 4px;
+    }
+    
+    .progress-info {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.9rem;
+      color: #6b7280;
+    }
+
     /* Responsive */
     @media (max-width: 768px) {
       .activities-grid, .tasks-grid {
@@ -307,7 +315,7 @@
       align-items: flex-start !important;
     }
 
-    /* --- ESTILOS DEL MODAL DE ADMINISTRACIÓN --- */
+    /* Admin modal styles */
     .admin-modal {
       display: none;
       position: fixed;
@@ -361,6 +369,7 @@
       scrollbar-width: none;
     }
     .admin-tabs::-webkit-scrollbar { display: none; }
+    
     .admin-tab {
       flex: none;
       padding: 0.7rem 1.2rem;
@@ -373,6 +382,7 @@
       cursor: pointer;
       transition: background 0.2s, color 0.2s, border-bottom 0.2s;
     }
+    
     .admin-tab.active {
       background: #fff;
       color: var(--primary);
@@ -416,28 +426,6 @@
       color: #6b7280;
     }
 
-    .progress-bar {
-      height: 8px;
-      background: #e2e8f0;
-      border-radius: 4px;
-      overflow: hidden;
-      margin-bottom: 0.5rem;
-    }
-
-    .progress-fill {
-      height: 100%;
-      background: var(--primary);
-      border-radius: 4px;
-    }
-
-    .progress-info {
-      display: flex;
-      justify-content: space-between;
-      font-size: 0.9rem;
-      color: #6b7280;
-    }
-
-    /* Estilos específicos para el modal de administración */
     .admin-modal h2 {
       font-size: 1.8rem;
       margin-bottom: 1.5rem;
@@ -495,7 +483,7 @@
       background: var(--volunteering-dark);
     }
 
-    /* Estilos para el formulario de configuración de actividad */
+    /* Form styles */
     .solidarity-form {
       background: #f9fafb;
       padding: 2rem;
@@ -562,35 +550,7 @@
       background: var(--primary-dark);
     }
 
-    .solidarity-form .btn-accent {
-      background: var(--accent);
-      color: white;
-    }
-
-    .solidarity-form .btn-accent:hover {
-      background: var(--accent-dark);
-    }
-
-    .solidarity-form .btn-warning {
-      background: var(--challenge);
-      color: #333;
-    }
-
-    .solidarity-form .btn-warning:hover {
-      background: var(--challenge-dark);
-      color: white;
-    }
-
-    .solidarity-form .btn-secondary {
-      background: var(--volunteering);
-      color: white;
-    }
-
-    .solidarity-form .btn-secondary:hover {
-      background: var(--volunteering-dark);
-    }
-
-    /* Estilos para las tarjetas de actividad en el modal de administración */
+    /* Activity cards */
     .activity-cards-grid {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
@@ -619,7 +579,7 @@
       margin-bottom: 1rem;
     }
 
-    /* Estilos para la lista de miembros */
+    /* Members list */
     .members-list {
       max-height: 300px;
       overflow-y: auto;
@@ -680,7 +640,7 @@
       color: white;
     }
 
-    /* Estilos para los movimientos recientes */
+    /* Recent activities */
     #recentActivities {
       max-height: 300px;
       overflow-y: auto;
@@ -715,42 +675,13 @@
       font-size: 0.85rem;
     }
 
-    /* Tabs estilo myteams */
-    .admin-tabs {
-      display: flex;
-      gap: 0.5rem;
-      margin-bottom: 1.2rem;
-      border-bottom: 2px solid #e2e8f0;
-      overflow-x: auto;
-      scrollbar-width: none;
-    }
-    .admin-tabs::-webkit-scrollbar { display: none; }
-    .admin-tab {
-      flex: none;
-      padding: 0.7rem 1.2rem;
-      border-radius: 8px 8px 0 0;
-      background: none;
-      color: #4a5568;
-      font-weight: 600;
-      border: none;
-      border-bottom: 2px solid transparent;
-      cursor: pointer;
-      transition: background 0.2s, color 0.2s, border-bottom 0.2s;
-    }
-    .admin-tab.active {
-      background: #fff;
-      color: var(--primary);
-      border-bottom: 2px solid var(--primary);
-      box-shadow: 0 2px 8px #4a6fa511;
-      z-index: 2;
-    }
-
-    /* Scroll interno para el formulario de configuración */
+    /* Settings form scroll */
     #settingsTab .solidarity-form {
       max-height: 60vh;
       overflow-y: auto;
       padding-right: 1rem;
     }
+    
     @media (max-width: 600px) {
       #settingsTab .solidarity-form {
         max-height: 45vh;

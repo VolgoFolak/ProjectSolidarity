@@ -854,6 +854,17 @@
         grid-template-columns: 1fr;
       }
     }
+
+    .admin-modal-content .form-section-title {
+      color: var(--primary) !important;
+      font-size: 1.25rem !important;
+      font-weight: 700 !important;
+      margin-bottom: 1.2rem !important;
+      margin-top: 0 !important;
+      display: flex;
+      align-items: center;
+      gap: 0.7rem;
+    }
   </style>
 {% endblock %}
 
@@ -945,12 +956,12 @@
       </div>
       
       <div class="admin-tab-content" id="membersTab">
-        <h3>Miembros actuales</h3>
+        <h3 class="form-section-title"><i class="fas fa-users"></i> Miembros actuales</h3>
         <div class="members-list" id="membersList">
           <!-- Los miembros se cargarán aquí dinámicamente -->
         </div>
         
-        <h3 style="margin-top: 2rem;">Invitar nuevos miembros</h3>
+        <h3 class="form-section-title"><i class="fas fa-user-plus"></i> Invitar nuevos miembros</h3>
         <div class="invite-form">
           <input type="email" id="inviteEmail" placeholder="Correo electrónico del usuario a invitar">
           <select id="inviteRole" class="form-control">
@@ -965,8 +976,8 @@
       </div>
       
       <div class="admin-tab-content" id="settingsTab">
-        <form id="teamSettingsForm" class="solidarity-form">
-          <h3 class="form-section-title"><i class="fas fa-cog"></i> Configuración de la comunidad</h3>
+        <form id="activitySettingsForm" class="solidarity-form">
+          <h3 class="form-section-title"><i class="fas fa-cog"></i> Configuración de la actividad</h3>
           <div class="form-grid">
             <div class="form-group">
               <label for="editTeamName"><i class="fas fa-users"></i> Nombre de la comunidad</label>
@@ -1017,13 +1028,13 @@
       </div>
       
       <div class="admin-tab-content" id="contentTab">
-        <h3>Mensaje para la comunidad</h3>
+        <h3 class="form-section-title"><i class="fas fa-bullhorn"></i> Mensaje para los participantes</h3>
         <textarea id="teamMessage" rows="5" style="width: 100%; margin-bottom: 1rem;"></textarea>
         <button class="btn btn-primary" id="saveMessageBtn">
           <i class="fas fa-bullhorn"></i> Publicar Mensaje
         </button>
         
-        <h3 style="margin-top: 2rem;">Actividades recientes</h3>
+        <h3 class="form-section-title"><i class="fas fa-history"></i> Actividades recientes</h3>
         <div id="recentActivities">
           <!-- Las actividades se cargarán aquí dinámicamente -->
         </div>
