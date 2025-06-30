@@ -176,13 +176,13 @@ class CausesRenderer {
             <h3 class="content-title" style="font-size:1.2rem; font-weight:600; color:var(--primary); margin-bottom:0.9rem; display:flex; align-items:center; gap:0.7rem;">
               <i class="fas fa-align-left"></i> Resumen
             </h3>
-            <p class="content-text" style="line-height:1.7; color:#4b5563; font-size:1.05rem; margin-left:0; margin-right:0; text-align:justify;">${cause.short_description || 'No hay resumen disponible para esta causa.'}</p>
+            <p class="content-text" style="line-height:1.7; color:#4b5563; font-size:1rem; margin-left:0; margin-right:0; text-align:justify;">${cause.short_description || 'No hay resumen disponible para esta causa.'}</p>
           </div>
           <div class="content-section" style="margin-bottom:2.2rem;">
             <h3 class="content-title" style="font-size:1.2rem; font-weight:600; color:var(--primary); margin-bottom:0.9rem; display:flex; align-items:center; gap:0.7rem;">
               <i class="fas fa-info-circle"></i> Descripción completa
             </h3>
-            <p class="content-text" style="line-height:1.7; color:#4b5563; font-size:1.05rem; margin-left:0; margin-right:0; text-align:justify;">${cause.description || 'No hay descripción detallada disponible para esta causa.'}</p>
+            <p class="content-text" style="line-height:1.7; color:#4b5563; font-size:1rem; margin-left:0; margin-right:0; text-align:justify;">${cause.description || 'No hay descripción detallada disponible para esta causa.'}</p>
           </div>
         </div>
         <!-- Botones abajo, con más espacio arriba -->
