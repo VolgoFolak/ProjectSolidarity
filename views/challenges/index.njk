@@ -619,59 +619,5 @@ async function loadChallengesFromSupabase(filter = "all", searchTerm = "") {
     challengesList.innerHTML = '<div style="color:#e53e3e;text-align:center;">Error: Renderer no disponible.</div>';
   }
 }
-
-// ✅ MANTENER FUNCIÓN DE PARTICIPAR (original) - TAMBIÉN CORREGIR AQUÍ
-async function participateInChallenge(challengeId, btn = null) {
-  const { data: { session } } = await supabase.auth.getSession();
-  if (!session?.user) {
-    document.getElementById('loginModal').classList.add('active');
-    return;
-  }
-  const userId = session.user.id;
-
-  // Verifica si ya participa antes de insertar
-  const { data: existing } = await supabase
-    .from('challenges_members') // <-- NOMBRE CORRECTO DE LA TABLA
-    .select('id')
-    .eq('challenge_id', challengeId)
-    .eq('user_id', userId)
-    .single();
-
-  if (existing) {
-    if (btn) {
-      btn.textContent = "Participando";
-      btn.disabled = true;
-      btn.style.opacity = "0.7";
-      btn.style.cursor = "not-allowed";
-    }
-    alert('Ya estás participando en este reto.');
-    return;
-  }
-
-  const { error } = await supabase
-    .from('challenges_members') // <-- NOMBRE CORRECTO DE LA TABLA
-    .insert([{ challenge_id: challengeId, user_id: userId, role: 'member', status: 'active' }]);
-
-  if (error) {
-    alert('Error al participar: ' + error.message);
-    return;
-  }
-
-  // Actualizar botón al instante
-  if (btn) {
-    btn.textContent = "Participando";
-    btn.disabled = true;
-    btn.style.opacity = "0.7";
-    btn.style.cursor = "not-allowed";
-  }
-
-  alert('¡Has aceptado el reto!');
-
-  if (window.challengesRenderer) {
-    window.challengesRenderer.closeModal();
-  }
-  loadChallengesFromSupabase(currentFilter);
-}
-window.participateInChallenge = participateInChallenge;
 </script>
 {% endblock %}
