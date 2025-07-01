@@ -957,3 +957,17 @@ header {
     transform: translateX(0);
   }
 }
+
+/* 📱 Espacio para la barra de navegación móvil */
+@media screen and (max-width: 1024px) {
+  body {
+    padding-bottom: 70px; /* Espacio para que no tape el contenido */
+  }
+  
+  /* Ajuste específico para contenedores principales */
+  .main-container,
+  .profile-main-container,
+  .container {
+    margin-bottom: 20px;
+  }
+}
