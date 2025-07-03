@@ -14,11 +14,9 @@ class VolunteeringRenderer {
     const pointsBadge = `<div class="volunteering-badge points"><i class="fas fa-star"></i> +${volunteering.points || 0} pts</div>`;
     const location = volunteering.city && volunteering.country ? `${volunteering.city}, ${volunteering.country}` : "";
 
-    // Progreso basado en participantes/beneficiarios
     const progress = volunteering.volunteers_needed
       ? Math.min(Math.round((volunteering.volunteers / volunteering.volunteers_needed) * 100), 100) : 0;
 
-    // Causa vinculada
     let causeHtml = '';
     if (volunteering.linkedCause && volunteering.linkedCause.title) {
       const cause = volunteering.linkedCause;
@@ -30,11 +28,9 @@ class VolunteeringRenderer {
       `;
     }
 
-    // ✅ VERIFICAR ROL DE ADMINISTRADOR (solo este bloque es nuevo)
     const isAdmin = ['founder','admin','coordinator','creator'].includes(volunteering.userRole) || volunteering.isCreator;
     const isParticipating = volunteering.isParticipating;
 
-    // ✅ LÓGICA DE BOTONES ACTUALIZADA (solo este bloque cambió)
     let actionButtons = '';
     if (isAdmin) {
       actionButtons = `
@@ -55,9 +51,7 @@ class VolunteeringRenderer {
       `;
     }
 
-    const startDate = volunteering.start_date ? new Date(volunteering.start_date).toLocaleDateString('es-ES', { day: 'numeric', month: 'short' }) : '';
-    const endDate = volunteering.end_date ? new Date(volunteering.end_date).toLocaleDateString('es-ES', { day: 'numeric', month: 'short' }) : '';
-
+    // FECHAS ELIMINADAS DE LOS METADATOS DE LA TARJETA
     return `
       <div class="volunteering-card">
         <div class="volunteering-image">
@@ -71,7 +65,7 @@ class VolunteeringRenderer {
           ${causeHtml}
           <div class="volunteering-meta">
             <div class="meta-item"><i class="fas fa-map-marker-alt"></i> ${location}</div>
-            <div class="meta-item"><i class="fas fa-calendar-alt"></i> ${startDate} - ${endDate}</div>
+            <div class="meta-item"><i class="fas fa-users"></i> ${volunteering.volunteers || 0} voluntarios</div>
             <div class="meta-item"><i class="fas fa-heart"></i> ${volunteering.beneficiaries || 0} beneficiarios</div>
           </div>
           <div class="volunteering-progress">
@@ -329,12 +323,12 @@ class VolunteeringRenderer {
           </div>
           <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.7rem; margin-bottom:1.2rem;">
             <div style="display:flex; align-items:center; gap:0.5rem; color:#6b7280;">
-              <i class="fas fa-map-marker-alt" style="color:var(--primary);"></i>
-              <span>${volunteering.city || 'Sin ubicación'}${volunteering.country ? ', ' + volunteering.country : ''}</span>
-            </div>
-            <div style="display:flex; align-items:center; gap:0.5rem; color:#6b7280;">
               <i class="fas fa-users" style="color:var(--primary);"></i>
               <span>${volunteering.volunteers || 0} voluntarios</span>
+            </div>
+            <div style="display:flex; align-items:center; gap:0.5rem; color:#6b7280;">
+              <i class="fas fa-map-marker-alt" style="color:var(--primary);"></i>
+              <span>${volunteering.city || 'Sin ubicación'}${volunteering.country ? ', ' + volunteering.country : ''}</span>
             </div>
             <div style="display:flex; align-items:center; gap:0.5rem; color:#6b7280;">
               <i class="fas fa-heart" style="color:var(--primary);"></i>
