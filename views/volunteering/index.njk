@@ -746,6 +746,14 @@ function shareVolunteering(volunteeringId) {
   }
 }
 
+// Supón que tienes una variable global window.volsData con los voluntariados
+document.addEventListener('DOMContentLoaded', function() {
+  const container = document.getElementById('volunteeringGrid');
+  if (window.volsData) {
+    window.volunteeringRenderer.renderGrid(window.volsData, container);
+  }
+});
+
 // ✅ EXPONER FUNCIONES GLOBALMENTE PARA EL RENDERER
 window.participateInVolunteering = participateInVolunteering;
 window.shareVolunteering = shareVolunteering;
