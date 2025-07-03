@@ -105,7 +105,7 @@ class SolidarityMobileHeader extends HTMLElement {
       
       <div class="center-section">
         <a href="/" class="logo" style="display:flex;align-items:center;gap:12px;text-decoration:none;">
-          <img src="/img/solidaritylogocorazon.jpg" alt="Solidarity Logo" class="logo-icon" style="width:44px;height:44px;object-fit:contain;">
+          <img src="/img/solidaritylogocorazon.png" alt="Solidarity Logo" class="logo-icon" style="width:44px;height:44px;object-fit:contain;">
           <span class="logo-text">Solidarity</span>
         </a>
       </div>
