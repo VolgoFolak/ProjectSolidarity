@@ -8,7 +8,7 @@ class SolidarityHamburgerMenu extends HTMLElement {
     super();
     this.attachShadow({ mode: 'open' });
     this.isOpen = false; // Inicializar estado
-    
+
     this.shadowRoot.innerHTML = `
       <style>
         :host {
@@ -18,77 +18,66 @@ class SolidarityHamburgerMenu extends HTMLElement {
           --white: #ffffff;
           --light: #f8f9fa;
           --darker: #1a202c;
-          
-          position: fixed;
-          top: 0;
-          right: 0;
-          z-index: 999999;
-          display: none;
+
+          display: block !important;
+          z-index: 999999 !important;
+          min-width: 60px !important;
+          min-height: 60px !important;
           font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
-        
+
         @media (max-width: 992px) {
           :host {
             display: block;
           }
         }
-        
-        /* Botón hamburguesa */
+
+        /* Botón hamburguesa circular */
         .menu-toggle {
-          position: relative;
-          width: 50px;
-          height: 50px;
-          margin: 15px;
-          background: var(--white);
+          width: 56px;
+          height: 56px;
+          margin: 0;
+          background: var(--white, #fff);
           border: none;
           border-radius: 50%;
           box-shadow: 0 4px 12px rgba(74, 111, 165, 0.2);
           display: flex;
-          flex-direction: column;
+          flex-direction: column; /* <-- Esto apila las líneas verticalmente */
           justify-content: center;
           align-items: center;
           cursor: pointer;
           transition: all 0.3s ease;
           z-index: 1000001;
+          position: relative;
         }
-        
         .menu-toggle:hover {
           transform: scale(1.05);
           box-shadow: 0 6px 18px rgba(74, 111, 165, 0.3);
         }
-        
+        /* Líneas del icono hamburguesa */
         .menu-line {
           width: 24px;
           height: 3px;
-          background: var(--primary);
+          background: #4a6fa5;
           margin: 2px 0;
           border-radius: 2px;
           transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-          transform-origin: center;
+          display: block;
         }
-        
-        /* Estado abierto del botón */
-        .menu-toggle.open {
-          background: var(--primary);
-        }
-        
         .menu-toggle.open .menu-line {
-          background: var(--white);
+          background: #fff;
         }
-        
         .menu-toggle.open .menu-line:nth-child(1) {
           transform: translateY(7px) rotate(45deg);
         }
-        
         .menu-toggle.open .menu-line:nth-child(2) {
           opacity: 0;
           transform: scale(0);
         }
-        
         .menu-toggle.open .menu-line:nth-child(3) {
           transform: translateY(-7px) rotate(-45deg);
         }
-        
+
         /* Overlay */
         .menu-overlay {
           position: fixed;
@@ -103,12 +92,12 @@ class SolidarityHamburgerMenu extends HTMLElement {
           transition: all 0.3s ease;
           z-index: 1000000;
         }
-        
+
         .menu-overlay.open {
           opacity: 1;
           visibility: visible;
         }
-        
+
         /* Panel del menú */
         .menu-panel {
           position: fixed;
@@ -125,11 +114,11 @@ class SolidarityHamburgerMenu extends HTMLElement {
           z-index: 1000000;
           overflow-y: auto;
         }
-        
+
         .menu-panel.open {
           transform: translateX(0);
         }
-        
+
         /* Contenido del menú */
         .menu-header {
           padding: 2rem 1.5rem 1.5rem;
@@ -137,7 +126,7 @@ class SolidarityHamburgerMenu extends HTMLElement {
           color: var(--white);
           margin-top: 60px; /* Espacio para el botón */
         }
-        
+
         .user-avatar {
           width: 48px;
           height: 48px;
@@ -146,13 +135,13 @@ class SolidarityHamburgerMenu extends HTMLElement {
           border: 3px solid var(--white);
           margin-bottom: 12px;
         }
-        
+
         .user-name {
           font-weight: 600;
           font-size: 1.1rem;
           margin-bottom: 4px;
         }
-        
+
         .user-status {
           font-size: 0.85rem;
           opacity: 0.9;
@@ -160,7 +149,7 @@ class SolidarityHamburgerMenu extends HTMLElement {
           align-items: center;
           gap: 6px;
         }
-        
+
         .status-dot {
           width: 8px;
           height: 8px;
@@ -168,17 +157,17 @@ class SolidarityHamburgerMenu extends HTMLElement {
           border-radius: 50%;
           box-shadow: 0 0 0 2px rgba(79, 195, 161, 0.3);
         }
-        
+
         /* Items del menú */
         .menu-items {
           flex: 1;
           padding: 1.5rem 0;
         }
-        
+
         .menu-section {
           margin-bottom: 2rem;
         }
-        
+
         .section-title {
           padding: 0 1.5rem 0.8rem;
           font-size: 0.75rem;
@@ -187,7 +176,7 @@ class SolidarityHamburgerMenu extends HTMLElement {
           color: #9ca3af;
           font-weight: 600;
         }
-        
+
         .menu-item {
           display: flex;
           align-items: center;
@@ -197,18 +186,18 @@ class SolidarityHamburgerMenu extends HTMLElement {
           transition: all 0.2s ease;
           position: relative;
         }
-        
+
         .menu-item:hover {
           background: var(--light);
           transform: translateX(4px);
         }
-        
+
         .menu-item.active {
           background: rgba(74, 111, 165, 0.08);
           color: var(--primary);
           font-weight: 600;
         }
-        
+
         .menu-item.active::before {
           content: '';
           position: absolute;
@@ -218,7 +207,7 @@ class SolidarityHamburgerMenu extends HTMLElement {
           width: 4px;
           background: var(--accent);
         }
-        
+
         .item-icon {
           width: 24px;
           height: 24px;
@@ -228,13 +217,13 @@ class SolidarityHamburgerMenu extends HTMLElement {
           margin-right: 16px;
           color: currentColor;
         }
-        
+
         .item-text {
           flex: 1;
           font-weight: 500;
           font-size: 0.95rem;
         }
-        
+
         .item-badge {
           background: var(--accent);
           color: white;
@@ -245,14 +234,14 @@ class SolidarityHamburgerMenu extends HTMLElement {
           min-width: 18px;
           text-align: center;
         }
-        
+
         /* Footer del menú */
         .menu-footer {
           padding: 1.5rem;
           border-top: 1px solid #e5e7eb;
           background: #f9fafb;
         }
-        
+
         .footer-link {
           display: flex;
           align-items: center;
@@ -265,16 +254,16 @@ class SolidarityHamburgerMenu extends HTMLElement {
           transition: all 0.2s;
           margin-bottom: 8px;
         }
-        
+
         .footer-link:hover {
           color: var(--primary);
           background: var(--white);
         }
-        
+
         .footer-link:last-child {
           margin-bottom: 0;
         }
-        
+
         /* Animaciones */
         @keyframes slideIn {
           from { 
@@ -286,27 +275,27 @@ class SolidarityHamburgerMenu extends HTMLElement {
             transform: translateX(0); 
           }
         }
-        
+
         .menu-item {
           animation: slideIn 0.3s ease-out forwards;
         }
-        
+
         .menu-item:nth-child(1) { animation-delay: 0.1s; }
         .menu-item:nth-child(2) { animation-delay: 0.15s; }
         .menu-item:nth-child(3) { animation-delay: 0.2s; }
         .menu-item:nth-child(4) { animation-delay: 0.25s; }
         .menu-item:nth-child(5) { animation-delay: 0.3s; }
-        
+
         /* Responsive */
         @media (max-width: 480px) {
           .menu-panel {
             width: 90vw;
           }
-          
+
           .menu-header {
             padding: 1.5rem 1rem 1rem;
           }
-          
+
           .item-text {
             font-size: 0.9rem;
           }
@@ -314,7 +303,7 @@ class SolidarityHamburgerMenu extends HTMLElement {
       </style>
       
       <!-- Botón hamburguesa -->
-      <button class="menu-toggle" aria-label="Abrir menú de navegación">
+      <button class="menu-toggle" id="hamburgerButton" aria-label="Abrir menú de navegación">
         <span class="menu-line"></span>
         <span class="menu-line"></span>
         <span class="menu-line"></span>
@@ -512,28 +501,28 @@ class SolidarityHamburgerMenu extends HTMLElement {
         </div>
       </div>
     `;
-    
+
     this.setupEventListeners();
     this.updateActiveItem();
     this.checkAuth();
   }
-  
+
   setupEventListeners() {
-    const toggle = this.shadowRoot.querySelector('.menu-toggle');
+    const toggle = this.shadowRoot.getElementById('hamburgerButton');
     const overlay = this.shadowRoot.querySelector('.menu-overlay');
     const logoutBtn = this.shadowRoot.getElementById('menuLogout');
-    
+
     // Toggle del menú
     toggle.addEventListener('click', (e) => {
       e.stopPropagation();
       this.toggleMenu();
     });
-    
+
     // Cerrar al hacer clic en overlay
     overlay.addEventListener('click', () => {
       this.closeMenu();
     });
-    
+
     // Event listeners para enlaces del menú
     this.shadowRoot.querySelectorAll('.menu-item').forEach(item => {
       item.addEventListener('click', () => {
@@ -541,33 +530,33 @@ class SolidarityHamburgerMenu extends HTMLElement {
         setTimeout(() => this.closeMenu(), 200);
       });
     });
-    
+
     // Logout
     logoutBtn.addEventListener('click', (e) => {
       e.preventDefault();
       this.logout();
     });
-    
+
     // Cerrar con ESC
     document.addEventListener('keydown', (e) => {
       if (e.key === 'Escape' && this.isOpen) {
         this.closeMenu();
       }
     });
-    
+
     // Actualizar item activo cuando cambia la URL
     window.addEventListener('popstate', () => {
       this.updateActiveItem();
     });
   }
-  
+
   toggleMenu() {
-    const toggle = this.shadowRoot.querySelector('.menu-toggle');
+    const toggle = this.shadowRoot.getElementById('hamburgerButton');
     const overlay = this.shadowRoot.querySelector('.menu-overlay');
     const panel = this.shadowRoot.querySelector('.menu-panel');
-    
+
     this.isOpen = !this.isOpen;
-    
+
     if (this.isOpen) {
       toggle.classList.add('open');
       overlay.classList.add('open');
@@ -579,14 +568,19 @@ class SolidarityHamburgerMenu extends HTMLElement {
       panel.classList.remove('open');
       document.body.style.overflow = '';
     }
+
+    const header = document.querySelector('solidarity-mobile-header');
+    if (header && header.setMenuOpen) {
+      header.setMenuOpen(this.isOpen);
+    }
   }
-  
+
   closeMenu() {
     if (this.isOpen) {
       this.toggleMenu();
     }
   }
-  
+
   async checkAuth() {
     try {
       // Verificar si Supabase está disponible
@@ -598,11 +592,11 @@ class SolidarityHamburgerMenu extends HTMLElement {
             .select('username, photo_url')
             .eq('id', user.id)
             .single();
-          
+
           const avatar = this.shadowRoot.getElementById('menuUserAvatar');
           const name = this.shadowRoot.getElementById('menuUserName');
           const status = this.shadowRoot.getElementById('menuUserStatus');
-          
+
           if (avatar) avatar.src = profile?.photo_url || '/img/default-user.png';
           if (name) name.textContent = profile?.username || 'Usuario';
           if (status) status.textContent = 'En línea';
@@ -612,11 +606,11 @@ class SolidarityHamburgerMenu extends HTMLElement {
       console.error('Error checking auth:', error);
     }
   }
-  
+
   updateActiveItem() {
     const currentPath = window.location.pathname;
     let activePage = 'home';
-    
+
     if (currentPath === '/') {
       activePage = 'home';
     } else if (currentPath.includes('/profile/myactivities')) {
@@ -636,7 +630,7 @@ class SolidarityHamburgerMenu extends HTMLElement {
     } else if (currentPath.includes('/ranking')) {
       activePage = 'ranking';
     }
-    
+
     // Actualizar items activos
     this.shadowRoot.querySelectorAll('.menu-item').forEach(item => {
       item.classList.remove('active');
@@ -645,7 +639,7 @@ class SolidarityHamburgerMenu extends HTMLElement {
       }
     });
   }
-  
+
   async logout() {
     try {
       if (typeof supabase !== 'undefined') {
@@ -658,7 +652,7 @@ class SolidarityHamburgerMenu extends HTMLElement {
       window.location.href = '/login';
     }
   }
-  
+
   // Métodos públicos
   showBadge(item, count) {
     const badge = this.shadowRoot.getElementById(`${item}Badge`);
@@ -667,7 +661,7 @@ class SolidarityHamburgerMenu extends HTMLElement {
       badge.style.display = count > 0 ? 'flex' : 'none';
     }
   }
-  
+
   updateActive() {
     this.updateActiveItem();
   }

@@ -215,10 +215,13 @@
   <solidarity-bottom-nav></solidarity-bottom-nav>
 
   <script src="/js/components/mobile-hamburger-menu.js"></script>
-  <solidarity-hamburger-menu></solidarity-hamburger-menu>
-
+  <script src="/js/components/mobile-header.js"></script>
   <script src="/js/components/mobile-avatar.js"></script>
-  <solidarity-mobile-avatar></solidarity-mobile-avatar>
+
+  <solidarity-mobile-header>
+    <solidarity-hamburger-menu slot="hamburger"></solidarity-hamburger-menu>
+    <solidarity-mobile-avatar slot="avatar"></solidarity-mobile-avatar>
+  </solidarity-mobile-header>
 
 </body>
 </html>

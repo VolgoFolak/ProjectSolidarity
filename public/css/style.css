@@ -870,6 +870,11 @@ header {
     max-width: 600px;
     margin: 0 auto;
   }
+
+  /* Oculta el navbar de escritorio en móvil */
+  .navbar {
+    display: none !important;
+  }
 }
 
 @media (max-width: 768px) {
