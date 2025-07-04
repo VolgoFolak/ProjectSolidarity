@@ -44,37 +44,56 @@ class SolidarityMobileAvatar extends HTMLElement {
           display: block;
         }
 
-        /* Botón elegante alargado (usuario no logueado) */
+        /* Botón de login circular - mismo formato que avatar */
         .login-button {
-          background: linear-gradient(135deg, #4a6fa5 0%, #166088 100%);
-          color: white;
-          border: none;
-          border-radius: 25px;
-          padding: 12px 20px;
-          margin: 0;
-          font-size: 14px;
-          font-weight: 600;
-          cursor: pointer;
-          transition: all 0.3s ease;
-          box-shadow: 0 4px 12px rgba(74, 111, 165, 0.3);
-          white-space: nowrap;
-          display: flex;
-          align-items: center;
-          gap: 8px;
-          z-index: 1000001;
-          min-width: 120px;
-          justify-content: center;
+          width: 56px !important;
+          height: 56px !important;
+          margin: 0 !important;
+          background: var(--white, #fff) !important;
+          border: none !important;
+          border-radius: 50% !important;
+          box-shadow: 0 4px 12px rgba(74, 111, 165, 0.2) !important;
+          display: flex !important;
+          justify-content: center !important;
+          align-items: center !important;
+          cursor: pointer !important;
+          transition: all 0.3s ease !important;
+          z-index: 1000001 !important;
+          color: var(--primary, #4a6fa5) !important;
         }
+
         .login-button:hover {
-          transform: translateY(-2px);
-          box-shadow: 0 6px 18px rgba(74, 111, 165, 0.4);
-          background: linear-gradient(135deg, #166088 0%, #4a6fa5 100%);
+          transform: scale(1.05) !important;
+          box-shadow: 0 6px 18px rgba(74, 111, 165, 0.3) !important;
+          background: var(--primary, #4a6fa5) !important;
         }
+
         .login-button:active {
-          transform: translateY(0);
+          transform: scale(1) !important;
         }
+
+        .login-button svg {
+  width: 32px !important;
+  height: 32px !important;
+  color: var(--primary, #4a6fa5) !important;
+  stroke: var(--primary, #4a6fa5) !important;
+  stroke-width: 2.5 !important;
+  fill: none !important;
+  transition: all 0.3s ease !important;
+}
+
+.login-button:hover svg {
+  stroke: #ffffff !important;
+  transform: scale(1.05) !important;
+}
+
         .login-button i {
-          font-size: 16px;
+          font-size: 24px !important;
+          color: var(--primary, #4a6fa5) !important;
+        }
+
+        .login-button span {
+          display: none !important; /* Ocultar texto */
         }
 
         /* Ocultar elementos según estado */
@@ -82,25 +101,24 @@ class SolidarityMobileAvatar extends HTMLElement {
           display: none !important;
         }
 
-        .logo-icon {
-          font-size: 1.7rem;
-          color: #4a6fa5;
-        }
-        .logo-text {
-          font-weight: 700;
-          font-size: 1.15rem;
-          color: #1a202c;
-        }
-      </style>
+        </style>
       
       <!-- Avatar para usuario logueado -->
       <button class="menu-toggle hidden" id="avatarButton" aria-label="Abrir menú de usuario">
         <img src="/img/default-user.png" alt="Avatar" id="avatarImg">
       </button>
       
-      <!-- Botón para usuario no logueado -->
+      <!-- Botón para usuario no logueado - formato circular como avatar -->
       <button class="login-button hidden" id="loginButton" aria-label="Iniciar sesión">
-        <i class="fas fa-user"></i>
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <!-- Cabeza del usuario -->
+          <circle cx="12" cy="8" r="3.5"></circle>
+          <!-- Cuerpo del usuario -->
+          <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+          <!-- Símbolo + para "añadir/registrarse" -->
+          <line x1="18" y1="6" x2="18" y2="12"></line>
+          <line x1="21" y1="9" x2="15" y2="9"></line>
+        </svg>
         <span>Iniciar Sesión</span>
       </button>
     `;
@@ -117,20 +135,15 @@ class SolidarityMobileAvatar extends HTMLElement {
       });
     }
 
-    // Mantener la funcionalidad del avatar si tienes un menú desplegable
     const avatarButton = this.shadowRoot.getElementById('avatarButton');
     if (avatarButton) {
       avatarButton.addEventListener('click', () => {
-        // Aquí puedes agregar la lógica para abrir el menú de usuario
-        // Por ejemplo, disparar un evento o abrir un dropdown
         this.toggleUserMenu();
       });
     }
   }
 
   toggleUserMenu() {
-    // Lógica para el menú de usuario (si lo tienes)
-    // Por ejemplo, abrir un dropdown o modal
     console.log('Abrir menú de usuario');
   }
 
@@ -143,11 +156,9 @@ class SolidarityMobileAvatar extends HTMLElement {
         const loginButton = this.shadowRoot.getElementById('loginButton');
         
         if (user) {
-          // Usuario logueado - mostrar avatar
           loginButton.classList.add('hidden');
           avatarButton.classList.remove('hidden');
           
-          // Actualizar imagen del avatar
           const { data: profile } = await supabase
             .from('profiles')
             .select('photo_url')
@@ -159,19 +170,16 @@ class SolidarityMobileAvatar extends HTMLElement {
             avatarImg.src = profile?.photo_url || '/img/default-user.png';
           }
         } else {
-          // Usuario no logueado - mostrar botón de login
           avatarButton.classList.add('hidden');
           loginButton.classList.remove('hidden');
         }
       } else {
-        // Sin Supabase - mostrar botón de login
         const avatarButton = this.shadowRoot.getElementById('avatarButton');
         const loginButton = this.shadowRoot.getElementById('loginButton');
         avatarButton.classList.add('hidden');
         loginButton.classList.remove('hidden');
       }
     } catch (error) {
-      // En caso de error, mostrar botón de login
       console.error('Error checking auth state:', error);
       const avatarButton = this.shadowRoot.getElementById('avatarButton');
       const loginButton = this.shadowRoot.getElementById('loginButton');
@@ -180,7 +188,6 @@ class SolidarityMobileAvatar extends HTMLElement {
     }
   }
 
-  // Método público para actualizar desde fuera
   async updateAvatar() {
     await this.updateAuthState();
   }
@@ -190,13 +197,11 @@ if (!customElements.get('solidarity-mobile-avatar')) {
   customElements.define('solidarity-mobile-avatar', SolidarityMobileAvatar);
 }
 
-// Función global para actualizar el componente
 window.updateMobileAvatar = function() {
   const avatar = document.querySelector('solidarity-mobile-avatar');
   if (avatar && avatar.updateAvatar) avatar.updateAvatar();
 };
 
-// Escuchar cambios de autenticación
 if (typeof supabase !== 'undefined') {
   supabase.auth.onAuthStateChange((event, session) => {
     window.updateMobileAvatar();
