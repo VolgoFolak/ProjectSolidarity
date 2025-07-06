@@ -1,0 +1,680 @@
+{% extends "layout.njk" %}
+
+{% block title %}Solidarity - Plataforma de Impacto Social{% endblock %}
+
+{% block head %}
+  {{ super() }}
+  <style>
+    :root {
+      --primary: #4a6fa5;
+      --primary-dark: #166088;
+      --accent: #4fc3a1;
+      --accent-dark: #3da58a;
+      --urgent: #e53e3e;
+      --warning: #f59e42;
+      --gold: #eab308;
+      --light: #f8fafc;
+      --dark: #2d3748;
+      --gray: #e2e8f0;
+    }
+
+    /* Hero Section Rediseñada */
+    .hero {
+      background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+      color: white;
+      padding: 4rem 2rem 6rem;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+      margin-bottom: 0;
+    }
+
+    .hero-container {
+      display: flex;
+      align-items: center;
+      max-width: 1200px;
+      margin: 0 auto;
+      position: relative;
+      z-index: 2;
+      gap: 3rem;
+    }
+
+    .hero-content {
+      flex: 1;
+      text-align: left;
+      padding: 2rem 0;
+    }
+
+    .hero-image {
+      flex: 1;
+      position: relative;
+      display: none; /* Oculto en móvil */
+    }
+
+    .hero-image img {
+      width: 100%;
+      max-width: 500px;
+      border-radius: 16px;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+      transform: rotate(-3deg);
+      transition: transform 0.3s ease;
+    }
+
+    .hero-image:hover img {
+      transform: rotate(0) scale(1.02);
+    }
+
+    .hero h1 {
+      font-size: 2.8rem;
+      margin-bottom: 1.5rem;
+      font-weight: 800;
+      line-height: 1.2;
+      text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+
+    .hero p {
+      font-size: 1.2rem;
+      margin: 0 auto 2rem;
+      font-weight: 400;
+      opacity: 0.9;
+      max-width: 600px;
+    }
+
+    .hero-buttons {
+      display: flex;
+      gap: 1.5rem;
+      margin-top: 2rem;
+      flex-wrap: wrap;
+    }
+
+    .hero-features {
+      display: flex;
+      gap: 1.5rem;
+      margin-top: 2rem;
+      flex-wrap: wrap;
+    }
+
+    .feature-badge {
+      background: rgba(255,255,255,0.15);
+      border-radius: 50px;
+      padding: 0.5rem 1.2rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.9rem;
+      backdrop-filter: blur(5px);
+    }
+
+    /* Sección de Acciones */
+    .actions-section {
+      padding: 5rem 2rem;
+      background: white;
+    }
+
+    .actions-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 2rem;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .action-card {
+      background: white;
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+      transition: all 0.3s ease;
+      border: 1px solid var(--gray);
+      position: relative;
+    }
+
+    .action-card:hover {
+      transform: translateY(-10px);
+      box-shadow: 0 15px 40px rgba(0,0,0,0.12);
+    }
+
+    .action-image {
+      height: 180px;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .action-image img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.5s ease;
+    }
+
+    .action-card:hover .action-image img {
+      transform: scale(1.1);
+    }
+
+    .action-badge {
+      position: absolute;
+      top: 1rem;
+      right: 1rem;
+      background: white;
+      padding: 0.3rem 0.8rem;
+      border-radius: 50px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+
+    .action-badge.points {
+      background: var(--primary);
+      color: white;
+    }
+
+    .action-content {
+      padding: 1.5rem;
+    }
+
+    .action-content h3 {
+      font-size: 1.4rem;
+      margin-bottom: 0.8rem;
+      color: var(--dark);
+      display: flex;
+      align-items: center;
+      gap: 0.7rem;
+    }
+
+    .action-icon {
+      width: 40px;
+      height: 40px;
+      background: rgba(79, 195, 161, 0.1);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--accent);
+    }
+
+    .action-content p {
+      color: #6b7280;
+      margin-bottom: 1.5rem;
+      font-size: 0.95rem;
+      line-height: 1.6;
+    }
+
+    .action-stats {
+      display: flex;
+      gap: 1rem;
+      margin-bottom: 1rem;
+      font-size: 0.85rem;
+      flex-wrap: wrap;
+    }
+
+    .stat-item {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      color: #6b7280;
+    }
+
+    .stat-item i {
+      color: var(--primary);
+    }
+
+    .action-button {
+      width: 100%;
+      text-align: center;
+      padding: 0.8rem;
+      border-radius: 8px;
+      font-weight: 600;
+      margin-top: 1rem;
+    }
+
+    /* Sección Comunidades */
+    .communities-section {
+      padding: 5rem 2rem;
+      background: var(--light);
+    }
+
+    .communities-container {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .communities-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 2rem;
+      margin-top: 3rem;
+    }
+
+    .community-card {
+      background: white;
+      border-radius: 16px;
+      padding: 1.5rem;
+      box-shadow: 0 5px 20px rgba(0,0,0,0.05);
+      transition: all 0.3s ease;
+      border: 1px solid var(--gray);
+      text-align: center;
+    }
+
+    .community-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    }
+
+    .community-avatar {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 3px solid var(--accent);
+      margin: 0 auto 1rem;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    }
+
+    .community-card h3 {
+      font-size: 1.3rem;
+      margin-bottom: 0.5rem;
+      color: var(--primary);
+    }
+
+    .community-card p {
+      color: #6b7280;
+      font-size: 0.95rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .community-members {
+      display: flex;
+      justify-content: center;
+      gap: 0.5rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .member-avatar {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 2px solid white;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+
+    .community-stats {
+      display: flex;
+      justify-content: space-around;
+      margin-top: 1.5rem;
+    }
+
+    .community-stat {
+      text-align: center;
+    }
+
+    .community-stat span {
+      font-weight: 700;
+      color: var(--primary);
+      display: block;
+    }
+
+    .community-stat small {
+      font-size: 0.8rem;
+      color: #6b7280;
+    }
+
+    /* Responsive */
+    @media (min-width: 768px) {
+      .hero {
+        padding: 6rem 2rem;
+      }
+      .hero-container {
+        text-align: left;
+      }
+      .hero-content {
+        padding: 3rem 0;
+      }
+      .hero-image {
+        display: block;
+      }
+      .hero h1 {
+        font-size: 3.2rem;
+      }
+      .hero p {
+        font-size: 1.3rem;
+        margin: 0 0 2rem;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .hero-buttons {
+        justify-content: center;
+      }
+      .hero-features {
+        justify-content: center;
+      }
+    }
+
+    /* Animaciones */
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-10px); }
+    }
+
+    .floating {
+      animation: float 4s ease-in-out infinite;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .animate-fade {
+      animation: fadeIn 0.8s ease-out forwards;
+    }
+
+    .delay-1 { animation-delay: 0.2s; }
+    .delay-2 { animation-delay: 0.4s; }
+    .delay-3 { animation-delay: 0.6s; }
+  </style>
+{% endblock %}
+
+{% block content %}
+  <!-- Hero Section Rediseñada -->
+  <section class="hero">
+    <div class="hero-container">
+      <div class="hero-content">
+        <h1 class="animate-fade">¡Transforma tu solidaridad en impacto real!</h1>
+        <p class="animate-fade delay-1">Únete a miles de personas que están cambiando el mundo a través de acciones concretas. Gana puntos, supera retos y forma parte de comunidades que marcan la diferencia.</p>
+        
+        <div class="hero-buttons animate-fade delay-2">
+          <a href="/register" class="btn btn-accent">
+            <i class="fas fa-rocket"></i> Empieza ahora
+          </a>
+          <a href="#actions" class="btn btn-outline-white">
+            <i class="fas fa-play-circle"></i> Ver acciones
+          </a>
+        </div>
+        
+        <div class="hero-features animate-fade delay-3">
+          <div class="feature-badge">
+            <i class="fas fa-star" style="color: var(--gold);"></i>
+            Sistema de puntos
+          </div>
+          <div class="feature-badge">
+            <i class="fas fa-trophy" style="color: var(--warning);"></i>
+            Retos emocionantes
+          </div>
+          <div class="feature-badge">
+            <i class="fas fa-users" style="color: white;"></i>
+            Comunidades activas
+          </div>
+        </div>
+      </div>
+      
+      <div class="hero-image floating">
+        <img src="https://images.unsplash.com/photo-1529333166437-7750a6dd5a70?auto=format&fit=crop&w=800&q=80" alt="Personas ayudando y sonriendo" class="animate-fade delay-2">
+      </div>
+    </div>
+  </section>
+
+  <!-- Sección de Acciones -->
+  <section class="actions-section" id="actions">
+    <div class="communities-container">
+      <div class="section-header">
+        <h2>Elige cómo quieres impactar</h2>
+        <p>Diferentes formas de contribuir, todas generan cambios positivos</p>
+      </div>
+      
+      <div class="actions-grid">
+        <!-- Causas -->
+        <div class="action-card animate-fade">
+          <div class="action-image">
+            <img src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&w=600&q=80" alt="Causas sociales">
+            <div class="action-badge points">
+              <i class="fas fa-star"></i> +10 pts/€
+            </div>
+          </div>
+          <div class="action-content">
+            <h3><div class="action-icon"><i class="fas fa-hand-holding-heart"></i></div> Causas Solidarias</h3>
+            <p>Apoya proyectos verificados con objetivos claros. Cada donación suma puntos y avances medibles hacia la meta.</p>
+            <div class="action-stats">
+              <div class="stat-item">
+                <i class="fas fa-map-marker-alt"></i> 58 países
+              </div>
+              <div class="stat-item">
+                <i class="fas fa-users"></i> 1,250+ activas
+              </div>
+            </div>
+            <a href="/causes" class="action-button btn btn-primary">
+              <i class="fas fa-search"></i> Explorar causas
+            </a>
+          </div>
+        </div>
+        
+        <!-- Retos -->
+        <div class="action-card animate-fade delay-1">
+          <div class="action-image">
+            <img src="https://images.unsplash.com/photo-1542601906990-b4d3fb778b09?auto=format&fit=crop&w=600&q=80" alt="Retos comunitarios">
+            <div class="action-badge points">
+              <i class="fas fa-star"></i> +200 pts
+            </div>
+          </div>
+          <div class="action-content">
+            <h3><div class="action-icon"><i class="fas fa-trophy"></i></div> Retos Solidarios</h3>
+            <p>Supera objetivos junto a otros voluntarios. La competencia sana multiplica el impacto colectivo.</p>
+            <div class="action-stats">
+              <div class="stat-item">
+                <i class="fas fa-medal"></i> Premios especiales
+              </div>
+              <div class="stat-item">
+                <i class="fas fa-bolt"></i> Tabla de posiciones
+              </div>
+            </div>
+            <a href="/challenges" class="action-button btn btn-accent">
+              <i class="fas fa-flag-checkered"></i> Ver retos
+            </a>
+          </div>
+        </div>
+        
+        <!-- Voluntariado -->
+        <div class="action-card animate-fade delay-2">
+          <div class="action-image">
+            <img src="https://images.unsplash.com/photo-1521791136064-7986c2920216?auto=format&fit=crop&w=600&q=80" alt="Voluntariado">
+            <div class="action-badge points">
+              <i class="fas fa-star"></i> +50 pts/hora
+            </div>
+          </div>
+          <div class="action-content">
+            <h3><div class="action-icon"><i class="fas fa-hands-helping"></i></div> Voluntariados</h3>
+            <p>Conecta con oportunidades presenciales o remotas que necesitan tus habilidades específicas.</p>
+            <div class="action-stats">
+              <div class="stat-item">
+                <i class="fas fa-certificate"></i> Certificados
+              </div>
+              <div class="stat-item">
+                <i class="fas fa-heart"></i> Experiencias únicas
+              </div>
+            </div>
+            <a href="/volunteering" class="action-button btn btn-primary">
+              <i class="fas fa-search"></i> Buscar voluntariados
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Sección Comunidades -->
+  <section class="communities-section">
+    <div class="communities-container">
+      <div class="section-header">
+        <h2>Únete a comunidades activas</h2>
+        <p>Colabora con equipos que comparten tus intereses y multiplica tu impacto</p>
+      </div>
+      
+      <div class="communities-grid">
+        <div class="community-card animate-fade">
+          <img src="https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=facearea&w=80&h=80&facepad=2&q=80" alt="EcoBarrio Solidario" class="community-avatar">
+          <h3>EcoBarrio Solidario</h3>
+          <p>Acciones ambientales y sociales en tu comunidad local</p>
+          
+          <div class="community-members">
+            <img src="https://randomuser.me/api/portraits/women/44.jpg" class="member-avatar" title="Laura">
+            <img src="https://randomuser.me/api/portraits/men/32.jpg" class="member-avatar" title="Carlos">
+            <img src="https://randomuser.me/api/portraits/women/65.jpg" class="member-avatar" title="Ana">
+            <span style="align-self:center; font-size:0.9rem;">+24</span>
+          </div>
+          
+          <div class="community-stats">
+            <div class="community-stat">
+              <span>1.2K</span>
+              <small>Puntos</small>
+            </div>
+            <div class="community-stat">
+              <span>5</span>
+              <small>Causas</small>
+            </div>
+            <div class="community-stat">
+              <span>245</span>
+              <small>Impacto</small>
+            </div>
+          </div>
+          
+          <a href="/teams/ecobarrio" class="btn btn-outline" style="width:100%; margin-top:1rem;">
+            <i class="fas fa-users"></i> Ver comunidad
+          </a>
+        </div>
+        
+        <div class="community-card animate-fade delay-1">
+          <img src="https://images.unsplash.com/photo-1515378791036-0648a3ef77b2?auto=format&fit=facearea&w=80&h=80&facepad=2&q=80" alt="Cocina Comunitaria" class="community-avatar">
+          <h3>Cocina Comunitaria</h3>
+          <p>Preparamos comidas para personas en situación vulnerable</p>
+          
+          <div class="community-members">
+            <img src="https://randomuser.me/api/portraits/men/41.jpg" class="member-avatar" title="Pedro">
+            <img src="https://randomuser.me/api/portraits/women/43.jpg" class="member-avatar" title="Lucía">
+            <span style="align-self:center; font-size:0.9rem;">+18</span>
+          </div>
+          
+          <div class="community-stats">
+            <div class="community-stat">
+              <span>870</span>
+              <small>Puntos</small>
+            </div>
+            <div class="community-stat">
+              <span>2</span>
+              <small>Causas</small>
+            </div>
+            <div class="community-stat">
+              <span>180</span>
+              <small>Impacto</small>
+            </div>
+          </div>
+          
+          <a href="/teams/cocina-comunitaria" class="btn btn-outline" style="width:100%; margin-top:1rem;">
+            <i class="fas fa-users"></i> Ver comunidad
+          </a>
+        </div>
+        
+        <div class="community-card animate-fade delay-2">
+          <img src="https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=facearea&w=80&h=80&facepad=2&q=80" alt="Lectura Accesible" class="community-avatar">
+          <h3>Lectura Accesible</h3>
+          <p>Hacemos la lectura accesible a personas con discapacidad</p>
+          
+          <div class="community-members">
+            <img src="https://randomuser.me/api/portraits/women/68.jpg" class="member-avatar" title="María">
+            <img src="https://randomuser.me/api/portraits/men/42.jpg" class="member-avatar" title="Javier">
+            <span style="align-self:center; font-size:0.9rem;">+12</span>
+          </div>
+          
+          <div class="community-stats">
+            <div class="community-stat">
+              <span>650</span>
+              <small>Puntos</small>
+            </div>
+            <div class="community-stat">
+              <span>1</span>
+              <small>Causas</small>
+            </div>
+            <div class="community-stat">
+              <span>95</span>
+              <small>Impacto</small>
+            </div>
+          </div>
+          
+          <a href="/teams/lectura-accesible" class="btn btn-outline" style="width:100%; margin-top:1rem;">
+            <i class="fas fa-users"></i> Ver comunidad
+          </a>
+        </div>
+      </div>
+      
+      <div style="text-align: center; margin-top: 3rem;">
+        <a href="/teams" class="btn btn-primary" style="padding: 0.8rem 2.5rem;">
+          <i class="fas fa-search"></i> Explorar todas las comunidades
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA Final -->
+  <section style="background: var(--primary); color: white; padding: 4rem 2rem; text-align: center;">
+    <div style="max-width: 800px; margin: 0 auto;">
+      <h2 style="font-size: 2rem; margin-bottom: 1.5rem;">¿Listo para unirte al movimiento?</h2>
+      <p style="font-size: 1.2rem; margin-bottom: 2rem; opacity: 0.9;">Regístrate ahora y comienza a ganar puntos, completar retos y conectar con una comunidad global de agentes de cambio.</p>
+      <div style="display: flex; gap: 1.5rem; justify-content: center; flex-wrap: wrap;">
+        <a href="/register" class="btn btn-accent" style="padding: 0.8rem 2rem;">
+          <i class="fas fa-user-plus"></i> Crear cuenta gratis
+        </a>
+        <a href="/login" class="btn btn-outline-white" style="padding: 0.8rem 2rem;">
+          <i class="fas fa-sign-in-alt"></i> Iniciar sesión
+        </a>
+      </div>
+    </div>
+  </section>
+{% endblock %}
+
+{% block scripts %}
+  {{ super() }}
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      // Animaciones y efectos visuales, NO lógica de supabase aquí
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('animate-fade');
+          }
+        });
+      }, { threshold: 0.1 });
+
+      document.querySelectorAll('.action-card, .community-card').forEach(card => {
+        observer.observe(card);
+      });
+
+      // Efecto hover en tarjetas
+      const cards = document.querySelectorAll('.action-card, .community-card');
+      cards.forEach(card => {
+        card.addEventListener('mouseenter', function() {
+          this.style.transform = 'translateY(-10px)';
+        });
+        card.addEventListener('mouseleave', function() {
+          this.style.transform = '';
+        });
+      });
+
+      // Mostrar imagen hero en desktop
+      if (window.innerWidth >= 768) {
+        document.querySelector('.hero-image').style.display = 'block';
+      }
+
+      // Actualizar al cambiar tamaño
+      window.addEventListener('resize', function() {
+        if (window.innerWidth >= 768) {
+          document.querySelector('.hero-image').style.display = 'block';
+        } else {
+          document.querySelector('.hero-image').style.display = 'none';
+        }
+      });
+    });
+  </script>
+{% endblock %}

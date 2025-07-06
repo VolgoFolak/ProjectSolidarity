@@ -25,7 +25,7 @@
 
   <div id="auth-buttons">
     <a href="/login" class="btn btn-outline">Iniciar Sesión</a>
-    <a href="/register" class="btn btn-primary" style="margin-left: 12px;">Registrarse</a>
+    <a href="/register" class="btn btn-primary">Registrarse</a>
   </div>
 
   <div id="user-menu" style="display:none;">
@@ -47,10 +47,8 @@
     </div>
   </div>
 
-  <!-- Enlace de mensajes solo si el usuario está logueado -->
-  {% if user %}
+  <!-- Enlace de mensajes usando el nuevo componente -->
   <a href="/messages" class="messages-link" title="Mensajes">
     <i class="fas fa-envelope" style="font-size: 1.5em; color: #4a6fa5; filter: drop-shadow(0 2px 6px #b3c6e7);"></i>
   </a>
-  {% endif %}
 </nav>
