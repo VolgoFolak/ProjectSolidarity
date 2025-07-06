@@ -145,26 +145,6 @@
       color: var(--primary);
       display: block;
       margin-bottom: 0.5rem;
-      font-family: 'Courier New', monospace; /* ✅ Fuente monoespaciada */
-      font-variant-numeric: tabular-nums; /* ✅ Números tabulares */
-      min-width: 120px; /* ✅ Ancho mínimo fijo */
-      text-align: center; /* ✅ Centrado */
-      line-height: 1; /* ✅ Altura de línea consistente */
-    }
-
-    /* ✅ Para números más largos como donaciones */
-    .live-stat:nth-child(1) .live-stat-number {
-      min-width: 140px; /* ✅ Más ancho para €48,290 */
-    }
-
-    /* ✅ Para números de horas con 'h' */
-    .live-stat:nth-child(3) .live-stat-number {
-      min-width: 100px; /* ✅ Para 2,840h */
-    }
-
-    /* ✅ Para números de tareas completadas */
-    .live-stat:nth-child(5) .live-stat-number {
-      min-width: 120px; /* ✅ Para 5,680 */
     }
 
     .live-stat-label {
@@ -314,16 +294,6 @@
       font-size: 0.85rem;
       flex-wrap: wrap;
       margin-top: auto; /* ✅ Se empuja hacia abajo */
-      justify-content: space-between; /* ✅ Solo distribuir de izquierda a derecha */
-    }
-
-    /* ✅ CAMBIO MUY ESPECÍFICO - Solo para metadatos de tarjetas de acción */
-    .action-stats .stat-item-action i {
-      color: var(--primary); /* ✅ Solo íconos azules en metadatos de acción */
-    }
-
-    .action-stats .stat-item-action {
-      color: #64748b; /* ✅ Solo texto grisáceo en metadatos de acción */
     }
 
     /* ✅ BOTONES MEJORADOS PARA TODAS LAS TARJETAS */
@@ -975,7 +945,7 @@
               <i class="fas fa-map-marker-alt"></i> 58 países
             </div>
             <div class="stat-item-action">
-              <i class="fas fa-heart"></i> 1,250+ activas
+              <i class="fas fa-users"></i> 1,250+ activas
             </div>
           </div>
           <a href="/causes" class="action-button btn-primary">
@@ -1000,7 +970,7 @@
           <p class="action-description">Completa micro-acciones específicas que ayudan a organizaciones reales. Tareas verificadas y medibles.</p>
           <div class="action-stats">
             <div class="stat-item-action">
-              <i class="fas fa-check-circle"></i> 2,340 completadas
+              <i class="fas fa-check"></i> 2,340 completadas
             </div>
             <div class="stat-item-action">
               <i class="fas fa-clock"></i> 5 min promedio
@@ -1031,7 +1001,7 @@
               <i class="fas fa-users"></i> 1,892 participantes
             </div>
             <div class="stat-item-action">
-              <i class="fas fa-trophy"></i> Premios especiales
+              <i class="fas fa-medal"></i> Premios especiales
             </div>
           </div>
           <a href="/challenges" class="action-button btn-warning">
@@ -1087,7 +1057,7 @@
               <i class="fas fa-users"></i> 34 equipos
             </div>
             <div class="stat-item-action">
-              <i class="fas fa-chart-line"></i> Multiplica impacto
+              <i class="fas fa-star"></i> Multiplica impacto
             </div>
           </div>
           <a href="/teams" class="action-button btn-urgent">
@@ -1112,7 +1082,7 @@
           <p class="action-description">Compite con usuarios de todo el mundo. Sube de nivel y gana badges únicos.</p>
           <div class="action-stats">
             <div class="stat-item-action">
-              <i class="fas fa-medal"></i> 1,247 usuarios
+              <i class="fas fa-trophy"></i> 1,247 usuarios
             </div>
             <div class="stat-item-action">
               <i class="fas fa-star"></i> Badges únicos
@@ -1637,93 +1607,183 @@
     }
 
     function openModal(type, id) {
-      console.log(`Abriendo modal de ${type} con ID: ${id}`);
+      // ✅ Abrir modales específicos según el tipo
+      const modalMappings = {
+        'cause': () => window.openCauseModal && window.openCauseModal(id),
+        'task': () => window.openTaskModal && window.openTaskModal(id),
+        'challenge': () => window.openChallengeModal && window.openChallengeModal(id),
+        'volunteering': () => window.openVolunteeringModal && window.openVolunteeringModal(id),
+        'team': () => window.openTeamModal && window.openTeamModal(id)
+      };
+
+      const openModalFn = modalMappings[type];
       
-      // ✅ Si es un ID de muestra, crear un modal simple con datos de muestra
-      if (id && id.startsWith('sample-')) {
-        showSampleModal(type, id);
-        return;
+      if (openModalFn) {
+        openModalFn();
+      } else {
+        // Fallback si no hay función específica
+        console.log(`Abriendo modal de ${type} con ID: ${id}`);
+        
+        // ✅ Crear modal dinámico básico
+        createDynamicModal(type, id);
       }
+    }
+
+    function createDynamicModal(type, id) {
+      // ✅ Crear modal básico si no existe función específica
+      const modalId = `modal-${type}-${id}`;
       
-      if (!id || id === 'undefined' || id === 'null') {
-        console.warn(`ID inválido para ${type}, redirigiendo a lista`);
-        const routes = {
-          'cause': '/causes',
-          'task': '/tasks', 
-          'challenge': '/challenges',
-          'volunteering': '/volunteering',
-          'team': '/teams'
-        };
-        window.location.href = routes[type] || '/';
+      // Verificar si ya existe el modal
+      if (document.getElementById(modalId)) {
+        document.getElementById(modalId).style.display = 'flex';
         return;
       }
 
-      // ✅ Para IDs reales, usar las INSTANCIAS GLOBALES correctas
-      switch(type) {
-        case 'cause':
-          // ✅ CORREGIDO - Usar instancia global primero
-          if (window.causesRenderer && typeof window.causesRenderer.showModal === 'function') {
-            console.log('✅ Usando causesRenderer.showModal');
-            window.causesRenderer.showModal(id);
-          } else if (window.CausesRenderer) {
-            console.log('✅ Creando nueva instancia de CausesRenderer');
-            const renderer = new window.CausesRenderer();
-            renderer.showModal(id);
-          } else if (window.showCauseModal && typeof window.showCauseModal === 'function') {
-            console.log('✅ Usando showCauseModal global');
-            window.showCauseModal(id);
-          } else {
-            console.warn('Renderer de causas no disponible, redirigiendo...');
-            console.log('Disponible causesRenderer:', !!window.causesRenderer);
-            console.log('Disponible CausesRenderer:', !!window.CausesRenderer);
-            console.log('Disponible showCauseModal:', !!window.showCauseModal);
-            window.location.href = `/causes/${id}`;
-          }
-          break;
-          
-        case 'task':
-          if (window.TasksRenderer && typeof window.TasksRenderer.showTaskModal === 'function') {
-            window.TasksRenderer.showTaskModal(id);
-          } else {
-            console.warn('Renderer de tareas no disponible, redirigiendo...');
-            window.location.href = `/tasks/${id}`;
-          }
-          break;
-          
-        case 'challenge':
-          if (window.challengesRenderer && typeof window.challengesRenderer.showModal === 'function') {
-            console.log('✅ Usando challengesRenderer.showModal');
-            window.challengesRenderer.showModal(id);
-          } else if (window.showChallengeModal && typeof window.showChallengeModal === 'function') {
-            console.log('✅ Usando showChallengeModal global');
-            window.showChallengeModal(id);
-          } else {
-            console.warn('Renderer de retos no disponible, redirigiendo...');
-            window.location.href = `/challenges/${id}`;
-          }
-          break;
-          
-        case 'volunteering':
-          if (window.VolunteeringRenderer && typeof window.VolunteeringRenderer.showVolunteeringModal === 'function') {
-            window.VolunteeringRenderer.showVolunteeringModal(id);
-          } else {
-            console.warn('Renderer de voluntariado no disponible, redirigiendo...');
-            window.location.href = `/volunteering/${id}`;
-          }
-          break;
-          
-        case 'team':
-          if (window.TeamsRenderer && typeof window.TeamsRenderer.showTeamModal === 'function') {
-            window.TeamsRenderer.showTeamModal(id);
-          } else {
-            console.warn('Renderer de equipos no disponible, redirigiendo...');
-            window.location.href = `/teams/${id}`;
-          }
-          break;
-          
-        default:
-          console.error(`Tipo de modal no reconocido: ${type}`);
-          window.location.href = '/';
+      const modalTitles = {
+        'cause': 'Detalles de la Causa',
+        'task': 'Detalles de la Tarea',
+        'challenge': 'Detalles del Reto',
+        'volunteering': 'Detalles del Voluntariado',
+        'team': 'Detalles de la Comunidad'
+      };
+
+      const modalHTML = `
+        <div id="${modalId}" class="modal" style="
+          position: fixed;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          background: rgba(0,0,0,0.8);
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          z-index: 10000;
+          opacity: 0;
+          transition: opacity 0.3s ease;
+        ">
+          <div class="modal-content" style="
+            background: white;
+            border-radius: 16px;
+            padding: 2rem;
+            max-width: 500px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+            position: relative;
+            transform: scale(0.9);
+            transition: transform 0.3s ease;
+          ">
+            <button onclick="closeModal('${modalId}')" style="
+              position: absolute;
+              top: 1rem;
+              right: 1rem;
+              background: none;
+              border: none;
+              font-size: 1.5rem;
+              cursor: pointer;
+              color: #666;
+              width: 40px;
+              height: 40px;
+              border-radius: 50%;
+              display: flex;
+              align-items: center;
+              justify-content: center;
+            ">&times;</button>
+            
+            <h3 style="
+              color: var(--primary);
+              margin-bottom: 1rem;
+              font-size: 1.5rem;
+            ">${modalTitles[type]}</h3>
+            
+            <div id="${modalId}-content">
+              <p style="color: #666; margin-bottom: 1rem;">Cargando información...</p>
+            </div>
+            
+            <div style="
+              display: flex;
+              gap: 1rem;
+              margin-top: 2rem;
+              justify-content: flex-end;
+            ">
+              <button onclick="closeModal('${modalId}')" style="
+                background: #e2e8f0;
+                color: #64748b;
+                border: none;
+                padding: 0.75rem 1.5rem;
+                border-radius: 8px;
+                cursor: pointer;
+                font-weight: 600;
+              ">Cerrar</button>
+              <button onclick="redirectTo('${type}', '${id}')" style="
+                background: var(--primary);
+                color: white;
+                border: none;
+                padding: 0.75rem 1.5rem;
+                border-radius: 8px;
+                cursor: pointer;
+                font-weight: 600;
+              ">Ver completo</button>
+            </div>
+          </div>
+        </div>
+      `;
+
+      document.body.insertAdjacentHTML('beforeend', modalHTML);
+      
+      // Animar aparición
+      const modal = document.getElementById(modalId);
+      const content = modal.querySelector('.modal-content');
+      
+      setTimeout(() => {
+        modal.style.opacity = '1';
+        content.style.transform = 'scale(1)';
+      }, 10);
+
+      // Cargar contenido específico
+      loadModalContent(type, id, modalId);
+      
+      // Cerrar con Escape
+      document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') {
+          closeModal(modalId);
+        }
+      });
+      
+      // Cerrar al hacer click fuera
+      modal.addEventListener('click', function(e) {
+        if (e.target === modal) {
+          closeModal(modalId);
+        }
+      });
+    }
+
+    function closeModal(modalId) {
+      const modal = document.getElementById(modalId);
+      if (modal) {
+        const content = modal.querySelector('.modal-content');
+        modal.style.opacity = '0';
+        content.style.transform = 'scale(0.9)';
+        
+        setTimeout(() => {
+          modal.remove();
+        }, 300);
+      }
+    }
+
+    function redirectTo(type, id) {
+      const urlMappings = {
+        'cause': `/causes/${id}`,
+        'task': `/tasks/${id}`,
+        'challenge': `/challenges/${id}`,
+        'volunteering': `/volunteering/${id}`,
+        'team': `/teams/${id}`
+      };
+      
+      const url = urlMappings[type];
+      if (url) {
+        window.location.href = url;
       }
     }
 
@@ -1878,7 +1938,7 @@
             <h4 style="color: var(--primary); margin-bottom: 0.5rem;">${data.title}</h4>
             <p style="color: #666; line-height: 1.6; margin-bottom: 1rem;">${data.description}</p>
             
-            <div style="background: #f8fafc; padding:  1rem; border-radius: 8px;">
+            <div style="background: #f8fafc; padding: 1rem; border-radius: 8px;">
               <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; font-size: 0.9rem;">
                 <div><strong>Voluntarios:</strong> ${data.volunteers || 0}</div>
                 <div><strong>Ubicación:</strong> ${data.location || 'Remoto'}</div>
@@ -1982,87 +2042,5 @@
       document.getElementById('completed-tasks').textContent = '5,680';
       document.getElementById('active-volunteers').textContent = '420';
     }
-
-    // ✅ Función para inicializar todos los renderers - CORREGIDA PARA CAUSAS
-    function initializeRenderers() {
-      // ✅ Verificar CausesRenderer - MÉTODO CORREGIDO
-      if (window.causesRenderer && typeof window.causesRenderer.showModal === 'function') {
-        renderersLoaded.causes = true;
-        console.log('✅ causesRenderer disponible con showModal');
-      } else if (window.CausesRenderer) {
-        // ✅ CREAR INSTANCIA si la clase existe pero no la instancia
-        if (!window.causesRenderer) {
-          window.causesRenderer = new window.CausesRenderer();
-          console.log('✅ Instancia causesRenderer creada');
-        }
-        renderersLoaded.causes = true;
-        console.log('✅ CausesRenderer disponible (clase)');
-      } else {
-        console.warn('❌ CausesRenderer no disponible');
-      }
-      
-      // ✅ Verificar TasksRenderer
-      if (window.TasksRenderer) {
-        renderersLoaded.tasks = true;
-        console.log('✅ TasksRenderer disponible');
-      }
-      
-      // ✅ Verificar ChallengesRenderer - MISMO PATRÓN QUE CAUSAS
-      if (window.challengesRenderer && typeof window.challengesRenderer.showModal === 'function') {
-        renderersLoaded.challenges = true;
-        console.log('✅ challengesRenderer disponible con showModal');
-      } else if (window.ChallengesRenderer) {
-        if (!window.challengesRenderer) {
-          window.challengesRenderer = new window.ChallengesRenderer();
-          console.log('✅ Instancia challengesRenderer creada');
-        }
-        renderersLoaded.challenges = true;
-        console.log('✅ ChallengesRenderer disponible (clase)');
-      } else {
-        console.warn('❌ ChallengesRenderer no disponible');
-      }
-      
-      // ✅ Verificar VolunteeringRenderer
-      if (window.VolunteeringRenderer) {
-        renderersLoaded.volunteering = true;
-        console.log('✅ VolunteeringRenderer disponible');
-      }
-      
-      // ✅ Verificar TeamsRenderer
-      if (window.TeamsRenderer) {
-        renderersLoaded.teams = true;
-        console.log('✅ TeamsRenderer disponible');
-      }
-      
-      console.log('Estado final de renderers:', renderersLoaded);
-    }
-
-    // ✅ VERIFICACIÓN FINAL - Crear instancias si las clases existen
-    if (window.CausesRenderer && !window.causesRenderer) {
-      window.causesRenderer = new window.CausesRenderer();
-      console.log('✅ Instancia global causesRenderer creada');
-    }
-
-    if (window.ChallengesRenderer && !window.challengesRenderer) {
-      window.challengesRenderer = new window.ChallengesRenderer();
-      console.log('✅ Instancia global challengesRenderer creada');
-    }
-
-    // ✅ ASEGURAR COMPATIBILIDAD CON CAUSAS - Crear funciones globales si no existen
-    setTimeout(() => {
-      // Verificar si las funciones globales de causas existen
-      if (!window.showCauseModal && window.causesRenderer && typeof window.causesRenderer.showModal === 'function') {
-        window.showCauseModal = (causeId) => window.causesRenderer.showModal(causeId);
-        console.log('✅ showCauseModal creado como alias');
-      }
-      
-      if (!window.showChallengeModal && window.challengesRenderer && typeof window.challengesRenderer.showModal === 'function') {
-        window.showChallengeModal = (challengeId) => window.challengesRenderer.showModal(challengeId);
-        console.log('✅ showChallengeModal creado como alias');
-      }
-      
-      // Re-verificar renderers después de un segundo
-      initializeRenderers();
-    }, 1500);
   </script>
 {% endblock %}

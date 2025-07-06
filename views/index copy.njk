@@ -145,26 +145,6 @@
       color: var(--primary);
       display: block;
       margin-bottom: 0.5rem;
-      font-family: 'Courier New', monospace; /* ✅ Fuente monoespaciada */
-      font-variant-numeric: tabular-nums; /* ✅ Números tabulares */
-      min-width: 120px; /* ✅ Ancho mínimo fijo */
-      text-align: center; /* ✅ Centrado */
-      line-height: 1; /* ✅ Altura de línea consistente */
-    }
-
-    /* ✅ Para números más largos como donaciones */
-    .live-stat:nth-child(1) .live-stat-number {
-      min-width: 140px; /* ✅ Más ancho para €48,290 */
-    }
-
-    /* ✅ Para números de horas con 'h' */
-    .live-stat:nth-child(3) .live-stat-number {
-      min-width: 100px; /* ✅ Para 2,840h */
-    }
-
-    /* ✅ Para números de tareas completadas */
-    .live-stat:nth-child(5) .live-stat-number {
-      min-width: 120px; /* ✅ Para 5,680 */
     }
 
     .live-stat-label {
@@ -314,16 +294,6 @@
       font-size: 0.85rem;
       flex-wrap: wrap;
       margin-top: auto; /* ✅ Se empuja hacia abajo */
-      justify-content: space-between; /* ✅ Solo distribuir de izquierda a derecha */
-    }
-
-    /* ✅ CAMBIO MUY ESPECÍFICO - Solo para metadatos de tarjetas de acción */
-    .action-stats .stat-item-action i {
-      color: var(--primary); /* ✅ Solo íconos azules en metadatos de acción */
-    }
-
-    .action-stats .stat-item-action {
-      color: #64748b; /* ✅ Solo texto grisáceo en metadatos de acción */
     }
 
     /* ✅ BOTONES MEJORADOS PARA TODAS LAS TARJETAS */
@@ -460,7 +430,14 @@
       display: block;
     }
 
-    /* ✅ PREVIEW CARDS SIN BADGES + BOTÓN VER MÁS */
+    .preview-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.5rem;
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+
     .preview-card {
       background: white;
       border-radius: 16px;
@@ -469,9 +446,11 @@
       transition: all 0.3s ease;
       border: 1px solid #e2e8f0;
       cursor: pointer;
-      display: flex;
-      flex-direction: column;
-      height: 100%;
+    }
+
+    .preview-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 30px rgba(0,0,0,0.1);
     }
 
     .preview-image {
@@ -481,11 +460,20 @@
       position: relative;
     }
 
+    .preview-category {
+      position: absolute;
+      top: 1rem;
+      left: 1rem;
+      background: rgba(0,0,0,0.7);
+      color: white;
+      padding: 0.25rem 0.75rem;
+      border-radius: 12px;
+      font-size: 0.75rem;
+      font-weight: 600;
+    }
+
     .preview-content {
       padding: 1.5rem;
-      display: flex;
-      flex-direction: column;
-      flex: 1;
     }
 
     .preview-title {
@@ -501,7 +489,6 @@
       font-size: 0.9rem;
       margin-bottom: 1rem;
       line-height: 1.5;
-      flex: 1;
     }
 
     .preview-meta {
@@ -511,30 +498,6 @@
       font-size: 0.8rem;
       color: #64748b;
       font-weight: 500;
-      margin-bottom: 1rem;
-    }
-
-    .preview-btn {
-      background: var(--primary);
-      color: white;
-      border: none;
-      padding: 0.5rem 1rem;
-      border-radius: 20px;
-      font-size: 0.8rem;
-      font-weight: 600;
-      cursor: pointer;
-      transition: all 0.3s ease;
-      text-decoration: none;
-      display: inline-block;
-      text-align: center;
-      margin-top: auto;
-    }
-
-    .preview-btn:hover {
-      background: var(--primary-dark);
-      transform: translateY(-1px);
-      color: white;
-      text-decoration: none;
     }
 
     /* ✅ TESTIMONIALS SECTION - Avatars más grandes y altura uniforme */
@@ -868,27 +831,6 @@
       0% { background-position: 200% 0; }
       100% { background-position: -200% 0; }
     }
-
-    /* ✅ PREVIEW GRID - 3 columnas en desktop CORREGIDO */
-    .preview-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-      gap: 1.5rem;
-      max-width: 1000px;
-      margin: 0 auto;
-    }
-
-    @media (min-width: 768px) {
-      .preview-grid {
-        grid-template-columns: repeat(2, 1fr);
-      }
-    }
-
-    @media (min-width: 1024px) {
-      .preview-grid {
-        grid-template-columns: repeat(3, 1fr); /* ✅ 3 columnas en desktop */
-      }
-    }
   </style>
 {% endblock %}
 
@@ -975,7 +917,7 @@
               <i class="fas fa-map-marker-alt"></i> 58 países
             </div>
             <div class="stat-item-action">
-              <i class="fas fa-heart"></i> 1,250+ activas
+              <i class="fas fa-users"></i> 1,250+ activas
             </div>
           </div>
           <a href="/causes" class="action-button btn-primary">
@@ -1000,7 +942,7 @@
           <p class="action-description">Completa micro-acciones específicas que ayudan a organizaciones reales. Tareas verificadas y medibles.</p>
           <div class="action-stats">
             <div class="stat-item-action">
-              <i class="fas fa-check-circle"></i> 2,340 completadas
+              <i class="fas fa-check"></i> 2,340 completadas
             </div>
             <div class="stat-item-action">
               <i class="fas fa-clock"></i> 5 min promedio
@@ -1031,7 +973,7 @@
               <i class="fas fa-users"></i> 1,892 participantes
             </div>
             <div class="stat-item-action">
-              <i class="fas fa-trophy"></i> Premios especiales
+              <i class="fas fa-medal"></i> Premios especiales
             </div>
           </div>
           <a href="/challenges" class="action-button btn-warning">
@@ -1087,7 +1029,7 @@
               <i class="fas fa-users"></i> 34 equipos
             </div>
             <div class="stat-item-action">
-              <i class="fas fa-chart-line"></i> Multiplica impacto
+              <i class="fas fa-star"></i> Multiplica impacto
             </div>
           </div>
           <a href="/teams" class="action-button btn-urgent">
@@ -1112,7 +1054,7 @@
           <p class="action-description">Compite con usuarios de todo el mundo. Sube de nivel y gana badges únicos.</p>
           <div class="action-stats">
             <div class="stat-item-action">
-              <i class="fas fa-medal"></i> 1,247 usuarios
+              <i class="fas fa-trophy"></i> 1,247 usuarios
             </div>
             <div class="stat-item-action">
               <i class="fas fa-star"></i> Badges únicos
@@ -1184,7 +1126,7 @@
     </div>
   </section>
 
-  <!-- ✅ TESTIMONIOS - Foto de María corregida y mensaje de Ana cambiado -->
+  <!-- ✅ TESTIMONIOS - Avatars más grandes -->
   <section class="testimonials-section">
     <div class="section-header">
       <h2>Voces de nuestra Comunidad</h2>
@@ -1197,7 +1139,7 @@
           "Solidarity me ha permitido ver el impacto real de mis donaciones. Cada euro cuenta y puedo seguir exactamente cómo ayuda a las causas que me importan."
         </div>
         <div class="testimonial-author">
-          <img src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?auto=format&fit=crop&w=200&q=80" alt="María González" class="testimonial-avatar">
+          <img src="https://images.unsplash.com/photo-1494790108755-2616b612b786?auto=format&fit=crop&w=150&q=80" alt="María González" class="testimonial-avatar">
           <div class="testimonial-info">
             <h4>María González</h4>
             <p>Donante nivel Oro • 12,450 pts</p>
@@ -1210,7 +1152,7 @@
           "Los retos colaborativos son increíbles. He conocido personas fantásticas y juntos hemos logrado objetivos que parecían imposibles."
         </div>
         <div class="testimonial-author">
-          <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=200&q=80" alt="Carlos Mendoza" class="testimonial-avatar">
+          <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=150&q=80" alt="Carlos Mendoza" class="testimonial-avatar">
           <div class="testimonial-info">
             <h4>Carlos Mendoza</h4>
             <p>Voluntario activo • 8,920 pts</p>
@@ -1220,10 +1162,10 @@
 
       <div class="testimonial-card animate-fade delay-2">
         <div class="testimonial-quote">
-          "Formar parte de esta plataforma ha sido transformador. El sistema de puntos me motiva a seguir ayudando y veo cómo mi esfuerzo realmente cuenta."
+          "Mi equipo ha crecido hasta 45 miembros. Juntos hemos completado 23 proyectos y cambiado la vida de cientos de personas."
         </div>
         <div class="testimonial-author">
-          <img src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=200&q=80" alt="Ana Rodríguez" class="testimonial-avatar">
+          <img src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?auto=format&fit=crop&w=150&q=80" alt="Ana Rodríguez" class="testimonial-avatar">
           <div class="testimonial-info">
             <h4>Ana Rodríguez</h4>
             <p>Líder de comunidad • 15,280 pts</p>
@@ -1344,7 +1286,7 @@
   {{ super() }}
   <script>
     document.addEventListener('DOMContentLoaded', async function() {
-      // ✅ NO cargar estadísticas al inicio, se cargan cuando son visibles
+      await loadPlatformStats();
       await loadRecentActivity();
       setupIntersectionObserver();
       setupResponsiveBehavior();
@@ -1544,47 +1486,53 @@
       const sampleData = {
         'cause': {
           image: 'https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?auto=format&fit=crop&w=400&q=80',
+          category: 'Causa Social',
           title: 'Educación para Todos',
-          description: 'Proyecto educativo para comunidades rurales que busca proporcionar acceso a educación de calidad',
-          meta: '<span>75% completado</span><span>12,450€ recaudados</span>'
+          description: 'Proyecto educativo para comunidades rurales',
+          meta: '<span>75% completado</span><span>12,450€</span>'
         },
         'task': {
           image: 'https://images.unsplash.com/photo-1517048676732-d65bc937f952?auto=format&fit=crop&w=400&q=80',
+          category: 'Tarea de Impacto',
           title: 'Revisar Contenido Web',
-          description: 'Ayuda a moderar contenido de sitios benéficos y verificar información de organizaciones',
-          meta: '<span>25 puntos</span><span>5 min aprox</span>'
+          description: 'Ayuda a moderar contenido de sitios benéficos',
+          meta: '<span>25 puntos</span><span>Disponible</span>'
         },
         'challenge': {
           image: 'https://images.unsplash.com/photo-1552664730-d307ca884978?auto=format&fit=crop&w=400&q=80',
+          category: 'Reto Colaborativo',
           title: 'Desafío Ambiental',
-          description: 'Reducir huella de carbono en comunidades a través de acciones colaborativas',
-          meta: '<span>89 participantes</span><span>7 días restantes</span>'
+          description: 'Reducir huella de carbono en comunidades',
+          meta: '<span>Activo</span><span>Participar</span>'
         },
         'volunteering': {
           image: 'https://images.unsplash.com/photo-1559027615-cd4628902d4a?auto=format&fit=crop&w=400&q=80',
+          category: 'Voluntariado',
           title: 'Apoyo Comunitario',
-          description: 'Ayuda a familias en situación vulnerable proporcionando apoyo directo',
-          meta: '<span>25 voluntarios</span><span>Madrid</span>'
+          description: 'Ayuda a familias en situación vulnerable',
+          meta: '<span>25 voluntarios</span><span>Activo</span>'
         },
         'team': {
           image: 'https://images.unsplash.com/photo-1517486808906-6ca8b3f04846?auto=format&fit=crop&w=400&q=80',
+          category: 'Comunidad',
           title: 'Amigos del Ambiente',
-          description: 'Comunidad enfocada en sostenibilidad y protección del medio ambiente',
-          meta: '<span>48 miembros</span><span>Activa</span>'
+          description: 'Comunidad enfocada en sostenibilidad',
+          meta: '<span>48 miembros</span><span>Unirse</span>'
         }
       };
 
       const sample = sampleData[type];
       const container = document.getElementById(containerId);
       
-      container.innerHTML = Array(3).fill().map((_, index) => `
+      container.innerHTML = Array(3).fill().map(() => `
         <div class="preview-card">
-          <div class="preview-image" style="background-image: url('${sample.image}')"></div>
+          <div class="preview-image" style="background-image: url('${sample.image}')">
+            <div class="preview-category">${sample.category}</div>
+          </div>
           <div class="preview-content">
             <h3 class="preview-title">${sample.title}</h3>
             <p class="preview-description">${sample.description}</p>
             <div class="preview-meta">${sample.meta}</div>
-            <button class="preview-btn" onclick="openModal('${type}', ${index})">Ver más</button>
           </div>
         </div>
       `).join('');
@@ -1603,309 +1551,60 @@
         return imageField || defaultImages[type];
       };
 
+      const getCategory = () => {
+        const categories = {
+          'cause': item.category || 'Causa Social',
+          'task': 'Tarea de Impacto',
+          'challenge': 'Reto Colaborativo',
+          'volunteering': 'Voluntariado',
+          'team': 'Comunidad'
+        };
+        return categories[type];
+      };
+
       const getMeta = () => {
         if (type === 'cause') {
           const progress = item.goal ? Math.round((item.raised || 0) / item.goal * 100) : 0;
-          return `<span>${progress}% completado</span><span>${(item.raised || 0).toLocaleString()}€ recaudados</span>`;
+          return `<span>${progress}% completado</span><span>${(item.raised || 0).toLocaleString()}€</span>`;
         }
         if (type === 'task') {
-          return `<span>${item.points || 25} puntos</span><span>${item.duration || '5 min'} aprox</span>`;
+          return `<span>${item.points || 25} puntos</span><span>Disponible</span>`;
         }
         if (type === 'challenge') {
-          return `<span>${item.participants || 0} participantes</span><span>${item.days_left || 7} días restantes</span>`;
+          return `<span>Activo</span><span>Participar</span>`;
         }
         if (type === 'volunteering') {
-          return `<span>${item.volunteers || 0} voluntarios</span><span>${item.location || 'Remoto'}</span>`;
+          return `<span>${item.volunteers || 0} voluntarios</span><span>Activo</span>`;
         }
         if (type === 'team') {
-          return `<span>${item.members_count || item.members || 0} miembros</span><span>Activa</span>`;
+          return `<span>${item.members_count || item.members || 0} miembros</span><span>Unirse</span>`;
         }
         return '';
       };
 
+      const getUrl = () => {
+        const urls = {
+          'cause': `/causes/${item.id}`,
+          'task': `/tasks/${item.id}`,
+          'challenge': `/challenges/${item.id}`,
+          'volunteering': `/volunteering/${item.id}`,
+          'team': `/teams/${item.id}`
+        };
+        return urls[type] || '#';
+      };
+
       return `
-        <div class="preview-card">
-          <div class="preview-image" style="background-image: url('${getImageUrl()}')"></div>
+        <div class="preview-card" onclick="window.location.href='${getUrl()}'">
+          <div class="preview-image" style="background-image: url('${getImageUrl()}')">
+            <div class="preview-category">${getCategory()}</div>
+          </div>
           <div class="preview-content">
             <h3 class="preview-title">${item.title || item.name || 'Sin título'}</h3>
             <p class="preview-description">${(item.description || '').substring(0, 100)}...</p>
             <div class="preview-meta">${getMeta()}</div>
-            <button class="preview-btn" onclick="openModal('${type}', '${item.id}')">Ver más</button>
           </div>
         </div>
       `;
-    }
-
-    function openModal(type, id) {
-      console.log(`Abriendo modal de ${type} con ID: ${id}`);
-      
-      // ✅ Si es un ID de muestra, crear un modal simple con datos de muestra
-      if (id && id.startsWith('sample-')) {
-        showSampleModal(type, id);
-        return;
-      }
-      
-      if (!id || id === 'undefined' || id === 'null') {
-        console.warn(`ID inválido para ${type}, redirigiendo a lista`);
-        const routes = {
-          'cause': '/causes',
-          'task': '/tasks', 
-          'challenge': '/challenges',
-          'volunteering': '/volunteering',
-          'team': '/teams'
-        };
-        window.location.href = routes[type] || '/';
-        return;
-      }
-
-      // ✅ Para IDs reales, usar las INSTANCIAS GLOBALES correctas
-      switch(type) {
-        case 'cause':
-          // ✅ CORREGIDO - Usar instancia global primero
-          if (window.causesRenderer && typeof window.causesRenderer.showModal === 'function') {
-            console.log('✅ Usando causesRenderer.showModal');
-            window.causesRenderer.showModal(id);
-          } else if (window.CausesRenderer) {
-            console.log('✅ Creando nueva instancia de CausesRenderer');
-            const renderer = new window.CausesRenderer();
-            renderer.showModal(id);
-          } else if (window.showCauseModal && typeof window.showCauseModal === 'function') {
-            console.log('✅ Usando showCauseModal global');
-            window.showCauseModal(id);
-          } else {
-            console.warn('Renderer de causas no disponible, redirigiendo...');
-            console.log('Disponible causesRenderer:', !!window.causesRenderer);
-            console.log('Disponible CausesRenderer:', !!window.CausesRenderer);
-            console.log('Disponible showCauseModal:', !!window.showCauseModal);
-            window.location.href = `/causes/${id}`;
-          }
-          break;
-          
-        case 'task':
-          if (window.TasksRenderer && typeof window.TasksRenderer.showTaskModal === 'function') {
-            window.TasksRenderer.showTaskModal(id);
-          } else {
-            console.warn('Renderer de tareas no disponible, redirigiendo...');
-            window.location.href = `/tasks/${id}`;
-          }
-          break;
-          
-        case 'challenge':
-          if (window.challengesRenderer && typeof window.challengesRenderer.showModal === 'function') {
-            console.log('✅ Usando challengesRenderer.showModal');
-            window.challengesRenderer.showModal(id);
-          } else if (window.showChallengeModal && typeof window.showChallengeModal === 'function') {
-            console.log('✅ Usando showChallengeModal global');
-            window.showChallengeModal(id);
-          } else {
-            console.warn('Renderer de retos no disponible, redirigiendo...');
-            window.location.href = `/challenges/${id}`;
-          }
-          break;
-          
-        case 'volunteering':
-          if (window.VolunteeringRenderer && typeof window.VolunteeringRenderer.showVolunteeringModal === 'function') {
-            window.VolunteeringRenderer.showVolunteeringModal(id);
-          } else {
-            console.warn('Renderer de voluntariado no disponible, redirigiendo...');
-            window.location.href = `/volunteering/${id}`;
-          }
-          break;
-          
-        case 'team':
-          if (window.TeamsRenderer && typeof window.TeamsRenderer.showTeamModal === 'function') {
-            window.TeamsRenderer.showTeamModal(id);
-          } else {
-            console.warn('Renderer de equipos no disponible, redirigiendo...');
-            window.location.href = `/teams/${id}`;
-          }
-          break;
-          
-        default:
-          console.error(`Tipo de modal no reconocido: ${type}`);
-          window.location.href = '/';
-      }
-    }
-
-    async function loadModalContent(type, id, modalId) {
-      const contentDiv = document.getElementById(`${modalId}-content`);
-      
-      try {
-        // ✅ Intentar cargar datos reales de Supabase
-        if (typeof supabase !== 'undefined') {
-          const tableMappings = {
-            'cause': 'causes',
-            'task': 'tasks',
-            'challenge': 'challenges',
-            'volunteering': 'volunteering',
-            'team': 'teams'
-          };
-          
-          const table = tableMappings[type];
-          if (table) {
-            const { data, error } = await supabase
-              .from(table)
-              .select('*')
-              .eq('id', id)
-              .single();
-
-            if (data && !error) {
-              contentDiv.innerHTML = createModalContentHTML(type, data);
-              return;
-            }
-          }
-        }
-        
-        // ✅ Fallback con datos de muestra
-        const sampleData = getSampleModalData(type, id);
-        contentDiv.innerHTML = createModalContentHTML(type, sampleData);
-        
-      } catch (error) {
-        console.error('Error cargando contenido del modal:', error);
-        contentDiv.innerHTML = `
-          <p style="color: #e53e3e;">Error al cargar la información.</p>
-          <p style="color: #666; font-size: 0.9rem;">Por favor, intenta de nuevo más tarde.</p>
-        `;
-      }
-    }
-
-    function getSampleModalData(type, id) {
-      const sampleData = {
-        'cause': {
-          title: 'Educación para Todos',
-          description: 'Proyecto educativo integral para comunidades rurales que busca proporcionar acceso a educación de calidad, materiales escolares y apoyo nutricional a niños en situación de vulnerabilidad.',
-          goal: 15000,
-          raised: 11250,
-          category: 'Educación',
-          location: 'Guatemala',
-          image_url: 'https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?auto=format&fit=crop&w=600&q=80'
-        },
-        'task': {
-          title: 'Revisar Contenido Web',
-          description: 'Ayuda a moderar contenido de sitios web benéficos y verificar información de organizaciones para mantener la calidad y veracidad de los datos.',
-          points: 25,
-          duration: '5-10 minutos',
-          difficulty: 'Fácil',
-          category: 'Moderación'
-        },
-        'challenge': {
-          title: 'Desafío Ambiental',
-          description: 'Únete a este reto colaborativo para reducir la huella de carbono en comunidades locales a través de acciones sostenibles y educación ambiental.',
-          participants: 89,
-          days_left: 7,
-          goal: 'Plantar 500 árboles',
-          reward: '500 puntos + badge especial'
-        },
-        'volunteering': {
-          title: 'Apoyo Comunitario',
-          description: 'Oportunidad de voluntariado para ayudar a familias en situación vulnerable proporcionando apoyo directo, asesoramiento y acompañamiento.',
-          volunteers: 25,
-          location: 'Madrid, España',
-          schedule: 'Fines de semana',
-          requirements: 'Mayor de edad, disponibilidad de 4h/semana'
-        },
-        'team': {
-          title: 'Amigos del Ambiente',
-          description: 'Comunidad enfocada en sostenibilidad y protección del medio ambiente. Organizamos actividades, campañas de concienciación y proyectos ecológicos.',
-          members: 48,
-          category: 'Medio Ambiente',
-          activities: 'Limpiezas, plantaciones, talleres',
-          level: 'Todos los niveles'
-        }
-      };
-      
-      return sampleData[type] || {};
-    }
-
-    function createModalContentHTML(type, data) {
-      const contentTemplates = {
-        'cause': `
-          <div style="margin-bottom: 1.5rem;">
-            ${data.image_url ? `<img src="${data.image_url}" alt="${data.title}" style="width: 100%; height: 200px; object-fit: cover; border-radius: 8px; margin-bottom: 1rem;">` : ''}
-            <h4 style="color: var(--primary); margin-bottom: 0.5rem;">${data.title}</h4>
-            <p style="color: #666; line-height: 1.6; margin-bottom: 1rem;">${data.description}</p>
-            
-            <div style="background: #f8fafc; padding: 1rem; border-radius: 8px; margin-bottom: 1rem;">
-              <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
-                <span>Progreso:</span>
-                <span style="font-weight: 600;">${Math.round((data.raised || 0) / (data.goal || 1) * 100)}%</span>
-              </div>
-              <div style="background: #e2e8f0; height: 8px; border-radius: 4px; overflow: hidden;">
-                <div style="background: var(--accent); height: 100%; width: ${Math.round((data.raised || 0) / (data.goal || 1) * 100)}%; transition: width 0.3s ease;"></div>
-              </div>
-              <div style="display: flex; justify-content: space-between; margin-top: 0.5rem; font-size: 0.9rem; color: #666;">
-                <span>${(data.raised || 0).toLocaleString()}€ recaudados</span>
-                <span>Meta: ${(data.goal || 0).toLocaleString()}€</span>
-              </div>
-            </div>
-            
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; font-size: 0.9rem;">
-              <div><strong>Categoría:</strong> ${data.category || 'Sin categoría'}</div>
-              <div><strong>Ubicación:</strong> ${data.location || 'Global'}</div>
-            </div>
-          </div>
-        `,
-        'task': `
-          <div style="margin-bottom: 1.5rem;">
-            <h4 style="color: var(--primary); margin-bottom: 0.5rem;">${data.title}</h4>
-            <p style="color: #666; line-height: 1.6; margin-bottom: 1rem;">${data.description}</p>
-            
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; font-size: 0.9rem; background: #f8fafc; padding: 1rem; border-radius: 8px;">
-              <div><strong>Puntos:</strong> ${data.points || 25}</div>
-              <div><strong>Duración:</strong> ${data.duration || '5 min'}</div>
-              <div><strong>Dificultad:</strong> ${data.difficulty || 'Fácil'}</div>
-              <div><strong>Categoría:</strong> ${data.category || 'General'}</div>
-            </div>
-          </div>
-        `,
-        'challenge': `
-          <div style="margin-bottom: 1.5rem;">
-            <h4 style="color: var(--primary); margin-bottom: 0.5rem;">${data.title}</h4>
-            <p style="color: #666; line-height: 1.6; margin-bottom: 1rem;">${data.description}</p>
-            
-            <div style="background: #f8fafc; padding: 1rem; border-radius: 8px; margin-bottom: 1rem;">
-              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; font-size: 0.9rem;">
-                <div><strong>Participantes:</strong> ${data.participants || 0}</div>
-                <div><strong>Días restantes:</strong> ${data.days_left || 'N/A'}</div>
-                <div><strong>Objetivo:</strong> ${data.goal || 'Sin especificar'}</div>
-                <div><strong>Recompensa:</strong> ${data.reward || 'Puntos'}</div>
-              </div>
-            </div>
-          </div>
-        `,
-        'volunteering': `
-          <div style="margin-bottom: 1.5rem;">
-            <h4 style="color: var(--primary); margin-bottom: 0.5rem;">${data.title}</h4>
-            <p style="color: #666; line-height: 1.6; margin-bottom: 1rem;">${data.description}</p>
-            
-            <div style="background: #f8fafc; padding:  1rem; border-radius: 8px;">
-              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; font-size: 0.9rem;">
-                <div><strong>Voluntarios:</strong> ${data.volunteers || 0}</div>
-                <div><strong>Ubicación:</strong> ${data.location || 'Remoto'}</div>
-                <div><strong>Horario:</strong> ${data.schedule || 'Flexible'}</div>
-                <div><strong>Requisitos:</strong> ${data.requirements || 'Ninguno específico'}</div>
-              </div>
-            </div>
-          </div>
-        `,
-        'team': `
-          <div style="margin-bottom: 1.5rem;">
-            <h4 style="color: var(--primary); margin-bottom: 0.5rem;">${data.title}</h4>
-            <p style="color: #666; line-height: 1.6; margin-bottom: 1rem;">${data.description}</p>
-            
-            <div style="background: #f8fafc; padding: 1rem; border-radius: 8px;">
-              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; font-size: 0.9rem;">
-                <div><strong>Miembros:</strong> ${data.members || 0}</div>
-                <div><strong>Categoría:</strong> ${data.category || 'General'}</div>
-                <div><strong>Actividades:</strong> ${data.activities || 'Variadas'}</div>
-                <div><strong>Nivel:</strong> ${data.level || 'Todos'}</div>
-              </div>
-            </div>
-          </div>
-        `
-      };
-      
-      return contentTemplates[type] || '<p>Información no disponible</p>';
     }
 
     function animateCounter(elementId, target, suffix = '') {
@@ -1916,7 +1615,7 @@
       }
 
       let current = 0;
-      const increment = target / 500; // ✅ 500 pasos en 10 segundos = 20ms cada paso
+      const increment = target / 100;
       const timer = setInterval(() => {
         current += increment;
         if (current >= target) {
@@ -1925,7 +1624,16 @@
         } else {
           element.textContent = Math.floor(current).toLocaleString() + suffix;
         }
-      }, 20); // ✅ 20ms * 500 = 10 segundos
+      }, 20);
+    }
+
+    function showFallbackStats() {
+      document.getElementById('total-donations').textContent = '48,290€';
+      document.getElementById('active-challenges').textContent = '12';
+      document.getElementById('volunteer-hours').textContent = '2,840h';
+      document.getElementById('active-teams').textContent = '34';
+      document.getElementById('completed-tasks').textContent = '5,680';
+      document.getElementById('active-volunteers').textContent = '420';
     }
 
     function setupIntersectionObserver() {
@@ -1934,17 +1642,11 @@
           if (entry.isIntersecting) {
             entry.target.style.opacity = '1';
             entry.target.style.transform = 'translateY(0)';
-            
-            // ✅ Animar contadores solo cuando son visibles
-            if (entry.target.classList.contains('live-stats') && !entry.target.hasAttribute('data-animated')) {
-              entry.target.setAttribute('data-animated', 'true');
-              loadPlatformStats();
-            }
           }
         });
       }, { threshold: 0.1 });
 
-      document.querySelectorAll('.action-card, .preview-card, .live-stat, .live-stats').forEach(el => {
+      document.querySelectorAll('.action-card, .preview-card, .live-stat').forEach(el => {
         el.style.opacity = '0';
         el.style.transform = 'translateY(30px)';
         el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
@@ -1973,96 +1675,5 @@
         });
       });
     }
-
-    function showFallbackStats() {
-      document.getElementById('total-donations').textContent = '48,290€';
-      document.getElementById('active-challenges').textContent = '12';
-      document.getElementById('volunteer-hours').textContent = '2,840h';
-      document.getElementById('active-teams').textContent = '34';
-      document.getElementById('completed-tasks').textContent = '5,680';
-      document.getElementById('active-volunteers').textContent = '420';
-    }
-
-    // ✅ Función para inicializar todos los renderers - CORREGIDA PARA CAUSAS
-    function initializeRenderers() {
-      // ✅ Verificar CausesRenderer - MÉTODO CORREGIDO
-      if (window.causesRenderer && typeof window.causesRenderer.showModal === 'function') {
-        renderersLoaded.causes = true;
-        console.log('✅ causesRenderer disponible con showModal');
-      } else if (window.CausesRenderer) {
-        // ✅ CREAR INSTANCIA si la clase existe pero no la instancia
-        if (!window.causesRenderer) {
-          window.causesRenderer = new window.CausesRenderer();
-          console.log('✅ Instancia causesRenderer creada');
-        }
-        renderersLoaded.causes = true;
-        console.log('✅ CausesRenderer disponible (clase)');
-      } else {
-        console.warn('❌ CausesRenderer no disponible');
-      }
-      
-      // ✅ Verificar TasksRenderer
-      if (window.TasksRenderer) {
-        renderersLoaded.tasks = true;
-        console.log('✅ TasksRenderer disponible');
-      }
-      
-      // ✅ Verificar ChallengesRenderer - MISMO PATRÓN QUE CAUSAS
-      if (window.challengesRenderer && typeof window.challengesRenderer.showModal === 'function') {
-        renderersLoaded.challenges = true;
-        console.log('✅ challengesRenderer disponible con showModal');
-      } else if (window.ChallengesRenderer) {
-        if (!window.challengesRenderer) {
-          window.challengesRenderer = new window.ChallengesRenderer();
-          console.log('✅ Instancia challengesRenderer creada');
-        }
-        renderersLoaded.challenges = true;
-        console.log('✅ ChallengesRenderer disponible (clase)');
-      } else {
-        console.warn('❌ ChallengesRenderer no disponible');
-      }
-      
-      // ✅ Verificar VolunteeringRenderer
-      if (window.VolunteeringRenderer) {
-        renderersLoaded.volunteering = true;
-        console.log('✅ VolunteeringRenderer disponible');
-      }
-      
-      // ✅ Verificar TeamsRenderer
-      if (window.TeamsRenderer) {
-        renderersLoaded.teams = true;
-        console.log('✅ TeamsRenderer disponible');
-      }
-      
-      console.log('Estado final de renderers:', renderersLoaded);
-    }
-
-    // ✅ VERIFICACIÓN FINAL - Crear instancias si las clases existen
-    if (window.CausesRenderer && !window.causesRenderer) {
-      window.causesRenderer = new window.CausesRenderer();
-      console.log('✅ Instancia global causesRenderer creada');
-    }
-
-    if (window.ChallengesRenderer && !window.challengesRenderer) {
-      window.challengesRenderer = new window.ChallengesRenderer();
-      console.log('✅ Instancia global challengesRenderer creada');
-    }
-
-    // ✅ ASEGURAR COMPATIBILIDAD CON CAUSAS - Crear funciones globales si no existen
-    setTimeout(() => {
-      // Verificar si las funciones globales de causas existen
-      if (!window.showCauseModal && window.causesRenderer && typeof window.causesRenderer.showModal === 'function') {
-        window.showCauseModal = (causeId) => window.causesRenderer.showModal(causeId);
-        console.log('✅ showCauseModal creado como alias');
-      }
-      
-      if (!window.showChallengeModal && window.challengesRenderer && typeof window.challengesRenderer.showModal === 'function') {
-        window.showChallengeModal = (challengeId) => window.challengesRenderer.showModal(challengeId);
-        console.log('✅ showChallengeModal creado como alias');
-      }
-      
-      // Re-verificar renderers después de un segundo
-      initializeRenderers();
-    }, 1500);
   </script>
 {% endblock %}
