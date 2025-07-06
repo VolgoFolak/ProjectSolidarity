@@ -24,6 +24,8 @@ class SolidarityHamburgerMenu extends HTMLElement {
           min-width: 60px !important;
           min-height: 60px !important;
           font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+          /* ✅ AÑADIR ESTA LÍNEA */
+          overflow: hidden;
         }
 
         @media (max-width: 992px) {
@@ -113,10 +115,13 @@ class SolidarityHamburgerMenu extends HTMLElement {
           flex-direction: column;
           z-index: 1000000;
           overflow-y: auto;
+          /* ✅ AÑADIR ESTAS LÍNEAS */
+          right: -5px; /* Offset para asegurar que esté completamente oculto */
         }
 
         .menu-panel.open {
           transform: translateX(0);
+          right: 0; /* ✅ AÑADIR ESTA LÍNEA */
         }
 
         /* Contenido del menú */
@@ -298,6 +303,23 @@ class SolidarityHamburgerMenu extends HTMLElement {
 
           .item-text {
             font-size: 0.9rem;
+          }
+        }
+           @media (max-width: 480px) {
+          .menu-panel {
+            width: 90vw;
+            right: -10px;
+          }
+
+          .menu-panel.open {
+            right: 0;
+          }
+        }
+
+        @media (max-width: 360px) {
+          .menu-panel {
+            width: 95vw;
+            right: -15px;
           }
         }
       </style>
