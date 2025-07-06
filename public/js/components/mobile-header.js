@@ -117,10 +117,10 @@ class SolidarityMobileHeader extends HTMLElement {
       
       <div class="center-section">
         <a href="/" class="logo" style="display:flex;align-items:center;gap:12px;text-decoration:none;">
-          <img src="${window.location.origin}/img/logo.jpg" 
+          <img src="${window.location.origin}/img/logotransparente.png" 
                alt="Solidarity Logo" 
                class="logo-icon" 
-               onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDQiIGhlaWdodD0iNDQiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTEyIDJMMTMuMDkgOC4yNkwyMCA5TDEzLjA5IDE1Ljc0TDEyIDIyTDEwLjkxIDE1Ljc0TDQgOUwxMC45MSA4LjI2TDEyIDJaIiBmaWxsPSIjNGE2ZmE1Ii8+Cjwvc3ZnPgo='; this.onerror=null;"
+               onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDQiIGhlaWdodD0iNDQiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgeG1zbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTEyIDJMMTMuMDkgOC4yNkwyMCA5TDEzLjA5IDE1Ljc0TDEyIDIyTDEwLjkxIDE1Ljc0TDQgOUwxMC45MSA4LjI2TDEyIDJaIiBmaWxsPSIjNGE2ZmE1Ii8+Cjwvc3ZnPgo='; this.onerror=null;"
                style="width:44px;height:44px;object-fit:contain;">
           <span class="logo-text">Solidarity</span>
         </a>
