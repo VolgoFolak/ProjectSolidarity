@@ -7,6 +7,7 @@ const multer = require('multer');
 const nunjucks = require('nunjucks');
 const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
 const { createClient } = require('@supabase/supabase-js');
+const cookieParser = require('cookie-parser'); // ✅ AÑADIR ESTO
 const app = express();
 const PORT = 3000;
 
@@ -17,8 +18,9 @@ const supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_KEY
 
 // Middleware para parsear JSON
 app.use(express.json());
+app.use(cookieParser()); // ✅ AÑADIR ESTO ANTES DEL MIDDLEWARE DE IDIOMA
 
-// Sesiones (añadido cookie: { sameSite: 'lax' } para compatibilidad frontend-backend)
+// Sesiones
 app.use(session({
     secret: 'secreto-super-seguro',
     resave: false,
@@ -26,9 +28,8 @@ app.use(session({
     cookie: { secure: false, sameSite: 'lax' }
 }));
 
-// Servir archivos estáticos (NO HTML aquí, solo CSS, JS, imágenes)
-app.use(express.static(path.join(__dirname)));
-app.use(express.static(path.join(__dirname, 'public'))); // Para scripts y assets
+// Servir archivos estáticos
+app.use(express.static(path.join(__dirname, 'public')));
 
 // --- Multer config para subir imágenes ---
 const uploadDir = path.join(__dirname, 'public', 'uploads');
@@ -39,7 +40,6 @@ const storage = multer.diskStorage({
         cb(null, uploadDir);
     },
     filename: function (req, file, cb) {
-        // Nombre único: fecha + nombre original
         const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
         const ext = path.extname(file.originalname);
         cb(null, file.fieldname + '-' + uniqueSuffix + ext);
@@ -52,7 +52,6 @@ app.post('/upload-photo', upload.single('photo'), (req, res) => {
     if (!req.file) {
         return res.json({ ok: false, error: 'No se subió ninguna imagen.' });
     }
-    // URL accesible desde el navegador
     const url = '/uploads/' + req.file.filename;
     res.json({ ok: true, url });
 });
@@ -86,7 +85,6 @@ app.post('/register', (req, res) => {
 
 // --- Login ---
 app.post('/login', (req, res) => {
-    // Permitir login por username o email
     const { username, password, email } = req.body;
     let users = readUsers();
     let user = null;
@@ -97,7 +95,7 @@ app.post('/login', (req, res) => {
     }
     if (user) {
         req.session.user = { 
-            id: user.id || user.username, // Usamos username como ID temporal
+            id: user.id || user.username,
             name: user.name, 
             photo: user.photo || '', 
             username: user.username, 
@@ -117,14 +115,12 @@ app.post('/login-supabase', async (req, res) => {
     return res.status(400).json({ error: 'No token' });
   }
 
-  // Valida el token con Supabase
   const { data: { user }, error } = await supabase.auth.getUser(token);
   if (error || !user) {
     console.log('Token inválido:', error);
     return res.status(401).json({ error: 'Token inválido' });
   }
 
-  // Busca el perfil en tu tabla de perfiles (usa first_name en vez de name)
   const { data: profile, error: profileError } = await supabase
     .from('profiles')
     .select('id, username, first_name, email, photo_url')
@@ -136,10 +132,9 @@ app.post('/login-supabase', async (req, res) => {
     return res.status(401).json({ error: 'Perfil no encontrado' });
   }
 
-  // Crea la sesión Express
   req.session.user = {
     id: profile.id,
-    name: profile.first_name, // Usa first_name aquí
+    name: profile.first_name,
     photo: profile.photo_url || '',
     username: profile.username,
     email: profile.email
@@ -154,7 +149,7 @@ app.get('/me', (req, res) => {
         res.json({ 
             logged: true,
             user: req.session.user,
-            firstLogin: req.session.firstLogin // Añade esto si quieres detectar primer login
+            firstLogin: req.session.firstLogin
         });
     } else {
         res.json({ logged: false });
@@ -166,53 +161,111 @@ app.post('/logout', (req, res) => {
     req.session.destroy(() => res.json({ ok: true }));
 });
 
-// --- Configura nunjucks para usar la carpeta 'views' ---
+// --- Configura nunjucks ---
 nunjucks.configure('views', {
   autoescape: true,
   express: app
 });
 app.set('view engine', 'njk');
 
-// --- Rutas para las páginas principales (usa .njk) ---
+// ✅ MIDDLEWARE DE DETECCIÓN DE IDIOMA
+const detectLanguage = require('./middleware/detectlanguage');
+app.use(detectLanguage);
+
+// ✅ RUTAS PARA CAMBIAR IDIOMA
+app.post('/set-language', (req, res) => {
+  const { lang } = req.body;
+  const supportedLangs = ['es', 'en', 'fr', 'de', 'pt', 'it', 'nl', 'pl', 'ru', 'sv', 'no', 'en-US', 'ja', 'ko'];
+  
+  if (supportedLangs.includes(lang)) {
+    res.cookie('userLang', lang, { 
+      maxAge: 31536000000, // 1 año
+      httpOnly: false,
+      secure: false,
+      sameSite: 'lax'
+    });
+    
+    res.json({ success: true, lang });
+  } else {
+    res.status(400).json({ error: 'Idioma no soportado' });
+  }
+});
+
+app.get('/current-language', (req, res) => {
+  res.json({ lang: req.lang || 'es' });
+});
+
+// ✅ RUTAS PRINCIPALES - CON DETECCIÓN DE IDIOMA (CORREGIDAS)
 app.get('/', (req, res) => {
-    res.render('index.njk');
+  res.render('index', { 
+    lang: req.lang,
+    user: req.session.user  // ✅ CORREGIDO: req.session.user
+  });
 });
+
 app.get('/login', (req, res) => {
-    res.render('auth/login.njk');
+  res.render('auth/login', {
+    lang: req.lang
+  });
 });
+
 app.get('/register', (req, res) => {
-    res.render('auth/register.njk');
+  res.render('auth/register', {
+    lang: req.lang
+  });
 });
+
 app.get('/causes', (req, res) => {
-    res.render('causes/index.njk');
+  res.render('causes/index', {
+    lang: req.lang,
+    user: req.session.user
+  });
 });
+
 app.get('/causes/create', (req, res) => {
-    res.render('causes/create.njk');
+    res.render('causes/create', {
+        lang: req.lang,
+        user: req.session.user
+    });
 });
-// ✅ RUTA ESPECÍFICA PARA CAUSA INDIVIDUAL - DEBE ESTAR DESPUÉS DE /causes/create
+
 app.get('/causes/:id', (req, res) => {
   try {
     const causeId = req.params.id;
     console.log('📍 Solicitando causa con ID:', causeId);
     res.render('causes/index', { 
       title: 'Causa - Solidarity',
-      user: req.session.user || null
+      lang: req.lang,
+      user: req.session.user
     });
-
   } catch (error) {
     console.error('❌ Error en ruta /causes/:id:', error);
     res.status(500).send('Error del servidor');
   }
 });
 
-// ✅ TAREAS INDIVIDUALES (inglés)
+app.get('/tasks', (req, res) => {
+  res.render('tasks/index', {
+    lang: req.lang,
+    user: req.session.user
+  });
+});
+
+app.get('/tasks/create', (req, res) => {
+    res.render('tasks/create', {
+        lang: req.lang,
+        user: req.session.user
+    });
+});
+
 app.get('/tasks/:id', (req, res) => {
   try {
     const taskId = req.params.id;
     console.log('📍 Solicitando tarea con ID:', taskId);
     res.render('tasks/index', { 
       title: 'Tarea - Solidarity',
-      user: req.session.user || null
+      lang: req.lang,
+      user: req.session.user
     });
   } catch (error) {
     console.error('❌ Error en ruta /tasks/:id:', error);
@@ -220,14 +273,14 @@ app.get('/tasks/:id', (req, res) => {
   }
 });
 
-// ✅ TAREAS INDIVIDUALES (español)
 app.get('/tarea/:id', (req, res) => {
   try {
     const taskId = req.params.id;
     console.log('📍 Solicitando tarea con ID (español):', taskId);
     res.render('tasks/index', { 
       title: 'Tarea - Solidarity',
-      user: req.session.user || null
+      lang: req.lang,
+      user: req.session.user
     });
   } catch (error) {
     console.error('❌ Error en ruta /tarea/:id:', error);
@@ -235,14 +288,28 @@ app.get('/tarea/:id', (req, res) => {
   }
 });
 
-// ✅ VOLUNTARIADOS INDIVIDUALES (inglés)
+app.get('/volunteering', (req, res) => {
+  res.render('volunteering/index', {
+    lang: req.lang,
+    user: req.session.user
+  });
+});
+
+app.get('/volunteering/create', (req, res) => {
+    res.render('volunteering/create', {
+        lang: req.lang,
+        user: req.session.user
+    });
+});
+
 app.get('/volunteering/:id', (req, res) => {
   try {
     const volunteeringId = req.params.id;
     console.log('📍 Solicitando voluntariado con ID:', volunteeringId);
     res.render('volunteering/index', { 
       title: 'Voluntariado - Solidarity',
-      user: req.session.user || null
+      lang: req.lang,
+      user: req.session.user
     });
   } catch (error) {
     console.error('❌ Error en ruta /volunteering/:id:', error);
@@ -250,14 +317,14 @@ app.get('/volunteering/:id', (req, res) => {
   }
 });
 
-// ✅ VOLUNTARIADOS INDIVIDUALES (español)
 app.get('/voluntariado/:id', (req, res) => {
   try {
     const volunteeringId = req.params.id;
     console.log('📍 Solicitando voluntariado con ID (español):', volunteeringId);
     res.render('volunteering/index', { 
       title: 'Voluntariado - Solidarity',
-      user: req.session.user || null
+      lang: req.lang,
+      user: req.session.user
     });
   } catch (error) {
     console.error('❌ Error en ruta /voluntariado/:id:', error);
@@ -265,14 +332,21 @@ app.get('/voluntariado/:id', (req, res) => {
   }
 });
 
-// ✅ DESAFÍOS INDIVIDUALES (inglés)
+app.get('/challenges', (req, res) => {
+  res.render('challenges/index', {
+    lang: req.lang,
+    user: req.session.user
+  });
+});
+
 app.get('/challenges/:id', (req, res) => {
   try {
     const challengeId = req.params.id;
     console.log('📍 Solicitando desafío con ID:', challengeId);
     res.render('challenges/index', { 
       title: 'Desafío - Solidarity',
-      user: req.session.user || null
+      lang: req.lang,
+      user: req.session.user
     });
   } catch (error) {
     console.error('❌ Error en ruta /challenges/:id:', error);
@@ -280,14 +354,14 @@ app.get('/challenges/:id', (req, res) => {
   }
 });
 
-// ✅ DESAFÍOS INDIVIDUALES (español)
 app.get('/reto/:id', (req, res) => {
   try {
     const challengeId = req.params.id;
     console.log('📍 Solicitando reto con ID (español):', challengeId);
     res.render('challenges/index', { 
       title: 'Reto - Solidarity',
-      user: req.session.user || null
+      lang: req.lang,
+      user: req.session.user
     });
   } catch (error) {
     console.error('❌ Error en ruta /reto/:id:', error);
@@ -295,14 +369,21 @@ app.get('/reto/:id', (req, res) => {
   }
 });
 
-// ✅ EQUIPOS INDIVIDUALES (inglés)
+app.get('/teams', (req, res) => {
+  res.render('teams/index', {
+    lang: req.lang,
+    user: req.session.user
+  });
+});
+
 app.get('/teams/:id', (req, res) => {
   try {
     const teamId = req.params.id;
     console.log('📍 Solicitando equipo con ID:', teamId);
     res.render('teams/index', { 
       title: 'Equipo - Solidarity',
-      user: req.session.user || null
+      lang: req.lang,
+      user: req.session.user
     });
   } catch (error) {
     console.error('❌ Error en ruta /teams/:id:', error);
@@ -310,14 +391,14 @@ app.get('/teams/:id', (req, res) => {
   }
 });
 
-// ✅ EQUIPOS INDIVIDUALES (español)
 app.get('/equipo/:id', (req, res) => {
   try {
     const teamId = req.params.id;
     console.log('📍 Solicitando equipo con ID (español):', teamId);
     res.render('teams/index', { 
       title: 'Equipo - Solidarity',
-      user: req.session.user || null
+      lang: req.lang,
+      user: req.session.user
     });
   } catch (error) {
     console.error('❌ Error en ruta /equipo/:id:', error);
@@ -325,72 +406,110 @@ app.get('/equipo/:id', (req, res) => {
   }
 });
 
-app.get('/tasks', (req, res) => {
-    res.render('tasks/index.njk');
-});
-app.get('/volunteering', (req, res) => {
-    res.render('volunteering/index.njk');
-});
-app.get('/profile', (req, res) => {
-    res.render('profile/index.njk');
-});
-app.get('/editprofile', (req, res) => {
-    res.render('profile/editprofile.njk');
-});
-app.get('/tasks/create', (req, res) => {
-    res.render('tasks/create.njk');
-});
-app.get('/volunteering/create', (req, res) => {
-    res.render('volunteering/create.njk');
-});
-app.get('/maps', (req, res) => {
-    res.render('maps/index.njk');
-});
-app.get('/challenges', (req, res) => {
-    res.render('challenges/index.njk');
-});
-app.get('/teams', (req, res) => {
-    res.render('teams/index.njk');
-});
 app.get('/myteams', (req, res) => {
-    res.render('myteams/myteams.njk');
-});
-app.get('/ranking', (req, res) => {
-    res.render('ranking/index.njk');
-});
-app.get('/takeaction', (req, res) => {
-    res.render('takeaction/index.njk');
-});
-app.get('/profile/myactivities', (req, res) => {
-    res.render('profile/myactivities');
-});
-app.get('/members', (req, res) => {
-    res.render('members/members.njk');
-});
-app.get('/docs/about', (req, res) => {
-    res.render('docs/about.njk');
-});
-app.get('/docs/cookies', (req, res) => {
-    res.render('docs/cookies.njk');
-});
-app.get('/docs/privacy', (req, res) => {
-    res.render('docs/privacy.njk');
-});
-app.get('/docs/terms', (req, res) => {
-    res.render('docs/terms.njk');
+    res.render('myteams/myteams', {
+        lang: req.lang,
+        user: req.session.user
+    });
 });
 
-// --- RUTAS DEL SISTEMA DE MENSAJERÍA ---
+app.get('/takeaction', (req, res) => {
+  res.render('takeaction/index', {
+    lang: req.lang,
+    user: req.session.user
+  });
+});
+
+app.get('/ranking', (req, res) => {
+  res.render('ranking/index', {
+    lang: req.lang,
+    user: req.session.user
+  });
+});
+
+app.get('/profile', (req, res) => {
+  res.render('profile/index', {
+    lang: req.lang,
+    user: req.session.user
+  });
+});
+
+app.get('/editprofile', (req, res) => {
+    res.render('profile/editprofile', {
+        lang: req.lang,
+        user: req.session.user
+    });
+});
+
+app.get('/profile/myactivities', (req, res) => {
+    res.render('profile/myactivities', {
+        lang: req.lang,
+        user: req.session.user
+    });
+});
+
+app.get('/maps', (req, res) => {
+  res.render('maps/index', {
+    lang: req.lang,
+    user: req.session.user
+  });
+});
+
+app.get('/members', (req, res) => {
+  res.render('members/members', {
+    lang: req.lang,
+    user: req.session.user
+  });
+});
+
 app.get('/messages', (req, res) => {
-    res.render('messages/index.njk');
+  res.render('messages/index', {
+    lang: req.lang,
+    user: req.session.user
+  });
 });
 
 app.get('/messages/new', (req, res) => {
-    res.render('messages/new.njk');
+    res.render('messages/new', {
+        lang: req.lang,
+        user: req.session.user
+    });
 });
 
 app.get('/messages/:conversationId', (req, res) => {
-    res.render('messages/conversation.njk');
+    res.render('messages/conversation', {
+        lang: req.lang,
+        user: req.session.user
+    });
+});
+
+// ✅ DOCS ROUTES
+app.get('/docs/about', (req, res) => {
+    res.render('docs/about', {
+        lang: req.lang,
+        user: req.session.user
+    });
+});
+
+app.get('/docs/cookies', (req, res) => {
+    res.render('docs/cookies', {
+        lang: req.lang,
+        user: req.session.user
+    });
+});
+
+app.get('/docs/privacy', (req, res) => {
+    res.render('docs/privacy', {
+        lang: req.lang,
+        user: req.session.user
+    });
+});
+
+app.get('/docs/terms', (req, res) => {
+    res.render('docs/terms', {
+        lang: req.lang,
+        user: req.session.user
+    });
 });
 
 // --- API para mensajes ---
@@ -408,8 +527,7 @@ app.get('/api/conversations', async (req, res) => {
                     profile: profiles!conversation_participants_profile_id_fkey (id, username, photo_url)
                 )
             `)
-            // .order('last_message.created_at', { ascending: false }) // ❌ Quita o comenta esta línea
-            .order('created_at', { ascending: false }); // ✅ Ordena por created_at de conversations
+            .order('created_at', { ascending: false });
         
         if (error) throw error;
         res.json(data);
@@ -452,7 +570,6 @@ app.post('/api/messages', async (req, res) => {
         
         if (error) throw error;
         
-        // Actualizar última conversación
         await supabase
             .from('conversations')
             .update({ last_message_id: data.id })
@@ -469,7 +586,6 @@ app.post('/api/conversations', async (req, res) => {
     
     const { recipient_id, content } = req.body;
     try {
-        // Crear nueva conversación
         const { data: conversation, error: convError } = await supabase
             .from('conversations')
             .insert({})
@@ -478,13 +594,11 @@ app.post('/api/conversations', async (req, res) => {
         
         if (convError) throw convError;
         
-        // Añadir participantes
         await supabase.from('conversation_participants').insert([
             { conversation_id: conversation.id, profile_id: req.session.user.id },
             { conversation_id: conversation.id, profile_id: recipient_id }
         ]);
         
-        // Crear mensaje inicial
         const { data: message, error: msgError } = await supabase
             .from('messages')
             .insert({
@@ -497,7 +611,6 @@ app.post('/api/conversations', async (req, res) => {
         
         if (msgError) throw msgError;
         
-        // Actualizar conversación con el primer mensaje
         await supabase
             .from('conversations')
             .update({ last_message_id: message.id })
@@ -537,7 +650,6 @@ app.get('/api/check-session', (req, res) => {
 });
 
 // --- STRIPE ROUTES ---
-// 1. Crear cuenta Express para el creador de la causa
 app.post('/connect-account', async (req, res) => {
   const { userId, email } = req.body;
   try {
@@ -546,15 +658,12 @@ app.post('/connect-account', async (req, res) => {
       email,
       capabilities: { transfers: { requested: true } }
     });
-    // Guarda account.id en tu BD, asociado al usuario
-    // ...
     res.json({ accountId: account.id });
   } catch (err) {
     res.status(400).json({ error: err.message });
   }
 });
 
-// 2. Crear link de onboarding para que el usuario complete su cuenta
 app.post('/connect-onboarding', async (req, res) => {
   const { accountId } = req.body;
   try {
@@ -570,7 +679,6 @@ app.post('/connect-onboarding', async (req, res) => {
   }
 });
 
-// 3. Crear sesión de pago para donar a una causa
 app.post('/donate', async (req, res) => {
   const { amount, causeId, creatorStripeAccountId, donorEmail } = req.body;
   try {
@@ -580,7 +688,7 @@ app.post('/donate', async (req, res) => {
         price_data: {
           currency: 'eur',
           product_data: { name: `Donación a causa #${causeId}` },
-          unit_amount: amount * 100, // en céntimos
+          unit_amount: amount * 100,
         },
         quantity: 1,
       }],
@@ -588,9 +696,9 @@ app.post('/donate', async (req, res) => {
       success_url: 'https://tusitio.com/donacion-exitosa',
       cancel_url: 'https://tusitio.com/donacion-cancelada',
       payment_intent_data: {
-        application_fee_amount: 100, // comisión para la plataforma (opcional)
+        application_fee_amount: 100,
         transfer_data: {
-          destination: creatorStripeAccountId, // el Stripe Account del creador
+          destination: creatorStripeAccountId,
         },
       },
       customer_email: donorEmail,
@@ -604,17 +712,13 @@ app.post('/donate', async (req, res) => {
 app.post('/api/impact-points', async (req, res) => {
   const { userId, points, communityId, weekly } = req.body;
 
-  // Suma puntos globales
   let updateObj = { impact_points: supabase.rpc('add_points', { user_id: userId, points }) };
 
-  // Suma puntos semanales si corresponde
   if (weekly) {
     updateObj.weekly_points = supabase.rpc('add_weekly_points', { user_id: userId, points });
   }
 
-  // Suma puntos de comunidad si corresponde
   if (communityId) {
-    // Obtén el perfil actual
     const { data: profile } = await supabase
       .from('profiles')
       .select('community_points')
@@ -627,7 +731,6 @@ app.post('/api/impact-points', async (req, res) => {
     updateObj.community_points = communityPoints;
   }
 
-  // Actualiza el perfil
   await supabase
     .from('profiles')
     .update(updateObj)

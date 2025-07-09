@@ -82,7 +82,7 @@ window.initTeamsRenderer = function(options) {
       card.setAttribute('data-team-id', team.id);
       card.innerHTML = `
         <div class="team-image-classic">
-          <img src="${team.photo || 'https://via.placeholder.com/350x180?text=Comunidad'}" alt="${team.name}">
+          <img src="${team.photo_url || 'https://via.placeholder.com/350x180?text=Comunidad'}" alt="${team.name}">
           <div class="team-badge-classic points" style="top:1rem;left:1rem;right:auto;background:var(--primary);color:#fff;">
             <i class="fas fa-bolt"></i> +${team.impact || 0} pts
           </div>
@@ -349,7 +349,7 @@ async function showTeamModal(teamId) {
           <div class="modal-cause-badge" style="right:1.5rem; left:auto; top:1.5rem; background:var(--gray); color:var(--primary-dark); position:absolute; padding:0.5rem 1rem; border-radius:50px; font-size:0.9rem; font-weight:600; display:flex; align-items:center; gap:0.6rem; box-shadow:0 2px 8px rgba(0,0,0,0.1); z-index:2;">
             <i class="fas fa-lock"></i> Privada
           </div>` : ''}
-          <img class="modal-cause-image" src="${team.photo || 'https://via.placeholder.com/350x180?text=Comunidad'}"
+          <img class="modal-cause-image" src="${team.photo_url || 'https://via.placeholder.com/350x180?text=Comunidad'}"
                alt="Imagen de la comunidad ${team.name}"
                style="width:100%;height:100%;object-fit:cover;"
                onerror="this.src='https://via.placeholder.com/350x180?text=Comunidad'">

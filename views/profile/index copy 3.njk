@@ -575,12 +575,12 @@
       transform: none;
     }
     .admin-activity-btn {
-      background: #10b981;
+      background: #ff6b6b;
       color: white;
     }
-
     .admin-activity-btn:hover {
-      background: #059669;
+      background: #ff5252;
+      transform: translateY(-2px);
     }
 
     /* --- ESTILOS PARA ESTADOS VACÍOS --- */
@@ -807,12 +807,24 @@
     }
 
     .admin-activity-btn {
-      background: #10b981;
+      background: #ff6b6b;
       color: white;
     }
 
     .admin-activity-btn:hover {
-      background: #059669;
+      background: #ff5252;
+    }
+
+    /* Challenge buttons */
+    .btn-warning {
+      background: #ffe066;
+      color: #a67c00;
+      border: 1px solid #ffe066;
+    }
+
+    .btn-warning:hover {
+      background: #a67c00;
+      color: white;
     }
 
     /* --- ESTILOS PARA TABS --- */
@@ -1383,36 +1395,6 @@
         <div class="label">Donado</div>
       </div>
     </div>
-    <!-- NUEVAS ESTADÍSTICAS -->
-    <div class="stats-card">
-      <div class="stats-icon"><i class="fas fa-hands-helping"></i></div>
-      <div class="stats-content">
-        <div class="number" id="causes-counter">0</div>
-        <div class="label">Causas</div>
-      </div>
-    </div>
-    <div class="stats-card">
-      <div class="stats-icon"><i class="fas fa-tasks"></i></div>
-      <div class="stats-content">
-        <div class="number" id="tasks-counter">0</div>
-        <div class="label">Tareas</div>
-      </div>
-    </div>
-    <div class="stats-card">
-      <div class="stats-icon"><i class="fas fa-bolt"></i></div>
-      <div class="stats-content">
-        <div class="number" id="challenges-counter">0</div>
-        <div class="label">Retos</div>
-      </div>
-    </div>
-    <div class="stats-card">
-      <div class="stats-icon"><i class="fas fa-heart"></i></div>
-      <div class="stats-content">
-        <div class="number" id="volunteering-counter">0</div>
-        <div class="label">Voluntariados</div>
-      </div>
-    </div>
-    <!-- FIN NUEVAS ESTADÍSTICAS -->
     <div class="stats-card">
       <div class="stats-icon"><i class="fas fa-users"></i></div>
       <div class="stats-content">
@@ -1441,21 +1423,6 @@
     <div class="impact-level-info">
       <span id="impact-level">Nivel 1 - Seed</span>
       <span id="impact-score-details-text">0/500 puntos para el siguiente nivel</span>
-    </div>
-  </div>
-
-  <!-- Mapa de impacto (MOVIDO AQUÍ) -->
-  <div class="map-section">
-    <div class="section-header">
-      <h3>Tu mapa de impacto</h3>
-    </div>
-    <div id="profile-map"></div>
-    <div class="map-legend">
-      <div class="legend-item"><span class="legend-color cause"></span> Causas</div>
-      <div class="legend-item"><span class="legend-color task"></span> Tareas</div>
-      <div class="legend-item"><span class="legend-color challenge"></span> Retos</div>
-      <div class="legend-item"><span class="legend-color volunteering"></span> Voluntariados</div>
-      <div class="legend-item"><span class="legend-color community"></span> Comunidades</div>
     </div>
   </div>
 
@@ -1549,6 +1516,21 @@
       <button id="nextPage" class="btn btn-outline" disabled>
         Siguiente <i class="fas fa-chevron-right"></i>
       </button>
+    </div>
+  </div>
+
+  <!-- Mapa de impacto -->
+  <div class="map-section">
+    <div class="section-header">
+      <h3>Tu mapa de impacto</h3>
+    </div>
+    <div id="profile-map"></div>
+    <div class="map-legend">
+      <div class="legend-item"><span class="legend-color cause"></span> Causas</div>
+      <div class="legend-item"><span class="legend-color task"></span> Tareas</div>
+      <div class="legend-item"><span class="legend-color challenge"></span> Retos</div>
+      <div class="legend-item"><span class="legend-color volunteering"></span> Voluntariados</div>
+      <div class="legend-item"><span class="legend-color community"></span> Comunidades</div>
     </div>
   </div>
 </div>
@@ -1716,26 +1698,11 @@
 
           // Popup como en el mapa de ayudas
           marker.bindPopup(`
-            <div style="text-align:center; min-width:210px; max-width:260px; padding:0.7em 0.2em;">
-              <img src="${activity.photo_url || `/img/${activity.type}-default.jpg`}" 
-                   alt="Foto acción" 
-                   style="width:56px; height:56px; border-radius:50%; object-fit:cover; border:3px solid ${activity.color}; box-shadow:0 2px 8px rgba(0,0,0,0.10); margin-bottom:0.7em;">
-              <div style="font-weight:800; font-size:1.08rem; color:#222; margin-bottom:0.2em;">
-                ${activity.title || activity.name}
-              </div>
-              <div style="color:#6b7280; font-size:0.97rem; margin-bottom:0.5em;">
-                <i class="fas fa-map-marker-alt" style="color:${activity.color};"></i>
-                ${activity.city || 'Sin ciudad'}, ${activity.country || 'Sin país'}
-              </div>
-              <div style="color:#444; font-size:0.93rem; margin-bottom:0.7em;">
-                ${(activity.summary || activity.description || 'Sin descripción').substring(0, 80)}${(activity.summary || activity.description || '').length > 80 ? '...' : ''}
-              </div>
-              <a href="/${activity.type}s/${activity.id}" 
-                 target="_blank"
-                 style="display:inline-block; background:${activity.color}; color:#fff; border-radius:50px; font-weight:700; padding:0.45em 1.2em; font-size:0.93rem; text-decoration:none; transition:background 0.18s;">
-                Ver más
-              </a>
-            </div>
+            <img src="${activity.photo_url || `/img/${activity.type}-default.jpg`}" class="popup-photo" alt="Foto acción" style="width: 38px; height: 38px; border-radius: 50%; object-fit: cover; margin-bottom: 7px; border: 2px solid #4a6fa5; box-shadow: 0 1px 4px rgba(74,111,165,0.10); display: block; margin-left: auto; margin-right: auto;">
+            <strong>${activity.title || activity.name}</strong><br>
+            <span style="color:#6b7280;">${activity.city || 'Sin ciudad'}, ${activity.country || 'Sin país'}</span><br>
+            <span style="font-size:0.97rem;">${(activity.summary || activity.description || 'Sin descripción').substring(0, 80)}...</span><br>
+            <a href="/${activity.type}s/${activity.id}" class="action-link" target="_blank" style="color:#4a6fa5;font-weight:600;">Ver ${activity.typeName}</a>
           `);
         }
       });
@@ -1785,7 +1752,7 @@
       console.log('✅ Mapa inicializado correctamente');
     }
 
-    // Cambia la función para crear tarjetas de comunidades (teams)
+    // Fallback para renderizar comunidades
     function renderCommunitiesFallback(teams, container) {
       if (!teams || teams.length === 0) {
         container.innerHTML = `
@@ -1808,7 +1775,9 @@
         card.innerHTML = `
           <div class="team-image-classic">
             <img src="${team.photo_url || '/img/comunidad-default.jpg'}" alt="${team.name}" onerror="this.src='/img/default-activity.jpg'">
-            <!-- Eliminado badge de puntos -->
+            <div class="team-badge-classic points">
+              <i class="fas fa-star"></i> +${team.impact || 0} pts
+            </div>
           </div>
           <div class="team-content-classic">
             <h3>${team.name}</h3>
@@ -1836,8 +1805,8 @@
               </div>
             ` : ''}
             <div class="team-actions-classic">
-              <button class="btn btn-vermas-team" onclick="window.location.href='/teams/${team.id}'" style="background: #4a6fa5; color: white; border-radius: 50px; font-weight: 700;">
-                Ver más
+              <button class="btn btn-vermas-team" onclick="window.location.href='/teams/${team.id}'">
+                <i class="fas fa-eye"></i> Ver comunidad
               </button>
             </div>
           </div>
@@ -2043,40 +2012,54 @@
           return '';
         }
 
-        function createActionButtons(activity) {
-          // Solo botón "Ver más", estilo pastilla
-          return `
-            <button class="btn view-${activity.type}-btn" data-${activity.type}-id="${activity.id}" style="background: ${activity.color}; color: white; border-radius: 50px; font-weight: 700;">
-              Ver más
-            </button>
-          `;
+        function createActionButtons(activity, isAdmin, isParticipating) {
+          const viewBtn = `<button class="btn view-${activity.type}-btn" data-${activity.type}-id="${activity.id}">Ver más</button>`;
+          
+          if (isAdmin) {
+            return `
+              ${viewBtn}
+              <button class="btn admin-activity-btn" data-activity-type="${activity.type}" data-activity-id="${activity.id}">
+                               <i class="fas fa-cog"></i> Administrar
+              </button>
+            `;
+          }
+          
+          if (isParticipating) {
+            return `
+              ${viewBtn}
+              <button class="btn btn-outline" disabled style="opacity:0.7;cursor:not-allowed;">
+                <i class="fas fa-check"></i> Participando
+              </button>
+            `;
+          }
+          
+          const participateBtn = `<button class="btn participate-btn" data-${activity.type}-id="${activity.id}" style="background: ${activity.color};">Participar</button>`;
+          return `${viewBtn}${participateBtn}`;
         }
 
         function createActivityCard(activity) {
           const isUrgent = activity.is_urgent;
+          const points = activity.points || (activity.type === 'cause' ? 10 : 20);
           const progress = calculateProgress(activity);
           const location = getLocation(activity);
+          const isParticipating = activity.isParticipating;
+          const isAdmin = ['owner', 'admin', 'coordinator', 'founder', 'creator'].includes(activity.userRole);
 
           // Color para barra de progreso: azul para retos, color original para otros
           const progressColor = activity.type === 'challenge' ? '#4a6fa5' : activity.color;
 
-          // Badge de tipo arriba a la izquierda, con borde para voluntariado
-          let badgeBorder = '';
-          if (activity.type === 'volunteering') {
-            badgeBorder = 'border: 2px solid #e74c3a1; box-shadow: 0 2px 8px rgba(231,76,60,0.13);';
-          } else {
-            badgeBorder = 'box-shadow: 0 2px 8px rgba(74,111,165,0.13);';
-          }
-
           const card = document.createElement('div');
           card.className = `${activity.type}-card`;
           card.innerHTML = `
-            <div class="${activity.type}-image" style="position:relative;">
+            <div class="${activity.type}-image">
               <img src="${activity.photo_url || `/img/${activity.type}-default.jpg`}" 
                    alt="${activity.title || activity.name}" 
                    onerror="this.src='/img/default-activity.jpg'">
               ${isUrgent ? `<div class="${activity.type}-badge urgent"><i class="fas fa-exclamation-circle"></i> Urgente</div>` : ''}
-              <div class="activity-type-badge" style="position: absolute; top: 1rem; left: 1rem; background: ${activity.color}; color: ${activity.type === 'challenge' ? '#333' : 'white'}; padding: 0.3rem 0.8rem; border-radius: 50px; font-size: 0.8rem; font-weight: 600; display: flex; align-items: center; gap: 0.5rem; z-index:2; ${badgeBorder}">
+              <div class="${activity.type}-badge points" style="background: ${activity.color};">
+                <i class="fas fa-star"></i> +${points} pts
+              </div>
+              <div class="activity-type-badge" style="top: 3.5rem; left: 1rem; background: ${activity.color}; color: ${activity.type === 'challenge' ? '#333' : 'white'}; position: absolute; padding: 0.3rem 0.8rem; border-radius: 50px; font-size: 0.8rem; font-weight: 600; display: flex; align-items: center; gap: 0.5rem;">
                 <i class="fas ${activity.icon}"></i> ${activity.typeName}
               </div>
             </div>
@@ -2101,25 +2084,20 @@
                 </div>
               </div>
               <div class="${activity.type}-actions">
-                ${createActionButtons(activity)}
+                ${createActionButtons(activity, isAdmin, isParticipating)}
               </div>
             </div>
           `;
+          
           return card;
         }
 
         //  // 10. FUNCIÓN PARA FILTRAR ACTIVIDADES
-        function filterActivities(tabType = 'all') {
-          const typeMap = {
-            causes: 'cause',
-            tasks: 'task',
-            challenges: 'challenge',
-            volunteering: 'volunteering'
-          };
-          if (tabType === 'all') {
+        function filterActivities(type = 'all') {
+          if (type === 'all') {
             filteredActivities = [...allActivities];
           } else {
-            filteredActivities = allActivities.filter(activity => activity.type === typeMap[tabType]);
+            filteredActivities = allActivities.filter(activity => activity.type === type);
           }
           renderActivities();
         }
@@ -2184,10 +2162,6 @@
         animateCounter('communities-counter', allCommunities.length);
         animateCounter('impacted-counter', causes.reduce((sum, c) => sum + (c.beneficiaries || 0), 0));
         animateCounter('donated-counter', causes.reduce((sum, c) => sum + (c.raised || 0), 0), '', ' €');
-        animateCounter('causes-counter', causes.length);
-        animateCounter('tasks-counter', tasks.length);
-        animateCounter('challenges-counter', challenges.length);
-        animateCounter('volunteering-counter', volunteerings.length);
 
         // 16. ACTUALIZAR IMPACTO
         const impactScore = allActivities.reduce((sum, a) => sum + (a.points || 20), 0);

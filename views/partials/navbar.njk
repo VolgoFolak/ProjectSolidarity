@@ -5,27 +5,27 @@
   </a>
   <!-- Menú principal solo desktop -->
   <div class="nav-links" id="nav-links">
-    <a href="/">Home</a>
+    <a href="/" data-i18n="nav.home">Home</a>
     <div class="dropdown">
       <a href="/takeaction" class="dropbtn btn-accent">
-        Take Action! <i class="fas fa-caret-down"></i>
+        <span data-i18n="nav.takeAction">Take Action!</span> <i class="fas fa-caret-down"></i>
       </a>
       <div class="dropdown-content">
-        <a href="/causes">Causas</a>
-        <a href="/tasks">Tareas</a>
-        <a href="/challenges">Retos</a>
-        <a href="/volunteering">Voluntariado</a>
+        <a href="/causes" data-i18n="nav.causes">Causas</a>
+        <a href="/tasks" data-i18n="nav.tasks">Tareas</a>
+        <a href="/challenges" data-i18n="nav.challenges">Retos</a>
+        <a href="/volunteering" data-i18n="nav.volunteering">Voluntariado</a>
       </div>
     </div>
-    <a href="/teams">Comunidades</a>
-    <a href="/maps">Mapa de Ayudas</a>
-    <a href="/ranking">Ranking</a>
-    <a href="/members">Miembros</a>
+    <a href="/teams" data-i18n="nav.communities">Comunidades</a>
+    <a href="/maps" data-i18n="nav.maps">Mapa de Ayudas</a>
+    <a href="/ranking" data-i18n="nav.ranking">Ranking</a>
+    <a href="/members" data-i18n="nav.members">Miembros</a>
   </div>
 
   <div id="auth-buttons">
-    <a href="/login" class="btn btn-outline">Iniciar Sesión</a>
-    <a href="/register" class="btn btn-primary">Registrarse</a>
+    <a href="/login" class="btn btn-outline" data-i18n="auth.login">Iniciar Sesión</a>
+    <a href="/register" class="btn btn-primary" data-i18n="auth.register">Registrarse</a>
   </div>
 
   <div id="user-menu" style="display:none;">
@@ -35,20 +35,61 @@
       <i class="fas fa-caret-down dropdown-icon"></i>
     </div>
     <div id="user-dropdown" class="user-dropdown-content">
-      <a href="/profile"><i class="fas fa-user icon-profile"></i> Mi Perfil</a>
-      <a href="/profile/myactivities"><i class="fas fa-list-check" style="color: #27ae60;"></i> Mis Actividades</a>
+      <a href="/profile"><i class="fas fa-user icon-profile"></i> <span data-i18n="nav.profile">Mi Perfil</span></a>
+      <a href="/profile/myactivities"><i class="fas fa-list-check" style="color: #27ae60;"></i> <span data-i18n="nav.myActivities">Mis Actividades</span></a>
       <a href="/myteams">
-        <i class="fas fa-users icon-teams" style="color: #8e44ad;"></i> Mis Comunidades
+        <i class="fas fa-users icon-teams" style="color: #8e44ad;"></i> <span data-i18n="nav.myTeams">Mis Comunidades</span>
       </a>
-      <a href="/messages"><i class="fas fa-envelope icon-messages"></i> Mensajes</a>
-      <a href="/editprofile"><i class="fas fa-cog icon-settings"></i> Configuración</a>
-      <a href="/help"><i class="fas fa-question-circle icon-help"></i> Ayuda</a>
-      <a href="#" id="logout-btn-link"><i class="fas fa-sign-out-alt icon-logout"></i> Cerrar sesión</a>
+      <a href="/messages"><i class="fas fa-envelope icon-messages"></i> <span data-i18n="nav.messages">Mensajes</span></a>
+      <a href="/editprofile"><i class="fas fa-cog icon-settings"></i> <span data-i18n="nav.settings">Configuración</span></a>
+      <a href="/help"><i class="fas fa-question-circle icon-help"></i> <span data-i18n="nav.help">Ayuda</span></a>
+      <a href="#" id="logout-btn-link"><i class="fas fa-sign-out-alt icon-logout"></i> <span data-i18n="nav.logout">Cerrar sesión</span></a>
     </div>
   </div>
 
   <!-- Enlace de mensajes usando el nuevo componente -->
-  <a href="/messages" class="messages-link" title="Mensajes">
+  <a href="/messages" class="messages-link" data-i18n-title="nav.messages" title="Mensajes">
     <i class="fas fa-envelope" style="font-size: 1.5em; color: #4a6fa5; filter: drop-shadow(0 2px 6px #b3c6e7);"></i>
   </a>
 </nav>
+
+<script>
+// ✅ TRADUCIR SOLO SI NO ES ESPAÑOL
+document.addEventListener('DOMContentLoaded', () => {
+  const currentLang = window.currentLang || 'es';
+  
+  if (currentLang !== 'es') {
+    // Esperar a que i18n esté listo
+    document.addEventListener('i18nReady', () => {
+      translateNavbar();
+    });
+    
+    // Si i18n ya está listo
+    if (window.i18n && window.i18n.translations) {
+      translateNavbar();
+    }
+  }
+});
+
+function translateNavbar() {
+  // Traducir elementos con data-i18n
+  const elementsToTranslate = document.querySelectorAll('[data-i18n]');
+  elementsToTranslate.forEach(element => {
+    const key = element.getAttribute('data-i18n');
+    const translation = window.t(key);
+    if (translation && translation !== key) {
+      element.textContent = translation;
+    }
+  });
+
+  // Traducir atributos title
+  const elementsWithTitle = document.querySelectorAll('[data-i18n-title]');
+  elementsWithTitle.forEach(element => {
+    const key = element.getAttribute('data-i18n-title');
+    const translation = window.t(key);
+    if (translation && translation !== key) {
+      element.setAttribute('title', translation);
+    }
+  });
+}
+</script>
