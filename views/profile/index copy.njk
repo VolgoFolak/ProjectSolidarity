@@ -1,0 +1,2336 @@
+{% extends "layout.njk" %}
+
+{% block title %}Mi perfil Solidarity{% endblock %}
+
+{% block head %}
+  {{ super() }}
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <style>
+    /* --- ESTILOS DE PERFIL Y ESTADÍSTICAS --- */
+    .profile-main-container {
+      max-width: 1100px;
+      margin: 2rem auto;
+      background: #fff;
+      border-radius: 18px;
+      box-shadow: 0 5px 24px rgba(76,163,161,0.08);
+      padding: 2.5rem 2rem;
+    }
+    .profile-header {
+      display: flex;
+      gap: 2.5rem;
+      align-items: center;
+      margin-bottom: 2.2rem;
+      flex-wrap: wrap;
+    }
+    .profile-photo-wrapper { flex-shrink: 0; position: relative; }
+    .profile-photo {
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 4px solid #4fc3a1;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+    }
+    .profile-info h2 {
+      font-size: 2rem;
+      margin-bottom: 0.5rem;
+      color: #4a6fa5;
+      font-weight: 800;
+    }
+    .profile-location {
+      color: #6b7280;
+      margin-bottom: 0.7rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 1.05rem;
+    }
+    .profile-bio { color: #444; margin-bottom: 1.2rem; font-size: 1.07rem; }
+    .social-links a {
+      color: #4fc3a1;
+      margin-right: 0.7em;
+      font-size: 1.2em;
+      transition: color 0.18s;
+    }
+    .social-links a:hover { color: #166088; }
+    .stats-section {
+      display: flex;
+      gap: 2.5rem;
+      margin-bottom: 2.2rem;
+      flex-wrap: wrap;
+      justify-content: flex-start;
+    }
+    .stats-card {
+      background: #f8fafc;
+      border-radius: 14px;
+      box-shadow: 0 2px 10px rgba(76,163,161,0.07);
+      padding: 1.2rem 2.2rem;
+      display: flex;
+      align-items: center;
+      gap: 1.1rem;
+      min-width: 180px;
+      flex: 1 1 180px;
+      border: 1.5px solid #e2e8f0;
+      transition: box-shadow 0.18s, border 0.18s;
+    }
+    .stats-card.highlight {
+      background: #e6f0fa;
+      border-color: #4a6fa5;
+    }
+    .stats-icon {
+      font-size: 2.1rem;
+      color: #4a6fa5;
+      background: #e6f0fa;
+      border-radius: 50%;
+      width: 48px;
+      height: 48px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .stats-content .number {
+      font-size: 1.7rem;
+      font-weight: 700;
+      color: #4a6fa5;
+    }
+    .stats-content .label {
+      color: #6b7280;
+      font-size: 1.01rem;
+      margin-top: 0.2rem;
+    }
+    .impact-score-section {
+      margin: 2rem 0 2.5rem 0;
+      background: #e6f0fa;
+      border-radius: 14px;
+      padding: 1.7rem 1.2rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 1.2rem;
+      box-shadow: 0 2px 10px rgba(76,163,161,0.07);
+    }
+    .impact-score-main {
+      display: flex;
+      align-items: center;
+      gap: 1.2rem;
+    }
+    .score {
+      font-size: 2.5rem;
+      font-weight: 700;
+      color: #4a6fa5;
+    }
+    .score-label {
+      font-size: 1.1rem;
+      color: #4fc3a1;
+      font-weight: 600;
+    }
+    .impact-badge {
+      display: inline-block;
+      background: #4a6fa5;
+      color: #fff;
+      font-size: 0.95rem;
+      font-weight: 700;
+      padding: 0.18em 0.9em;
+      border-radius: 999px;
+      box-shadow: 0 2px 8px rgba(76,163,161,0.09);
+      margin-left: 0.7em;
+      letter-spacing: 0.02em;
+      min-width: 70px;
+      text-align: center;
+    }
+    .impact-score-bar-bg {
+      width: 220px;
+      height: 12px;
+      background: #f0f0f0;
+      border-radius: 8px;
+      margin: 0.5rem 0;
+      overflow: hidden;
+      position: relative;
+    }
+    .impact-score-bar {
+      height: 100%;
+      background: linear-gradient(90deg, #4a6fa5, #4fc3a1);
+      border-radius: 8px;
+      transition: width 0.5s;
+      position: absolute;
+      top: 0;
+      left: 0;
+    }
+    .impact-level-info {
+      color: #6b7280;
+      font-size: 1.01rem;
+      margin-top: 0.2rem;
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+    .section-header h3 {
+      color: #4a6fa5 !important;
+      font-size: 2rem !important;
+      font-weight: 800;
+      margin-bottom: 0;
+    }
+    .section-header {
+      margin-bottom: 1.2rem;
+    }
+    #profile-map {
+      width: 100%;
+      height: 400px;
+      border-radius: 12px;
+      margin-bottom: 1.5rem;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+    }
+    .map-legend {
+      display: flex;
+      gap: 1.2rem;
+      margin-top: 1rem;
+      font-size: 0.97rem;
+    }
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+    .legend-color {
+      display: inline-block;
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      margin-right: 0.3em;
+    }
+    .legend-color.cause { background: #e74c3c; }
+
+    /* --- ESTILOS PARA CAUSAS --- */
+    .causes-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+      gap: 2rem;
+    }
+    .cause-card {
+      background: white;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+      transition: all 0.3s ease;
+      border: 1px solid #e2e8f0;
+      display: flex;
+      flex-direction: column;
+    }
+    .cause-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+    }
+    .cause-image {
+      height: 180px;
+      overflow: hidden;
+      position: relative;
+    }
+    .cause-image img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.3s ease;
+    }
+    .cause-card:hover .cause-image img {
+      transform: scale(1.05);
+    }
+    .cause-badge {
+      position: absolute;
+      top: 1rem;
+      right: 1rem;
+      background: rgba(255, 255, 255, 0.9);
+      padding: 0.3rem 0.8rem;
+      border-radius: 50px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
+    .cause-badge.urgent {
+      background: #e53e3e;
+      color: white;
+    }
+    .cause-badge.points {
+      background: #4a6fa5;
+      color: white;
+      left: 1rem;
+      right: auto;
+    }
+    .cause-content {
+      padding: 1.5rem;
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+    }
+    .cause-content h3 {
+      font-size: 1.3rem;
+      margin-bottom: 0.8rem;
+      color: #2d3748;
+    }
+    .cause-content p {
+      color: #6b7280;
+      margin-bottom: 1.5rem;
+      font-size: 0.95rem;
+      line-height: 1.6;
+      flex-grow: 1;
+    }
+    .cause-meta {
+      display: flex;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+      font-size: 0.85rem;
+      flex-wrap: wrap;
+    }
+    .meta-item {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      color: #6b7280;
+    }
+    .meta-item i {
+      color: #4a6fa5;
+    }
+    .beneficiaries-count {
+      display: inline-flex;
+      align-items: center;
+      background: #f0f9ff;
+      color: #4a6fa5;
+      padding: 0.3rem 0.8rem;
+      border-radius: 50px;
+      font-size: 0.85rem;
+      font-weight: 600;
+    }
+    .beneficiaries-count i {
+      margin-right: 0.3rem;
+    }
+    .cause-progress {
+      margin-bottom: 1.5rem;
+    }
+    .progress-bar {
+      height: 8px;
+      background: #e2e8f0;
+      border-radius: 4px;
+      overflow: hidden;
+      margin-bottom: 0.5rem;
+    }
+    .progress-fill {
+      height: 100%;
+      background: #4a6fa5;
+      border-radius: 4px;
+    }
+    .progress-info {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.9rem;
+      color: #6b7280;
+    }
+    .cause-actions {
+      display: flex;
+      gap: 0.8rem;
+    }
+    .cause-actions .btn {
+      flex: 1;
+      text-align: center;
+      justify-content: center;
+    }
+
+    /* --- ESTILOS PARA TAREAS --- */
+    .tasks-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+      gap: 2rem;
+      margin-bottom: 3rem;
+    }
+    .task-card {
+      background: white;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+      transition: all 0.3s ease;
+      border: 1px solid #e2e8f0;
+      display: flex;
+      flex-direction: column;
+    }
+    .task-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+    }
+    .task-image {
+      height: 180px;
+      overflow: hidden;
+      position: relative;
+    }
+    .task-image img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.3s ease;
+    }
+    .task-card:hover .task-image img {
+      transform: scale(1.05);
+    }
+    .task-badge {
+      position: absolute;
+      padding: 0.3rem 0.8rem;
+      border-radius: 50px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
+    .task-badge.urgent {
+      top: 1rem;
+      right: 1rem;
+      background: #e53e3e;
+      color: white;
+    }
+    .task-badge.points {
+      top: 1rem;
+      left: 1rem;
+      background: #4a6fa5;
+      color: white;
+    }
+    .task-content {
+      padding: 1.5rem;
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+    }
+    .task-content h3 {
+      font-size: 1.3rem;
+      margin-bottom: 0.8rem;
+      color: #2d3748;
+      font-weight: 700;
+    }
+    .task-content p {
+      color: #6b7280;
+      margin-bottom: 1.5rem;
+      font-size: 0.95rem;
+      line-height: 1.6;
+      flex-grow: 1;
+    }
+    .linked-cause {
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+      background: #f8fafc;
+      padding: 0.8rem;
+      border-radius: 8px;
+      margin-bottom: 1.5rem;
+      border: 1px solid #e2e8f0;
+    }
+    .linked-cause img {
+      width: 40px;
+      height: 40px;
+      border-radius: 6px;
+      object-fit: cover;
+    }
+    .linked-cause span {
+      font-weight: 600;
+      color: #4a6fa5;
+      font-size: 0.9rem;
+    }
+    .task-meta {
+      display: flex;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+      font-size: 0.85rem;
+      flex-wrap: wrap;
+    }
+    .meta-item {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      color: #6b7280;
+    }
+    .meta-item i {
+      color: #4a6fa5;
+    }
+    .beneficiaries-count {
+      display: inline-flex;
+      align-items: center;
+      background: #f0f9ff;
+      color: #4a6fa5;
+      padding: 0.3rem 0.8rem;
+      border-radius: 50px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      grid-column: 1 / -1;
+    }
+    .beneficiaries-count i {
+      margin-right: 0.3rem;
+    }
+    .task-progress {
+      margin-bottom: 1.5rem;
+    }
+    .progress-bar {
+      height: 8px;
+      background: #e2e8f0;
+      border-radius: 4px;
+      overflow: hidden;
+      margin-bottom: 0.5rem;
+    }
+    .progress-fill {
+      height: 100%;
+      background: #4a6fa5;
+      border-radius: 4px;
+      transition: width 0.3s ease;
+    }
+    .progress-info {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.9rem;
+      color: #6b7280;
+    }
+    .task-actions {
+      display: flex;
+      gap: 0.8rem;
+      margin-top: auto;
+    }
+    .task-actions .btn {
+      flex: 1;
+      text-align: center;
+      justify-content: center;
+    }
+
+    /* Botones específicos para tareas */
+    .view-task-btn {
+      background: #4a6fa5;
+      color: white;
+    }
+    .view-task-btn:hover {
+      background: #166088;
+      transform: translateY(-2px);
+    }
+    .participate-btn {
+      background: #4fc3a1;
+      color: white;
+    }
+    .participate-btn:hover:not(:disabled) {
+      background: #3da58a;
+      transform: translateY(-2px);
+    }
+    .participate-btn:disabled {
+      opacity: 0.7;
+      cursor: not-allowed;
+      transform: none;
+    }
+    .admin-activity-btn {
+      background: #ff6b6b;
+      color: white;
+    }
+    .admin-activity-btn:hover {
+      background: #ff5252;
+      transform: translateY(-2px);
+    }
+
+    /* --- ESTILOS PARA ESTADOS VACÍOS --- */
+    .no-activities, .no-tasks, .error-message {
+      grid-column: 1 / -1;
+      text-align: center;
+      padding: 2.5em 1em;
+    }
+    .no-activities i, .no-tasks i {
+      font-size: 2.5em;
+      color: #4fc3a1;
+      margin-bottom: 0.5em;
+    }
+    .no-activities h4, .no-tasks h4 {
+      color: #4a6fa5;
+      font-size: 1.3em;
+      margin-bottom: 0.3em;
+    }
+    .no-activities p, .no-tasks p {
+      color: #6b7280;
+      font-size: 1em;
+    }
+
+    /* --- ESTILOS PARA COMUNIDADES --- */
+    .community-row {
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
+      padding: 1rem;
+      background: #f8fafc;
+      border-radius: 12px;
+      margin-bottom: 1rem;
+      border: 1px solid #e2e8f0;
+    }
+    .community-row img {
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      object-fit: cover;
+    }
+    .community-row-content {
+      flex: 1;
+    }
+    .community-row-title {
+      font-weight: 600;
+      color: #4a6fa5;
+      margin-bottom: 0.3rem;
+    }
+    .community-row-summary {
+      color: #6b7280;
+      font-size: 0.9rem;
+    }
+    .community-row-actions {
+      flex-shrink: 0;
+    }
+
+    /* --- ESTILOS PARA RETOS/CHALLENGES (idénticos a challenges/index.njk) --- */
+    .challenges-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+      gap: 2rem;
+      margin-bottom: 3rem;
+    }
+
+    .challenge-card {
+      background: white;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+      transition: all 0.3s ease;
+      border: 1px solid #e2e8f0;
+      display: flex;
+      flex-direction: column;
+    }
+    .challenge-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+    }
+    .challenge-image {
+      height: 180px;
+      overflow: hidden;
+      position: relative;
+    }
+    .challenge-image img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.3s ease;
+    }
+    .challenge-card:hover .challenge-image img {
+      transform: scale(1.05);
+    }
+    .challenge-badge {
+      position: absolute;
+      padding: 0.3rem 0.8rem;
+      border-radius: 50px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
+    .challenge-badge.urgent {
+      top: 1rem;
+      right: 1rem;
+      background: #e53e3e;
+      color: white;
+    }
+    .challenge-badge.points {
+      top: 1rem;
+      left: 1rem;
+      background: #a67c00;
+      color: white;
+    }
+    .challenge-content {
+      padding: 1.5rem;
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+    }
+    .challenge-content h3 {
+      font-size: 1.3rem;
+      margin-bottom: 0.8rem;
+      color: #2d3748;
+      font-weight: 700;
+    }
+    .challenge-content p {
+      color: #6b7280;
+      margin-bottom: 1.5rem;
+      font-size: 0.95rem;
+      line-height: 1.6;
+      flex-grow: 1;
+    }
+    .challenge-meta {
+      display: flex;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+      font-size: 0.85rem;
+      flex-wrap: wrap;
+    }
+    .challenge-progress {
+      margin-bottom: 1.5rem;
+    }
+    .challenge-actions {
+      display: flex;
+      gap: 0.8rem;
+      margin-top: auto;
+    }
+    .challenge-actions .btn {
+      flex: 1;
+      text-align: center;
+      justify-content: center;
+    }
+
+    /* Botones específicos para challenges */
+    .btn-warning {
+      background: #ffe066;
+      color: #333;
+    }
+    .btn-warning:hover {
+      background: #a67c00;
+      color: white;
+      transform: translateY(-2px);
+    }
+
+    /* Estado vacío para retos */
+    .no-challenges {
+      grid-column: 1 / -1;
+      text-align: center;
+      padding: 2.5em 1em;
+      color: #6b7280;
+    }
+
+    .no-challenges i {
+      font-size: 2.5em;
+      color: #ffe066;
+      margin-bottom: 0.5em;
+    }
+
+    .no-challenges h4 {
+      color: #4a6fa5;
+      font-size: 1.3em;
+      margin-bottom: 0.3em;
+    }
+
+    .no-challenges p {
+      color: #6b7280;
+      font-size: 1em;
+      margin-bottom: 1em;
+    }
+
+    /* --- ESTILOS PARA VOLUNTARIADOS (idénticos a volunteering/index.njk) --- */
+    .volunteering-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+      gap: 2rem;
+      margin-bottom: 3rem;
+    }
+
+    .volunteering-card {
+      background: white;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+      transition: all 0.3s ease;
+      border: 1px solid #e2e8f0;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .volunteering-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+    }
+
+    .volunteering-image {
+      height: 180px;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .volunteering-image img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.3s ease;
+    }
+
+    .volunteering-card:hover .volunteering-image img {
+      transform: scale(1.05);
+    }
+
+    .volunteering-badge {
+      position: absolute;
+      padding: 0.3rem 0.8rem;
+      border-radius: 50px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
+
+    .volunteering-badge.urgent {
+      top: 1rem;
+      right: 1rem;
+      background: #e53e3e;
+      color: white;
+    }
+
+    .volunteering-badge.points {
+      top: 1rem;
+      left: 1rem;
+      background: #4fc3a1;
+      color: white;
+    }
+
+    .volunteering-content {
+      padding: 1.5rem;
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+    }
+
+    .volunteering-content h3 {
+      font-size: 1.3rem;
+      margin-bottom: 0.8rem;
+      color: #2d3748;
+      font-weight: 700;
+    }
+
+    .volunteering-content p {
+      color: #6b7280;
+      margin-bottom: 1.5rem;
+      font-size: 0.95rem;
+      line-height: 1.6;
+      flex-grow: 1;
+    }
+
+    .volunteering-meta {
+      display: flex;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+      font-size: 0.85rem;
+      flex-wrap: wrap;
+    }
+
+    .volunteering-progress {
+      margin-bottom: 1.5rem;
+    }
+
+    .volunteering-actions {
+      display: flex;
+      gap: 0.8rem;
+      margin-top: auto;
+    }
+
+    .volunteering-actions .btn {
+      flex: 1;
+      text-align: center;
+      justify-content: center;
+    }
+
+    /* Estado vacío para voluntariados */
+    .no-volunteering {
+      grid-column: 1 / -1;
+      text-align: center;
+      padding: 2.5em 1em;
+      color: #6b7280;
+    }
+
+    .no-volunteering i {
+      font-size: 2.5em;
+      color: #4fc3a1;
+      margin-bottom: 0.5em;
+    }
+
+    .no-volunteering h4 {
+      color: #4a6fa5;
+      font-size: 1.3em;
+      margin-bottom: 0.3em;
+    }
+
+    .no-volunteering p {
+      color: #6b7280;
+      font-size: 1em;
+      margin-bottom: 1em;
+    }
+
+    /* --- ESTILOS PARA COMUNIDADES --- */
+    .communities-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 2rem;
+      margin-bottom: 3rem;
+    }
+    .community-card {
+      background: #fff;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+      border: 1px solid #e2e8f0;
+      display: flex;
+      flex-direction: column;
+      transition: box-shadow 0.2s, transform 0.2s;
+    }
+    .community-card:hover {
+      box-shadow: 0 10px 25px rgba(0,0,0,0.10);
+      transform: translateY(-5px);
+    }
+    .community-image {
+      height: 180px;
+      overflow: hidden;
+      position: relative;
+    }
+    .community-image img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.3s;
+    }
+    .community-card:hover .community-image img {
+      transform: scale(1.05);
+    }
+    .community-content {
+      padding: 1.5rem;
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+    }
+    .community-content h3 {
+      font-size: 1.3rem;
+      margin-bottom: 0.8rem;
+      color: #2d3748;
+      font-weight: 700;
+    }
+    .community-content p {
+      color: #6b7280;
+      margin-bottom: 1.5rem;
+      font-size: 0.95rem;
+      line-height: 1.6;
+      flex-grow: 1;
+    }
+    .community-actions {
+      display: flex;
+      gap: 0.8rem;
+      margin-top: auto;
+    }
+
+    /* Responsive: 2 columnas en tablet, 1 columna en móvil */
+    @media (max-width: 1024px) {
+      .communities-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+    @media (max-width: 600px) {
+      .communities-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    /* --- ESTILOS PARA EQUIPOS (NUEVO) --- */
+    .teams-grid-classic {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 2rem;
+      margin-bottom: 3rem;
+    }
+    @media (max-width: 1024px) {
+      .teams-grid-classic {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+    @media (max-width: 600px) {
+      .teams-grid-classic {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    /* --- ESTILOS PARA TABS --- */
+    .tabs-container {
+      background: white;
+      border-radius: 12px;
+      padding: 1rem;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+      border: 1px solid #e2e8f0;
+    }
+
+    .tabs {
+      display: flex;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+    }
+
+    .tab {
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      border-radius: 8px;
+      padding: 0.7rem 1.2rem;
+      font-size: 0.9rem;
+      font-weight: 500;
+      color: #6b7280;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      min-width: 100px;
+      justify-content: center;
+    }
+
+    .tab:hover {
+      background: #e2e8f0;
+      border-color: #cbd5e1;
+      color: #4a6fa5;
+    }
+
+    .tab.active {
+      background: #4a6fa5;
+      border-color: #4a6fa5;
+      color: white;
+      box-shadow: 0 2px 8px rgba(74, 111, 165, 0.2);
+    }
+
+    .tab.active:hover {
+      background: #3d5a87;
+      border-color: #3d5a87;
+    }
+
+    /* --- ESTILOS PARA BÚSQUEDA --- */
+    .search-container {
+      background: white;
+      border-radius: 12px;
+      padding: 1rem;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+      border: 1px solid #e2e8f0;
+    }
+
+    .search-input-wrapper {
+      position: relative;
+      display: flex;
+      align-items: center;
+    }
+
+    .search-icon {
+      position: absolute;
+      left: 1rem;
+      color: #9ca3af;
+      font-size: 1rem;
+      z-index: 2;
+    }
+
+    .search-input {
+      width: 100%;
+      padding: 0.8rem 1rem 0.8rem 2.8rem;
+      border: 1px solid #d1d5db;
+      border-radius: 8px;
+      font-size: 1rem;
+      background: #f9fafb;
+      transition: all 0.2s ease;
+    }
+
+    .search-input:focus {
+      outline: none;
+      border-color: #4a6fa5;
+      background: white;
+      box-shadow: 0 0 0 3px rgba(74, 111, 165, 0.1);
+    }
+
+    .clear-search {
+      position: absolute;
+      right: 0.8rem;
+      background: none;
+      border: none;
+      color: #9ca3af;
+      font-size: 1rem;
+      cursor: pointer;
+      padding: 0.2rem;
+      border-radius: 4px;
+      transition: color 0.2s ease;
+    }
+
+    .clear-search:hover {
+      color: #6b7280;
+      background: #f3f4f6;
+    }
+
+    /* --- ESTILOS PARA PAGINACIÓN --- */
+    .pagination-container {
+      background: white;
+      border-radius: 12px;
+      padding: 1rem;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+      border: 1px solid #e2e8f0;
+    }
+
+    .pagination-container .btn {
+      min-width: 100px;
+    }
+
+    .pagination-container .btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    #pageInfo {
+      font-size: 1rem;
+      color: #4a6fa5;
+      font-weight: 600;
+      min-width: 60px;
+      text-align: center;
+    }
+
+    /* --- RESPONSIVE PARA TABS --- */
+    @media (max-width: 768px) {
+      .tabs {
+        justify-content: center;
+      }
+      
+      .tab {
+        min-width: 80px;
+        font-size: 0.8rem;
+        padding: 0.6rem 0.8rem;
+      }
+      
+      .search-input {
+        font-size: 0.9rem;
+      }
+      
+      .pagination-container {
+        flex-direction: column;
+        gap: 0.8rem;
+      }
+      
+      .pagination-container .btn {
+        min-width: 80px;
+      }
+    }
+  </style>
+{% endblock %}
+
+{% block content %}
+<div class="profile-main-container">
+  <!-- Header con foto y datos básicos -->
+  <div class="profile-header">
+    <div class="profile-photo-wrapper">
+      <img class="profile-photo" src="/img/avatar-default.jpg" alt="Foto de perfil">
+    </div>
+    <div class="profile-info">
+      <h2 id="profile-name">Nombre Apellido</h2>
+      <div class="profile-location" id="profile-location"></div>
+      <div class="profile-bio" id="profile-bio"></div>
+      <div class="social-links">
+        <a href="#"><i class="fab fa-linkedin"></i></a>
+        <a href="#"><i class="fab fa-twitter"></i></a>
+        <a href="#"><i class="fab fa-instagram"></i></a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Sección de estadísticas principales -->
+  <div class="stats-section">
+    <div class="stats-card">
+      <div class="stats-icon"><i class="fas fa-project-diagram"></i></div>
+      <div class="stats-content">
+        <div class="number" id="projects-counter">0</div>
+        <div class="label">Proyectos</div>
+      </div>
+    </div>
+    <div class="stats-card highlight">
+      <div class="stats-icon"><i class="fas fa-users"></i></div>
+      <div class="stats-content">
+        <div class="number" id="impacted-counter">0</div>
+        <div class="label">Personas impactadas</div>
+      </div>
+    </div>
+    <div class="stats-card">
+      <div class="stats-icon"><i class="fas fa-hand-holding-heart"></i></div>
+      <div class="stats-content">
+        <div class="number" id="donated-counter">0</div>
+        <div class="label">Donado</div>
+      </div>
+    </div>
+    <div class="stats-card">
+      <div class="stats-icon"><i class="fas fa-users"></i></div>
+      <div class="stats-content">
+        <div class="number" id="communities-counter">0</div>
+        <div class="label">Comunidades</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Barra de progreso de impacto -->
+  <div class="impact-score-section">
+    <div class="section-header">
+      <h3>Tu impacto social</h3>
+      <div class="impact-score-main">
+        <span class="score" id="impact-score">0</span>
+        <span class="score-label">Puntos</span>
+        <span class="impact-badge" id="impact-level-badge">
+          <i class="fas fa-tree" style="margin-right:0.4em;color:#fff;"></i>
+          Forest
+        </span>
+      </div>
+    </div>
+    <div class="impact-score-bar-bg">
+      <div class="impact-score-bar" id="impact-score-bar" style="width:0%"></div>
+    </div>
+    <div class="impact-level-info">
+      <span id="impact-level">Nivel 1 - Seed</span>
+      <span id="impact-score-details-text">0/500 puntos para el siguiente nivel</span>
+    </div>
+  </div>
+
+  <!-- Tus actividades -->
+  <div class="activities-section">
+    <div class="section-header">
+      <h3>Tus actividades</h3>
+    </div>
+    <div class="causes-grid" id="activities-grid"></div>
+  </div>
+
+  <!-- Tus tareas -->
+  <div class="tasks-section">
+    <div class="section-header">
+      <h3>Tus tareas</h3>
+    </div>
+    <div class="tasks-grid" id="tasks-grid"></div>
+  </div>
+
+  <!-- TUS RETOS - NUEVA SECCIÓN -->
+  <div class="challenges-section">
+    <div class="section-header">
+      <h3>Tus retos</h3>
+    </div>
+    <div class="challenges-grid" id="challenges-grid"></div>
+  </div>
+
+  <!-- TUS VOLUNTARIADOS - NUEVA SECCIÓN -->
+  <div class="volunteering-section">
+    <div class="section-header">
+      <h3>Tus voluntariados</h3>
+    </div>
+    <div class="volunteering-grid" id="volunteering-grid"></div>
+  </div>
+
+  <!-- Comunidades -->
+  <div class="communities-section">
+    <div class="section-header" style="margin-top:2.5em;">
+      <h3>Tus comunidades</h3>
+    </div>
+
+    <!-- CONTROLES DE COMUNIDADES -->
+    <div class="teams-controls" style="margin-bottom: 2rem;">
+      <!-- Tabs de filtros -->
+      <div class="tabs-container" style="margin-bottom: 1.5rem;">
+        <div class="tabs">
+          <button class="tab active" data-filter="all">
+            <i class="fas fa-th-large"></i> Todas
+          </button>
+          <button class="tab" data-filter="medio_ambiente">
+            <i class="fas fa-leaf"></i> Medio Ambiente
+          </button>
+          <button class="tab" data-filter="educacion">
+            <i class="fas fa-graduation-cap"></i> Educación
+          </button>
+          <button class="tab" data-filter="salud">
+            <i class="fas fa-heartbeat"></i> Salud
+          </button>
+          <button class="tab" data-filter="animales">
+            <i class="fas fa-paw"></i> Animales
+          </button>
+          <button class="tab" data-filter="comunidad">
+            <i class="fas fa-users"></i> Comunidad
+          </button>
+          <button class="tab" data-filter="otros">
+            <i class="fas fa-plus-circle"></i> Otros
+          </button>
+        </div>
+      </div>
+
+      <!-- Barra de búsqueda -->
+      <div class="search-container" style="margin-bottom: 1.5rem;">
+        <div class="search-input-wrapper">
+          <i class="fas fa-search search-icon"></i>
+          <input type="text" id="search-input" class="search-input" placeholder="Buscar en tus comunidades...">
+          <button id="clear-search" class="clear-search" style="display: none;">
+            <i class="fas fa-times"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Grid de comunidades -->
+    <div class="teams-grid-classic" id="communities-list"></div>
+
+    <!-- Paginación -->
+    <div class="pagination-container" id="pagination" style="display: flex; justify-content: center; align-items: center; gap: 1rem; margin-top: 2rem;">
+      <button id="prevPage" class="btn btn-outline" disabled>
+        <i class="fas fa-chevron-left"></i> Anterior
+      </button>
+      <span id="pageInfo" style="color: #6b7280; font-weight: 600;">1 / 1</span>
+      <button id="nextPage" class="btn btn-outline" disabled>
+        Siguiente <i class="fas fa-chevron-right"></i>
+      </button>
+    </div>
+  </div>
+
+  <!-- Mapa de impacto -->
+  <div class="map-section">
+    <div class="section-header">
+      <h3>Tu mapa de impacto</h3>
+    </div>
+    <div id="profile-map"></div>
+    <div class="map-legend">
+      <div class="legend-item"><span class="legend-color cause"></span> Causas</div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+  {{ super() }}
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script src="/js/modules/causes-renderer.js"></script>
+  <script src="/js/modules/tasks-renderer.js"></script>
+  <script src="/js/modules/challenges-renderer.js"></script>
+  <script src="/js/modules/volunteering-renderer.js"></script>
+  <script src="/js/modules/teams-renderer.js"></script>
+  <script>
+    function waitForSupabase(callback) {
+      if (window.supabase) {
+        callback(window.supabase);
+      } else {
+        setTimeout(() => waitForSupabase(callback), 30);
+      }
+    }
+
+    // Animación de contadores
+    function animateCounter(id, target, prefix = '', suffix = '', duration = 1200) {
+      const el = document.getElementById(id);
+      if (!el) return;
+      let count = 0;
+      const steps = 50;
+      const step = Math.max(1, Math.ceil(target / steps));
+      const intervalTime = Math.max(10, Math.floor(duration / (target / step)));
+      const interval = setInterval(() => {
+        count += step;
+        if (count >= target) {
+          el.textContent = prefix + target + suffix;
+          clearInterval(interval);
+        } else {
+          el.textContent = prefix + count + suffix;
+        }
+      }, intervalTime);
+    }
+
+    // Impacto social
+    const levels = [
+      { name: "Seed", min: 0, max: 499, color: "#4CAF50", icon: "fa-seedling" },
+      { name: "Sprout", min: 500, max: 999, color: "#8BC34A", icon: "fa-leaf" },
+      { name: "Tree", min: 1000, max: 1999, color: "#FFC107", icon: "fa-tree" },
+      { name: "Forest", min: 2000, max: 4999, color: "#FF9800", icon: "fa-forest" },
+      { name: "Legend", min: 5000, max: 99999, color: "#F44336", icon: "fa-trophy" }
+    ];
+
+    function getLevel(score) {
+      for (let i = levels.length - 1; i >= 0; i--) {
+        if (score >= levels[i].min) {
+          return { ...levels[i], idx: i };
+        }
+      }
+      return { ...levels[0], idx: 0 };
+    }
+
+    function updateImpactScore(score) {
+      const scoreElement = document.getElementById('impact-score');
+      const levelElement = document.getElementById('impact-level');
+      const badgeElement = document.getElementById('impact-level-badge');
+      const barElement = document.getElementById('impact-score-bar');
+      const detailsElement = document.getElementById('impact-score-details-text');
+      
+      if (!scoreElement || !levelElement || !barElement || !detailsElement) return;
+      
+      scoreElement.textContent = score;
+      const level = getLevel(score);
+      levelElement.innerHTML = `<i class="fas ${level.icon}"></i> Nivel ${level.idx + 1} - ${level.name}`;
+      
+      if (badgeElement) {
+        badgeElement.textContent = level.name;
+        badgeElement.style.background = level.name === "Forest"
+          ? "linear-gradient(90deg,#FF9800,#4fc3a1)"
+          : level.color;
+        badgeElement.innerHTML = level.name === "Forest"
+          ? '<i class="fas fa-tree" style="margin-right:0.4em;color:#fff;"></i>Forest'
+          : level.name;
+      }
+      
+      let percent = 100;
+      if (level.max) {
+        percent = Math.round(((score - level.min) / (level.max - level.min)) * 100);
+        percent = Math.max(0, Math.min(percent, 100));
+      }
+      
+      barElement.style.width = percent + '%';
+      barElement.style.backgroundColor = level.color;
+      detailsElement.textContent = percent >= 100
+        ? `¡Has alcanzado el máximo de este nivel!`
+        : `Te faltan ${level.max - score} puntos para el siguiente nivel.`;
+    }
+
+    // Fallback mejorado para renderizar tareas (idéntico al tasks-renderer.js)
+    function renderTasksFallback(tasks, container) {
+      if (!tasks || tasks.length === 0) {
+        container.innerHTML = `
+          <div class="no-tasks">
+            <i class="fas fa-tasks"></i>
+            <h4>No tienes tareas asignadas</h4>
+            <p>Participa en una causa o comunidad para recibir tareas.</p>
+            <a href="/tasks" class="btn btn-primary" style="margin-top:1em;">
+              <i class="fas fa-tasks"></i> Explorar tareas
+            </a>
+          </div>
+        `;
+        return;
+      }
+
+      container.innerHTML = '';
+      
+      tasks.forEach(task => {
+        // Badges como en el renderer original
+        const urgentBadge = task.is_urgent ? `<div class="task-badge urgent"><i class="fas fa-exclamation-circle"></i> Urgente</div>` : "";
+        const pointsBadge = `<div class="task-badge points"><i class="fas fa-star"></i> +${task.points || 0} pts</div>`;
+        
+        // Progreso
+        const progress = task.beneficiaries ? Math.min(Math.round((task.participants / task.beneficiaries) * 100), 100) : 0;
+        
+        // Ubicación
+        const location = task.city && task.country ? `${task.city}, ${task.country}` : task.city || task.country || 'Sin ubicación';
+        
+        // Causa vinculada
+        let causeHtml = '';
+        if (task.cause_id && task.linkedCause) {
+          const cause = task.linkedCause;
+          causeHtml = `
+            <div class="linked-cause">
+              <img src="${cause.photo_url || '/img/causa-default.jpg'}" alt="${cause.title}">
+              <span>${cause.title}</span>
+            </div>
+          `;
+        }
+        
+        // Determinar botones según rol
+        const isParticipating = task.isParticipating;
+        const isAdmin = ['owner', 'admin', 'coordinator', 'founder'].includes(task.userRole);
+        
+        let actionsHtml = '';
+        if (isAdmin) {
+          actionsHtml = `
+            <button class="btn view-task-btn" data-task-id="${task.id}">Ver más</button>
+            <button class="btn admin-activity-btn" data-activity-type="task" data-activity-id="${task.id}">
+              <i class="fas fa-cog"></i> Administrar
+            </button>
+          `;
+        } else {
+          const participateBtn = isParticipating
+            ? `<button class="btn participate-btn" data-task-id="${task.id}" disabled style="opacity:0.7;cursor:not-allowed;">Participando</button>`
+            : `<button class="btn participate-btn" data-task-id="${task.id}">Participar</button>`;
+          
+          actionsHtml = `
+            <button class="btn view-task-btn" data-task-id="${task.id}">Ver más</button>
+            ${participateBtn}
+          `;
+        }
+        
+        const card = document.createElement('div');
+        card.className = 'task-card';
+        card.innerHTML = `
+          <div class="task-image">
+            <img src="${task.photo_url || '/img/task-default.jpg'}" alt="${task.title}" onerror="this.src='/img/task-default.jpg'">
+            ${urgentBadge}
+            ${pointsBadge}
+          </div>
+          <div class="task-content">
+            <h3>${task.title}</h3>
+            <p>${task.summary ? task.summary : (task.description ? task.description.substring(0, 100) + (task.description.length > 100 ? '...' : '') : 'Sin descripción')}</p>
+            ${causeHtml}
+            <div class="task-meta">
+              <div class="meta-item"><i class="fas fa-map-marker-alt"></i> ${location}</div>
+              <div class="meta-item"><i class="fas fa-users"></i> ${task.participants || 0} participantes</div>
+              <div class="beneficiaries-count">
+                <i class="fas fa-heart"></i> Beneficia a ${task.beneficiaries || 0} personas
+              </div>
+            </div>
+            <div class="task-progress">
+              <div class="progress-bar">
+                <div class="progress-fill" style="width: ${progress}%"></div>
+              </div>
+              <div class="progress-info">
+                <span>${task.participants || 0} participantes</span>
+                <span>Meta: ${task.beneficiaries || 0}</span>
+              </div>
+            </div>
+            <div class="task-actions">
+              ${actionsHtml}
+            </div>
+          </div>
+        `;
+        
+        container.appendChild(card);
+      });
+      
+      // Event listeners para los botones
+      container.querySelectorAll('.view-task-btn').forEach(btn => {
+        btn.addEventListener('click', function(e) {
+          e.preventDefault();
+          const taskId = this.getAttribute('data-task-id');
+          if (window.tasksRenderer && typeof window.tasksRenderer.showTaskModal === 'function') {
+            window.tasksRenderer.showTaskModal(taskId);
+          } else {
+            window.location.href = `/tasks/${taskId}`;
+          }
+        });
+      });
+      
+      container.querySelectorAll('.participate-btn').forEach(btn => {
+        btn.addEventListener('click', function(e) {
+          e.preventDefault();
+          const taskId = this.getAttribute('data-task-id');
+          if (window.participateInTask) {
+            window.participateInTask(taskId);
+          } else {
+            alert('Función de participación no disponible');
+          }
+        });
+      });
+      
+      container.querySelectorAll('.admin-activity-btn').forEach(btn => {
+        btn.addEventListener('click', function(e) {
+          e.preventDefault();
+          const activityId = this.getAttribute('data-activity-id');
+          if (typeof window.openAdminTaskModal === 'function') {
+            const task = tasks.find(t => t.id == activityId);
+            if (task) window.openAdminTaskModal(task);
+          } else {
+            alert('Función de administración no disponible');
+          }
+        });
+      });
+    }
+
+    // Fallback para renderizar retos
+    function renderChallengesFallback(challenges, container) {
+      if (!challenges || challenges.length === 0) {
+        container.innerHTML = `
+          <div class="no-challenges">
+            <i class="fas fa-bolt"></i>
+            <h4>No participas en ningún reto</h4>
+            <p>Los retos son una forma divertida de generar impacto. ¡Acepta uno o crea el tuyo!</p>
+            <a href="/challenges" class="btn btn-warning" style="margin-top:1em;">
+              <i class="fas fa-bolt"></i> Explorar retos
+            </a>
+          </div>
+        `;
+        return;
+      }
+
+      container.innerHTML = '';
+      
+      challenges.forEach(challenge => {
+        // Badges como en el renderer original
+        const urgentBadge = challenge.is_urgent ? `<div class="challenge-badge urgent"><i class="fas fa-exclamation-circle"></i> Urgente</div>` : "";
+        const pointsBadge = `<div class="challenge-badge points"><i class="fas fa-star"></i> +${challenge.points || 20} pts</div>`;
+        
+        // Progreso
+        const progress = challenge.beneficiaries ? Math.min(Math.round((challenge.participants / challenge.beneficiaries) * 100), 100) : 0;
+        
+        // Ubicación
+        const location = challenge.city && challenge.country ? `${challenge.city}, ${challenge.country}` : challenge.city || challenge.country || 'Sin ubicación';
+        
+        // Causa vinculada
+        let causeHtml = '';
+        if (challenge.cause_id && challenge.linkedCause) {
+          const cause = challenge.linkedCause;
+          causeHtml = `
+            <div class="linked-cause">
+              <img src="${cause.photo_url || '/img/causa-default.jpg'}" alt="${cause.title}">
+              <span>${cause.title}</span>
+            </div>
+          `;
+        }
+        
+        // Determinar botones según rol
+        const isParticipating = challenge.isParticipating;
+        const isAdmin = ['founder', 'admin', 'coordinator', 'creator'].includes(challenge.userRole);
+        
+        let actionsHtml = '';
+        if (isAdmin) {
+          actionsHtml = `
+            <button class="btn view-challenge-btn" data-challenge-id="${challenge.id}">Ver más</button>
+            <button class="btn admin-activity-btn" data-activity-type="challenge" data-activity-id="${challenge.id}">
+              <i class="fas fa-cog"></i> Administrar
+            </button>
+          `;
+        } else if (isParticipating) {
+          actionsHtml = `
+            <button class="btn view-challenge-btn" data-challenge-id="${challenge.id}">Ver más</button>
+            <button class="btn btn-accent" disabled style="opacity:0.7;cursor:not-allowed;">
+              <i class="fas fa-check"></i> Reto Aceptado!
+            </button>
+          `;
+        } else {
+          actionsHtml = `
+            <button class="btn view-challenge-btn" data-challenge-id="${challenge.id}">Ver más</button>
+            <button class="btn btn-warning participate-btn" data-challenge-id="${challenge.id}">
+              <i class="fas fa-bolt"></i> Aceptar Reto
+            </button>
+          `;
+        }
+        
+        const card = document.createElement('div');
+        card.className = 'challenge-card';
+        card.innerHTML = `
+          <div class="challenge-image">
+            <img src="${challenge.photo_url || '/img/challenge-default.jpg'}" alt="${challenge.title}" onerror="this.src='/img/challenge-default.jpg'">
+            ${urgentBadge}
+            ${pointsBadge}
+          </div>
+          <div class="challenge-content">
+            <h3>${challenge.title}</h3>
+            <p>${challenge.summary ? challenge.summary : (challenge.description ? challenge.description.substring(0, 100) + (challenge.description.length > 100 ? '...' : '') : 'Sin descripción')}</p>
+            ${causeHtml}
+            <div class="challenge-meta">
+              <div class="meta-item"><i class="fas fa-map-marker-alt"></i> ${location}</div>
+              <div class="meta-item"><i class="fas fa-users"></i> ${challenge.participants || 0} participantes</div>
+              <div class="beneficiaries-count">
+                <i class="fas fa-heart"></i> Beneficia a ${challenge.beneficiaries || 0} personas
+              </div>
+            </div>
+            <div class="challenge-progress">
+              <div class="progress-bar">
+                <div class="progress-fill" style="width: ${progress}%"></div>
+              </div>
+              <div class="progress-info">
+                <span>${challenge.participants || 0} participantes</span>
+                <span>Meta: ${challenge.beneficiaries || 0}</span>
+              </div>
+            </div>
+            <div class="challenge-actions">
+              ${actionsHtml}
+            </div>
+          </div>
+        `;
+        
+        container.appendChild(card);
+      });
+      
+      // Event listeners para los botones
+      container.querySelectorAll('.view-challenge-btn').forEach(btn => {
+        btn.addEventListener('click', function(e) {
+          e.preventDefault();
+          const challengeId = this.getAttribute('data-challenge-id');
+          if (window.challengesRenderer && typeof window.challengesRenderer.showChallengeModal === 'function') {
+            window.challengesRenderer.showChallengeModal(challengeId);
+          } else {
+            window.location.href = `/challenges/${challengeId}`;
+          }
+        });
+      });
+      
+      container.querySelectorAll('.participate-btn').forEach(btn => {
+        btn.addEventListener('click', function(e) {
+          e.preventDefault();
+          const challengeId = this.getAttribute('data-challenge-id');
+          if (window.participateInChallenge) {
+            window.participateInChallenge(challengeId);
+          } else {
+            alert('Función de participación no disponible');
+          }
+        });
+      });
+      
+      container.querySelectorAll('.admin-activity-btn').forEach(btn => {
+        btn.addEventListener('click', function(e) {
+          e.preventDefault();
+          const activityId = this.getAttribute('data-activity-id');
+          if (typeof window.openAdminActivityModal === 'function') {
+            const challenge = challenges.find(ch => ch.id == activityId);
+            if (challenge) window.openAdminActivityModal(challenge);
+          } else {
+            alert('Función de administración no disponible');
+          }
+        });
+      });
+    }
+
+    // Fallback para renderizar voluntariados
+    function renderVolunteeringFallback(volunteerings, container) {
+      if (!volunteerings || volunteerings.length === 0) {
+        container.innerHTML = `
+          <div class="no-volunteering">
+            <i class="fas fa-hands-helping"></i>
+            <h4>No participas en ningún voluntariado</h4>
+            <p>Los voluntariados son una excelente forma de ayudar directamente. ¡Únete a uno!</p>
+            <a href="/volunteering" class="btn btn-accent" style="margin-top:1em;">
+              <i class="fas fa-hands-helping"></i> Explorar voluntariados
+            </a>
+          </div>
+        `;
+        return;
+      }
+
+      container.innerHTML = '';
+      
+      volunteerings.forEach(volunteering => {
+        // Badges como en el renderer original
+        const urgentBadge = volunteering.is_urgent ? `<div class="volunteering-badge urgent"><i class="fas fa-exclamation-circle"></i> Urgente</div>` : "";
+        const pointsBadge = `<div class="volunteering-badge points"><i class="fas fa-star"></i> +${volunteering.points || 20} pts</div>`;
+        
+        // Progreso
+        const progress = volunteering.volunteers_needed ? Math.min(Math.round((volunteering.volunteers / volunteering.volunteers_needed) * 100), 100) : 0;
+        
+        // Ubicación
+        const location = volunteering.city && volunteering.country ? `${volunteering.city}, ${volunteering.country}` : volunteering.city || volunteering.country || 'Sin ubicación';
+        
+        // Causa vinculada
+        let causeHtml = '';
+        if (volunteering.cause_id && volunteering.linkedCause) {
+          const cause = volunteering.linkedCause;
+          causeHtml = `
+            <div class="linked-cause">
+              <img src="${cause.photo_url || '/img/causa-default.jpg'}" alt="${cause.title}">
+              <span>${cause.title}</span>
+            </div>
+          `;
+        }
+        
+        // Determinar botones según rol
+        const isParticipating = volunteering.isParticipating;
+        const isAdmin = ['founder', 'admin', 'coordinator', 'creator'].includes(volunteering.userRole);
+        
+        let actionsHtml = '';
+        if (isAdmin) {
+          actionsHtml = `
+            <button class="btn view-volunteering-btn" data-volunteering-id="${volunteering.id}">Ver más</button>
+            <button class="btn admin-activity-btn" data-activity-type="volunteering" data-activity-id="${volunteering.id}">
+              <i class="fas fa-cog"></i> Administrar
+            </button>
+          `;
+        } else if (isParticipating) {
+          actionsHtml = `
+            <button class="btn view-volunteering-btn" data-volunteering-id="${volunteering.id}">Ver más</button>
+            <button class="btn btn-accent" disabled style="opacity:0.7;cursor:not-allowed;">
+              <i class="fas fa-check"></i> Participando
+            </button>
+          `;
+        } else {
+          actionsHtml = `
+            <button class="btn view-volunteering-btn" data-volunteering-id="${volunteering.id}">Ver más</button>
+            <button class="btn btn-accent participate-btn" data-volunteering-id="${volunteering.id}">
+              <i class="fas fa-hands-helping"></i> Participar
+            </button>
+          `;
+        }
+        
+        const card = document.createElement('div');
+        card.className = 'volunteering-card';
+        card.innerHTML = `
+          <div class="volunteering-image">
+            <img src="${volunteering.photo_url || '/img/volunteering-default.jpg'}" alt="${volunteering.title}" onerror="this.src='/img/volunteering-default.jpg'">
+            ${urgentBadge}
+            ${pointsBadge}
+          </div>
+          <div class="volunteering-content">
+            <h3>${volunteering.title}</h3>
+            <p>${volunteering.summary ? volunteering.summary : (volunteering.description ? volunteering.description.substring(0, 100) + (volunteering.description.length > 100 ? '...' : '') : 'Sin descripción')}</p>
+            ${causeHtml}
+            <div class="volunteering-meta">
+              <div class="meta-item"><i class="fas fa-map-marker-alt"></i> ${location}</div>
+              <div class="meta-item"><i class="fas fa-users"></i> ${volunteering.volunteers || 0} voluntarios</div>
+              <div class="meta-item"><i class="fas fa-heart"></i> ${volunteering.beneficiaries || 0} beneficiarios</div>
+            </div>
+            <div class="volunteering-progress">
+              <div class="progress-bar">
+                <div class="progress-fill" style="width: ${progress}%"></div>
+              </div>
+              <div class="progress-info">
+                <span>${volunteering.volunteers || 0} voluntarios</span>
+                <span>Meta: ${volunteering.volunteers_needed || 0}</span>
+              </div>
+            </div>
+            <div class="volunteering-actions">
+              ${actionsHtml}
+            </div>
+          </div>
+        `;
+        
+        container.appendChild(card);
+      });
+      
+      // Event listeners para los botones
+      container.querySelectorAll('.view-volunteering-btn').forEach(btn => {
+        btn.addEventListener('click', function(e) {
+          e.preventDefault();
+          const volunteeringId = this.getAttribute('data-volunteering-id');
+          if (window.volunteeringRenderer && typeof window.volunteeringRenderer.showVolunteeringModal === 'function') {
+            window.volunteeringRenderer.showVolunteeringModal(volunteeringId);
+          } else {
+            window.location.href = `/volunteering/${volunteeringId}`;
+          }
+        });
+      });
+      
+      container.querySelectorAll('.participate-btn').forEach(btn => {
+        btn.addEventListener('click', function(e) {
+          e.preventDefault();
+          const volunteeringId = this.getAttribute('data-volunteering-id');
+          if (window.participateInVolunteering) {
+            window.participateInVolunteering(volunteeringId);
+          } else {
+            alert('Función de participación no disponible');
+          }
+        });
+      });
+      
+      container.querySelectorAll('.admin-activity-btn').forEach(btn => {
+        btn.addEventListener('click', function(e) {
+          e.preventDefault();
+          const activityId = this.getAttribute('data-activity-id');
+          if (typeof window.openAdminActivityModal === 'function') {
+            const volunteering = volunteerings.find(v => v.id == activityId);
+            if (volunteering) window.openAdminActivityModal(volunteering);
+          } else {
+            alert('Función de administración no disponible');
+          }
+        });
+      });
+    }
+
+    // Fallback para renderizar comunidades con mensaje personalizado
+    function renderCommunitiesFallback(communities, container) {
+      if (!communities || communities.length === 0) {
+        container.innerHTML = `
+          <div style="grid-column: 1 / -1; text-align: center; padding: 3rem 1rem; color: #6b7280;">
+            <i class="fas fa-users" style="font-size: 3rem; color: #4a6fa5; margin-bottom: 1rem;"></i>
+            <h4 style="color: #4a6fa5; font-size: 1.4rem; margin-bottom: 0.5rem;">Aún no formas parte de ninguna comunidad</h4>
+            <p style="margin-bottom: 1.5rem; font-size: 1.1rem;">Únete a una comunidad o crea la tuya para empezar a colaborar.</p>
+            <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
+              <a href="/teams" class="btn btn-primary">
+                <i class="fas fa-search"></i> Explorar comunidades
+              </a>
+              <a href="/teams/create" class="btn btn-accent">
+                <i class="fas fa-plus"></i> Crear comunidad
+              </a>
+            </div>
+          </div>
+        `;
+        
+        // Ocultar controles si no hay comunidades
+        const pagination = document.getElementById('pagination');
+        if (pagination) pagination.style.display = 'none';
+        
+        return;
+      }
+
+      // Si hay comunidades, mostrar controles
+      const pagination = document.getElementById('pagination');
+      if (pagination) pagination.style.display = 'flex';
+
+      // Renderizar tarjetas básicas
+      container.innerHTML = communities.map(c => `
+        <div class="team-card-classic" data-team-id="${c.id}">
+          <div class="team-image-classic">
+            <img src="${c.photo_url || '/img/community-default.jpg'}" alt="${c.name}">
+            <div class="team-badge-classic points" style="top:1rem;left:1rem;right:auto;background:var(--primary);color:#fff;">
+              <i class="fas fa-bolt"></i> +${c.impact || 0} pts
+            </div>
+          </div>
+          <div class="team-content-classic">
+            <h3>${c.name || 'Sin nombre'}</h3>
+            <p>${c.summary || c.description || 'Sin descripción'}</p>
+            <div class="team-actions-classic" style="margin-top: 1rem;">
+              <a href="/teams/${c.id}" class="btn btn-primary">
+                <i class="fas fa-eye"></i> Ver más
+              </a>
+              <a href="/teams/${c.id}" class="btn btn-accent">
+                <i class="fas fa-users"></i> Entrar
+              </a>
+            </div>
+          </div>
+        </div>
+      `).join('');
+    }
+    
+    // Solo UN waitForSupabase
+    waitForSupabase(async function(supabase) {
+      try {
+        // 1. Obtener usuario logueado
+        const { data: { user }, error: authError } = await supabase.auth.getUser();
+        if (authError || !user) {
+          window.location.href = '/login?return=/profile';
+          return;
+        }
+
+        // 2. Cargar perfil
+        const { data: profile, error: profileError } = await supabase
+          .from('profiles')
+          .select('*')
+          .eq('id', user.id)
+          .single();
+
+        if (!profileError && profile) {
+          document.querySelector('.profile-photo').src = profile.photo_url || '/img/avatar-default.jpg';
+          document.getElementById('profile-name').textContent = `${profile.first_name || ''} ${profile.last_name || ''}`.trim();
+          if (profile.country) {
+            document.getElementById('profile-location').innerHTML = `
+              <i class="fas fa-map-marker-alt"></i> 
+              ${[profile.city, profile.country].filter(Boolean).join(', ')}
+            `;
+          }
+          document.getElementById('profile-bio').textContent = profile.bio || '';
+        }
+
+        // 3. CAUSAS
+        const { data: causeMembers } = await supabase
+          .from('causes_members')
+          .select('cause_id')
+          .eq('user_id', user.id);
+
+        const causeIds = (causeMembers || []).map(m => m.cause_id).filter(Boolean);
+        let causes = [];
+        if (causeIds.length > 0) {
+          const { data: causesData } = await supabase
+            .from('causes')
+            .select('*')
+            .in('id', causeIds);
+          causes = causesData || [];
+        }
+
+        // 4. TAREAS - CORREGIDO para usar task_members (SIN S)
+        console.log('🔍 Buscando tareas para usuario:', user.id);
+
+        const { data: taskMemberships, error: taskMembersError } = await supabase
+          .from('task_members')  // ✅ CORRECTO: task_members (sin S)
+          .select('task_id, role, status')
+          .eq('user_id', user.id);
+
+        console.log('📋 Task memberships encontradas:', taskMemberships);
+        console.log('❌ Error en task memberships:', taskMembersError);
+
+        // Si hay error, también buscar tareas creadas por el usuario como fallback
+        if (taskMembersError) {
+          console.warn('⚠️ Error en task_members, buscando tareas creadas:', taskMembersError);
+          const { data: createdTasks } = await supabase
+            .from('tasks')
+            .select('*')
+            .eq('user_id', user.id);
+          
+          tasks = (createdTasks || []).map(task => ({
+            ...task,
+            userRole: 'founder',
+            userStatus: 'active',
+            isParticipating: true
+          }));
+        } else {
+          const taskIds = (taskMemberships || []).map(m => m.task_id).filter(Boolean);
+          
+          console.log('🎯 Task IDs extraídos:', taskIds);
+
+          if (taskIds.length > 0) {
+            const { data: tasksData, error: tasksError } = await supabase
+              .from('tasks')
+              .select('*')
+              .in('id', taskIds);
+            
+            console.log('✅ Tasks data obtenida:', tasksData);
+            console.log('❌ Error en tasks:', tasksError);
+            
+            // Enriquecer tareas con información del rol del usuario
+            tasks = (tasksData || []).map(task => {
+              const membership = taskMemberships.find(m => m.task_id === task.id);
+              return {
+                ...task,
+                userRole: membership ? membership.role : 'member',
+                userStatus: membership ? membership.status : 'active',
+                isParticipating: true
+              };
+            });
+            
+            // También agregar tareas creadas por el usuario (sin duplicados)
+            const { data: createdTasks } = await supabase
+              .from('tasks')
+              .select('*')
+              .eq('user_id', user.id);
+                                                
+
+            if (createdTasks && createdTasks.length > 0) {
+              createdTasks.forEach(createdTask => {
+                if (!tasks.find(t => t.id === createdTask.id)) {
+                  tasks.push({
+                    ...createdTask,
+                    userRole: 'founder',
+                    userStatus: 'active',
+                    isParticipating: true
+                  });
+                }
+              });
+            }
+          } else {
+            console.log('⚠️ No se encontraron task IDs, buscando tareas creadas por el usuario');
+            const { data: createdTasks } = await supabase
+              .from('tasks')
+              .select('*')
+              .eq('user_id', user.id);
+            
+            tasks = (createdTasks || []).map(task => ({
+              ...task,
+              userRole: 'founder',
+              userStatus: 'active',
+              isParticipating: true
+            }));
+          }
+        }
+
+        console.log('🎯 TOTAL TAREAS ENCONTRADAS:', tasks.length);
+        console.log('📋 Detalles de tareas:', tasks);
+
+        // 5. COMUNIDADES
+        const { data: memberTeams } = await supabase
+          .from('team_members')
+          .select('team_id')
+          .eq('user_id', user.id);
+
+        const teamIds = (memberTeams || []).map(m => m.team_id).filter(Boolean);
+        let allCommunities = [];
+        if (teamIds.length > 0) {
+          const { data: teamsData } = await supabase
+            .from('teams')
+            .select('*')
+            .in('id', teamIds);
+          allCommunities = [...(allCommunities || []), ...(teamsData || [])];
+        }
+
+        // Comunidades creadas
+        const { data: createdTeams } = await supabase
+          .from('teams')
+          .select('*')
+          .eq('creator_id', user.id);
+
+        allCommunities = [...allCommunities, ...(createdTeams || [])];
+
+        // Eliminar duplicados
+        allCommunities = allCommunities.filter((team, index, self) =>
+          index === self.findIndex(t => t.id === team.id)
+        );
+
+        // 6. RETOS/CHALLENGES - NUEVO
+        console.log('🎯 Buscando retos para usuario:', user.id);
+
+        const { data: challengeMemberships, error: challengeMembersError } = await supabase
+          .from('challenges_members')
+          .select('challenge_id, role, status')
+          .eq('user_id', user.id);
+
+        console.log('⚡ Challenge memberships encontradas:', challengeMemberships);
+        console.log('❌ Error en challenge memberships:', challengeMembersError);
+
+        const challengeIds = (challengeMemberships || []).map(m => m.challenge_id).filter(Boolean);
+        let challenges = [];
+
+        console.log('🎯 Challenge IDs extraídos:', challengeIds);
+
+        if (challengeIds.length > 0) {
+          const { data: challengesData, error: challengesError } = await supabase
+            .from('challenges')
+            .select('*')
+            .in('id', challengeIds);
+          
+          console.log('✅ Challenges data obtenida:', challengesData);
+          if (challengesError) console.log('❌ Error en challenges:', challengesError);
+          
+          // Enriquecer retos con información del rol del usuario
+          challenges = (challengesData || []).map(challenge => {
+            const membership = challengeMemberships.find(m => m.challenge_id === challenge.id);
+            return {
+              ...challenge,
+              userRole: membership ? membership.role : 'member',
+              userStatus: membership ? membership.status : 'active',
+              isParticipating: true
+            };
+          });
+        } else {
+          console.log('⚠️ No se encontraron challenge IDs, buscando retos creados por el usuario');
+          
+          // Fallback: buscar retos creados por el usuario
+          const { data: createdChallenges, error: createdError } = await supabase
+            .from('challenges')
+            .select('*')
+            .eq('user_id', user.id);
+            
+          if (!createdError && createdChallenges && createdChallenges.length > 0) {
+            challenges = createdChallenges.map(challenge => ({
+              ...challenge,
+              userRole: 'founder',
+              userStatus: 'active',
+              isParticipating: true
+            }));
+            console.log('✅ Encontrados retos creados por el usuario:', challenges.length);
+          }
+        }
+
+        console.log('🎯 TOTAL RETOS ENCONTRADOS:', challenges.length);
+        console.log('⚡ Detalles de retos:', challenges);
+
+        // 7. VOLUNTARIADOS - NUEVO
+        console.log('🔍 Buscando voluntariados para usuario:', user.id);
+
+        const { data: volunteeringMemberships, error: volunteeringMembersError } = await supabase
+          .from('volunteering_members')
+          .select('volunteering_id, role, status')
+          .eq('user_id', user.id);
+
+        console.log('📋 Volunteering memberships encontradas:', volunteeringMemberships);
+        console.log('❌ Error en volunteering memberships:', volunteeringMembersError);
+
+        const volunteeringIds = (volunteeringMemberships || []).map(m => m.volunteering_id).filter(Boolean);
+
+        if (volunteeringIds.length > 0) {
+          const { data: volunteeringData, error: volunteeringError } = await supabase
+            .from('volunteering')
+            .select('*')
+            .in('id', volunteeringIds);
+
+          console.log('✅ Volunteering data obtenida:', volunteeringData);
+          if (volunteeringError) console.log('❌ Error en volunteering:', volunteeringError);
+
+          volunteerings = (volunteeringData || []).map(vol => {
+            const membership = volunteeringMemberships.find(m => m.volunteering_id === vol.id);
+            let volunteerings = [];
+            return {
+              ...vol,
+              userRole: membership ? membership.role : 'member',
+              userStatus: membership ? membership.status : 'active',
+              isParticipating: true
+            };
+          });
+        } else {
+          // Fallback: buscar voluntariados creados por el usuario
+          const { data: createdVolunteerings, error: createdError } = await supabase
+            .from('volunteering')
+            .select('*')
+            .eq('user_id', user.id);
+
+          if (!createdError && createdVolunteerings && createdVolunteerings.length > 0) {
+            volunteerings = createdVolunteerings.map(vol => ({
+              ...vol,
+              userRole: 'founder',
+              userStatus: 'active',
+              isParticipating: true
+            }));
+            console.log('✅ Encontrados voluntariados creados por el usuario:', volunteerings.length);
+          }
+        }
+
+        console.log('🎯 TOTAL VOLUNTARIADOS ENCONTRTRADOS:', volunteerings.length);
+        console.log('📋 Detalles de voluntariados:', volunteerings);
+
+        // 8. RENDERIZAR CAUSAS
+        const grid = document.getElementById('activities-grid');
+        if (grid) {
+          if (window.causesRenderer && typeof window.causesRenderer.renderGrid === 'function') {
+            window.causesRenderer.renderGrid(causes, grid);
+          } else {
+            // Fallback si no hay renderer
+            if (!causes || causes.length === 0) {
+              grid.innerHTML = `
+                <div class="no-activities">
+                  <i class="fas fa-hands-helping"></i>
+                  <h4>Aún no participas en ninguna causa</h4>
+                  <p>Únete a una causa para empezar a marcar la diferencia</p>
+                  <a href="/causes" class="btn btn-primary" style="margin-top:1em;">
+                    Explorar causas
+                  </a>
+                </div>
+              `;
+            }
+          }
+        }
+
+        // 9. RENDERIZAR TAREAS
+        const tasksGrid = document.getElementById('tasks-grid');
+        if (tasksGrid) {
+          if (window.tasksRenderer && typeof window.tasksRenderer.renderGrid === 'function') {
+            window.tasksRenderer.renderGrid(tasks, tasksGrid);
+          } else {
+            renderTasksFallback(tasks, tasksGrid);
+          }
+        }
+
+        // 10. RENDERIZAR RETOS - NUEVO
+        const challengesGrid = document.getElementById('challenges-grid');
+        if (challengesGrid) {
+          if (window.challengesRenderer && typeof window.challengesRenderer.renderGrid === 'function') {
+            window.challengesRenderer.renderGrid(challenges, challengesGrid);
+          } else {
+            // Fallback si no hay renderer
+            renderChallengesFallback(challenges, challengesGrid);
+          }
+        }
+
+        // 11. RENDERIZAR VOLUNTARIADOS - NUEVO
+        const volunteeringGrid = document.getElementById('volunteering-grid');
+        if (volunteeringGrid) {
+          if (window.volunteeringRenderer && typeof window.volunteeringRenderer.renderGrid === 'function') {
+            window.volunteeringRenderer.renderGrid(volunteerings, volunteeringGrid);
+          } else {
+            // Fallback si no hay renderer
+            renderVolunteeringFallback(volunteerings, volunteeringGrid);
+          }
+        }
+
+        // 12. ESTADÍSTICAS - ACTUALIZADO
+        animateCounter('projects-counter', causes.length);
+        animateCounter('communities-counter', allCommunities.length);
+
+        const totalImpacted = causes.reduce((sum, c) => sum + (c.beneficiaries || 0), 0);
+        const totalDonated = causes.reduce((sum, c) => sum + (c.raised || 0), 0);
+        animateCounter('impacted-counter', totalImpacted);
+        animateCounter('donated-counter', totalDonated, '', ' €');
+
+        // 13. IMPACTO SOCIAL - ACTUALIZADO para incluir voluntariados
+        const challengesImpact = challenges.reduce((sum, ch) => sum + (ch.points || 20), 0);
+        const volunteeringImpact = volunteerings.reduce((sum, v) => sum + (v.points || 20), 0);
+        const impactScore = totalImpacted + causes.length * 10 + totalDonated + challengesImpact + volunteeringImpact;
+        updateImpactScore(impactScore);
+
+        // 14. RENDERIZAR COMUNIDADES CON FUNCIONALIDAD COMPLETA
+        const container = document.getElementById('communities-list');
+        if (container) {
+          // Limpia el contenedor
+          container.innerHTML = '';
+          container.className = 'teams-grid-classic';
+
+          // Usa el renderer modular CON TODOS LOS CONTROLES
+          if (window.initTeamsRenderer) {
+            const teamsRenderer = window.initTeamsRenderer({
+              gridSelector: '#communities-list',
+              paginationSelector: '#pagination',
+              prevPageSelector: '#prevPage',
+              nextPageSelector: '#nextPage',
+              pageInfoSelector: '#pageInfo',
+              tabSelector: '.tab',
+              searchInputSelector: '#search-input',
+              onShowTeamModal: function(teamId) {
+                if (typeof showTeamModal === 'function') showTeamModal(teamId);
+                else window.location.href = '/teams/' + teamId;
+              },
+              supabase,
+              session: { user }
+            });
+
+            // Sobrescribe los datos para que solo muestre las comunidades del usuario
+            if (teamsRenderer && teamsRenderer.allTeams !== undefined) {
+              teamsRenderer.allTeams = allCommunities;
+              teamsRenderer.filteredTeams = allCommunities;
+            } else {
+              // Fallback: asignar a variables globales
+              if (window.allTeams !== undefined) window.allTeams = allCommunities;
+              if (window.filteredTeams !== undefined) window.filteredTeams = allCommunities;
+            }
+            
+            // Renderiza
+            if (typeof window.renderTeams === 'function') {
+              window.renderTeams();
+            } else if (teamsRenderer && typeof teamsRenderer.renderTeams === 'function') {
+              teamsRenderer.renderTeams();
+            }
+          } else {
+            // Fallback completo si no está cargado el renderer
+            renderCommunitiesFallback(allCommunities, container);
+          }
+        }
+
+        // Añadir funcionalidad al botón limpiar búsqueda
+        const searchInput = document.getElementById('search-input');
+        const clearSearchBtn = document.getElementById('clear-search');
+
+        if (searchInput && clearSearchBtn) {
+          searchInput.addEventListener('input', function() {
+            if (this.value.length > 0) {
+              clearSearchBtn.style.display = 'block';
+            } else {
+              clearSearchBtn.style.display = 'none';
+            }
+          });
+
+          clearSearchBtn.addEventListener('click', function() {
+            searchInput.value = '';
+            clearSearchBtn.style.display = 'none';
+            searchInput.dispatchEvent(new Event('input'));
+            searchInput.focus();
+          });
+        }
+
+      } catch (error) {
+        console.error('Error cargando perfil:', error);
+        
+        // Mostrar errores en las secciones correspondientes
+        const grid = document.getElementById('activities-grid');
+        if (grid) {
+          grid.innerHTML = `<div class="error-message">Error al cargar tus causas.</div>`;
+        }
+        
+        const tasksGrid = document.getElementById('tasks-grid');
+        if (tasksGrid) {
+          tasksGrid.innerHTML = `<div class="error-message">Error al cargar tus tareas.</div>`;
+        }
+      }
+    });
+
+    // ✅ FUNCIÓN GLOBAL PARA PARTICIPAR EN VOLUNTARIADOS
+    window.participateInVolunteering = async function(volunteeringId, btnElement) {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session?.user) {
+        alert('Debes iniciar sesión para participar.');
+        return;
+      }
+      const userId = session.user.id;
+
+      // Verifica si ya participa antes de insertar
+      const { data: existing, error } = await supabase
+        .from('volunteering_members')
+        .select('id')
+        .eq('volunteering_id', volunteeringId)
+        .eq('user_id', userId)
+        .maybeSingle();
+
+      if (existing) {
+        alert('Ya participas en este voluntariado.');
+        return;
+      }
+
+      const { error: insertError } = await supabase
+        .from('volunteering_members')
+        .insert([{ 
+          volunteering_id: volunteeringId, 
+          user_id: userId, 
+          role: 'volunteer', 
+          status: 'active' 
+        }]);
+
+      if (insertError) {
+        alert('Error al participar: ' + insertError.message);
+        return;
+      }
+
+      alert('¡Te has unido al voluntariado exitosamente!');
+
+      // Recargar la página para reflejar los cambios
+      window.location.reload();
+    };
+  </script>
+{% endblock %}

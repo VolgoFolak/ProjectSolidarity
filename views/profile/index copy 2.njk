@@ -575,12 +575,12 @@
       transform: none;
     }
     .admin-activity-btn {
-      background: #10b981;
+      background: #ff6b6b;
       color: white;
     }
-
     .admin-activity-btn:hover {
-      background: #059669;
+      background: #ff5252;
+      transform: translateY(-2px);
     }
 
     /* --- ESTILOS PARA ESTADOS VACÍOS --- */
@@ -604,215 +604,402 @@
       font-size: 1em;
     }
 
-    /* --- ESTILOS RESPONSIVE MEJORADOS --- */
-    @media (max-width: 1024px) {
-      .causes-grid,
-      .tasks-grid,
-      .challenges-grid,
-      .volunteering-grid,
-      .activities-grid,
-      .teams-grid-classic {
-        grid-template-columns: repeat(2, 1fr);
-        gap: 1.5rem;
-      }
-      
-      .activities-tabs {
-        justify-content: center;
-      }
-      
-      .activity-tab {
-        min-width: 100px;
-        font-size: 0.8rem;
-        padding: 0.6rem 0.8rem;
-      }
-
-      .profile-header {
-        flex-direction: column;
-        text-align: center;
-        gap: 1.5rem;
-      }
-
-      .stats-section {
-        gap: 1rem;
-      }
-
-      .stats-card {
-        min-width: 150px;
-        padding: 1rem 1.5rem;
-      }
-
-      .impact-score-main {
-        flex-wrap: wrap;
-        justify-content: center;
-        gap: 0.8rem;
-      }
-    }
-
-    @media (max-width: 600px) {
-      .causes-grid,
-      .tasks-grid,
-      .challenges-grid,
-      .volunteering-grid,
-      .activities-grid,
-      .teams-grid-classic {
-        grid-template-columns: 1fr;
-        gap: 1rem;
-      }
-
-      .profile-main-container {
-        padding: 1.5rem 1rem;
-        margin: 1rem;
-      }
-
-      .stats-section {
-        flex-direction: column;
-        gap: 0.8rem;
-      }
-
-      .stats-card {
-        min-width: unset;
-        flex: unset;
-      }
-
-      .impact-score-bar-bg {
-        width: 100%;
-        max-width: 280px;
-      }
-
-      /* Botones responsive */
-      .cause-actions,
-      .task-actions,
-      .challenge-actions,
-      .volunteering-actions {
-        flex-direction: column;
-        gap: 0.5rem;
-      }
-
-      .cause-actions .btn,
-      .task-actions .btn,
-      .challenge-actions .btn,
-      .volunteering-actions .btn {
-        flex: unset;
-        width: 100%;
-      }
-
-      /* Metas responsive */
-      .cause-meta,
-      .task-meta,
-      .challenge-meta,
-      .volunteering-meta {
-        flex-direction: column;
-        gap: 0.5rem;
-        align-items: flex-start;
-      }
-
-      .beneficiaries-count {
-        grid-column: unset;
-        align-self: flex-start;
-      }
-
-      /* Tabs responsive */
-      .activities-tabs {
-        flex-direction: column;
-        gap: 0.3rem;
-      }
-
-      .activity-tab {
-        min-width: unset;
-        width: 100%;
-        justify-content: center;
-      }
-
-      /* Mapa responsive */
-      #profile-map {
-        height: 300px;
-      }
-
-      .map-legend {
-        flex-direction: column;
-        gap: 0.5rem;
-        align-items: center;
-      }
-    }
-
-    /* --- BOTONES CONSISTENTES --- */
-    .btn {
-      display: inline-flex;
+    /* --- ESTILOS PARA COMUNIDADES --- */
+    .community-row {
+      display: flex;
       align-items: center;
-      justify-content: center;
-      gap: 0.5rem;
-      padding: 0.6rem 1.2rem;
-      border-radius: 8px;
-      font-size: 0.9rem;
-      font-weight: 500;
-      text-decoration: none;
-      border: none;
-      cursor: pointer;
-      transition: all 0.2s ease;
-      min-height: 40px;
+      gap: 1.5rem;
+      padding: 1rem;
+      background: #f8fafc;
+      border-radius: 12px;
+      margin-bottom: 1rem;
+      border: 1px solid #e2e8f0;
     }
-
-    .btn-primary {
-      background: #4a6fa5;
-      color: white;
+    .community-row img {
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      object-fit: cover;
     }
-
-    .btn-primary:hover {
-      background: #166088;
-      transform: translateY(-2px);
-      box-shadow: 0 4px 12px rgba(74, 111, 165, 0.3);
+    .community-row-content {
+      flex: 1;
     }
-
-    .btn-outline {
-      background: transparent;
+    .community-row-title {
+      font-weight: 600;
       color: #4a6fa5;
-      border: 1px solid #4a6fa5;
+      margin-bottom: 0.3rem;
+    }
+    .community-row-summary {
+      color: #6b7280;
+      font-size: 0.9rem;
+    }
+    .community-row-actions {
+      flex-shrink: 0;
     }
 
-    .btn-outline:hover:not(:disabled) {
-      background: #4a6fa5;
+    /* --- ESTILOS PARA RETOS/CHALLENGES (idénticos a challenges/index.njk) --- */
+    .challenges-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 2rem;
+      margin-bottom: 3rem;
+    }
+
+    .challenge-card {
+      background: white;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+      transition: all 0.3s ease;
+      border: 1px solid #e2e8f0;
+      display: flex;
+      flex-direction: column;
+    }
+    .challenge-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+    }
+    .challenge-image {
+      height: 180px;
+      overflow: hidden;
+      position: relative;
+    }
+    .challenge-image img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.3s ease;
+    }
+    .challenge-card:hover .challenge-image img {
+      transform: scale(1.05);
+    }
+    .challenge-badge {
+      position: absolute;
+      padding: 0.3rem 0.8rem;
+      border-radius: 50px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
+    .challenge-badge.urgent {
+      top: 1rem;
+      right: 1rem;
+      background: #e53e3e;
+      color: white;
+    }
+    .challenge-badge.points {
+      top: 1rem;
+      left: 1rem;
+      background: #a67c00;
+      color: white;
+    }
+    .challenge-content {
+      padding: 1.5rem;
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+    }
+    .challenge-content h3 {
+      font-size: 1.3rem;
+      margin-bottom: 0.8rem;
+      color: #2d3748;
+      font-weight: 700;
+    }
+    .challenge-content p {
+      color: #6b7280;
+      margin-bottom: 1.5rem;
+      font-size: 0.95rem;
+      line-height: 1.6;
+      flex-grow: 1;
+    }
+    .challenge-meta {
+      display: flex;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+      font-size: 0.85rem;
+      flex-wrap: wrap;
+    }
+    .challenge-progress {
+      margin-bottom: 1.5rem;
+    }
+    .challenge-actions {
+      display: flex;
+      gap: 0.8rem;
+      margin-top: auto;
+    }
+    .challenge-actions .btn {
+      flex: 1;
+      text-align: center;
+      justify-content: center;
+    }
+
+    /* Botones específicos para challenges */
+    .btn-warning {
+      background: #ffe066;
+      color: #333;
+    }
+    .btn-warning:hover {
+      background: #a67c00;
       color: white;
       transform: translateY(-2px);
     }
 
-    .btn-outline:disabled {
-      opacity: 0.5;
-      cursor: not-allowed;
-      transform: none;
+    /* Estado vacío para retos */
+    .no-challenges {
+      grid-column: 1 / -1;
+      text-align: center;
+      padding: 2.5em 1em;
+      color: #6b7280;
     }
 
-    /* Botones específicos por tipo */
-    .view-cause-btn,
-    .view-task-btn,
-    .view-challenge-btn,
-    .view-volunteering-btn {
-      background: #4a6fa5;
+    .no-challenges i {
+      font-size: 2.5em;
+      color: #ffe066;
+      margin-bottom: 0.5em;
+    }
+
+    .no-challenges h4 {
+      color: #4a6fa5;
+      font-size: 1.3em;
+      margin-bottom: 0.3em;
+    }
+
+    .no-challenges p {
+      color: #6b7280;
+      font-size: 1em;
+      margin-bottom: 1em;
+    }
+
+    /* --- ESTILOS PARA VOLUNTARIADOS (idénticos a volunteering/index.njk) --- */
+    .volunteering-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 2rem;
+      margin-bottom: 3rem;
+    }
+
+    .volunteering-card {
+      background: white;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+      transition: all 0.3s ease;
+      border: 1px solid #e2e8f0;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .volunteering-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+    }
+
+    .volunteering-image {
+      height: 180px;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .volunteering-image img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.3s ease;
+    }
+
+    .volunteering-card:hover .volunteering-image img {
+      transform: scale(1.05);
+    }
+
+    .volunteering-badge {
+      position: absolute;
+      padding: 0.3rem 0.8rem;
+      border-radius: 50px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
+
+    .volunteering-badge.urgent {
+      top: 1rem;
+      right: 1rem;
+      background: #e53e3e;
       color: white;
     }
 
-    .view-cause-btn:hover,
-    .view-task-btn:hover,
-    .view-challenge-btn:hover,
-    .view-volunteering-btn:hover {
-      background: #166088;
-    }
-
-    .participate-btn {
+    .volunteering-badge.points {
+      top: 1rem;
+      left: 1rem;
       background: #4fc3a1;
       color: white;
     }
 
-    .participate-btn:hover:not(:disabled) {
-      background: #3da58a;
+    .volunteering-content {
+      padding: 1.5rem;
+      display: flex;
+      flex-direction: column;
+      flex: 1;
     }
 
-    .admin-activity-btn {
-      background: #10b981;
-      color: white;
+    .volunteering-content h3 {
+      font-size: 1.3rem;
+      margin-bottom: 0.8rem;
+      color: #2d3748;
+      font-weight: 700;
     }
 
-    .admin-activity-btn:hover {
-      background: #059669;
+    .volunteering-content p {
+      color: #6b7280;
+      margin-bottom: 1.5rem;
+      font-size: 0.95rem;
+      line-height: 1.6;
+      flex-grow: 1;
+    }
+
+    .volunteering-meta {
+      display: flex;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+      font-size: 0.85rem;
+      flex-wrap: wrap;
+    }
+
+    .volunteering-progress {
+      margin-bottom: 1.5rem;
+    }
+
+    .volunteering-actions {
+      display: flex;
+      gap: 0.8rem;
+      margin-top: auto;
+    }
+
+    .volunteering-actions .btn {
+      flex: 1;
+      text-align: center;
+      justify-content: center;
+    }
+
+    /* Estado vacío para voluntariados */
+    .no-volunteering {
+      grid-column: 1 / -1;
+      text-align: center;
+      padding: 2.5em 1em;
+      color: #6b7280;
+    }
+
+    .no-volunteering i {
+      font-size: 2.5em;
+      color: #4fc3a1;
+      margin-bottom: 0.5em;
+    }
+
+    .no-volunteering h4 {
+      color: #4a6fa5;
+      font-size: 1.3em;
+      margin-bottom: 0.3em;
+    }
+
+    .no-volunteering p {
+      color: #6b7280;
+      font-size: 1em;
+      margin-bottom: 1em;
+    }
+
+    /* --- ESTILOS PARA COMUNIDADES --- */
+    .communities-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 2rem;
+      margin-bottom: 3rem;
+    }
+    .community-card {
+      background: #fff;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+      border: 1px solid #e2e8f0;
+      display: flex;
+      flex-direction: column;
+      transition: box-shadow 0.2s, transform 0.2s;
+    }
+    .community-card:hover {
+      box-shadow: 0 10px 25px rgba(0,0,0,0.10);
+      transform: translateY(-5px);
+    }
+    .community-image {
+      height: 180px;
+      overflow: hidden;
+      position: relative;
+    }
+    .community-image img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.3s;
+    }
+    .community-card:hover .community-image img {
+      transform: scale(1.05);
+    }
+    .community-content {
+      padding: 1.5rem;
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+    }
+    .community-content h3 {
+      font-size: 1.3rem;
+      margin-bottom: 0.8rem;
+      color: #2d3748;
+      font-weight: 700;
+    }
+    .community-content p {
+      color: #6b7280;
+      margin-bottom: 1.5rem;
+      font-size: 0.95rem;
+      line-height: 1.6;
+      flex-grow: 1;
+    }
+    .community-actions {
+      display: flex;
+      gap: 0.8rem;
+      margin-top: auto;
+    }
+
+    /* Responsive: 2 columnas en tablet, 1 columna en móvil */
+    @media (max-width: 1024px) {
+      .communities-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+    @media (max-width: 600px) {
+      .communities-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    /* --- ESTILOS PARA EQUIPOS (NUEVO) --- */
+    .teams-grid-classic {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 2rem;
+      margin-bottom: 3rem;
+    }
+    @media (max-width: 1024px) {
+      .teams-grid-classic {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+    @media (max-width: 600px) {
+      .teams-grid-classic {
+        grid-template-columns: 1fr;
+      }
     }
 
     /* --- ESTILOS PARA TABS --- */
@@ -1237,107 +1424,6 @@
         grid-template-columns: 1fr;
       }
     }
-
-    /* --- ESTILOS ESPECÍFICOS PARA COMMUNITY CARDS --- */
-    .community-card {
-      background: white;
-      border-radius: 12px;
-      overflow: hidden;
-      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
-      transition: all 0.3s ease;
-      border: 1px solid #e2e8f0;
-      display: flex;
-      flex-direction: column;
-    }
-
-    .community-card:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
-    }
-
-    .community-image {
-      height: 180px;
-      overflow: hidden;
-      position: relative;
-    }
-
-    .community-image img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      transition: transform 0.3s ease;
-    }
-
-    .community-card:hover .community-image img {
-      transform: scale(1.05);
-    }
-
-    .community-content {
-      padding: 1.5rem;
-      display: flex;
-      flex-direction: column;
-      flex: 1;
-    }
-
-    .community-content h3 {
-      font-size: 1.3rem;
-      margin-bottom: 0.8rem;
-      color: #2d3748;
-      font-weight: 700;
-    }
-
-    .community-content p {
-      color: #6b7280;
-      margin-bottom: 1.5rem;
-      font-size: 0.95rem;
-      line-height: 1.6;
-      flex-grow: 1;
-    }
-
-    .community-actions {
-      display: flex;
-      gap: 0.8rem;
-      margin-top: auto;
-    }
-
-    .community-actions .btn {
-      flex: 1;
-      text-align: center;
-      justify-content: center;
-    }
-
-    /* Grid de comunidades en 3 columnas igual que actividades */
-    .teams-grid-classic {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 2rem;
-      margin-bottom: 3rem;
-    }
-
-    /* Responsive para communities grid */
-    @media (max-width: 1024px) {
-      .causes-grid,
-      .tasks-grid,
-      .challenges-grid,
-      .volunteering-grid,
-      .activities-grid,
-      .teams-grid-classic {
-        grid-template-columns: repeat(2, 1fr);
-        gap: 1.5rem;
-      }
-    }
-
-    @media (max-width: 600px) {
-      .causes-grid,
-      .tasks-grid,
-      .challenges-grid,
-      .volunteering-grid,
-      .activities-grid,
-      .teams-grid-classic {
-        grid-template-columns: 1fr;
-        gap: 1rem;
-      }
-    }
   </style>
 {% endblock %}
 
@@ -1383,36 +1469,6 @@
         <div class="label">Donado</div>
       </div>
     </div>
-    <!-- NUEVAS ESTADÍSTICAS -->
-    <div class="stats-card">
-      <div class="stats-icon"><i class="fas fa-hands-helping"></i></div>
-      <div class="stats-content">
-        <div class="number" id="causes-counter">0</div>
-        <div class="label">Causas</div>
-      </div>
-    </div>
-    <div class="stats-card">
-      <div class="stats-icon"><i class="fas fa-tasks"></i></div>
-      <div class="stats-content">
-        <div class="number" id="tasks-counter">0</div>
-        <div class="label">Tareas</div>
-      </div>
-    </div>
-    <div class="stats-card">
-      <div class="stats-icon"><i class="fas fa-bolt"></i></div>
-      <div class="stats-content">
-        <div class="number" id="challenges-counter">0</div>
-        <div class="label">Retos</div>
-      </div>
-    </div>
-    <div class="stats-card">
-      <div class="stats-icon"><i class="fas fa-heart"></i></div>
-      <div class="stats-content">
-        <div class="number" id="volunteering-counter">0</div>
-        <div class="label">Voluntariados</div>
-      </div>
-    </div>
-    <!-- FIN NUEVAS ESTADÍSTICAS -->
     <div class="stats-card">
       <div class="stats-icon"><i class="fas fa-users"></i></div>
       <div class="stats-content">
@@ -1441,21 +1497,6 @@
     <div class="impact-level-info">
       <span id="impact-level">Nivel 1 - Seed</span>
       <span id="impact-score-details-text">0/500 puntos para el siguiente nivel</span>
-    </div>
-  </div>
-
-  <!-- Mapa de impacto (MOVIDO AQUÍ) -->
-  <div class="map-section">
-    <div class="section-header">
-      <h3>Tu mapa de impacto</h3>
-    </div>
-    <div id="profile-map"></div>
-    <div class="map-legend">
-      <div class="legend-item"><span class="legend-color cause"></span> Causas</div>
-      <div class="legend-item"><span class="legend-color task"></span> Tareas</div>
-      <div class="legend-item"><span class="legend-color challenge"></span> Retos</div>
-      <div class="legend-item"><span class="legend-color volunteering"></span> Voluntariados</div>
-      <div class="legend-item"><span class="legend-color community"></span> Comunidades</div>
     </div>
   </div>
 
@@ -1551,6 +1592,21 @@
       </button>
     </div>
   </div>
+
+  <!-- Mapa de impacto -->
+  <div class="map-section">
+    <div class="section-header">
+      <h3>Tu mapa de impacto</h3>
+    </div>
+    <div id="profile-map"></div>
+    <div class="map-legend">
+      <div class="legend-item"><span class="legend-color cause"></span> Causas</div>
+      <div class="legend-item"><span class="legend-color task"></span> Tareas</div>
+      <div class="legend-item"><span class="legend-color challenge"></span> Retos</div>
+      <div class="legend-item"><span class="legend-color volunteering"></span> Voluntariados</div>
+      <div class="legend-item"><span class="legend-color community"></span> Comunidades</div>
+    </div>
+  </div>
 </div>
 {% endblock %}
 
@@ -1644,148 +1700,147 @@
         : `Te faltan ${level.max - score} puntos para el siguiente nivel.`;
     }
 
-    // FUNCIÓN PARA INICIALIZAR EL MAPA DEL PERFIL (ADAPTADA DEL MAPA DE AYUDAS)
+    // FUNCIÓN PARA INICIALIZAR EL MAPA DEL PERFIL
     function initProfileMap(activities, communities) {
       const mapContainer = document.getElementById('profile-map');
-      if (!mapContainer) {
-        console.log('⚠️ Contenedor del mapa no encontrado');
-        return;
-      }
+      if (!mapContainer) return;
 
-      console.log('🗺️ Inicializando mapa con:', activities.length, 'actividades y', communities.length, 'comunidades');
-
-      // Limpiar el contenedor antes de crear el mapa
-      mapContainer.innerHTML = '';
-
-      // Crear el mapa centrado en España por defecto (como en el mapa de ayudas)
-      const map = L.map('profile-map', { 
-        zoomControl: true, 
-        dragging: true, 
-        scrollWheelZoom: false 
-      }).setView([40.4168, -3.7038], 6);
+      // Crear el mapa centrado en España por defecto
+      const map = L.map('profile-map').setView([40.4168, -3.7038], 6);
 
       L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         attribution: '© OpenStreetMap contributors'
       }).addTo(map);
 
-      map.zoomControl.setPosition('topright');
-
-      // Íconos como en el mapa de ayudas
-      const markerIcons = {
-        cause: new L.Icon({
-          iconUrl: 'https://cdn.jsdelivr.net/gh/pointhi/leaflet-color-markers@master/img/marker-icon-red.png',
-          shadowUrl: 'https://cdn.jsdelivr.net/gh/pointhi/leaflet-color-markers@master/img/marker-shadow.png',
-          iconSize: [18,30], iconAnchor: [9,30], popupAnchor: [1,-24], shadowSize: [30,30]
+      // Íconos personalizados para cada tipo
+      const icons = {
+        cause: L.divIcon({
+          html: '<i class="fas fa-hands-helping"></i>',
+          iconSize: [20, 20],
+          className: 'custom-div-icon',
+          iconAnchor: [10, 10],
+          popupAnchor: [0, -10]
         }),
-        task: new L.Icon({
-          iconUrl: 'https://cdn.jsdelivr.net/gh/pointhi/leaflet-color-markers@master/img/marker-icon-blue.png',
-          shadowUrl: 'https://cdn.jsdelivr.net/gh/pointhi/leaflet-color-markers@master/img/marker-shadow.png',
-          iconSize: [18,30], iconAnchor: [9,30], popupAnchor: [1,-24], shadowSize: [30,30]
+        task: L.divIcon({
+          html: '<i class="fas fa-tasks"></i>',
+          iconSize: [20, 20], 
+          className: 'custom-div-icon task-icon',
+          iconAnchor: [10, 10],
+          popupAnchor: [0, -10]
         }),
-        challenge: new L.Icon({
-          iconUrl: 'https://cdn.jsdelivr.net/gh/pointhi/leaflet-color-markers@master/img/marker-icon-yellow.png',
-          shadowUrl: 'https://cdn.jsdelivr.net/gh/pointhi/leaflet-color-markers@master/img/marker-shadow.png',
-          iconSize: [18,30], iconAnchor: [9,30], popupAnchor: [1,-24], shadowSize: [30,30]
+        challenge: L.divIcon({
+          html: '<i class="fas fa-bolt"></i>',
+          iconSize: [20, 20],
+          className: 'custom-div-icon challenge-icon',
+          iconAnchor: [10, 10],
+          popupAnchor: [0, -10]
         }),
-        volunteering: new L.Icon({
-          iconUrl: 'https://cdn.jsdelivr.net/gh/pointhi/leaflet-color-markers@master/img/marker-icon-green.png',
-          shadowUrl: 'https://cdn.jsdelivr.net/gh/pointhi/leaflet-color-markers@master/img/marker-shadow.png',
-          iconSize: [18,30], iconAnchor: [9,30], popupAnchor: [1,-24], shadowSize: [30,30]
+        volunteering: L.divIcon({
+          html: '<i class="fas fa-heart"></i>',
+          iconSize: [20, 20],
+          className: 'custom-div-icon volunteering-icon',
+          iconAnchor: [10, 10],
+          popupAnchor: [0, -10]
         }),
-        community: new L.Icon({
-          iconUrl: 'https://cdn.jsdelivr.net/gh/pointhi/leaflet-color-markers@master/img/marker-icon-violet.png',
-          shadowUrl: 'https://cdn.jsdelivr.net/gh/pointhi/leaflet-color-markers@master/img/marker-shadow.png',
-          iconSize: [18,30], iconAnchor: [9,30], popupAnchor: [1,-24], shadowSize: [30,30]
+        community: L.divIcon({
+          html: '<i class="fas fa-users"></i>',
+          iconSize: [20, 20],
+          className: 'custom-div-icon community-icon',
+          iconAnchor: [10, 10],
+          popupAnchor: [0, -10]
         })
       };
 
-      // Array para guardar todos los marcadores
-      let allMarkers = [];
-
-      // Agregar pins de actividades (usando lat/lng como en el mapa de ayudas)
-      console.log('🔗 Agregando', activities.length, 'actividades al mapa');
-      activities.forEach((activity, index) => {
-        console.log(`📍 Actividad ${index + 1}:`, activity.title || activity.name, 'Coordenadas:', activity.lat, activity.lng);
-        
-        if (activity.lat && activity.lng) {
-          const marker = L.marker([activity.lat, activity.lng], {
-            icon: markerIcons[activity.type] || markerIcons.cause
+      // Agregar pins de actividades
+      activities.forEach(activity => {
+        if (activity.latitude && activity.longitude) {
+          const marker = L.marker([activity.latitude, activity.longitude], {
+            icon: icons[activity.type]
           }).addTo(map);
 
-          allMarkers.push(marker);
-
-          // Popup como en el mapa de ayudas
+          // Popup con información
           marker.bindPopup(`
-            <div style="text-align:center; min-width:210px; max-width:260px; padding:0.7em 0.2em;">
+            <div class="map-popup">
               <img src="${activity.photo_url || `/img/${activity.type}-default.jpg`}" 
-                   alt="Foto acción" 
-                   style="width:56px; height:56px; border-radius:50%; object-fit:cover; border:3px solid ${activity.color}; box-shadow:0 2px 8px rgba(0,0,0,0.10); margin-bottom:0.7em;">
-              <div style="font-weight:800; font-size:1.08rem; color:#222; margin-bottom:0.2em;">
+                   alt="${activity.title || activity.name}" 
+                   style="width: 100%; height: 80px; object-fit: cover; border-radius: 4px; margin-bottom: 8px;">
+              <h4 style="margin: 0 0 4px 0; font-size: 14px; color: #4a6fa5;">
+                <i class="fas ${activity.icon}" style="color: ${activity.color}; margin-right: 6px;"></i>
                 ${activity.title || activity.name}
+              </h4>
+              <p style="margin: 0 0 8px 0; font-size: 12px; color: #6b7280;">
+                ${activity.typeName} • ${getLocation(activity)}
+              </p>
+              <p style="margin: 0 0 8px 0; font-size: 11px; color: #374151;">
+                ${getDescription(activity)}
+              </p>
+              <div style="display: flex; gap: 4px; margin-bottom: 8px;">
+                <span style="background: ${activity.color}; color: white; padding: 2px 6px; border-radius: 4px; font-size: 10px;">
+                  +${activity.points || 10} pts
+                </span>
+                <span style="background: #e5e7eb; color: #374151; padding: 2px 6px; border-radius: 4px; font-size: 10px;">
+                  ${getParticipants(activity)} participantes
+                </span>
               </div>
-              <div style="color:#6b7280; font-size:0.97rem; margin-bottom:0.5em;">
-                <i class="fas fa-map-marker-alt" style="color:${activity.color};"></i>
-                ${activity.city || 'Sin ciudad'}, ${activity.country || 'Sin país'}
-              </div>
-              <div style="color:#444; font-size:0.93rem; margin-bottom:0.7em;">
-                ${(activity.summary || activity.description || 'Sin descripción').substring(0, 80)}${(activity.summary || activity.description || '').length > 80 ? '...' : ''}
-              </div>
-              <a href="/${activity.type}s/${activity.id}" 
-                 target="_blank"
-                 style="display:inline-block; background:${activity.color}; color:#fff; border-radius:50px; font-weight:700; padding:0.45em 1.2em; font-size:0.93rem; text-decoration:none; transition:background 0.18s;">
-                Ver más
-              </a>
+              <button onclick="window.location.href='/${activity.type}s/${activity.id}'" 
+                      style="background: ${activity.color}; color: white; border: none; padding: 4px 8px; border-radius: 4px; font-size: 11px; cursor: pointer; width: 100%;">
+                Ver detalles
+              </button>
             </div>
           `);
         }
       });
 
-      // Agregar pins de comunidades (usando lat/lng como en el mapa de ayudas)
-      console.log('🏢 Agregando', communities.length, 'comunidades al mapa');
-      communities.forEach((community, index) => {
-        console.log(`📍 Comunidad ${index + 1}:`, community.name, 'Coordenadas:', community.lat, community.lng);
-        
-        if (community.lat && community.lng) {
-          const marker = L.marker([community.lat, community.lng], {
-            icon: markerIcons.community
+      // Agregar pins de comunidades
+      communities.forEach(community => {
+        if (community.latitude && community.longitude) {
+          const marker = L.marker([community.latitude, community.longitude], {
+            icon: icons.community
           }).addTo(map);
 
-          allMarkers.push(marker);
-
-          // Popup como en el mapa de ayudas
           marker.bindPopup(`
-            <img src="${community.photo_url || '/img/community-default.jpg'}" class="popup-photo" alt="Foto comunidad" style="width: 38px; height: 38px; border-radius: 50%; object-fit: cover; margin-bottom: 7px; border: 2px solid #4fc3a1; box-shadow: 0 1px 4px rgba(79,195,161,0.10); display: block; margin-left: auto; margin-right: auto;">
-            <strong>${community.name}</strong><br>
-            <span style="color:#6b7280;">${community.city || 'Sin ciudad'}, ${community.country || 'Sin país'}</span><br>
-            <span style="font-size:0.97rem;">${(community.description || 'Una comunidad comprometida con generar impacto social positivo.').substring(0, 80)}...</span><br>
-            <a href="/teams/${community.id}" class="action-link" target="_blank" style="color:#4fc3a1;font-weight:600;">Ver comunidad</a>
+            <div class="map-popup">
+              <img src="${community.photo_url || '/img/community-default.jpg'}" 
+                   alt="${community.name}" 
+                   style="width: 100%; height: 80px; object-fit: cover; border-radius: 4px; margin-bottom: 8px;">
+              <h4 style="margin: 0 0 4px 0; font-size: 14px; color: #4a6fa5;">
+                <i class="fas fa-users" style="color: #4fc3a1; margin-right: 6px;"></i>
+                ${community.name}
+              </h4>
+              <p style="margin: 0 0 8px 0; font-size: 12px; color: #6b7280;">
+                Comunidad • ${community.city || 'Sin ubicación'}
+              </p>
+              <p style="margin: 0 0 8px 0; font-size: 11px; color: #374151;">
+                ${community.summary || community.description?.substring(0, 80) + '...' || 'Sin descripción'}
+              </p>
+              <div style="display: flex; gap: 4px; margin-bottom: 8px;">
+                <span style="background: #4fc3a1; color: white; padding: 2px 6px; border-radius: 4px; font-size: 10px;">
+                  +${community.impact || 0} pts
+                </span>
+                <span style="background: #e5e7eb; color: #374151; padding: 2px 6px; border-radius: 4px; font-size: 10px;">
+                  ${community.members_count || 0} miembros
+                </span>
+              </div>
+              <button onclick="window.location.href='/teams/${community.id}'" 
+                      style="background: #4fc3a1; color: white; border: none; padding: 4px 8px; border-radius: 4px; font-size: 11px; cursor: pointer; width: 100%;">
+                Ver comunidad
+              </button>
+            </div>
           `);
         }
       });
 
-      // Ajustar vista del mapa como en el mapa de ayudas
-      console.log('📍 Total de marcadores en el mapa:', allMarkers.length);
+      // Ajustar vista del mapa si hay marcadores
+      const allMarkers = [...activities, ...communities].filter(item => item.latitude && item.longitude);
       if (allMarkers.length > 0) {
-        try {
-          const validMarkers = allMarkers.map(m => m.getLatLng());
-          if (validMarkers.length > 0) {
-            const bounds = L.latLngBounds(validMarkers);
-            if (bounds.isValid()) {
-              map.fitBounds(bounds, { padding: [30, 30] });
-              console.log('✅ Vista del mapa ajustada correctamente');
-            }
-          }
-        } catch (error) {
-          console.log('⚠️ No se pudo ajustar la vista del mapa:', error);
+        const group = new L.featureGroup(map._layers);
+        if (Object.keys(group._layers).length > 0) {
+          map.fitBounds(group.getBounds().pad(0.1));
         }
-      } else {
-        console.log('⚠️ No hay marcadores para mostrar en el mapa');
       }
-
-      console.log('✅ Mapa inicializado correctamente');
     }
 
-    // Cambia la función para crear tarjetas de comunidades (teams)
+    // Fallback para renderizar comunidades
     function renderCommunitiesFallback(teams, container) {
       if (!teams || teams.length === 0) {
         container.innerHTML = `
@@ -1804,41 +1859,16 @@
       container.innerHTML = '';
       teams.forEach(team => {
         const card = document.createElement('div');
-        card.className = 'team-card-classic';
+        card.className = 'community-card';
         card.innerHTML = `
-          <div class="team-image-classic">
-            <img src="${team.photo_url || '/img/comunidad-default.jpg'}" alt="${team.name}" onerror="this.src='/img/default-activity.jpg'">
-            <!-- Eliminado badge de puntos -->
+          <div class="community-image">
+            <img src="${team.photo_url || '/img/comunidad-default.jpg'}" alt="${team.name}">
           </div>
-          <div class="team-content-classic">
+          <div class="community-content">
             <h3>${team.name}</h3>
-            <p>${team.description?.substring(0, 120) + '...' || 'Una comunidad comprometida con generar impacto social positivo.'}</p>
-            <div class="team-meta-classic">
-              <div class="meta-item-classic">
-                <i class="fas fa-map-marker-alt"></i> 
-                ${team.city && team.country ? `${team.city}, ${team.country}` : team.city || team.country || 'Sin ubicación'}
-              </div>
-              <div class="meta-item-classic">
-                <i class="fas fa-users"></i> 
-                ${team.members_count || 0} miembros
-              </div>
-              <div class="meta-item-classic">
-                <i class="fas fa-calendar-alt"></i> 
-                ${team.created_at ? new Date(team.created_at).toLocaleDateString('es-ES') : 'Fecha no disponible'}
-              </div>
-            </div>
-            ${team.interests && team.interests.length > 0 ? `
-              <div class="team-tags-classic">
-                ${team.interests.slice(0, 3).map(interest => 
-                  `<span class="team-tag-classic">${interest}</span>`
-                ).join('')}
-                ${team.interests.length > 3 ? `<span class="team-tag-classic tag-more">+${team.interests.length - 3}</span>` : ''}
-              </div>
-            ` : ''}
-            <div class="team-actions-classic">
-              <button class="btn btn-vermas-team" onclick="window.location.href='/teams/${team.id}'" style="background: #4a6fa5; color: white; border-radius: 50px; font-weight: 700;">
-                Ver más
-              </button>
+            <p>${team.description?.substring(0, 100) + '...' || 'Sin descripción'}</p>
+            <div class="community-actions">
+              <button class="btn btn-primary">Ver comunidad</button>
             </div>
           </div>
         `;
@@ -2021,13 +2051,7 @@
 
         function calculateProgress(activity) {
           const participants = getParticipants(activity);
-          const target = activity.beneficiaries || activity.max_participants || 0;
-          
-          // Si la meta es 0, mostrar barra vacía
-          if (target === 0) {
-            return 0;
-          }
-          
+          const target = activity.beneficiaries || 1;
           return Math.min(Math.round((participants / target) * 100), 100);
         }
 
@@ -2043,40 +2067,51 @@
           return '';
         }
 
-        function createActionButtons(activity) {
-          // Solo botón "Ver más", estilo pastilla
-          return `
-            <button class="btn view-${activity.type}-btn" data-${activity.type}-id="${activity.id}" style="background: ${activity.color}; color: white; border-radius: 50px; font-weight: 700;">
-              Ver más
-            </button>
-          `;
+        function createActionButtons(activity, isAdmin, isParticipating) {
+          const viewBtn = `<button class="btn view-${activity.type}-btn" data-${activity.type}-id="${activity.id}">Ver más</button>`;
+          
+          if (isAdmin) {
+            return `
+              ${viewBtn}
+              <button class="btn admin-activity-btn" data-activity-type="${activity.type}" data-activity-id="${activity.id}">
+                <i class="fas fa-cog"></i> Administrar
+              </button>
+            `;
+          }
+          
+          if (isParticipating) {
+            return `
+              ${viewBtn}
+              <button class="btn btn-outline" disabled style="opacity:0.7;cursor:not-allowed;">
+                <i class="fas fa-check"></i> Participando
+              </button>
+            `;
+          }
+          
+          const participateBtn = `<button class="btn participate-btn" data-${activity.type}-id="${activity.id}" style="background: ${activity.color};">Participar</button>`;
+          return `${viewBtn}${participateBtn}`;
         }
 
         function createActivityCard(activity) {
           const isUrgent = activity.is_urgent;
+          const points = activity.points || (activity.type === 'cause' ? 10 : 20);
           const progress = calculateProgress(activity);
           const location = getLocation(activity);
-
-          // Color para barra de progreso: azul para retos, color original para otros
-          const progressColor = activity.type === 'challenge' ? '#4a6fa5' : activity.color;
-
-          // Badge de tipo arriba a la izquierda, con borde para voluntariado
-          let badgeBorder = '';
-          if (activity.type === 'volunteering') {
-            badgeBorder = 'border: 2px solid #e74c3a1; box-shadow: 0 2px 8px rgba(231,76,60,0.13);';
-          } else {
-            badgeBorder = 'box-shadow: 0 2px 8px rgba(74,111,165,0.13);';
-          }
+          const isParticipating = activity.isParticipating;
+          const isAdmin = ['owner', 'admin', 'coordinator', 'founder', 'creator'].includes(activity.userRole);
 
           const card = document.createElement('div');
           card.className = `${activity.type}-card`;
           card.innerHTML = `
-            <div class="${activity.type}-image" style="position:relative;">
+            <div class="${activity.type}-image">
               <img src="${activity.photo_url || `/img/${activity.type}-default.jpg`}" 
                    alt="${activity.title || activity.name}" 
                    onerror="this.src='/img/default-activity.jpg'">
               ${isUrgent ? `<div class="${activity.type}-badge urgent"><i class="fas fa-exclamation-circle"></i> Urgente</div>` : ''}
-              <div class="activity-type-badge" style="position: absolute; top: 1rem; left: 1rem; background: ${activity.color}; color: ${activity.type === 'challenge' ? '#333' : 'white'}; padding: 0.3rem 0.8rem; border-radius: 50px; font-size: 0.8rem; font-weight: 600; display: flex; align-items: center; gap: 0.5rem; z-index:2; ${badgeBorder}">
+              <div class="${activity.type}-badge points" style="background: ${activity.color};">
+                <i class="fas fa-star"></i> +${points} pts
+              </div>
+              <div class="activity-type-badge" style="top: 3.5rem; left: 1rem; background: ${activity.color}; color: white; position: absolute; padding: 0.3rem 0.8rem; border-radius: 50px; font-size: 0.8rem; font-weight: 600; display: flex; align-items: center; gap: 0.5rem;">
                 <i class="fas ${activity.icon}"></i> ${activity.typeName}
               </div>
             </div>
@@ -2088,38 +2123,33 @@
                 <div class="meta-item"><i class="fas fa-map-marker-alt"></i> ${location}</div>
                 <div class="meta-item"><i class="fas fa-users"></i> ${getParticipants(activity)} participantes</div>
                 <div class="beneficiaries-count">
-                  <i class="fas fa-heart"></i> Beneficia a ${activity.beneficiaries || activity.max_participants || 0} personas
+                  <i class="fas fa-heart"></i> Beneficia a ${activity.beneficiaries || 0} personas
                 </div>
               </div>
               <div class="${activity.type}-progress">
                 <div class="progress-bar">
-                  <div class="progress-fill" style="width: ${progress}%; background: ${progressColor};"></div>
+                  <div class="progress-fill" style="width: ${progress}%; background: ${activity.color};"></div>
                 </div>
                 <div class="progress-info">
                   <span>${getParticipants(activity)} participantes</span>
-                  <span>Meta: ${activity.beneficiaries || activity.max_participants || 0}</span>
+                  <span>Meta: ${activity.beneficiaries || 0}</span>
                 </div>
               </div>
               <div class="${activity.type}-actions">
-                ${createActionButtons(activity)}
+                ${createActionButtons(activity, isAdmin, isParticipating)}
               </div>
             </div>
           `;
+          
           return card;
         }
 
-        //  // 10. FUNCIÓN PARA FILTRAR ACTIVIDADES
-        function filterActivities(tabType = 'all') {
-          const typeMap = {
-            causes: 'cause',
-            tasks: 'task',
-            challenges: 'challenge',
-            volunteering: 'volunteering'
-          };
-          if (tabType === 'all') {
+        // 10. FUNCIÓN PARA FILTRAR ACTIVIDADES
+        function filterActivities(type = 'all') {
+          if (type === 'all') {
             filteredActivities = [...allActivities];
           } else {
-            filteredActivities = allActivities.filter(activity => activity.type === typeMap[tabType]);
+            filteredActivities = allActivities.filter(activity => activity.type === type);
           }
           renderActivities();
         }
@@ -2184,61 +2214,15 @@
         animateCounter('communities-counter', allCommunities.length);
         animateCounter('impacted-counter', causes.reduce((sum, c) => sum + (c.beneficiaries || 0), 0));
         animateCounter('donated-counter', causes.reduce((sum, c) => sum + (c.raised || 0), 0), '', ' €');
-        animateCounter('causes-counter', causes.length);
-        animateCounter('tasks-counter', tasks.length);
-        animateCounter('challenges-counter', challenges.length);
-        animateCounter('volunteering-counter', volunteerings.length);
 
         // 16. ACTUALIZAR IMPACTO
         const impactScore = allActivities.reduce((sum, a) => sum + (a.points || 20), 0);
         updateImpactScore(impactScore);
 
-        // 17. INICIALIZAR MAPA (CORREGIDO SIN VARIABLES GLOBALES)
+        // 17. INICIALIZAR MAPA
         console.log('🗺️ Inicializando mapa con:', allActivities.length, 'actividades y', allCommunities.length, 'comunidades');
-        
-        // No usar variables globales, pasar funciones directamente al mapa
         initProfileMap(allActivities, allCommunities);
 
-        // 18. EVENT LISTENERS PARA BOTONES DE ACTIVIDADES
-        document.addEventListener('click', function(e) {
-          // Ver causa
-          if (e.target.matches('.view-cause-btn') || e.target.closest('.view-cause-btn')) {
-            const btn = e.target.matches('.view-cause-btn') ? e.target : e.target.closest('.view-cause-btn');
-            const causeId = btn.dataset.causeId;
-            if (causeId) window.location.href = `/causes/${causeId}`;
-          }
-          
-          // Ver tarea
-          if (e.target.matches('.view-task-btn') || e.target.closest('.view-task-btn')) {
-            const btn = e.target.matches('.view-task-btn') ? e.target : e.target.closest('.view-task-btn');
-            const taskId = btn.dataset.taskId;
-            if (taskId) window.location.href = `/tasks/${taskId}`;
-          }
-          
-          // Ver reto
-          if (e.target.matches('.view-challenge-btn') || e.target.closest('.view-challenge-btn')) {
-            const btn = e.target.matches('.view-challenge-btn') ? e.target : e.target.closest('.view-challenge-btn');
-            const challengeId = btn.dataset.challengeId;
-            if (challengeId) window.location.href = `/challenges/${challengeId}`;
-          }
-          
-          // Ver voluntariado
-          if (e.target.matches('.view-volunteering-btn') || e.target.closest('.view-volunteering-btn')) {
-            const btn = e.target.matches('.view-volunteering-btn') ? e.target : e.target.closest('.view-volunteering-btn');
-            const volunteeringId = btn.dataset.volunteeringId;
-            if (volunteeringId) window.location.href = `/volunteering/${volunteeringId}`;
-          }
-          
-          // Administrar actividad
-          if (e.target.matches('.admin-activity-btn') || e.target.closest('.admin-activity-btn')) {
-            const btn = e.target.matches('.admin-activity-btn') ? e.target : e.target.closest('.admin-activity-btn');
-            const activityType = btn.dataset.activityType;
-            const activityId = btn.dataset.activityId;
-            if (activityType && activityId) {
-              window.location.href = `/${activityType}s/${activityId}/admin`;
-            }
-          }
-        });
       } catch (error) {
         console.error('Error cargando perfil:', error);
       }

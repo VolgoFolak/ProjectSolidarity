@@ -1,0 +1,768 @@
+{
+  "login": "Войти",
+  "register": "Регистрация",
+  "welcome": "Добро пожаловать в Solidarity",
+  "of": "из",
+  "view_cause": "Посмотреть Дело",
+  "complete_task": "Завершить Задачу",
+  "join_team": "Присоединиться к Команде",
+  
+  "nav.home": "Главная",
+  "nav.takeAction": "Действовать!",
+  "nav.causes": "Дела",
+  "nav.tasks": "Задачи",
+  "nav.challenges": "Вызовы",
+  "nav.volunteering": "Волонтерство",
+  "nav.communities": "Сообщества",
+  "nav.maps": "Карта Помощи",
+  "nav.ranking": "Рейтинг",
+  "nav.members": "Участники",
+  "nav.profile": "Мой Профиль",
+  "nav.myActivities": "Мои Активности",
+  "nav.myTeams": "Мои Команды",
+  "nav.messages": "Сообщения",
+  "nav.settings": "Настройки",
+  "nav.help": "Помощь",
+  "nav.logout": "Выйти",
+  "nav.points": "очк",
+  
+  "auth.login": "Войти",
+  "auth.register": "Регистрация",
+  "auth.username": "Имя пользователя",
+  "auth.email": "Email",
+  "auth.password": "Пароль",
+  "auth.confirmPassword": "Подтвердить пароль",
+  "auth.name": "Полное имя",
+  "auth.forgotPassword": "Забыли пароль?",
+  
+  "footer.about": "О нас",
+  "footer.terms": "Условия использования",
+  "footer.privacy": "Политика конфиденциальности",
+  "footer.contact": "Контакты",
+  
+  "home.welcome": "Добро пожаловать в Solidarity!",
+  "home.intro": "Мы - платформа, объединяющая людей для совместного решения социальных проблем.",
+  "home.actionNeeded": "Требуются действия!",
+  "home.viewCauses": "Посмотреть Дела",
+  "home.joinUs": "Присоединяйтесь к нам",
+  
+  "cause.view": "Просмотреть Дело",
+  "cause.join": "Присоединиться к Делу",
+  "cause.share": "Поделиться Делом",
+  "cause.support": "Поддержать Дело",
+  
+  "task.complete": "Завершить Задачу",
+  "task.join": "Присоединиться к Задаче",
+  "task.details": "Детали Задачи",
+  
+  "challenge.accept": "Принять Вызов",
+  "challenge.join": "Присоединиться к Вызову",
+  "challenge.details": "Детали Вызова",
+  
+  "volunteering.signUp": "Записаться на Волонтерство",
+  "volunteering.join": "Присоединиться к Волонтерству",
+  
+  "community.join": "Присоединиться к Сообществу",
+  "community.leave": "Покинуть Сообщество",
+  "community.members": "Участники Сообщества",
+  
+  "map.search": "Поиск на карте",
+  "map.zoomIn": "Увеличить",
+  "map.zoomOut": "Уменьшить",
+  
+  "ranking.position": "Позиция",
+  "ranking.member": "Участник",
+  "ranking.points": "Очки",
+  
+  "profile.view": "Просмотреть Профиль",
+  "profile.edit": "Редактировать Профиль",
+  "profile.activities": "Мои Активности",
+  "profile.teams": "Мои Команды",
+  
+  "settings.account": "Настройки аккаунта",
+  "settings.notifications": "Уведомления",
+  "settings.privacy": "Конфиденциальность",
+  
+  "help.faq": "Часто задаваемые вопросы",
+  "help.contactSupport": "Связаться с поддержкой",
+  
+  "logout.confirm": "Вы уверены, что хотите выйти?",
+  
+  "error.404": "Страница не найдена",
+  "error.500": "Внутренняя ошибка сервера",
+  
+  "success.registration": "Регистрация прошла успешно!",
+  "success.login": "Вы успешно вошли в систему!",
+  "success.logout": "Вы вышли из системы!",
+  
+  "warning.unsavedChanges": "У вас есть несохраненные изменения. Вы уверены, что хотите покинуть эту страницу?",
+  
+  "info.profileUpdated": "Профиль успешно обновлен.",
+  "info.passwordChanged": "Пароль успешно изменен.",
+  
+  "button.save": "Сохранить",
+  "button.cancel": "Отмена",
+  "button.delete": "Удалить",
+  "button.edit": "Редактировать",
+  "button.view": "Просмотреть",
+  "button.join": "Присоединиться",
+  "button.leave": "Покинуть",
+  "button.accept": "Принять",
+  "button.decline": "Отклонить",
+  "button.send": "Отправить",
+  "button.search": "Поиск",
+  "button.clear": "Очистить",
+  "button.upload": "Загрузить",
+  "button.download": "Скачать",
+  "button.print": "Печать",
+  "button.share": "Поделиться",
+  "button.message": "Сообщение",
+  "button.notification": "Уведомление",
+  "button.settings": "Настройки",
+  "button.help": "Помощь",
+  "button.logout": "Выйти",
+  
+  "label.username": "Имя пользователя",
+  "label.email": "Email",
+  "label.password": "Пароль",
+  "label.confirmPassword": "Подтвердить пароль",
+  "label.name": "Полное имя",
+  "label.forgotPassword": "Забыли пароль?",
+  
+  "placeholder.search": "Поиск...",
+  "placeholder.username": "Введите имя пользователя",
+  "placeholder.email": "Введите Email",
+  "placeholder.password": "Введите пароль",
+  "placeholder.confirmPassword": "Подтвердите пароль",
+  "placeholder.name": "Введите полное имя",
+  
+  "message.welcome": "Добро пожаловать в Solidarity!",
+  "message.thankYou": "Спасибо за ваш вклад!",
+  "message.goodbye": "До свидания!",
+  "message.error": "Произошла ошибка. Пожалуйста, попробуйте еще раз.",
+  "message.success": "Операция выполнена успешно.",
+  "message.warning": "Предупреждение!",
+  "message.info": "Информация:",
+  
+  "title.home": "Главная - Solidarity",
+  "title.login": "Вход - Solidarity",
+  "title.register": "Регистрация - Solidarity",
+  "title.profile": "Профиль - Solidarity",
+  "title.settings": "Настройки - Solidarity",
+  "title.causes": "Дела - Solidarity",
+  "title.tasks": "Задачи - Solidarity",
+  "title.challenges": "Вызовы - Solidarity",
+  "title.volunteering": "Волонтерство - Solidarity",
+  "title.communities": "Сообщества - Solidarity",
+  "title.maps": "Карта Помощи - Solidarity",
+  "title.ranking": "Рейтинг - Solidarity",
+  "title.members": "Участники - Solidarity",
+  "title.messages": "Сообщения - Solidarity",
+  "title.help": "Помощь - Solidarity",
+  "title.logout": "Выход - Solidarity",
+  
+  "meta.description": "Solidarity - платформа для совместного решения социальных проблем.",
+  "meta.keywords": "Solidarity, социальные проблемы, волонтерство, сообщества",
+  "meta.author": "Solidarity Team",
+  
+  "button.loadMore": "Загрузить еще",
+  "button.showLess": "Показать меньше",
+  
+  "label.language": "Язык",
+  "label.theme": "Тема",
+  
+  "theme.light": "Светлая тема",
+  "theme.dark": "Темная тема",
+  
+  "notification.newMessage": "У вас новое сообщение от {username}",
+  "notification.taskDeadline": "Срок выполнения задачи истекает",
+  "notification.causeUpdate": "Дело обновлено",
+  "notification.teamInvite": "Вас пригласили в команду",
+  
+  "placeholder.message": "Напишите сообщение...",
+  
+  "button.sendMessage": "Отправить сообщение",
+  
+  "message.noResults": "Нет результатов, соответствующих вашему запросу.",
+  "message.loading": "Загрузка...",
+  "message.saving": "Сохранение...",
+  "message.deleting": "Удаление...",
+  "message.updating": "Обновление...",
+  
+  "error.required": "Это поле обязательно для заполнения.",
+  "error.invalidEmail": "Введите действительный адрес электронной почты.",
+  "error.passwordsMismatch": "Пароли не совпадают.",
+  "error.usernameTaken": "Это имя пользователя уже занято.",
+  "error.emailTaken": "Этот адрес электронной почты уже занят.",
+  
+  "success.registrationCompleted": "Регистрация завершена. Пожалуйста, войдите в систему.",
+  "success.passwordReset": "Сброс пароля выполнен. Проверьте свою электронную почту для получения дальнейших инструкций.",
+  
+  "info.profilePicture": "Изображение профиля должно быть квадратным и не менее 256x256 пикселей.",
+  "info.coverPhoto": "Обложка должна быть 820x312 пикселей.",
+  
+  "button.uploadPicture": "Загрузить изображение",
+  "button.removePicture": "Удалить изображение",
+  
+  "label.bio": "Биография",
+  "label.location": "Местоположение",
+  "label.website": "Веб-сайт",
+  
+  "placeholder.bio": "Напишите о себе...",
+  "placeholder.location": "Введите ваше местоположение",
+  "placeholder.website": "Введите URL вашего веб-сайта",
+  
+  "message.bioUpdated": "Биография успешно обновлена.",
+  "message.locationUpdated": "Местоположение успешно обновлено.",
+  "message.websiteUpdated": "Веб-сайт успешно обновлен.",
+  
+  "error.bioTooLong": "Биография не должна превышать 160 символов.",
+  "error.locationTooLong": "Местоположение не должно превышать 100 символов.",
+  "error.websiteInvalid": "Введите действительный URL-адрес веб-сайта.",
+  
+  "success.settingsSaved": "Настройки успешно сохранены.",
+  
+  "info.emailVerification": "Пожалуйста, проверьте свою электронную почту, чтобы подтвердить регистрацию.",
+  "info.passwordStrength": "Пароль должен содержать не менее 8 символов, включая заглавные и строчные буквы, цифры и специальные символы.",
+  
+  "button.verifyEmail": "Подтвердить Email",
+  "button.resendVerification": "Отправить повторно",
+  
+  "message.emailVerified": "Адрес электронной почты успешно подтвержден.",
+  "message.verificationEmailSent": "Письмо для подтверждения было отправлено на ваш адрес электронной почты.",
+  
+  "error.emailNotVerified": "Пожалуйста, подтвердите свой адрес электронной почты, прежде чем продолжить.",
+  
+  "success.accountActivated": "Ваш аккаунт активирован. Вы можете войти в систему.",
+  
+  "info.termsAndConditions": "Пожалуйста, ознакомьтесь с нашими Условиями использования и Политикой конфиденциальности.",
+  
+  "button.acceptTerms": "Принять условия",
+  "button.declineTerms": "Отклонить условия",
+  
+  "message.termsAccepted": "Условия успешно приняты.",
+  "message.termsDeclined": "Условия отклонены. Вы не сможете использовать платформу, пока не примете условия.",
+  
+  "error.termsNotAccepted": "Вы должны принять условия, чтобы продолжить.",
+  
+  "success.actionCompleted": "Действие успешно выполнено.",
+  "error.actionFailed": "Не удалось выполнить действие. Пожалуйста, попробуйте еще раз.",
+  
+  "info.featureComingSoon": "Эта функция скоро появится. Следите за обновлениями!",
+  
+  "button.subscribe": "Подписаться",
+  "button.unsubscribe": "Отписаться",
+  
+  "message.subscribed": "Вы успешно подписались на обновления.",
+  "message.unsubscribed": "Вы успешно отписались от обновлений.",
+  
+  "error.subscriptionFailed": "Не удалось выполнить подписку. Пожалуйста, попробуйте еще раз.",
+  
+  "success.newsletterSubscribed": "Вы успешно подписались на нашу рассылку новостей.",
+  "success.newsletterUnsubscribed": "Вы успешно отписались от нашей рассылки новостей.",
+  
+  "info.checkEmail": "Пожалуйста, проверьте свою электронную почту для получения дальнейших инструкций.",
+  
+  "button.done": "Готово",
+  "button.next": "Далее",
+  "button.previous": "Назад",
+  
+  "message.welcomeBack": "С возвращением, {username}!",
+  "message.profileUpdated": "Профиль успешно обновлен.",
+  "message.passwordChanged": "Пароль успешно изменен.",
+  
+  "error.incorrectPassword": "Неверный пароль.",
+  "error.accountLocked": "Ваш аккаунт заблокирован. Пожалуйста, свяжитесь с поддержкой.",
+  
+  "success.accountUnlocked": "Ваш аккаунт разблокирован. Вы можете войти в систему.",
+  
+  "info.contactSupport": "Если у вас есть вопросы или проблемы, пожалуйста, свяжитесь с нашей службой поддержки.",
+  
+  "button.contactSupport": "Связаться с поддержкой",
+  
+  "message.supportTicketOpened": "Ваш запрос в службу поддержки успешно отправлен.",
+  "message.supportTicketClosed": "Ваш запрос в службу поддержки закрыт.",
+  
+  "error.ticketNotFound": "Запрос в службу поддержки не найден.",
+  
+  "success.ticketReopened": "Запрос в службу поддержки успешно повторно открыт.",
+  "success.ticketClosed": "Запрос в службу поддержки успешно закрыт.",
+  
+  "info.ticketStatus": "Статус вашего запроса в службу поддержки: {status}.",
+  
+  "button.refresh": "Обновить",
+  "button.retry": "Повторить",
+  
+  "message.retryLater": "Пожалуйста, попробуйте еще раз позже.",
+  
+  "error.network": "Сетевая ошибка. Пожалуйста, проверьте подключение к Интернету.",
+  
+  "success.dataSaved": "Данные успешно сохранены.",
+  "error.dataNotSaved": "Не удалось сохранить данные.",
+  
+  "info.changesSaved": "Изменения успешно сохранены.",
+  
+  "button.viewDetails": "Просмотреть детали",
+  "button.hideDetails": "Скрыть детали",
+  
+  "message.detailsUpdated": "Детали успешно обновлены.",
+  
+  "error.detailsNotUpdated": "Не удалось обновить детали.",
+  
+  "info.itemAdded": "Элемент успешно добавлен.",
+  "info.itemRemoved": "Элемент успешно удален.",
+  
+  "button.addItem": "Добавить элемент",
+  "button.removeItem": "Удалить элемент",
+  
+  "message.itemAdded": "Элемент успешно добавлен в ваш список.",
+  "message.itemRemoved": "Элемент успешно удален из вашего списка.",
+  
+  "error.itemNotFound": "Элемент не найден.",
+  
+  "success.itemUpdated": "Элемент успешно обновлен.",
+  
+  "info.listUpdated": "Список успешно обновлен.",
+  
+  "button.export": "Экспорт",
+  "button.import": "Импорт",
+  
+  "message.dataExported": "Данные успешно экспортированы.",
+  "message.dataImported": "Данные успешно импортированы.",
+  
+  "error.exportFailed": "Не удалось выполнить экспорт. Пожалуйста, попробуйте еще раз.",
+  "error.importFailed": "Не удалось выполнить импорт. Пожалуйста, попробуйте еще раз.",
+  
+  "success.actionSuccessful": "Действие выполнено успешно.",
+  "error.actionUnsuccessful": "Действие не выполнено. Пожалуйста, попробуйте еще раз.",
+  
+  "info.featureAvailable": "Эта функция доступна в вашем тарифном плане.",
+  "info.featureUnavailable": "Эта функция недоступна в вашем тарифном плане.",
+  
+  "button.upgrade": "Улучшить",
+  "button.downgrade": "Понизить",
+  
+  "message.planUpgraded": "Ваш тарифный план успешно улучшен.",
+  "message.planDowngraded": "Ваш тарифный план успешно понижен.",
+  
+  "error.planChangeFailed": "Не удалось изменить тарифный план. Пожалуйста, попробуйте еще раз.",
+  
+  "success.paymentSuccessful": "Платеж успешно обработан.",
+  "error.paymentFailed": "Не удалось обработать платеж. Пожалуйста, попробуйте еще раз.",
+  
+  "info.subscriptionDetails": "Детали вашей подписки:",
+  
+  "button.viewSubscription": "Просмотреть подписку",
+  "button.cancelSubscription": "Отменить подписку",
+  
+  "message.subscriptionCanceled": "Ваша подписка успешно отменена.",
+  "message.subscriptionRenewed": "Ваша подписка успешно продлена.",
+  
+  "error.subscriptionChangeFailed": "Не удалось изменить подписку. Пожалуйста, попробуйте еще раз.",
+  
+  "success.profilePictureUpdated": "Изображение профиля успешно обновлено.",
+  "error.profilePictureNotUpdated": "Не удалось обновить изображение профиля.",
+  
+  "info.coverPhotoUpdated": "Обложка профиля успешно обновлена.",
+  "error.coverPhotoNotUpdated": "Не удалось обновить обложку профиля.",
+  
+  "success.bioUpdated": "Биография успешно обновлена.",
+  "error.bioNotUpdated": "Не удалось обновить биографию.",
+  
+  "success.locationUpdated": "Местоположение успешно обновлено.",
+  "error.locationNotUpdated": "Не удалось обновить местоположение.",
+  
+  "success.websiteUpdated": "Веб-сайт успешно обновлен.",
+  "error.websiteNotUpdated": "Не удалось обновить веб-сайт.",
+  
+  "info.passwordResetRequested": "Запрос на сброс пароля успешно отправлен.",
+  "info.passwordResetCompleted": "Сброс пароля успешно выполнен.",
+  
+  "button.requestPasswordReset": "Запросить сброс пароля",
+  "button.resetPassword": "Сбросить пароль",
+  
+  "message.passwordResetRequested": "Инструкции по сбросу пароля были отправлены на ваш адрес электронной почты.",
+  "message.passwordResetCompleted": "Вы можете войти в систему, используя новый пароль.",
+  
+  "error.passwordResetFailed": "Не удалось выполнить сброс пароля. Пожалуйста, попробуйте еще раз.",
+  
+  "success.emailVerificationSent": "Письмо для подтверждения адреса электронной почты успешно отправлено.",
+  "error.emailVerificationFailed": "Не удалось отправить письмо для подтверждения адреса электронной почты.",
+  
+  "info.accountActivation": "Активируйте свой аккаунт, перейдя по ссылке в письме, отправленном на ваш адрес электронной почты.",
+  
+  "button.activateAccount": "Активировать аккаунт",
+  
+  "message.accountActivated": "Ваш аккаунт успешно активирован.",
+  
+  "error.accountActivationFailed": "Не удалось активировать аккаунт. Пожалуйста, попробуйте еще раз.",
+  
+  "success.profileUpdated": "Профиль успешно обновлен.",
+  "error.profileNotUpdated": "Не удалось обновить профиль.",
+  
+  "info.changesDiscarded": "Изменения были отменены.",
+  
+  "button.discardChanges": "Отменить изменения",
+  
+  "message.changesDiscarded": "Изменения успешно отменены.",
+  
+  "error.changesNotDiscarded": "Не удалось отменить изменения.",
+  
+  "success.itemAddedToCart": "Элемент успешно добавлен в корзину.",
+  "success.itemRemovedFromCart": "Элемент успешно удален из корзины.",
+  
+  "error.cartUpdateFailed": "Не удалось обновить корзину. Пожалуйста, попробуйте еще раз.",
+  
+  "info.cartUpdated": "Корзина успешно обновлена.",
+  
+  "button.viewCart": "Просмотреть корзину",
+  "button.checkout": "Оформить заказ",
+  
+  "message.cartUpdated": "Корзина успешно обновлена.",
+  
+  "error.cartNotUpdated": "Не удалось обновить корзину.",
+  
+  "success.orderPlaced": "Заказ успешно оформлен.",
+  "error.orderNotPlaced": "Не удалось оформить заказ.",
+  
+  "info.orderDetails": "Детали вашего заказа:",
+  
+  "button.viewOrder": "Просмотреть заказ",
+  "button.cancelOrder": "Отменить заказ",
+  
+  "message.orderCanceled": "Ваш заказ успешно отменен.",
+  "message.orderShipped": "Ваш заказ отправлен.",
+  
+  "error.orderCancellationFailed": "Не удалось отменить заказ.",
+  "error.orderShipmentFailed": "Не удалось отправить заказ.",
+  
+  "success.paymentProcessed": "Платеж успешно обработан.",
+  "error.paymentProcessingFailed": "Не удалось обработать платеж.",
+  
+  "info.subscriptionRenewal": "Ваша подписка будет автоматически продлена через {days} дней.",
+  
+  "button.renewSubscription": "Продлить подписку",
+  "button.cancelRenewal": "Отменить продление",
+  
+  "message.renewalCanceled": "Автоматическое продление подписки отменено.",
+  "message.renewalConfirmed": "Автоматическое продление подписки подтверждено.",
+  
+  "error.renewalChangeFailed": "Не удалось изменить настройки продления. Пожалуйста, попробуйте еще раз.",
+  
+  "success.notificationSettingsUpdated": "Настройки уведомлений успешно обновлены.",
+  "error.notificationSettingsNotUpdated": "Не удалось обновить настройки уведомлений.",
+  
+  "info.privacySettingsUpdated": "Настройки конфиденциальности успешно обновлены.",
+  "error.privacySettingsNotUpdated": "Не удалось обновить настройки конфиденциальности.",
+  
+  "success.accountSettingsUpdated": "Настройки аккаунта успешно обновлены.",
+  "error.accountSettingsNotUpdated": "Не удалось обновить настройки аккаунта.",
+  
+  "info.emailSettingsUpdated": "Настройки электронной почты успешно обновлены.",
+  "error.emailSettingsNotUpdated": "Не удалось обновить настройки электронной почты.",
+  
+  "success.smsSettingsUpdated": "Настройки SMS успешно обновлены.",
+  "error.smsSettingsNotUpdated": "Не удалось обновить настройки SMS.",
+  
+  "info.pushSettingsUpdated": "Настройки push-уведомлений успешно обновлены.",
+  "error.pushSettingsNotUpdated": "Не удалось обновить настройки push-уведомлений.",
+  
+  "success.themeSettingsUpdated": "Настройки темы успешно обновлены.",
+  "error.themeSettingsNotUpdated": "Не удалось обновить настройки темы.",
+  
+  "info.languageSettingsUpdated": "Настройки языка успешно обновлены.",
+  "error.languageSettingsNotUpdated": "Не удалось обновить настройки языка.",
+  
+  "success.regionSettingsUpdated": "Настройки региона успешно обновлены.",
+  "error.regionSettingsNotUpdated": "Не удалось обновить настройки региона.",
+  
+  "info.timezoneSettingsUpdated": "Настройки часового пояса успешно обновлены.",
+  "error.timezoneSettingsNotUpdated": "Не удалось обновить настройки часового пояса.",
+  
+  "success.dateFormatSettingsUpdated": "Настройки формата даты успешно обновлены.",
+  "error.dateFormatSettingsNotUpdated": "Не удалось обновить настройки формата даты.",
+  
+  "info.timeFormatSettingsUpdated": "Настройки формата времени успешно обновлены.",
+  "error.timeFormatSettingsNotUpdated": "Не удалось обновить настройки формата времени.",
+  
+  "success.numberFormatSettingsUpdated": "Настройки формата числа успешно обновлены.",
+  "error.numberFormatSettingsNotUpdated": "Не удалось обновить настройки формата числа.",
+  
+  "info.currencySettingsUpdated": "Настройки валюты успешно обновлены.",
+  "error.currencySettingsNotUpdated": "Не удалось обновить настройки валюты.",
+  
+  "success.unitSettingsUpdated": "Настройки единиц измерения успешно обновлены.",
+  "error.unitSettingsNotUpdated": "Не удалось обновить настройки единиц измерения.",
+  
+  "info.decimalSeparatorSettingsUpdated": "Настройки десятичного разделителя успешно обновлены.",
+  "error.decimalSeparatorSettingsNotUpdated": "Не удалось обновить настройки десятичного разделителя.",
+  
+  "success.thousandsSeparatorSettingsUpdated": "Настройки разделителя тысяч успешно обновлены.",
+  "error.thousandsSeparatorSettingsNotUpdated": "Не удалось обновить настройки разделителя тысяч.",
+  
+  "info.dateTimeSettingsUpdated": "Настройки даты и времени успешно обновлены.",
+  "error.dateTimeSettingsNotUpdated": "Не удалось обновить настройки даты и времени.",
+  
+  "success.backupSettingsUpdated": "Настройки резервного копирования успешно обновлены.",
+  "error.backupSettingsNotUpdated": "Не удалось обновить настройки резервного копирования.",
+  
+  "info.restoreSettingsUpdated": "Настройки восстановления успешно обновлены.",
+  "error.restoreSettingsNotUpdated": "Не удалось обновить настройки восстановления.",
+  
+  "success.securitySettingsUpdated": "Настройки безопасности успешно обновлены.",
+  "error.securitySettingsNotUpdated": "Не удалось обновить настройки безопасности.",
+  
+  "info.advancedSettingsUpdated": "Расширенные настройки успешно обновлены.",
+  "error.advancedSettingsNotUpdated": "Не удалось обновить расширенные настройки.",
+  
+  "success.apiSettingsUpdated": "Настройки API успешно обновлены.",
+  "error.apiSettingsNotUpdated": "Не удалось обновить настройки API.",
+  
+  "info.webhookSettingsUpdated": "Настройки вебхука успешно обновлены.",
+  "error.webhookSettingsNotUpdated": "Не удалось обновить настройки вебхука.",
+  
+  "success.integrationSettingsUpdated": "Настройки интеграции успешно обновлены.",
+  "error.integrationSettingsNotUpdated": "Не удалось обновить настройки интеграции.",
+  
+  "info.pluginSettingsUpdated": "Настройки плагина успешно обновлены.",
+  "error.pluginSettingsNotUpdated": "Не удалось обновить настройки плагина.",
+  
+  "success.themeColorSettingsUpdated": "Настройки цвета темы успешно обновлены.",
+  "error.themeColorSettingsNotUpdated": "Не удалось обновить настройки цвета темы.",
+  
+  "info.layoutSettingsUpdated": "Настройки макета успешно обновлены.",
+  "error.layoutSettingsNotUpdated": "Не удалось обновить настройки макета.",
+  
+  "success.widgetSettingsUpdated": "Настройки виджета успешно обновлены.",
+  "error.widgetSettingsNotUpdated": "Не удалось обновить настройки виджета.",
+  
+  "info.shortcutSettingsUpdated": "Настройки ярлыков успешно обновлены.",
+  "error.shortcutSettingsNotUpdated": "Не удалось обновить настройки ярлыков.",
+  
+  "success.accessibilitySettingsUpdated": "Настройки доступности успешно обновлены.",
+  "error.accessibilitySettingsNotUpdated": "Не удалось обновить настройки доступности.",
+  
+  "info.customizationSettingsUpdated": "Настройки кастомизации успешно обновлены.",
+  "error.customizationSettingsNotUpdated": "Не удалось обновить настройки кастомизации.",
+  
+  "success.notificationToneSettingsUpdated": "Настройки звука уведомлений успешно обновлены.",
+  "error.notificationToneSettingsNotUpdated": "Не удалось обновить настройки звука уведомлений.",
+  
+  "info.vibrationSettingsUpdated": "Настройки вибрации успешно обновлены.",
+  "error.vibrationSettingsNotUpdated": "Не удалось обновить настройки вибрации.",
+  
+  "success.ringtoneSettingsUpdated": "Настройки мелодии звонка успешно обновлены.",
+  "error.ringtoneSettingsNotUpdated": "Не удалось обновить настройки мелодии звонка.",
+  
+  "info.mediaSettingsUpdated": "Настройки медиа успешно обновлены.",
+  "error.mediaSettingsNotUpdated": "Не удалось обновить настройки медиа.",
+  
+  "success.downloadSettingsUpdated": "Настройки загрузки успешно обновлены.",
+  "error.downloadSettingsNotUpdated": "Не удалось обновить настройки загрузки.",
+  
+  "info.uploadSettingsUpdated": "Настройки загрузки успешно обновлены.",
+  "error.uploadSettingsNotUpdated": "Не удалось обновить настройки загрузки.",
+  
+  "success.backupCompleted": "Резервное копирование успешно завершено.",
+  "error.backupFailed": "Не удалось выполнить резервное копирование.",
+  
+  "info.restoreCompleted": "Восстановление успешно завершено.",
+  "error.restoreFailed": "Не удалось выполнить восстановление.",
+  
+  "success.syncCompleted": "Синхронизация успешно завершена.",
+  "error.syncFailed": "Не удалось выполнить синхронизацию.",
+  
+  "info.updateAvailable": "Доступно обновление до версии {version}.",
+  
+  "button.updateNow": "Обновить сейчас",
+  "button.later": "Позже",
+  
+  "message.updateDownloaded": "Обновление загружено. Установите его, чтобы применить изменения.",
+  "message.updateInstalled": "Обновление установлено. Перезапустите приложение, чтобы применить изменения.",
+  
+  "error.updateFailed": "Не удалось выполнить обновление. Пожалуйста, попробуйте еще раз.",
+  
+  "success.featureEnabled": "Функция успешно включена.",
+  "success.featureDisabled": "Функция успешно отключена.",
+  
+  "error.featureToggleFailed": "Не удалось изменить состояние функции. Пожалуйста, попробуйте еще раз.",
+  
+  "info.maintenanceScheduled": "Плановое обслуживание запланировано на {date} в {time}.",
+  
+  "button.scheduleMaintenance": "Запланировать обслуживание",
+  "button.cancelMaintenance": "Отменить обслуживание",
+  
+  "message.maintenanceScheduled": "Обслуживание успешно запланировано.",
+  "message.maintenanceCanceled": "Обслуживание успешно отменено.",
+  
+  "error.maintenanceActionFailed": "Не удалось выполнить действие обслуживания. Пожалуйста, попробуйте еще раз.",
+  
+  "success.databaseBackupCompleted": "Резервное копирование базы данных успешно завершено.",
+  "error.databaseBackupFailed": "Не удалось выполнить резервное копирование базы данных.",
+  
+  "info.databaseRestoreCompleted": "Восстановление базы данных успешно завершено.",
+  "error.databaseRestoreFailed": "Не удалось выполнить восстановление базы данных.",
+  
+  "success.dataExportCompleted": "Экспорт данных успешно завершен.",
+  "error.dataExportFailed": "Не удалось выполнить экспорт данных.",
+  
+  "success.dataImportCompleted": "Импорт данных успешно завершен.",
+  "error.dataImportFailed": "Не удалось выполнить импорт данных.",
+  
+  "info.apiKeyRegenerated": "Ключ API успешно регенерирован.",
+  "error.apiKeyRegenerationFailed": "Не удалось регенерировать ключ API.",
+  
+  "success.webhookTestSuccessful": "Тест вебхука прошел успешно.",
+  "error.webhookTestFailed": "Не удалось пройти тест вебхука.",
+  
+  "info.integrationTestSuccessful": "Тест интеграции прошел успешно.",
+  "error.integrationTestFailed": "Не удалось пройти тест интеграции.",
+  
+  "success.pluginActivated": "Плагин успешно активирован.",
+  "error.pluginActivationFailed": "Не удалось активировать плагин.",
+  
+  "info.pluginDeactivated": "Плагин успешно деактивирован.",
+  "error.pluginDeactivationFailed": "Не удалось деактивировать плагин.",
+  
+  "success.themeApplied": "Тема успешно применена.",
+  "error.themeApplicationFailed": "Не удалось применить тему.",
+  
+  "info.layoutApplied": "Макет успешно применен.",
+  "error.layoutApplicationFailed": "Не удалось применить макет.",
+  
+  "success.widgetAdded": "Виджет успешно добавлен.",
+  "error.widgetAdditionFailed": "Не удалось добавить виджет.",
+  
+  "info.shortcutAdded": "Ярлык успешно добавлен.",
+  "error.shortcutAdditionFailed": "Не удалось добавить ярлык.",
+  
+  "success.accessibilityFeatureEnabled": "Функция доступности успешно включена.",
+  "error.accessibilityFeatureToggleFailed": "Не удалось изменить состояние функции доступности.",
+  
+  "info.customizationSaved": "Кастомизация успешно сохранена.",
+  "error.customizationSaveFailed": "Не удалось сохранить кастомизацию.",
+  
+  "success.notificationToneChanged": "Звук уведомлений успешно изменен.",
+  "error.notificationToneChangeFailed": "Не удалось изменить звук уведомлений.",
+  
+  "info.vibrationChanged": "Вибрация успешно изменена.",
+  "error.vibrationChangeFailed": "Не удалось изменить вибрацию.",
+  
+  "success.ringtoneChanged": "Мелодия звонка успешно изменена.",
+  "error.ringtoneChangeFailed": "Не удалось изменить мелодию звонка.",
+  
+  "info.mediaSettingsSaved": "Медиа-настройки успешно сохранены.",
+  "error.mediaSettingsSaveFailed": "Не удалось сохранить медиа-настройки.",
+  
+  "success.downloadSettingsSaved": "Настройки загрузки успешно сохранены.",
+  "error.downloadSettingsSaveFailed": "Не удалось сохранить настройки загрузки.",
+  
+  "info.uploadSettingsSaved": "Настройки загрузки успешно сохранены.",
+  "error.uploadSettingsSaveFailed": "Не удалось сохранить настройки загрузки.",
+  
+  "success.backupCompletedSuccessfully": "Резервное копирование успешно завершено.",
+  "error.backupCompletionFailed": "Не удалось завершить резервное копирование.",
+  
+  "info.restoreCompletedSuccessfully": "Восстановление успешно завершено.",
+  "error.restoreCompletionFailed": "Не удалось завершить восстановление.",
+  
+  "success.syncCompletedSuccessfully": "Синхронизация успешно завершена.",
+  "error.syncCompletionFailed": "Не удалось завершить синхронизацию.",
+  
+  "info.updateAvailableNow": "Доступно обновление до версии {version}.",
+  
+  "button.updateNowAvailable": "Обновить сейчас",
+  "button.laterAvailable": "Позже",
+  
+  "message.updateDownloadedNow": "Обновление загружено. Установите его, чтобы применить изменения.",
+  "message.updateInstalledNow": "Обновление установлено. Перезапустите приложение, чтобы применить изменения.",
+  
+  "error.updateFailedNow": "Не удалось выполнить обновление. Пожалуйста, попробуйте еще раз.",
+  
+  "success.featureEnabledNow": "Функция успешно включена.",
+  "success.featureDisabledNow": "Функция успешно отключена.",
+  
+  "error.featureToggleFailedNow": "Не удалось изменить состояние функции. Пожалуйста, попробуйте еще раз.",
+  
+  "info.maintenanceScheduledNow": "Плановое обслуживание запланировано на {date} в {time}.",
+  
+  "button.scheduleMaintenanceNow": "Запланировать обслуживание",
+  "button.cancelMaintenanceNow": "Отменить обслуживание",
+  
+  "message.maintenanceScheduledNow": "Обслуживание успешно запланировано.",
+  "message.maintenanceCanceledNow": "Обслуживание успешно отменено.",
+  
+  "error.maintenanceActionFailedNow": "Не удалось выполнить действие обслуживания. Пожалуйста, попробуйте еще раз.",
+  
+  "success.databaseBackupCompletedNow": "Резервное копирование базы данных успешно завершено.",
+  "error.databaseBackupFailedNow": "Не удалось выполнить резервное копирование базы данных.",
+  
+  "info.databaseRestoreCompletedNow": "Восстановление базы данных успешно завершено.",
+  "error.databaseRestoreFailedNow": "Не удалось выполнить восстановление базы данных.",
+  
+  "success.dataExportCompletedNow": "Экспорт данных успешно завершен.",
+  "error.dataExportFailedNow": "Не удалось выполнить экспорт данных.",
+  
+  "success.dataImportCompletedNow": "Импорт данных успешно завершен.",
+  "error.dataImportFailedNow": "Не удалось выполнить импорт данных.",
+  
+  "info.apiKeyRegeneratedNow": "Ключ API успешно регенерирован.",
+  "error.apiKeyRegenerationFailedNow": "Не удалось регенерировать ключ API.",
+  
+  "success.webhookTestSuccessfulNow": "Тест вебхука прошел успешно.",
+  "error.webhookTestFailedNow": "Не удалось пройти тест вебхука.",
+  
+  "info.integrationTestSuccessfulNow": "Тест интеграции прошел успешно.",
+  "error.integrationTestFailedNow": "Не удалось пройти тест интеграции.",
+  
+  "success.pluginActivatedNow": "Плагин успешно активирован.",
+  "error.pluginActivationFailedNow": "Не удалось активировать плагин.",
+  
+  "info.pluginDeactivatedNow": "Плагин успешно деактивирован.",
+  "error.pluginDeactivationFailedNow": "Не удалось деактивировать плагин.",
+  
+  "success.themeAppliedNow": "Тема успешно применена.",
+  "error.themeApplicationFailedNow": "Не удалось применить тему.",
+  
+  "info.layoutAppliedNow": "Макет успешно применен.",
+  "error.layoutApplicationFailedNow": "Не удалось применить макет.",
+  
+  "success.widgetAddedNow": "Виджет успешно добавлен.",
+  "error.widgetAdditionFailedNow": "Не удалось добавить виджет.",
+  
+  "info.shortcutAddedNow": "Ярлык успешно добавлен.",
+  "error.shortcutAdditionFailedNow": "Не удалось добавить ярлык.",
+  
+  "success.accessibilityFeatureEnabledNow": "Функция доступности успешно включена.",
+  "error.accessibilityFeatureToggleFailedNow": "Не удалось изменить состояние функции доступности.",
+  
+  "info.customizationSavedNow": "Кастомизация успешно сохранена.",
+  "error.customizationSaveFailedNow": "Не удалось сохранить кастомизацию.",
+  
+  "success.notificationToneChangedNow": "Звук уведомлений успешно изменен.",
+  "error.notificationToneChangeFailedNow": "Не удалось изменить звук уведомлений.",
+  
+  "info.vibrationChangedNow": "Вибрация успешно изменена.",
+  "error.vibrationChangeFailedNow": "Не удалось изменить вибрацию.",
+  
+  "success.ringtoneChangedNow": "Мелодия звонка успешно изменена.",
+  "error.ringtoneChangeFailedNow": "Не удалось изменить мелодию звонка.",
+  
+  "info.mediaSettingsSavedNow": "Медиа-настройки успешно сохранены.",
+  "error.mediaSettingsSaveFailedNow": "Не удалось сохранить медиа-настройки.",
+  
+  "success.downloadSettingsSavedNow": "Настройки загрузки успешно сохранены.",
+  "error.downloadSettingsSaveFailedNow": "Не удалось сохранить настройки загрузки.",
+  
+  "info.uploadSettingsSavedNow": "Настройки загрузки успешно сохранены.",
+  "error.uploadSettingsSaveFailedNow": "Не удалось сохранить настройки загрузки.",
+  
+  "success.backupCompletedSuccessfullyNow": "Резервное копирование успешно завершено.",
+  "error.backupCompletionFailedNow": "Не удалось завершить резервное копирование.",
+  
+  "info.restoreCompletedSuccessfullyNow": "Восстановление успешно завершено.",
+  "error.restoreCompletionFailedNow": "Не удалось завершить восстановление.",
+  
+  "success.syncCompletedSuccessfullyNow": "Синхронизация успешно завершена.",
+  "error.syncCompletionFailedNow": "Не удалось завершить синхронизацию."
+}

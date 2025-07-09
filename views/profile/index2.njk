@@ -251,7 +251,7 @@
     .legend-color.cause { background: #4a6fa5; }
     .legend-color.task { background: #4fc3a1; }
     .legend-color.challenge { background: #ffe066; }
-    .legend-color.volunteering { background: #e74c3a1; }
+    .legend-color.volunteering { background: #e74c3c; }
     .legend-color.community { background: #4fc3a1; }
 
     /* --- ESTILOS PARA CAUSAS --- */
@@ -1306,39 +1306,216 @@
       justify-content: center;
     }
 
-    /* Grid de comunidades en 3 columnas igual que actividades */
-    .teams-grid-classic {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 2rem;
-      margin-bottom: 3rem;
+    /* --- ESTILOS PARA SECCIONES DE ACTIVIDADES ORGANIZADAS --- */
+    .activity-section {
+      margin-bottom: 3.5rem;
     }
 
-    /* Responsive para communities grid */
-    @media (max-width: 1024px) {
-      .causes-grid,
-      .tasks-grid,
-      .challenges-grid,
-      .volunteering-grid,
-      .activities-grid,
-      .teams-grid-classic {
-        grid-template-columns: repeat(2, 1fr);
-        gap: 1.5rem;
-      }
+    .activity-section-header {
+      display: flex;
+      align-items: center;
+      gap: 1.1rem;
+      margin-bottom: 2.2rem;
+      border-radius: 14px;
+      padding: 1.2rem 1.7rem;
+      box-shadow: 0 2px 12px rgba(227, 238, 253, 0.33);
     }
 
-    @media (max-width: 600px) {
-      .causes-grid,
-      .tasks-grid,
-      .challenges-grid,
-      .volunteering-grid,
-      .activities-grid,
-      .teams-grid-classic {
-        grid-template-columns: 1fr;
-        gap: 1rem;
-      }
+    .activity-section-header .icon-wrapper {
+      border-radius: 50%;
+      width: 48px;
+      height: 48px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2rem;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
     }
-  </style>
+
+    .activity-section-header .text-content h2 {
+      font-weight: 900;
+      font-size: 1.45rem;
+      margin: 0;
+      letter-spacing: -1px;
+    }
+
+    .activity-section-header .text-content .subtitle {
+      font-size: 1rem;
+      font-weight: 500;
+    }
+
+    /* Estilos específicos por sección */
+    .causes-section .activity-section-header {
+      background: linear-gradient(90deg, #e6f4ea 0%, #fff 100%);
+    }
+
+    .causes-section .icon-wrapper {
+      background: var(--accent, #4fc3a1);
+      color: #fff;
+      box-shadow: 0 2px 8px rgba(79, 195, 161, 0.2);
+    }
+
+    .causes-section h2 {
+      color: var(--accent, #4fc3a1);
+    }
+
+    .causes-section .subtitle {
+      color: #3da58a;
+    }
+
+    .tasks-section .activity-section-header {
+      background: linear-gradient(90deg, #e3eefd 0%, #fff 100%);
+    }
+
+    .tasks-section .icon-wrapper {
+      background: var(--primary, #4a6fa5);
+      color: #fff;
+      box-shadow: 0 2px 8px rgba(74, 111, 165, 0.2);
+    }
+
+    .tasks-section h2 {
+      color: var(--primary, #4a6fa5);
+    }
+
+    .tasks-section .subtitle {
+      color: #166088;
+    }
+
+    .challenges-section .activity-section-header {
+      background: linear-gradient(90deg, #fffbe6 0%, #fff 100%);
+    }
+
+    .challenges-section .icon-wrapper {
+      background: #a67c00;
+      color: #fff;
+      box-shadow: 0 2px 8px rgba(255, 224, 102, 0.4);
+    }
+
+    .challenges-section h2 {
+      color: #a67c00;
+    }
+
+    .challenges-section .subtitle {
+      color: #a67c00;
+    }
+
+    .volunteering-section .activity-section-header {
+      background: linear-gradient(90deg, #e6faff 0%, #fff 100%);
+    }
+
+    .volunteering-section .icon-wrapper {
+      background: #0097a7;
+      color: #fff;
+      box-shadow: 0 2px 8px rgba(0, 188, 212, 0.2);
+    }
+
+    .volunteering-section h2 {
+      color: #0097a7;
+    }
+
+    .volunteering-section .subtitle {
+      color: #0097a7;
+    }
+
+    /* Estado vacío específico por sección */
+    .empty-state-section {
+      grid-column: 1 / -1;
+      text-align: center;
+      padding: 2.5rem;
+      border-radius: 12px;
+      border: 2px dashed #e2e8f0;
+      margin-bottom: 1rem;
+    }
+
+    .empty-state-section i {
+      font-size: 2.5rem;
+      margin-bottom: 1rem;
+      opacity: 0.7;
+    }
+
+    .empty-state-section h4 {
+      margin-bottom: 0.5rem;
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: #4a5568;
+    }
+
+    .empty-state-section p {
+      margin-bottom: 1.5rem;
+      font-size: 0.95rem;
+      color: #718096;
+    }
+
+    .empty-state-section .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.7rem 1.2rem;
+      border-radius: 8px;
+      font-weight: 600;
+      text-decoration: none;
+      transition: all 0.2s;
+      font-size: 0.9rem;
+    }
+
+    .empty-state-section .btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    }
+
+    /* Colores específicos para estados vacíos */
+    .causes-section .empty-state-section {
+      background: linear-gradient(135deg, rgba(79, 195, 161, 0.05) 0%, rgba(255, 255, 255, 0.8) 100%);
+    }
+
+    .causes-section .empty-state-section i {
+      color: #4fc3a1;
+    }
+
+    .causes-section .empty-state-section .btn {
+      background: #4fc3a1;
+      color: white;
+    }
+
+    .tasks-section .empty-state-section {
+      background: linear-gradient(135deg, rgba(74, 111, 165, 0.05) 0%, rgba(255, 255, 255, 0.8) 100%);
+    }
+
+    .tasks-section .empty-state-section i {
+      color: #4a6fa5;
+    }
+
+    .tasks-section .empty-state-section .btn {
+      background: #4a6fa5;
+      color: white;
+    }
+
+    .challenges-section .empty-state-section {
+      background: linear-gradient(135deg, rgba(166, 124, 0, 0.05) 0%, rgba(255, 255, 255, 0.8) 100%);
+    }
+
+    .challenges-section .empty-state-section i {
+      color: #a67c00;
+    }
+
+    .challenges-section .empty-state-section .btn {
+      background: #a67c00;
+      color: white;
+    }
+
+    .volunteering-section .empty-state-section {
+      background: linear-gradient(135deg, rgba(0, 151, 167, 0.05) 0%, rgba(255, 255, 255, 0.8) 100%);
+    }
+
+    .volunteering-section .empty-state-section i {
+      color: #0097a7;
+    }
+
+    .volunteering-section .empty-state-section .btn {
+      background: #0097a7;
+      color: white;
+    }
+
 {% endblock %}
 
 {% block content %}
@@ -1383,36 +1560,6 @@
         <div class="label">Donado</div>
       </div>
     </div>
-    <!-- NUEVAS ESTADÍSTICAS -->
-    <div class="stats-card">
-      <div class="stats-icon"><i class="fas fa-hands-helping"></i></div>
-      <div class="stats-content">
-        <div class="number" id="causes-counter">0</div>
-        <div class="label">Causas</div>
-      </div>
-    </div>
-    <div class="stats-card">
-      <div class="stats-icon"><i class="fas fa-tasks"></i></div>
-      <div class="stats-content">
-        <div class="number" id="tasks-counter">0</div>
-        <div class="label">Tareas</div>
-      </div>
-    </div>
-    <div class="stats-card">
-      <div class="stats-icon"><i class="fas fa-bolt"></i></div>
-      <div class="stats-content">
-        <div class="number" id="challenges-counter">0</div>
-        <div class="label">Retos</div>
-      </div>
-    </div>
-    <div class="stats-card">
-      <div class="stats-icon"><i class="fas fa-heart"></i></div>
-      <div class="stats-content">
-        <div class="number" id="volunteering-counter">0</div>
-        <div class="label">Voluntariados</div>
-      </div>
-    </div>
-    <!-- FIN NUEVAS ESTADÍSTICAS -->
     <div class="stats-card">
       <div class="stats-icon"><i class="fas fa-users"></i></div>
       <div class="stats-content">
@@ -1459,10 +1606,10 @@
     </div>
   </div>
 
-  <!-- Tus actividades -->
+  <!-- Tus actividades (REORGANIZADO CON SECCIONES SEPARADAS) -->
   <div class="activities-section">
     <div class="section-header">
-      <h3>Tus actividades</h3>
+      <h3>Tus actividades solidarias</h3>
     </div>
     
     <!-- TABS PARA FILTRAR ACTIVIDADES -->
@@ -1486,8 +1633,61 @@
       </div>
     </div>
     
-    <!-- Grid unificado para todas las actividades -->
-    <div class="activities-grid" id="activities-grid"></div>
+    <!-- Sección de Causas -->
+    <section class="activity-section causes-section" id="causes-section">
+      <div class="activity-section-header">
+        <div class="icon-wrapper">
+          <i class="fas fa-heart"></i>
+        </div>
+        <div class="text-content">
+          <h2>Tus causas</h2>
+          <div class="subtitle">Todas tus causas solidarias activas</div>
+        </div>
+      </div>
+      <div class="activities-grid causes-grid" id="causes-grid"></div>
+    </section>
+
+    <!-- Sección de Tareas -->
+    <section class="activity-section tasks-section" id="tasks-section">
+      <div class="activity-section-header">
+        <div class="icon-wrapper">
+          <i class="fas fa-tasks"></i>
+        </div>
+        <div class="text-content">
+          <h2>Tus tareas</h2>
+          <div class="subtitle">Tus tareas pendientes y completadas</div>
+        </div>
+      </div>
+      <div class="activities-grid tasks-grid" id="tasks-grid"></div>
+    </section>
+
+    <!-- Sección de Retos -->
+    <section class="activity-section challenges-section" id="challenges-section">
+      <div class="activity-section-header">
+        <div class="icon-wrapper">
+          <i class="fas fa-trophy"></i>
+        </div>
+        <div class="text-content">
+          <h2>Tus retos</h2>
+          <div class="subtitle">Tus retos y desafíos solidarios</div>
+        </div>
+      </div>
+      <div class="activities-grid challenges-grid" id="challenges-grid"></div>
+    </section>
+
+    <!-- Sección de Voluntariado -->
+    <section class="activity-section volunteering-section" id="volunteering-section">
+      <div class="activity-section-header">
+        <div class="icon-wrapper">
+          <i class="fas fa-hands-helping"></i>
+        </div>
+        <div class="text-content">
+          <h2>Tus voluntariados</h2>
+          <div class="subtitle">Tus acciones de voluntariado</div>
+        </div>
+      </div>
+      <div class="activities-grid volunteering-grid" id="volunteering-grid"></div>
+    </section>
   </div>
 
   <!-- Comunidades -->
@@ -1716,26 +1916,11 @@
 
           // Popup como en el mapa de ayudas
           marker.bindPopup(`
-            <div style="text-align:center; min-width:210px; max-width:260px; padding:0.7em 0.2em;">
-              <img src="${activity.photo_url || `/img/${activity.type}-default.jpg`}" 
-                   alt="Foto acción" 
-                   style="width:56px; height:56px; border-radius:50%; object-fit:cover; border:3px solid ${activity.color}; box-shadow:0 2px 8px rgba(0,0,0,0.10); margin-bottom:0.7em;">
-              <div style="font-weight:800; font-size:1.08rem; color:#222; margin-bottom:0.2em;">
-                ${activity.title || activity.name}
-              </div>
-              <div style="color:#6b7280; font-size:0.97rem; margin-bottom:0.5em;">
-                <i class="fas fa-map-marker-alt" style="color:${activity.color};"></i>
-                ${activity.city || 'Sin ciudad'}, ${activity.country || 'Sin país'}
-              </div>
-              <div style="color:#444; font-size:0.93rem; margin-bottom:0.7em;">
-                ${(activity.summary || activity.description || 'Sin descripción').substring(0, 80)}${(activity.summary || activity.description || '').length > 80 ? '...' : ''}
-              </div>
-              <a href="/${activity.type}s/${activity.id}" 
-                 target="_blank"
-                 style="display:inline-block; background:${activity.color}; color:#fff; border-radius:50px; font-weight:700; padding:0.45em 1.2em; font-size:0.93rem; text-decoration:none; transition:background 0.18s;">
-                Ver más
-              </a>
-            </div>
+            <img src="${activity.photo_url || `/img/${activity.type}-default.jpg`}" class="popup-photo" alt="Foto acción" style="width: 38px; height: 38px; border-radius: 50%; object-fit: cover; margin-bottom: 7px; border: 2px solid #4a6fa5; box-shadow: 0 1px 4px rgba(74,111,165,0.10); display: block; margin-left: auto; margin-right: auto;">
+            <strong>${activity.title || activity.name}</strong><br>
+            <span style="color:#6b7280;">${activity.city || 'Sin ciudad'}, ${activity.country || 'Sin país'}</span><br>
+            <span style="font-size:0.97rem;">${(activity.summary || activity.description || 'Sin descripción').substring(0, 80)}...</span><br>
+            <a href="/${activity.type === 'challenge' ? 'challenges' : activity.type}/${activity.id}" class="action-link" target="_blank" style="color:#4a6fa5;font-weight:600;">Ver ${activity.typeName}</a>
           `);
         }
       });
@@ -1785,7 +1970,7 @@
       console.log('✅ Mapa inicializado correctamente');
     }
 
-    // Cambia la función para crear tarjetas de comunidades (teams)
+    // Fallback para renderizar comunidades
     function renderCommunitiesFallback(teams, container) {
       if (!teams || teams.length === 0) {
         container.innerHTML = `
@@ -1808,7 +1993,9 @@
         card.innerHTML = `
           <div class="team-image-classic">
             <img src="${team.photo_url || '/img/comunidad-default.jpg'}" alt="${team.name}" onerror="this.src='/img/default-activity.jpg'">
-            <!-- Eliminado badge de puntos -->
+            <div class="team-badge-classic points">
+              <i class="fas fa-star"></i> +${team.impact || 0} pts
+            </div>
           </div>
           <div class="team-content-classic">
             <h3>${team.name}</h3>
@@ -1836,8 +2023,8 @@
               </div>
             ` : ''}
             <div class="team-actions-classic">
-              <button class="btn btn-vermas-team" onclick="window.location.href='/teams/${team.id}'" style="background: #4a6fa5; color: white; border-radius: 50px; font-weight: 700;">
-                Ver más
+              <button class="btn btn-vermas-team" onclick="window.location.href='/teams/${team.id}'">
+                <i class="fas fa-eye"></i> Ver comunidad
               </button>
             </div>
           </div>
@@ -1994,19 +2181,19 @@
 
         console.log('✅ Comunidades cargadas:', allCommunities.length);
 
-        // 8. COMBINAR ACTIVIDADES
+        // 8. COMBINAR ACTIVIDADES (CORREGIR MAPEO DE TIPOS)
         let allActivities = [
-          ...causes.map(item => ({ ...item, type: 'cause', typeName: 'Causa', icon: 'fa-hands-helping', color: '#4a6fa5' })),
-          ...tasks.map(item => ({ ...item, type: 'task', typeName: 'Tarea', icon: 'fa-tasks', color: '#4fc3a1' })),
+          ...causes.map(item => ({ ...item, type: 'causes', typeName: 'Causa', icon: 'fa-hands-helping', color: '#4fc3a1' })),
+          ...tasks.map(item => ({ ...item, type: 'tasks', typeName: 'Tarea', icon: 'fa-tasks', color: '#4a6fa5' })),
           ...challenges.map(item => ({ ...item, type: 'challenge', typeName: 'Reto', icon: 'fa-bolt', color: '#ffe066' })),
-          ...volunteerings.map(item => ({ ...item, type: 'volunteering', typeName: 'Voluntariado', icon: 'fa-heart', color: '#e74c3a1' }))
+          ...volunteerings.map(item => ({ ...item, type: 'volunteering', typeName: 'Voluntariado', icon: 'fa-heart', color: '#e74c3c' }))
         ];
         
         let filteredActivities = [...allActivities];
 
         // 9. FUNCIONES AUXILIARES
         function getLocation(activity) {
-          return activity.city && activity.country ? `${activity.city}, ${activity.country}` : 
+          return activity.city && activity.country ? `${activity.city}, ${activity.country}` :
                  activity.city || activity.country || 'Sin ubicación';
         }
 
@@ -2043,40 +2230,54 @@
           return '';
         }
 
-        function createActionButtons(activity) {
-          // Solo botón "Ver más", estilo pastilla
-          return `
-            <button class="btn view-${activity.type}-btn" data-${activity.type}-id="${activity.id}" style="background: ${activity.color}; color: white; border-radius: 50px; font-weight: 700;">
-              Ver más
-            </button>
-          `;
+        function createActionButtons(activity, isAdmin, isParticipating) {
+          const viewBtn = `<button class="btn view-${activity.type}-btn" data-${activity.type}-id="${activity.id}">Ver más</button>`;
+          
+          if (isAdmin) {
+            return `
+              ${viewBtn}
+              <button class="btn admin-activity-btn" data-activity-type="${activity.type}" data-activity-id="${activity.id}">
+                               <i class="fas fa-cog"></i> Administrar
+              </button>
+            `;
+          }
+          
+          if (isParticipating) {
+            return `
+              ${viewBtn}
+              <button class="btn btn-outline" disabled style="opacity:0.7;cursor:not-allowed;">
+                <i class="fas fa-check"></i> Participando
+              </button>
+            `;
+          }
+          
+          const participateBtn = `<button class="btn participate-btn" data-${activity.type}-id="${activity.id}" style="background: ${activity.color};">Participar</button>`;
+          return `${viewBtn}${participateBtn}`;
         }
 
         function createActivityCard(activity) {
           const isUrgent = activity.is_urgent;
+          const points = activity.points || (activity.type === 'cause' ? 10 : 20);
           const progress = calculateProgress(activity);
           const location = getLocation(activity);
+          const isParticipating = activity.isParticipating;
+          const isAdmin = ['owner', 'admin', 'coordinator', 'founder', 'creator'].includes(activity.userRole);
 
           // Color para barra de progreso: azul para retos, color original para otros
           const progressColor = activity.type === 'challenge' ? '#4a6fa5' : activity.color;
 
-          // Badge de tipo arriba a la izquierda, con borde para voluntariado
-          let badgeBorder = '';
-          if (activity.type === 'volunteering') {
-            badgeBorder = 'border: 2px solid #e74c3a1; box-shadow: 0 2px 8px rgba(231,76,60,0.13);';
-          } else {
-            badgeBorder = 'box-shadow: 0 2px 8px rgba(74,111,165,0.13);';
-          }
-
           const card = document.createElement('div');
           card.className = `${activity.type}-card`;
           card.innerHTML = `
-            <div class="${activity.type}-image" style="position:relative;">
+            <div class="${activity.type}-image">
               <img src="${activity.photo_url || `/img/${activity.type}-default.jpg`}" 
                    alt="${activity.title || activity.name}" 
                    onerror="this.src='/img/default-activity.jpg'">
               ${isUrgent ? `<div class="${activity.type}-badge urgent"><i class="fas fa-exclamation-circle"></i> Urgente</div>` : ''}
-              <div class="activity-type-badge" style="position: absolute; top: 1rem; left: 1rem; background: ${activity.color}; color: ${activity.type === 'challenge' ? '#333' : 'white'}; padding: 0.3rem 0.8rem; border-radius: 50px; font-size: 0.8rem; font-weight: 600; display: flex; align-items: center; gap: 0.5rem; z-index:2; ${badgeBorder}">
+              <div class="${activity.type}-badge points" style="background: ${activity.color};">
+                <i class="fas fa-star"></i> +${points} pts
+              </div>
+              <div class="activity-type-badge" style="top: 3.5rem; left: 1rem; background: ${activity.color}; color: ${activity.type === 'challenge' ? '#333' : 'white'}; position: absolute; padding: 0.3rem 0.8rem; border-radius: 50px; font-size: 0.8rem; font-weight: 600; display: flex; align-items: center; gap: 0.5rem;">
                 <i class="fas ${activity.icon}"></i> ${activity.typeName}
               </div>
             </div>
@@ -2101,53 +2302,41 @@
                 </div>
               </div>
               <div class="${activity.type}-actions">
-                ${createActionButtons(activity)}
+                ${createActionButtons(activity, isAdmin, isParticipating)}
               </div>
             </div>
           `;
+          
           return card;
         }
 
-        //  // 10. FUNCIÓN PARA FILTRAR ACTIVIDADES
-        function filterActivities(tabType = 'all') {
-          const typeMap = {
-            causes: 'cause',
-            tasks: 'task',
-            challenges: 'challenge',
-            volunteering: 'volunteering'
-          };
-          if (tabType === 'all') {
-            filteredActivities = [...allActivities];
-          } else {
-            filteredActivities = allActivities.filter(activity => activity.type === typeMap[tabType]);
-          }
-          renderActivities();
-        }
-
-        // 11. FUNCIÓN PARA RENDERIZAR ACTIVIDADES
+        // 11. FUNCIÓN PARA RENDERIZAR ACTIVIDADES (ACTUALIZADA CON SECCIONES)
         function renderActivities() {
           const container = document.getElementById('activities-grid');
           if (!container) return;
 
-          if (filteredActivities.length === 0) {
-            const activeTab = document.querySelector('.activity-tab.active');
-            const tabType = activeTab ? activeTab.dataset.activityFilter : 'all';
-            const emptyMessages = {
-              all: { icon: 'fa-th-large', title: 'No tienes actividades', desc: 'Únete a causas, tareas, retos o voluntariados', link: '/causes' },
-              causes: { icon: 'fa-hands-helping', title: 'No participas en causas', desc: 'Únete a una causa para ayudar', link: '/causes' },
-              tasks: { icon: 'fa-tasks', title: 'No tienes tareas asignadas', desc: 'Participa en una causa para recibir tareas', link: '/tasks' },
-              challenges: { icon: 'fa-bolt', title: 'No participas en retos', desc: 'Acepta un reto para generar impacto', link: '/challenges' },
-              volunteering: { icon: 'fa-heart', title: 'No participas en voluntariados', desc: 'Únete a un voluntariado para ayudar', link: '/volunteering' }
-            };
-            
-            const msg = emptyMessages[tabType] || emptyMessages.all;
+          // Renderizar por secciones separadas
+          renderCausesSection();
+          renderTasksSection();
+          renderChallengesSection();
+          renderVolunteeringSection();
+        }
+
+        // FUNCIÓN PARA RENDERIZAR SECCIÓN DE CAUSAS
+        function renderCausesSection() {
+          const container = document.getElementById('causes-grid');
+          if (!container) return;
+
+          const causesActivities = allActivities.filter(activity => activity.type === 'causes');
+          
+          if (causesActivities.length === 0) {
             container.innerHTML = `
-              <div style="grid-column: 1 / -1; text-align: center; padding: 3rem 1rem; color: #6b7280;">
-                <i class="fas ${msg.icon}" style="font-size: 3rem; color: #4a6fa5; margin-bottom: 1rem;"></i>
-                <h4 style="color: #4a6fa5; font-size: 1.4rem; margin-bottom: 0.5rem;">${msg.title}</h4>
-                <p style="margin-bottom: 1.5rem; font-size: 1.1rem;">${msg.desc}</p>
-                <a href="${msg.link}" class="btn btn-primary">
-                  <i class="fas ${msg.icon}"></i> Explorar
+              <div class="empty-state-section">
+                <i class="fas fa-heart"></i>
+                <h4>No tienes causas solidarias aún</h4>
+                <p>Explora y únete a causas que te importen</p>
+                <a href="/causes" class="btn">
+                  <i class="fas fa-heart"></i> Explorar causas
                 </a>
               </div>
             `;
@@ -2155,18 +2344,126 @@
           }
 
           container.innerHTML = '';
-          filteredActivities.forEach(activity => {
+          causesActivities.forEach(activity => {
             const card = createActivityCard(activity);
             container.appendChild(card);
           });
         }
 
-        // 12. EVENT LISTENERS PARA TABS
+        // FUNCIÓN PARA RENDERIZAR SECCIÓN DE TAREAS
+        function renderTasksSection() {
+          const container = document.getElementById('tasks-grid');
+          if (!container) return;
+
+          const tasksActivities = allActivities.filter(activity => activity.type === 'tasks');
+          
+          if (tasksActivities.length === 0) {
+            container.innerHTML = `
+              <div class="empty-state-section">
+                <i class="fas fa-tasks"></i>
+                <h4>No tienes tareas pendientes</h4>
+                <p>Encuentra tareas donde puedas ayudar</p>
+                <a href="/tasks" class="btn">
+                  <i class="fas fa-tasks"></i> Ver tareas
+                </a>
+              </div>
+            `;
+            return;
+          }
+
+          container.innerHTML = '';
+          tasksActivities.forEach(activity => {
+            const card = createActivityCard(activity);
+            container.appendChild(card);
+          });
+        }
+
+        // FUNCIÓN PARA RENDERIZAR SECCIÓN DE RETOS
+        function renderChallengesSection() {
+          const container = document.getElementById('challenges-grid');
+          if (!container) return;
+
+          const challengesActivities = allActivities.filter(activity => activity.type === 'challenge');
+          
+          if (challengesActivities.length === 0) {
+            container.innerHTML = `
+              <div class="empty-state-section">
+                <i class="fas fa-trophy"></i>
+                <h4>No tienes retos activos</h4>
+                <p>Acepta desafíos solidarios y suma impacto</p>
+                <a href="/challenges" class="btn">
+                  <i class="fas fa-trophy"></i> Descubrir retos
+                </a>
+              </div>
+            `;
+            return;
+          }
+
+          container.innerHTML = '';
+          challengesActivities.forEach(activity => {
+            const card = createActivityCard(activity);
+            container.appendChild(card);
+          });
+        }
+
+        // FUNCIÓN PARA RENDERIZAR SECCIÓN DE VOLUNTARIADOS
+        function renderVolunteeringSection() {
+          const container = document.getElementById('volunteering-grid');
+          if (!container) return;
+
+          const volunteeringActivities = allActivities.filter(activity => activity.type === 'volunteering');
+          
+          if (volunteeringActivities.length === 0) {
+            container.innerHTML = `
+              <div class="empty-state-section">
+                <i class="fas fa-hands-helping"></i>
+                <h4>No tienes voluntariados</h4>
+                <p>Únete a oportunidades de voluntariado</p>
+                <a href="/volunteering" class="btn">
+                  <i class="fas fa-hands-helping"></i> Ver voluntariados
+                </a>
+              </div>
+            `;
+            return;
+          }
+
+          container.innerHTML = '';
+          volunteeringActivities.forEach(activity => {
+            const card = createActivityCard(activity);
+            container.appendChild(card);
+          });
+        }
+
+        // 12. ACTUALIZAR EVENT LISTENERS PARA TABS (MEJORADO)
         document.querySelectorAll('.activity-tab').forEach(tab => {
           tab.addEventListener('click', function() {
             document.querySelectorAll('.activity-tab').forEach(t => t.classList.remove('active'));
             this.classList.add('active');
-            filterActivities(this.dataset.activityFilter);
+            
+            const filter = this.dataset.activityFilter;
+            
+            // Mostrar/ocultar secciones según el filtro
+            const sections = document.querySelectorAll('.activity-section');
+            
+            if (filter === 'all') {
+              sections.forEach(section => section.style.display = 'block');
+            } else {
+              sections.forEach(section => {
+                // Corregir mapeo de filtros
+                const filterMapping = {
+                  'causes': 'causes-section',
+                  'tasks': 'tasks-section', 
+                  'challenges': 'challenges-section',
+                  'volunteering': 'volunteering-section'
+                };
+                
+                if (section.classList.contains(filterMapping[filter])) {
+                  section.style.display = 'block';
+                } else {
+                  section.style.display = 'none';
+                }
+              });
+            }
           });
         });
 
@@ -2184,10 +2481,6 @@
         animateCounter('communities-counter', allCommunities.length);
         animateCounter('impacted-counter', causes.reduce((sum, c) => sum + (c.beneficiaries || 0), 0));
         animateCounter('donated-counter', causes.reduce((sum, c) => sum + (c.raised || 0), 0), '', ' €');
-        animateCounter('causes-counter', causes.length);
-        animateCounter('tasks-counter', tasks.length);
-        animateCounter('challenges-counter', challenges.length);
-        animateCounter('volunteering-counter', volunteerings.length);
 
         // 16. ACTUALIZAR IMPACTO
         const impactScore = allActivities.reduce((sum, a) => sum + (a.points || 20), 0);
@@ -2202,29 +2495,29 @@
         // 18. EVENT LISTENERS PARA BOTONES DE ACTIVIDADES
         document.addEventListener('click', function(e) {
           // Ver causa
-          if (e.target.matches('.view-cause-btn') || e.target.closest('.view-cause-btn')) {
-            const btn = e.target.matches('.view-cause-btn') ? e.target : e.target.closest('.view-cause-btn');
-            const causeId = btn.dataset.causeId;
+          if (e.target.matches('[data-causes-id]') || e.target.closest('[data-causes-id]')) {
+            const btn = e.target.matches('[data-causes-id]') ? e.target : e.target.closest('[data-causes-id]');
+            const causeId = btn.dataset.causesId;
             if (causeId) window.location.href = `/causes/${causeId}`;
           }
           
           // Ver tarea
-          if (e.target.matches('.view-task-btn') || e.target.closest('.view-task-btn')) {
-            const btn = e.target.matches('.view-task-btn') ? e.target : e.target.closest('.view-task-btn');
-            const taskId = btn.dataset.taskId;
+          if (e.target.matches('[data-tasks-id]') || e.target.closest('[data-tasks-id]')) {
+            const btn = e.target.matches('[data-tasks-id]') ? e.target : e.target.closest('[data-tasks-id]');
+            const taskId = btn.dataset.tasksId;
             if (taskId) window.location.href = `/tasks/${taskId}`;
           }
           
           // Ver reto
-          if (e.target.matches('.view-challenge-btn') || e.target.closest('.view-challenge-btn')) {
-            const btn = e.target.matches('.view-challenge-btn') ? e.target : e.target.closest('.view-challenge-btn');
+          if (e.target.matches('[data-challenge-id]') || e.target.closest('[data-challenge-id]')) {
+            const btn = e.target.matches('[data-challenge-id]') ? e.target : e.target.closest('[data-challenge-id]');
             const challengeId = btn.dataset.challengeId;
             if (challengeId) window.location.href = `/challenges/${challengeId}`;
           }
           
           // Ver voluntariado
-          if (e.target.matches('.view-volunteering-btn') || e.target.closest('.view-volunteering-btn')) {
-            const btn = e.target.matches('.view-volunteering-btn') ? e.target : e.target.closest('.view-volunteering-btn');
+          if (e.target.matches('[data-volunteering-id]') || e.target.closest('[data-volunteering-id]')) {
+            const btn = e.target.matches('[data-volunteering-id]') ? e.target : e.target.closest('[data-volunteering-id]');
             const volunteeringId = btn.dataset.volunteeringId;
             if (volunteeringId) window.location.href = `/volunteering/${volunteeringId}`;
           }
@@ -2235,7 +2528,14 @@
             const activityType = btn.dataset.activityType;
             const activityId = btn.dataset.activityId;
             if (activityType && activityId) {
-              window.location.href = `/${activityType}s/${activityId}/admin`;
+              // Corregir pluralización
+              const pluralTypes = {
+                'causes': 'causes',
+                'tasks': 'tasks', 
+                'challenge': 'challenges',
+                'volunteering': 'volunteering'
+              };
+              window.location.href = `/${pluralTypes[activityType] || activityType}/${activityId}/admin`;
             }
           }
         });
