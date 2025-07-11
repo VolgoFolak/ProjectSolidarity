@@ -315,7 +315,7 @@ const TasksRenderer = {
 
     // Llenar contenido del modal
     document.getElementById('taskModalBody').innerHTML = `
-    <h1 style="font-size:2rem; font-weight:800; color:var(--primary); margin-bottom:2rem; text-align:left !important;">${task.title}</h1>
+      <h1 style="font-size:2rem; font-weight:800; color:var(--primary); margin-bottom:2rem; text-align:left !important;">${task.title}</h1>
       <div style="display:flex; gap:2rem; margin-bottom:2rem;">
         <div style="flex:1; min-width:320px; height:300px; border-radius:12px; overflow:hidden; position:relative;">
           <img src="${task.photo_url || '/img/task-default.jpg'}" 
@@ -369,11 +369,44 @@ const TasksRenderer = {
         <h3 style="font-size:1.2rem; font-weight:600; color:var(--primary); margin-bottom:0.9rem;">
           <i class="fas fa-info-circle"></i> Descripción completa
         </h3>
-        <p style="line-height:1.7; color:#4b5563;">
+        <p style="line-height:1.7; color:#4b5563; margin-bottom:2rem;">
           ${task.description || 'No hay descripción disponible para esta tarea.'}
         </p>
       </div>
       ${participantsHtml}
+      
+      ${(task.contact_email || task.phone_number) ? `
+        <div style="margin-bottom:2rem;">
+          <h3 style="font-size:1.2rem; font-weight:600; color:var(--primary); margin-bottom:0.9rem;">
+            <i class="fas fa-address-book"></i> Información de contacto
+          </h3>
+          <div style="background:#f8fafc; border-radius:12px; padding:1.5rem; margin-bottom:2rem; border:1px solid #e5e7eb;">
+            ${task.contact_email ? `
+              <div style="display:flex; align-items:center; gap:0.7rem; margin-bottom:${task.phone_number ? '1rem' : '0'};">
+                <i class="fas fa-envelope" style="color:var(--primary); font-size:1.1rem;"></i>
+                <div>
+                  <span style="color:#6b7280; font-size:0.9rem; display:block;">Email de contacto:</span>
+                  <a href="mailto:${task.contact_email}" style="color:var(--primary); font-weight:600; text-decoration:none; font-size:1rem;">
+                    ${task.contact_email}
+                  </a>
+                </div>
+              </div>
+            ` : ''}
+            ${task.phone_number ? `
+              <div style="display:flex; align-items:center; gap:0.7rem;">
+                <i class="fas fa-phone" style="color:var(--primary); font-size:1.1rem;"></i>
+                <div>
+                  <span style="color:#6b7280; font-size:0.9rem; display:block;">Teléfono de contacto:</span>
+                  <a href="tel:${task.phone_number}" style="color:var(--primary); font-weight:600; text-decoration:none; font-size:1rem;">
+                    ${task.phone_number}
+                  </a>
+                </div>
+              </div>
+            ` : ''}
+          </div>
+        </div>
+      ` : ''}
+      
       <div style="display:flex; gap:0.8rem; margin-top:2rem;">
         <button class="btn btn-primary" style="flex:1;" onclick="window.participateInTask('${task.id}')">
           <i class="fas fa-hand-holding-heart"></i> Participar
@@ -495,7 +528,35 @@ window.openAdminTaskModal = function(task) {
     existingModal.remove();
   }
 
-    // Cerrar modal
+  // ✅ CREAR EL MODAL
+  const modal = document.createElement('div');
+  modal.id = 'adminTaskModal';
+  modal.className = 'modal';
+  modal.style.cssText = 'display:flex; position:fixed; z-index:9999; left:0; top:0; width:100vw; height:100vh; background:rgba(0,0,0,0.35); align-items:center; justify-content:center;';
+  
+  modal.innerHTML = `
+    <div class="modal-content" style="background:#fff; border-radius:18px; max-width:600px; width:95vw; padding:2rem; box-shadow:0 8px 32px rgba(74,111,165,0.13); position:relative; max-height:90vh; overflow-y:auto;">
+      <button id="closeAdminTaskModal" style="position:absolute; top:1.5rem; right:1.5rem; background:none; border:none; font-size:1.8rem; color:#6b7280; cursor:pointer;">&times;</button>
+      
+      <h2 style="color:var(--primary); font-size:1.5rem; font-weight:700; margin-bottom:1.5rem;">
+        <i class="fas fa-cog"></i> Administrar: ${task.title}
+      </h2>
+      
+      <div class="admin-tabs" style="margin-bottom:2rem;">
+        <button id="tabMiembrosBtn" class="tab-btn active" style="background:var(--primary); color:white; border:none; padding:0.7rem 1.5rem; border-radius:8px; cursor:pointer; font-weight:600;">
+          <i class="fas fa-users"></i> Miembros
+        </button>
+      </div>
+      
+      <div id="adminTaskMembersTab" class="tab-content">
+        <div style="color:#6b7280; padding:1rem; text-align:center;">Cargando miembros...</div>
+      </div>
+    </div>
+  `;
+  
+  document.body.appendChild(modal);
+
+  // Cerrar modal
   modal.querySelector('#closeAdminTaskModal').addEventListener('click', () => {
     modal.remove();
     document.body.style.overflow = '';
@@ -566,3 +627,44 @@ window.loadTaskMembersAdminTab = async function(taskId) {
     membersContainer.innerHTML = `<div style="color:red; padding:1rem; text-align:center;">Error inesperado al cargar miembros.</div>`;
   }
 };
+
+// ACTUALIZAR la función resetCreateTaskForm para limpiar los nuevos campos
+function resetCreateTaskForm() {
+  const taskForm = document.getElementById('taskForm');
+  const previewImg = document.getElementById('previewImg');
+  const afterCreate = document.getElementById('afterCreate');
+  const contactEmail = document.getElementById('contact_email');
+  const phoneNumber = document.getElementById('phone_number');
+  const pointsText = document.getElementById('pointsText');
+  
+  // Verificar que los elementos existen antes de manipularlos
+  if (taskForm) {
+    taskForm.reset();
+    taskForm.style.display = 'block';
+  }
+  
+  if (previewImg) {
+    previewImg.style.display = 'none';
+  }
+  
+  if (afterCreate) {
+    afterCreate.style.display = 'none';
+  }
+  
+  // ✅ LIMPIAR CAMPOS DE CONTACTO CON VERIFICACIÓN
+  if (contactEmail) {
+    contactEmail.value = '';
+  }
+  
+  if (phoneNumber) {
+    phoneNumber.value = '';
+  }
+  
+  // Actualizar texto de puntos por defecto
+  if (pointsText) {
+    pointsText.innerHTML = '<i class="fas fa-star"></i> Participar en esta tarea otorgará <strong>50 puntos</strong> a cada voluntario.';
+  }
+}
+
+// Hacer la función disponible globalmente
+window.resetCreateTaskForm = resetCreateTaskForm;

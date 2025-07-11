@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="{{ lang if lang else 'en' }}">  <!-- ✅ CORREGIDO: Sintaxis Nunjucks -->
+<html lang="{{ lang if lang else 'en' }}">
 <head>
   <meta charset="UTF-8">
   <title>{% block title %}Solidarity{% endblock %}</title>
@@ -9,17 +9,63 @@
   <!-- Favicon -->
   <link rel="icon" href="/images/favicon.ico" type="image/x-icon">
   
+  <!-- ✅ GOOGLE ANALYTICS 4 - CONFIGURACIÓN ACTUALIZADA -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-KLTQ612VGL"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    // ✅ CONFIGURACIÓN CON TU ID REAL
+    gtag('config', 'G-KLTQ612VGL', {
+      // Configuraciones de privacidad y datos
+      anonymize_ip: true,
+      allow_google_signals: true,
+      allow_ad_personalization_signals: false,
+      
+      // Configuraciones de seguimiento avanzado
+      send_page_view: true,
+      page_title: document.title,
+      page_location: window.location.href,
+      
+      // Datos personalizados de usuario
+      user_id: window.currentUserId || null,
+      custom_map: {
+        'custom_parameter_1': 'user_type',
+        'custom_parameter_2': 'user_language',
+        'custom_parameter_3': 'platform_section'
+      },
+      
+      // Configuraciones de enhanced ecommerce
+      enhanced_conversions: true,
+      
+      // Debug mode (cambiar a false en producción)
+      debug_mode: false
+    });
+
+    // ✅ DATOS EXTENDIDOS DEL USUARIO
+    gtag('set', {
+      user_properties: {
+        user_type: window.userType || 'anonymous',
+        preferred_language: window.currentLang || 'es',
+        platform_version: '1.0',
+        registration_date: window.userRegistrationDate || null,
+        last_login: window.lastLoginDate || null
+      }
+    });
+  </script>
+  
   <!-- CSS -->
   <link rel="stylesheet" href="/css/style.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   
   {% block head %}{% endblock %}
 </head>
-<body class="{{ bodyClass if bodyClass else ('lang-' + (lang if lang else 'en')) }}">  <!-- ✅ CORREGIDO -->
+<body class="{{ bodyClass if bodyClass else ('lang-' + (lang if lang else 'en')) }}">
   <!-- Navbar -->
   <header>
     {% include "partials/navbar.njk" %}
-    {% include "partials/language-selector.njk" %}
+    <!-- ✅ ELIMINADO: language-selector.njk ya no es necesario -->
   </header>
 
   <!-- Contenido principal -->
@@ -33,19 +79,21 @@
   <!-- ✅ SCRIPTS BASE - ORDEN CORRECTO -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script>
+    // ✅ VARIABLES PARA ANALYTICS
+    window.currentUserId = '{{ user.id if user else null }}';
+    window.userType = '{{ user.type if user else "anonymous" }}';
+    window.userRegistrationDate = '{{ user.created_at if user else null }}';
+    window.lastLoginDate = '{{ user.last_login if user else null }}';
+    window.currentLang = '{{ lang if lang else "es" }}';
+    
+    // Configuración de Supabase
     const supabaseUrl = 'https://cyftasxlrzuynzbrfgkd.supabase.co';
     const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImN5ZnRhc3hscnp1eW56YnJmZ2tkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDgwMzUzMTksImV4cCI6MjA2MzYxMTMxOX0.I56ZqFTfLgdwWlcozMVncGNGBZ4A2_5VpAbHeNmtDhA';
     const supabase = window.supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
-    
-    // ✅ IDIOMA DISPONIBLE GLOBALMENTE
-    window.currentLang = '{{ lang if lang else "en" }}';  <!-- ✅ CORREGIDO -->
   </script>
   
   <!-- ✅ SISTEMA DE TRADUCCIONES MEJORADO -->
   <script src="/js/i18n.js"></script>
-  
-  <!-- ✅ SELECTOR DE IDIOMAS -->
-  <script src="/js/components/languageselector.js"></script>
   
   <!-- ✅ OTROS SCRIPTS -->
   <script src="/js/navbar.js"></script>
@@ -86,6 +134,63 @@
       translateElements();
     });
 
+    // ✅ FUNCIÓN DE TRADUCCIÓN COMPLETA
+    function translateElements() {
+      console.log('🌍 Iniciando traducción de elementos...');
+      
+      // Traducir elementos con data-i18n
+      const elementsToTranslate = document.querySelectorAll('[data-i18n]');
+      elementsToTranslate.forEach(element => {
+        const key = element.getAttribute('data-i18n');
+        if (window.t && typeof window.t === 'function') {
+          const translation = window.t(key);
+          if (translation && translation !== key) {
+            element.textContent = translation;
+            console.log('✅ Traducido:', key, '->', translation);
+          }
+        }
+      });
+
+      // Traducir atributos title
+      const elementsWithTitle = document.querySelectorAll('[data-i18n-title]');
+      elementsWithTitle.forEach(element => {
+        const key = element.getAttribute('data-i18n-title');
+        if (window.t && typeof window.t === 'function') {
+          const translation = window.t(key);
+          if (translation && translation !== key) {
+            element.setAttribute('title', translation);
+          }
+        }
+      });
+    }
+
+    // ✅ EVENTOS ANALYTICS PERSONALIZADOS PARA SOLIDARITY
+    document.addEventListener('DOMContentLoaded', function() {
+      // Trackear visita a página específica
+      if (typeof gtag !== 'undefined') {
+        gtag('event', 'page_view', {
+          page_title: document.title,
+          page_location: window.location.href,
+          user_type: window.userType || 'anonymous',
+          page_section: getCurrentPageSection()
+        });
+
+        console.log('📊 Analytics inicializado para:', window.location.pathname);
+      }
+    });
+
+    // ✅ FUNCIÓN PARA DETECTAR SECCIÓN DE LA PÁGINA
+    function getCurrentPageSection() {
+      const path = window.location.pathname;
+      if (path.includes('/causes')) return 'causes';
+      if (path.includes('/teams')) return 'teams';
+      if (path.includes('/challenges')) return 'challenges';
+      if (path.includes('/volunteer')) return 'volunteer';
+      if (path.includes('/profile')) return 'profile';
+      if (path === '/') return 'home';
+      return 'other';
+    }
+
     // Función para actividades trending
     function isTrending(activity) {
       if (activity.type === 'cause') {
@@ -105,6 +210,22 @@
       }
       return false;
     }
+
+    // ✅ FUNCIÓN GLOBAL PARA TRACKEAR EVENTOS DESDE CUALQUIER PARTE
+    window.trackSolidarityEvent = function(eventName, parameters = {}) {
+      if (typeof gtag !== 'undefined') {
+        const enrichedParams = {
+          ...parameters,
+          user_type: window.userType || 'anonymous',
+          timestamp: new Date().toISOString(),
+          page_section: getCurrentPageSection(),
+          user_language: window.currentLang || 'es'
+        };
+        
+        gtag('event', eventName, enrichedParams);
+        console.log('📊 Evento tracked:', eventName, enrichedParams);
+      }
+    };
   </script>
 
   <!-- Scripts antes del cierre del body -->
@@ -122,6 +243,37 @@
     <solidarity-hamburger-menu slot="hamburger"></solidarity-hamburger-menu>
     <solidarity-mobile-avatar slot="avatar"></solidarity-mobile-avatar>
   </solidarity-mobile-header>
+
+  <!-- ✅ ANALYTICS AVANZADO -->
+  <script src="/js/analytics.js"></script>
+  
+  <!-- ✅ CARGAR AUTO-TRANSLATE -->
+  <script src="/js/auto-translate.js"></script>
+
+  <!-- ✅ GOOGLE TRANSLATE INVISIBLE - SOLO FUNCIONALIDAD -->
+  <div id="google_translate_element" style="display:none;"></div>
+  <script type="text/javascript">
+    function googleTranslateElementInit() {
+      new google.translate.TranslateElement({
+        pageLanguage: 'es',
+        includedLanguages: 'en,es,fr,de,it,pt,ru,zh-CN,ar,ja,ko,hi,tr,pl,nl,sv,da,no,fi,he,th,vi,id,ms,tl,uk,cs,hu,ro,bg,hr,sk,sl,et,lv,lt,mt,el,ca,eu,gl',
+        layout: google.translate.TranslateElement.InlineLayout.SIMPLE,
+        autoDisplay: false,
+        multilanguagePage: true,
+        gaTrack: true,
+        gaId: 'G-KLTQ612VGL'
+      }, 'google_translate_element');
+      
+      // ✅ INICIAR AUTO-TRADUCCIÓN
+      setTimeout(() => {
+        if (window.autoTranslate) {
+          window.autoTranslate.init();
+          console.log('🌍 Auto-translate iniciado');
+        }
+      }, 1500);
+    }
+  </script>
+  <script src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
 
 </body>
 </html>
