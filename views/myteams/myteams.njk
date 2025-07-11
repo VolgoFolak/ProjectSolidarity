@@ -1158,6 +1158,132 @@
 {% block scripts %}
   {{ super() }}
   <script>
+    // Mover estas funciones FUERA del DOMContentLoaded para que sean accesibles globalmente
+    async function loadTeamMembers(teamId) {
+      try {
+        console.log('🔍 Cargando miembros para team:', teamId);
+
+        // 1. Obtener miembros del equipo - SOLO username y photo_url
+        const { data: members, error: membersError } = await supabase
+          .from('team_members')
+          .select(`
+            user_id, 
+            role,
+            profiles:user_id (
+              username,
+              photo_url
+            )
+          `)
+          .eq('team_id', teamId)
+          .neq('role', 'pending');
+
+        if (membersError) {
+          console.error('❌ Error cargando miembros:', membersError);
+          return;
+        }
+
+        console.log('✅ Miembros cargados:', members);
+
+        // 2. Añadir el fundador si no está en la lista
+        let membersList = members ? [...members] : [];
+        if (currentAdminTeam?.creator_id && !membersList.some(m => m.user_id === currentAdminTeam.creator_id)) {
+          // SOLO username y photo_url
+          const { data: founderProfile } = await supabase
+            .from('profiles')
+            .select('username, photo_url')
+            .eq('id', currentAdminTeam.creator_id)
+            .single();
+
+          membersList.unshift({
+            user_id: currentAdminTeam.creator_id,
+            role: 'founder',
+            profiles: founderProfile || {}
+          });
+        }
+
+        // 3. Renderizar miembros
+        const container = document.getElementById('membersList');
+        if (!container) return;
+
+        container.innerHTML = '';
+        
+        if (membersList.length === 0) {
+          container.innerHTML = '<div style="text-align:center;color:#718096;padding:2rem;">No hay miembros en esta comunidad.</div>';
+          return;
+        }
+
+        membersList.forEach(member => {
+          const profile = member.profiles || {};
+          const isFounder = member.role === 'founder' || member.user_id === currentAdminTeam?.creator_id;
+          const displayName = profile.username || 'Usuario sin nombre';
+          const avatar = profile.photo_url || 'https://via.placeholder.com/40?text=' + (displayName.charAt(0).toUpperCase());
+          
+          const roleText = {
+            'founder': 'Fundador',
+            'coordinator': 'Coordinador', 
+            'admin': 'Administrador',
+            'member': 'Miembro'
+          }[member.role] || 'Miembro';
+
+          const roleIcon = {
+            'founder': 'fa-crown',
+            'coordinator': 'fa-star',
+            'admin': 'fa-user-shield', 
+            'member': 'fa-user'
+          }[member.role] || 'fa-user';
+
+          const memberItem = document.createElement('div');
+          memberItem.className = 'member-item';
+          memberItem.innerHTML = `
+            <div class="member-info">
+              <img src="${avatar}" alt="${displayName}" class="member-avatar" onerror="this.src='https://via.placeholder.com/40?text=${displayName.charAt(0).toUpperCase()}'">
+              <div>
+                <div class="member-name" style="color:#4a6fa5;font-weight:600;">${displayName}</div>
+              </div>
+            </div>
+            <div class="member-actions">
+              <span class="role-badge ${member.role === 'founder' ? 'admin' : 'member'}" style="font-size:0.8rem;margin-right:0.5rem;">
+                <i class="fas ${roleIcon}"></i> ${roleText}
+              </span>
+              ${isFounder ? '' : `
+                <button class="btn btn-outline btn-sm" onclick="removeMember('${member.user_id}', '${teamId}')" style="font-size:0.8rem;">
+                  <i class="fas fa-user-minus"></i> Quitar
+                </button>
+              `}
+            </div>
+          `;
+          container.appendChild(memberItem);
+        });
+
+      } catch (error) {
+        console.error('❌ Error loading team members:', error);
+        const container = document.getElementById('membersList');
+        if (container) {
+          container.innerHTML = '<div style="text-align:center;color:#e53e3e;padding:2rem;">Error al cargar miembros</div>';
+        }
+      }
+    }
+
+    async function removeMember(userId, teamId) {
+      if (confirm('¿Estás seguro de que quieres quitar a este miembro de la comunidad?')) {
+        try {
+          const { error } = await supabase
+            .from('team_members')
+            .delete()
+            .eq('user_id', userId)
+            .eq('team_id', teamId);
+          
+          if (error) throw error;
+          
+          alert('Miembro quitado de la comunidad.');
+          await loadTeamMembers(teamId);
+        } catch (error) {
+          console.error('Error removing member:', error);
+          alert('Error al quitar miembro: ' + error.message);
+        }
+      }
+    }
+
     window.getCategoryName = function(category) {
       const categories = {
         'medio_ambiente': 'Medio Ambiente',
@@ -1557,46 +1683,114 @@
         document.getElementById('adminModal').classList.add('active');
         document.body.style.overflow = 'hidden';
 
-        // Miembros (cuenta exacta)
-        const { count: membersCount, error: membersError } = await supabase
-          .from('team_members')
-          .select('user_id', { count: 'exact', head: true })
-          .eq('team_id', team.id)
-          .neq('role', 'pending');
-        document.getElementById('membersCount').textContent = membersError ? (team.members_count || 0) : membersCount;
+        console.log('📊 Cargando estadísticas para:', team.name);
 
-        // Actividades
-        const { count: activitiesCount, error: activitiesError } = await supabase
-          .from('activities')
-          .select('id', { count: 'exact', head: true })
-          .eq('team_id', team.id);
-        document.getElementById('activitiesCount').textContent =
-          (activitiesError || typeof activitiesCount === 'undefined') ? (team.activities_count || 0) : activitiesCount;
+        try {
+          // Miembros (cuenta exacta)
+          const { count: membersCount, error: membersError } = await supabase
+            .from('team_members')
+            .select('user_id', { count: 'exact', head: true })
+            .eq('team_id', team.id)
+            .neq('role', 'pending');
+          
+          console.log('👥 Miembros:', membersCount, membersError);
+          document.getElementById('membersCount').textContent = membersError ? (team.members_count || 0) : (membersCount || 0);
 
-        // Beneficiarios
-        const { count: beneficiariesCount, error: beneficiariesError } = await supabase
-          .from('beneficiaries')
-          .select('id', { count: 'exact', head: true })
-          .eq('team_id', team.id);
-        document.getElementById('beneficiariesCount').textContent = beneficiariesError ? (team.beneficiaries || 0) : beneficiariesCount;
+          // Actividades - probar diferentes nombres de tabla
+          let activitiesCount = 0;
+          
+          // Intenta primero con 'causes'
+          const { count: causesCount, error: causesError } = await supabase
+            .from('causes')
+            .select('id', { count: 'exact', head: true })
+            .eq('team_id', team.id);
+          
+          if (!causesError) activitiesCount += (causesCount || 0);
 
-        // Puntos de impacto (suma de campo "impact" en activities)
-        const { data: impactData, error: impactError } = await supabase
-          .from('activities')
-          .select('impact')
-          .eq('team_id', team.id);
-        let impactPoints = 0;
-        if (!impactError && impactData) {
-          impactPoints = impactData.reduce((sum, act) => sum + (act.impact || 0), 0);
-        } else {
-          impactPoints = team.impact || 0;
+          // Intenta con 'tasks'
+          const { count: tasksCount, error: tasksError } = await supabase
+            .from('tasks')
+            .select('id', { count: 'exact', head: true })
+            .eq('team_id', team.id);
+          
+          if (!tasksError) activitiesCount += (tasksCount || 0);
+
+          // Intenta con 'challenges'
+          const { count: challengesCount, error: challengesError } = await supabase
+            .from('challenges')
+            .select('id', { count: 'exact', head: true })
+            .eq('team_id', team.id);
+          
+          if (!challengesError) activitiesCount += (challengesCount || 0);
+
+          // Intenta con 'volunteerings'
+          const { count: volunteeringsCount, error: volunteeringsError } = await supabase
+            .from('volunteerings')
+            .select('id', { count: 'exact', head: true })
+            .eq('team_id', team.id);
+          
+          if (!volunteeringsError) activitiesCount += (volunteeringsCount || 0);
+
+          console.log('📋 Actividades total:', activitiesCount);
+          console.log('- Causas:', causesCount, causesError?.message);
+          console.log('- Tareas:', tasksCount, tasksError?.message);
+          console.log('- Retos:', challengesCount, challengesError?.message);
+          console.log('- Voluntariados:', volunteeringsCount, volunteeringsError?.message);
+
+          document.getElementById('activitiesCount').textContent = activitiesCount;
+
+          // Beneficiarios - usar suma de beneficiarios de todas las actividades
+          let totalBeneficiaries = 0;
+          
+          // Sumar beneficiarios de cada tipo de actividad
+          const tables = ['causes', 'tasks', 'challenges', 'volunteerings'];
+          for (const table of tables) {
+            try {
+              const { data: items } = await supabase
+                .from(table)
+                .select('beneficiaries')
+                .eq('team_id', team.id);
+              
+              if (items) {
+                totalBeneficiaries += items.reduce((sum, item) => sum + (item.beneficiaries || 0), 0);
+              }
+            } catch (error) {
+              console.log(`ℹ️ Tabla ${table} no disponible:`, error.message);
+            }
+          }
+
+          console.log('❤️ Beneficiarios:', totalBeneficiaries);
+          document.getElementById('beneficiariesCount').textContent = totalBeneficiaries || team.beneficiaries || 0;
+
+          // Puntos de impacto
+          let totalImpact = 0;
+          for (const table of tables) {
+            try {
+              const { data: items } = await supabase
+                .from(table)
+                .select('points, impact')
+                .eq('team_id', team.id);
+              
+              if (items) {
+                totalImpact += items.reduce((sum, item) => sum + (item.points || item.impact || 0), 0);
+              }
+            } catch (error) {
+              console.log(`ℹ️ Tabla ${table} no disponible para puntos:`, error.message);
+            }
+          }
+
+          console.log('⚡ Puntos de impacto:', totalImpact);
+          document.getElementById('impactPoints').textContent = totalImpact || team.impact || 0;
+
+        } catch (error) {
+          console.error('❌ Error cargando estadísticas:', error);
         }
-        document.getElementById('impactPoints').textContent = impactPoints;
 
         // Progreso de recaudación
-        const recaudado = team.funds_raised || 0;
-        const meta = team.goal || 0;
+        const recaudado = team.funds_raised || team.raised || 0;
+        const meta = team.goal || team.target || 1000;
         const porcentaje = meta ? Math.min(100, Math.round((recaudado / meta) * 100)) : 0;
+        
         document.getElementById('communityProgress').style.width = porcentaje + '%';
         document.getElementById('progressPercent').textContent = `${porcentaje}% completado`;
         document.getElementById('progressAmount').textContent = `${recaudado} € de ${meta} €`;
@@ -1607,7 +1801,8 @@
         document.getElementById('editTeamCategory').value = team.category || 'otros';
         document.getElementById('editTeamPrivacy').value = team.privacy || 'public';
         document.getElementById('editTeamTags').value = (team.tags || []).join(', ');
-        document.getElementById('editTeamGoal').value = team.goal || '';
+        document.getElementById('editTeamGoal').value = team.goal || team.target || '';
+        
         if (team.photo_url) {
           document.getElementById('editTeamPhotoPreview').src = team.photo_url;
           document.getElementById('editTeamPhotoPreview').style.display = 'block';
@@ -1619,54 +1814,92 @@
       // 1. Define la función primero
       async function loadTeamMembers(teamId) {
         try {
-          // 1. Obtener los miembros
+          console.log('🔍 Cargando miembros para team:', teamId);
+          
+          // 1. Obtener miembros del equipo - SOLO username y photo_url
           const { data: members, error: membersError } = await supabase
             .from('team_members')
-            .select('user_id, role')
+            .select(`
+              user_id, 
+              role,
+              profiles:user_id (
+                username,
+                photo_url
+              )
+            `)
             .eq('team_id', teamId)
             .neq('role', 'pending');
 
           if (membersError) {
-            console.error('Error cargando miembros:', membersError);
+            console.error('❌ Error cargando miembros:', membersError);
             return;
           }
 
-          // 2. Añadir el founder si no está
+          console.log('✅ Miembros cargados:', members);
+
+          // 2. Añadir el fundador si no está en la lista
           let membersList = members ? [...members] : [];
-          if (currentAdminTeam.creator_id && !membersList.some(m => m.user_id === currentAdminTeam.creator_id)) {
+          if (currentAdminTeam?.creator_id && !membersList.some(m => m.user_id === currentAdminTeam.creator_id)) {
+            // SOLO username y photo_url
+            const { data: founderProfile } = await supabase
+              .from('profiles')
+              .select('username, photo_url')
+              .eq('id', currentAdminTeam.creator_id)
+              .single();
+
             membersList.unshift({
               user_id: currentAdminTeam.creator_id,
-              role: 'founder'
+              role: 'founder',
+              profiles: founderProfile || {}
             });
           }
 
-          // 3. Cargar avatares
-          const userIds = membersList.map(m => m.user_id);
-          const { data: avatars } = await supabase
-            .from('profiles')
-            .select('id, avatar_url')
-            .in('id', userIds);
-
-          // 4. Renderizar miembros
+          // 3. Renderizar miembros
           const container = document.getElementById('membersList');
+          if (!container) return;
+
           container.innerHTML = '';
+          
+          if (membersList.length === 0) {
+            container.innerHTML = '<div style="text-align:center;color:#718096;padding:2rem;">No hay miembros en esta comunidad.</div>';
+            return;
+          }
+
           membersList.forEach(member => {
-            const isFounder = member.role === 'founder';
-            const avatar = avatars?.find(a => a.id === member.user_id)?.avatar_url || 'https://via.placeholder.com/40?text=No+Img';
+            const profile = member.profiles || {};
+            const isFounder = member.role === 'founder' || member.user_id === currentAdminTeam?.creator_id;
+            const displayName = profile.username || 'Usuario sin nombre';
+            const avatar = profile.photo_url || 'https://via.placeholder.com/40?text=' + (displayName.charAt(0).toUpperCase());
+            
+            const roleText = {
+              'founder': 'Fundador',
+              'coordinator': 'Coordinador', 
+              'admin': 'Administrador',
+              'member': 'Miembro'
+            }[member.role] || 'Miembro';
+
+            const roleIcon = {
+              'founder': 'fa-crown',
+              'coordinator': 'fa-star',
+              'admin': 'fa-user-shield', 
+              'member': 'fa-user'
+            }[member.role] || 'fa-user';
+
             const memberItem = document.createElement('div');
             memberItem.className = 'member-item';
             memberItem.innerHTML = `
               <div class="member-info">
-                <img src="${avatar}" alt="${member.user_id}" class="member-avatar">
-                <span class="member-name">${member.user_id}</span>
+                <img src="${avatar}" alt="${displayName}" class="member-avatar" onerror="this.src='https://via.placeholder.com/40?text=${displayName.charAt(0).toUpperCase()}'">
+                <div>
+                  <div class="member-name" style="color:#4a6fa5;font-weight:600;">${displayName}</div>
+                </div>
               </div>
               <div class="member-actions">
-                ${isFounder ? `
-                  <span class="role-badge admin" style="font-size:0.8rem;">
-                    <i class="fas fa-crown"></i> Fundador
-                  </span>
-                ` : `
-                  <button class="btn btn-outline" onclick="removeMember('${member.user_id}', '${teamId}')">
+                <span class="role-badge ${member.role === 'founder' ? 'admin' : 'member'}" style="font-size:0.8rem;margin-right:0.5rem;">
+                  <i class="fas ${roleIcon}"></i> ${roleText}
+                </span>
+                ${isFounder ? '' : `
+                  <button class="btn btn-outline btn-sm" onclick="removeMember('${member.user_id}', '${teamId}')" style="font-size:0.8rem;">
                     <i class="fas fa-user-minus"></i> Quitar
                   </button>
                 `}
@@ -1674,8 +1907,13 @@
             `;
             container.appendChild(memberItem);
           });
+
         } catch (error) {
-          console.error('Error loading team members:', error);
+          console.error('❌ Error loading team members:', error);
+          const container = document.getElementById('membersList');
+          if (container) {
+            container.innerHTML = '<div style="text-align:center;color:#e53e3e;padding:2rem;">Error al cargar miembros</div>';
+          }
         }
       }
 
@@ -1687,9 +1925,11 @@
               .delete()
               .eq('user_id', userId)
               .eq('team_id', teamId);
+            
             if (error) throw error;
+            
             alert('Miembro quitado de la comunidad.');
-            loadTeamMembers(teamId);
+            await loadTeamMembers(teamId);
           } catch (error) {
             console.error('Error removing member:', error);
             alert('Error al quitar miembro: ' + error.message);
@@ -1838,18 +2078,18 @@
         }
       }
 
-      // Eventos para los botones de crear actividad en el modal
+      // Eventos para los botones de crear actividad en el modal de administración
       document.getElementById('createCauseBtnTab').addEventListener('click', function() {
-        if (currentAdminTeam) createCause(currentAdminTeam.id);
+        if (typeof window.openCreateCauseModal === 'function') window.openCreateCauseModal();
       });
       document.getElementById('createTaskBtnTab').addEventListener('click', function() {
-        if (currentAdminTeam) createTask(currentAdminTeam.id);
+        if (typeof window.openCreateTaskModal === 'function') window.openCreateTaskModal();
       });
       document.getElementById('createChallengeBtnTab').addEventListener('click', function() {
-        if (currentAdminTeam) createChallenge(currentAdminTeam.id);
+        if (typeof window.openCreateChallengeModal === 'function') window.openCreateChallengeModal();
       });
       document.getElementById('createVolunteeringBtnTab').addEventListener('click', function() {
-        if ( currentAdminTeam) createVolunteering(currentAdminTeam.id);
+        if (typeof window.openCreateVolunteeringModal === 'function') window.openCreateVolunteeringModal();
       });
 
       // Permite cerrar el modal "Ver más" con la cruz o haciendo clic fuera

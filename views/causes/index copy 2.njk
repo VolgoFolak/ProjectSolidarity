@@ -1300,54 +1300,26 @@ document.addEventListener('click', async function(e) {
       alert('Debes iniciar sesión para donar.');
       return;
     }
-    // Comprobar si ya existe como miembro de la causa (cualquier rol)
-    const { data: memberRow } = await supabase
+    // Comprobar si ya es donante
+    const { data: alreadyDonor } = await supabase
       .from('causes_members')
-      .select('id, role')
+      .select('id')
       .eq('cause_id', causeId)
       .eq('user_id', session.user.id)
+      .eq('role', 'donor')
       .single();
-
-    if (memberRow) {
-      if (memberRow.role === 'donor') {
-        btn.textContent = 'Ya donaste';
-        btn.disabled = true;
-        btn.classList.remove('btn-accent');
-        btn.classList.add('btn-success');
-        btn.style.background = 'var(--accent)';
-        btn.style.color = '#fff';
-        btn.style.opacity = '1';
-        btn.style.cursor = 'not-allowed';
-        return;
-      } else {
-        // Actualizar el rol a 'donor'
-        const { error } = await supabase
-          .from('causes_members')
-          .update({ role: 'donor' })
-          .eq('id', memberRow.id);
-        if (error) {
-          alert('Error al donar: ' + error.message);
-          return;
-        }
-        btn.textContent = 'Ya donaste';
-        btn.disabled = true;
-        btn.classList.remove('btn-accent');
-        btn.classList.add('btn-success');
-        btn.style.background = 'var(--accent)';
-        btn.style.color = '#fff';
-        btn.style.opacity = '1';
-        btn.style.cursor = 'not-allowed';
-        // Feedback visual
-        const notification = document.createElement('div');
-        notification.textContent = '¡Gracias por tu donación!';
-        notification.style.cssText = 'position:fixed;top:20px;right:20px;background:#4fc3a1;color:white;padding:1rem 2rem;border-radius:8px;z-index:99999;font-weight:600;box-shadow:0 4px 12px rgba(79,195,161,0.2);';
-        document.body.appendChild(notification);
-        setTimeout(() => notification.remove(), 2500);
-        await loadCausesFromSupabase();
-        return;
-      }
+    if (alreadyDonor) {
+      btn.textContent = 'Ya donaste';
+      btn.disabled = true;
+      btn.classList.remove('btn-accent');
+      btn.classList.add('btn-success');
+      btn.style.background = 'var(--accent)';
+      btn.style.color = '#fff';
+      btn.style.opacity = '1';
+      btn.style.cursor = 'not-allowed';
+      return;
     }
-    // Insertar como donante si no existe
+    // Insertar como donante en causes_members
     const { error } = await supabase
       .from('causes_members')
       .insert([{ cause_id: causeId, user_id: session.user.id, role: 'donor', status: 'active' }]);
@@ -1361,6 +1333,7 @@ document.addEventListener('click', async function(e) {
     notification.style.cssText = 'position:fixed;top:20px;right:20px;background:#4fc3a1;color:white;padding:1rem 2rem;border-radius:8px;z-index:99999;font-weight:600;box-shadow:0 4px 12px rgba(79,195,161,0.2);';
     document.body.appendChild(notification);
     setTimeout(() => notification.remove(), 2500);
+    // Recargar causas para actualizar botón y donantes
     await loadCausesFromSupabase();
   }
 });

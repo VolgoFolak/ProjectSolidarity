@@ -1,6 +1,6 @@
 /**
  * Módulo para renderizar tarjetas y modales de causas
- * Template basado EXACTO en views/causes/index.njk
+ * Template basado EXACTAMENTE en views/causes/index.njk
  */
 
 class CausesRenderer {
@@ -47,7 +47,7 @@ class CausesRenderer {
     const pointsBadge = `<div class="cause-badge points"><i class="fas fa-star"></i> +${cause.points || 0} pts</div>`;
     const location = cause.city && cause.country ? `${cause.city}, ${cause.country}` : "";
     const isAdmin = ['founder','admin','coordinator'].includes(cause.userRole);
-    const isDonor = cause.isDonor; // Este campo debe estar en el objeto causa, igual que isParticipating en tareas
+    const isDonor = cause.isDonor;
 
     // Botón "Donar" funcional
     const donateBtn = isDonor
@@ -105,33 +105,7 @@ class CausesRenderer {
       console.error('❌ Causa no encontrada:', causeId);
       return;
     }
-
-    // Obtener donantes de Supabase (usa 'profiles' si tu relación es así)
-    const { data: donors, error: donorsError } = await supabase
-      .from('causes_members')
-      .select('user_id, profiles(username, photo_url)')
-      .eq('cause_id', causeId)
-      .eq('role', 'donor')
-      .eq('status', 'active');
-
-    let donorsHtml = '';
-    if (donorsError) {
-      donorsHtml = `<div style="color:#e53e3e;">Error al cargar los donantes.</div>`;
-    } else if (!donors || donors.length === 0) {
-      donorsHtml = `<div style="color:#6b7280;">Aún no hay donantes para esta causa.</div>`;
-    } else {
-      donorsHtml = `
-        <div style="display:flex; flex-wrap:wrap; gap:1rem; margin-top:1rem;">
-          ${donors.map(d => `
-            <div style="display:flex; align-items:center; gap:0.6rem; background:#f8fafc; border-radius:8px; padding:0.5rem 1rem;">
-              <img src="${d.profiles?.photo_url || '/img/avatar-default.png'}" alt="${d.profiles?.username}" style="width:32px; height:32px; border-radius:50%; object-fit:cover;">
-              <span style="font-weight:600; color:#4a6fa5;">${d.profiles?.username || 'Usuario'}</span>
-            </div>
-          `).join('')}
-        </div>
-      `;
-    }
-
+    
     const progress = cause.goal ? Math.min(Math.round((cause.raised / cause.goal) * 100), 100) : 0;
     const createdDate = new Date(cause.created_at).toLocaleDateString('es-ES', {
       year: 'numeric',
@@ -143,7 +117,7 @@ class CausesRenderer {
     const modal = this.getOrCreateModal();
     const modalBody = modal.querySelector('#modalBody');
 
-    // TEMPLATE EXACTO del modal original, inserta donorsHtml después de la descripción
+    // ✅ TEMPLATE EXACTO del modal original
     modalBody.innerHTML = `
       <div class="modal-cause-container">
         <!-- Título principal centrado, más espacio abajo -->
@@ -213,17 +187,13 @@ class CausesRenderer {
             </h3>
             <p class="content-text" style="line-height:1.7; color:#4b5563; font-size:1rem; margin-left:0; margin-right:0; text-align:justify;">${cause.description || 'No hay descripción detallada disponible para esta causa.'}</p>
           </div>
-          <div class="content-section">
-            <h3 class="content-title"><i class="fas fa-users"></i> Donantes</h3>
-            ${donorsHtml}
-          </div>
           
           ${(cause.contact_email || cause.phone_number) ? `
             <div class="content-section" style="margin-bottom:2.2rem;">
               <h3 class="content-title" style="font-size:1.2rem; font-weight:600; color:var(--primary); margin-bottom:0.9rem; display:flex; align-items:center; gap:0.7rem;">
                 <i class="fas fa-address-book"></i> Información de contacto
               </h3>
-              <div style="background:#f8fafc; border-radius:12px; padding:1.5rem; border:1px solid #e5e7eb; text-align:left;">
+              <div style="background:#f8fafc; border-radius:12px; padding:1.5rem; border:1px solid #e5e7eb;">
                 ${cause.contact_email ? `
                   <div style="display:flex; align-items:center; gap:0.7rem; margin-bottom:${cause.phone_number ? '1rem' : '0'};">
                     <i class="fas fa-envelope" style="color:var(--primary); font-size:1.1rem;"></i>
@@ -264,6 +234,40 @@ class CausesRenderer {
           </button>
         </div>
         <div class="share-section" id="shareSection" style="text-align:left;"></div>
+      </div>
+    `;
+
+    // Obtener donantes de Supabase
+    const { data: donors, error: donorsError } = await supabase
+      .from('causes_members')
+      .select('user_id, users(username, photo_url)')
+      .eq('cause_id', causeId)
+      .eq('role', 'donor')
+      .eq('status', 'active');
+
+    let donorsHtml = '';
+    if (donorsError) {
+      donorsHtml = `<div style="color:#e53e3e;">Error al cargar los donantes.</div>`;
+    } else if (!donors || donors.length === 0) {
+      donorsHtml = `<div style="color:#6b7280;">Aún no hay donantes para esta causa.</div>`;
+    } else {
+      donorsHtml = `
+        <div style="display:flex; flex-wrap:wrap; gap:1rem; margin-top:1rem;">
+          ${donors.map(d => `
+            <div style="display:flex; align-items:center; gap:0.6rem; background:#f8fafc; border-radius:8px; padding:0.5rem 1rem;">
+              <img src="${d.users?.photo_url || '/img/avatar-default.png'}" alt="${d.users?.username}" style="width:32px; height:32px; border-radius:50%; object-fit:cover;">
+              <span style="font-weight:600; color:#4a6fa5;">${d.users?.username || 'Usuario'}</span>
+            </div>
+          `).join('')}
+        </div>
+      `;
+    }
+
+    // Agregar sección de donantes al modal
+    modalBody.innerHTML += `
+      <div class="content-section">
+        <h3 class="content-title"><i class="fas fa-users"></i> Donantes</h3>
+        ${donorsHtml}
       </div>
     `;
 
@@ -353,8 +357,8 @@ class CausesRenderer {
       btn.addEventListener('click', (e) => {
         e.preventDefault();
         const causeId = btn.getAttribute('data-cause-id');
-        if (window.donateToCause) {
-          window.donateToCause(causeId);
+        if (window.donateToCoause) {
+          window.donateToCoause(causeId);
         }
       });
     });
@@ -395,29 +399,7 @@ class CausesRenderer {
       return { causes: [], error };
     }
 
-    // Obtener información de donaciones del usuario actual
-    const { data: { session } } = await supabase.auth.getSession();
-    const userId = session?.user?.id;
-    let donatedIds = [];
-    if (userId) {
-      const { data: memberships } = await supabase
-        .from('causes_members')
-        .select('cause_id')
-        .eq('user_id', userId)
-        .eq('role', 'donor');
-      donatedIds = memberships ? memberships.map(m => m.cause_id) : [];
-    }
-
-    // Procesar causas con información adicional
-    const causesWithInfo = causes ? causes.map(cause => ({
-      ...cause,
-      isDonor: donatedIds.includes(cause.id)
-    })) : [];
-
-    // Renderizar
-    window.causesRenderer.renderGrid(causesWithInfo, causesList);
-
-    return { causes: causesWithInfo, error: null };
+    return { causes: causes || [], error: null };
   }
 
   /**
@@ -886,6 +868,8 @@ window.donateToCause = async function(causeId) {
   }
 
   try {
+    console.log('🎯 Iniciando donación para causa:', causeId);
+    
     const { data: { session } } = await supabase.auth.getSession();
     if (!session?.user) {
       showNotification('Debes iniciar sesión para donar', 'warning');
@@ -895,56 +879,82 @@ window.donateToCause = async function(causeId) {
       return;
     }
 
-    // Verificar si ya existe registro para este usuario y causa
-    const { data: existing, error: existingError } = await supabase
+    console.log('👤 Usuario autenticado:', session.user.id);
+
+    // Verificar si ya donó
+    const { data: existing, error: checkError } = await supabase
       .from('causes_members')
       .select('id, role')
       .eq('cause_id', causeId)
       .eq('user_id', session.user.id)
       .single();
 
-    // Si el usuario es founder, permitir donar y mostrar modal de éxito sin cambiar el rol ni insertar
-    if (existing && existing.role === 'founder') {
-      showDonationSuccessModal('¡Donación exitosa!', 50);
-      // Puedes sumar puntos aquí si tienes lógica de puntos
+    if (checkError && checkError.code !== 'PGRST116') {
+      console.error('❌ Error verificando donación existente:', checkError);
+      showNotification('Error al verificar donación: ' + checkError.message, 'error');
       return;
     }
 
-    // Si ya es donante, mostrar info
-    if (existing && existing.role === 'donor') {
+    if (existing) {
       showNotification('Ya has donado a esta causa', 'info');
       return;
     }
 
-    // Si no existe registro, insertar como donante
-    if (!existing) {
-      const { error } = await supabase
-        .from('causes_members')
-        .insert([{
-          cause_id: causeId,
-          user_id: session.user.id,
-          role: 'donor',
-          status: 'active'
-        }]);
+    console.log('✅ Usuario no ha donado antes, procediendo...');
 
-      if (error) {
-        showNotification('Error al donar: ' + error.message, 'error');
-        return;
-      }
+    // Obtener información de la causa para el modal
+    const { data: cause } = await supabase
+      .from('causes')
+      .select('title, points')
+      .eq('id', causeId)
+      .single();
 
-      showDonationSuccessModal('¡Donación exitosa!', 50);
+    // Agregar donación
+    const { data: newMember, error: insertError } = await supabase
+      .from('causes_members')
+      .insert([{
+        cause_id: causeId,
+        user_id: session.user.id,
+        role: 'donor',
+        status: 'active'
+      }])
+      .select()
+      .single();
 
-      if (window.loadCausesFromSupabase) {
-        await window.loadCausesFromSupabase();
-      }
+    if (insertError) {
+      console.error('❌ Error al insertar donación:', insertError);
+      showNotification('Error al donar: ' + insertError.message, 'error');
       return;
     }
 
-    // Si existe registro con otro rol (ej: 'member'), puedes decidir si permites donar o no
-    // Aquí simplemente mostramos el modal de éxito
-    showDonationSuccessModal('¡Donación exitosa!', 50);
+    console.log('✅ Donación insertada:', newMember);
+
+    // Esperar un poco para que el trigger se ejecute
+    await new Promise(resolve => setTimeout(resolve, 1000));
+
+    // Verificar que el contador se actualizó
+    const { data: updatedCause, error: fetchError } = await supabase
+      .from('causes')
+      .select('donors')
+      .eq('id', causeId)
+      .single();
+
+    if (fetchError) {
+      console.error('❌ Error obteniendo causa actualizada:', fetchError);
+    } else {
+      console.log('📊 Nuevo contador de donantes:', updatedCause.donors);
+    }
+
+    // ✅ MOSTRAR MODAL ELEGANTE EN LUGAR DEL ALERT
+    showDonationSuccessModal(cause?.title || 'esta causa', cause?.points || 50);
+    
+    // Recargar causas si existe la función
+    if (window.loadCausesFromSupabase) {
+      await window.loadCausesFromSupabase();
+    }
 
   } catch (error) {
+    console.error('❌ Error inesperado donando:', error);
     showNotification('Error al procesar la donación', 'error');
   }
 };

@@ -223,7 +223,7 @@ class CausesRenderer {
               <h3 class="content-title" style="font-size:1.2rem; font-weight:600; color:var(--primary); margin-bottom:0.9rem; display:flex; align-items:center; gap:0.7rem;">
                 <i class="fas fa-address-book"></i> Información de contacto
               </h3>
-              <div style="background:#f8fafc; border-radius:12px; padding:1.5rem; border:1px solid #e5e7eb; text-align:left;">
+              <div style="background:#f8fafc; border-radius:12px; padding:1.5rem; border:1px solid #e5e7eb;">
                 ${cause.contact_email ? `
                   <div style="display:flex; align-items:center; gap:0.7rem; margin-bottom:${cause.phone_number ? '1rem' : '0'};">
                     <i class="fas fa-envelope" style="color:var(--primary); font-size:1.1rem;"></i>
@@ -895,55 +895,41 @@ window.donateToCause = async function(causeId) {
       return;
     }
 
-    // Verificar si ya existe registro para este usuario y causa
-    const { data: existing, error: existingError } = await supabase
+    // Verificar si ya donó
+    const { data: existing } = await supabase
       .from('causes_members')
-      .select('id, role')
+      .select('id')
       .eq('cause_id', causeId)
       .eq('user_id', session.user.id)
+      .eq('role', 'donor')
       .single();
 
-    // Si el usuario es founder, permitir donar y mostrar modal de éxito sin cambiar el rol ni insertar
-    if (existing && existing.role === 'founder') {
-      showDonationSuccessModal('¡Donación exitosa!', 50);
-      // Puedes sumar puntos aquí si tienes lógica de puntos
-      return;
-    }
-
-    // Si ya es donante, mostrar info
-    if (existing && existing.role === 'donor') {
+    if (existing) {
       showNotification('Ya has donado a esta causa', 'info');
       return;
     }
 
-    // Si no existe registro, insertar como donante
-    if (!existing) {
-      const { error } = await supabase
-        .from('causes_members')
-        .insert([{
-          cause_id: causeId,
-          user_id: session.user.id,
-          role: 'donor',
-          status: 'active'
-        }]);
+    // Insertar donación
+    const { error } = await supabase
+      .from('causes_members')
+      .insert([{
+        cause_id: causeId,
+        user_id: session.user.id,
+        role: 'donor',
+        status: 'active'
+      }]);
 
-      if (error) {
-        showNotification('Error al donar: ' + error.message, 'error');
-        return;
-      }
-
-      showDonationSuccessModal('¡Donación exitosa!', 50);
-
-      if (window.loadCausesFromSupabase) {
-        await window.loadCausesFromSupabase();
-      }
+    if (error) {
+      showNotification('Error al donar: ' + error.message, 'error');
       return;
     }
 
-    // Si existe registro con otro rol (ej: 'member'), puedes decidir si permites donar o no
-    // Aquí simplemente mostramos el modal de éxito
-    showDonationSuccessModal('¡Donación exitosa!', 50);
+    showDonationSuccessModal('¡Donación exitosa!', 50); // Puedes adaptar los puntos si lo necesitas
 
+    // Recargar causas para actualizar el botón y el contador
+    if (window.loadCausesFromSupabase) {
+      await window.loadCausesFromSupabase();
+    }
   } catch (error) {
     showNotification('Error al procesar la donación', 'error');
   }

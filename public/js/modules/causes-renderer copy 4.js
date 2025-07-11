@@ -1,6 +1,6 @@
 /**
  * Módulo para renderizar tarjetas y modales de causas
- * Template basado EXACTO en views/causes/index.njk
+ * Template basado EXACTAMENTE en views/causes/index.njk
  */
 
 class CausesRenderer {
@@ -105,33 +105,7 @@ class CausesRenderer {
       console.error('❌ Causa no encontrada:', causeId);
       return;
     }
-
-    // Obtener donantes de Supabase (usa 'profiles' si tu relación es así)
-    const { data: donors, error: donorsError } = await supabase
-      .from('causes_members')
-      .select('user_id, profiles(username, photo_url)')
-      .eq('cause_id', causeId)
-      .eq('role', 'donor')
-      .eq('status', 'active');
-
-    let donorsHtml = '';
-    if (donorsError) {
-      donorsHtml = `<div style="color:#e53e3e;">Error al cargar los donantes.</div>`;
-    } else if (!donors || donors.length === 0) {
-      donorsHtml = `<div style="color:#6b7280;">Aún no hay donantes para esta causa.</div>`;
-    } else {
-      donorsHtml = `
-        <div style="display:flex; flex-wrap:wrap; gap:1rem; margin-top:1rem;">
-          ${donors.map(d => `
-            <div style="display:flex; align-items:center; gap:0.6rem; background:#f8fafc; border-radius:8px; padding:0.5rem 1rem;">
-              <img src="${d.profiles?.photo_url || '/img/avatar-default.png'}" alt="${d.profiles?.username}" style="width:32px; height:32px; border-radius:50%; object-fit:cover;">
-              <span style="font-weight:600; color:#4a6fa5;">${d.profiles?.username || 'Usuario'}</span>
-            </div>
-          `).join('')}
-        </div>
-      `;
-    }
-
+    
     const progress = cause.goal ? Math.min(Math.round((cause.raised / cause.goal) * 100), 100) : 0;
     const createdDate = new Date(cause.created_at).toLocaleDateString('es-ES', {
       year: 'numeric',
@@ -143,7 +117,7 @@ class CausesRenderer {
     const modal = this.getOrCreateModal();
     const modalBody = modal.querySelector('#modalBody');
 
-    // TEMPLATE EXACTO del modal original, inserta donorsHtml después de la descripción
+    // ✅ TEMPLATE EXACTO del modal original
     modalBody.innerHTML = `
       <div class="modal-cause-container">
         <!-- Título principal centrado, más espacio abajo -->
@@ -213,17 +187,13 @@ class CausesRenderer {
             </h3>
             <p class="content-text" style="line-height:1.7; color:#4b5563; font-size:1rem; margin-left:0; margin-right:0; text-align:justify;">${cause.description || 'No hay descripción detallada disponible para esta causa.'}</p>
           </div>
-          <div class="content-section">
-            <h3 class="content-title"><i class="fas fa-users"></i> Donantes</h3>
-            ${donorsHtml}
-          </div>
           
           ${(cause.contact_email || cause.phone_number) ? `
             <div class="content-section" style="margin-bottom:2.2rem;">
               <h3 class="content-title" style="font-size:1.2rem; font-weight:600; color:var(--primary); margin-bottom:0.9rem; display:flex; align-items:center; gap:0.7rem;">
                 <i class="fas fa-address-book"></i> Información de contacto
               </h3>
-              <div style="background:#f8fafc; border-radius:12px; padding:1.5rem; border:1px solid #e5e7eb; text-align:left;">
+              <div style="background:#f8fafc; border-radius:12px; padding:1.5rem; border:1px solid #e5e7eb;">
                 ${cause.contact_email ? `
                   <div style="display:flex; align-items:center; gap:0.7rem; margin-bottom:${cause.phone_number ? '1rem' : '0'};">
                     <i class="fas fa-envelope" style="color:var(--primary); font-size:1.1rem;"></i>
@@ -264,6 +234,40 @@ class CausesRenderer {
           </button>
         </div>
         <div class="share-section" id="shareSection" style="text-align:left;"></div>
+      </div>
+    `;
+
+    // Obtener donantes de Supabase
+    const { data: donors, error: donorsError } = await supabase
+      .from('causes_members')
+      .select('user_id, users(username, photo_url)')
+      .eq('cause_id', causeId)
+      .eq('role', 'donor')
+      .eq('status', 'active');
+
+    let donorsHtml = '';
+    if (donorsError) {
+      donorsHtml = `<div style="color:#e53e3e;">Error al cargar los donantes.</div>`;
+    } else if (!donors || donors.length === 0) {
+      donorsHtml = `<div style="color:#6b7280;">Aún no hay donantes para esta causa.</div>`;
+    } else {
+      donorsHtml = `
+        <div style="display:flex; flex-wrap:wrap; gap:1rem; margin-top:1rem;">
+          ${donors.map(d => `
+            <div style="display:flex; align-items:center; gap:0.6rem; background:#f8fafc; border-radius:8px; padding:0.5rem 1rem;">
+              <img src="${d.users?.photo_url || '/img/avatar-default.png'}" alt="${d.users?.username}" style="width:32px; height:32px; border-radius:50%; object-fit:cover;">
+              <span style="font-weight:600; color:#4a6fa5;">${d.users?.username || 'Usuario'}</span>
+            </div>
+          `).join('')}
+        </div>
+      `;
+    }
+
+    // Agregar sección de donantes al modal
+    modalBody.innerHTML += `
+      <div class="content-section">
+        <h3 class="content-title"><i class="fas fa-users"></i> Donantes</h3>
+        ${donorsHtml}
       </div>
     `;
 
@@ -895,55 +899,41 @@ window.donateToCause = async function(causeId) {
       return;
     }
 
-    // Verificar si ya existe registro para este usuario y causa
-    const { data: existing, error: existingError } = await supabase
+    // Verificar si ya donó
+    const { data: existing } = await supabase
       .from('causes_members')
-      .select('id, role')
+      .select('id')
       .eq('cause_id', causeId)
       .eq('user_id', session.user.id)
+      .eq('role', 'donor')
       .single();
 
-    // Si el usuario es founder, permitir donar y mostrar modal de éxito sin cambiar el rol ni insertar
-    if (existing && existing.role === 'founder') {
-      showDonationSuccessModal('¡Donación exitosa!', 50);
-      // Puedes sumar puntos aquí si tienes lógica de puntos
-      return;
-    }
-
-    // Si ya es donante, mostrar info
-    if (existing && existing.role === 'donor') {
+    if (existing) {
       showNotification('Ya has donado a esta causa', 'info');
       return;
     }
 
-    // Si no existe registro, insertar como donante
-    if (!existing) {
-      const { error } = await supabase
-        .from('causes_members')
-        .insert([{
-          cause_id: causeId,
-          user_id: session.user.id,
-          role: 'donor',
-          status: 'active'
-        }]);
+    // Insertar donación
+    const { error } = await supabase
+      .from('causes_members')
+      .insert([{
+        cause_id: causeId,
+        user_id: session.user.id,
+        role: 'donor',
+        status: 'active'
+      }]);
 
-      if (error) {
-        showNotification('Error al donar: ' + error.message, 'error');
-        return;
-      }
-
-      showDonationSuccessModal('¡Donación exitosa!', 50);
-
-      if (window.loadCausesFromSupabase) {
-        await window.loadCausesFromSupabase();
-      }
+    if (error) {
+      showNotification('Error al donar: ' + error.message, 'error');
       return;
     }
 
-    // Si existe registro con otro rol (ej: 'member'), puedes decidir si permites donar o no
-    // Aquí simplemente mostramos el modal de éxito
-    showDonationSuccessModal('¡Donación exitosa!', 50);
+    showDonationSuccessModal('¡Donación exitosa!', 50); // Puedes adaptar los puntos si lo necesitas
 
+    // Recargar causas para actualizar el botón y el contador
+    if (window.loadCausesFromSupabase) {
+      await window.loadCausesFromSupabase();
+    }
   } catch (error) {
     showNotification('Error al procesar la donación', 'error');
   }

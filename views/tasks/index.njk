@@ -474,6 +474,17 @@
           <label for="end_date">Fecha de finalización (opcional)</label>
           <input type="date" id="end_date" name="end_date">
         </div>
+        <!-- AGREGAR estos campos después del campo "end_date" y antes de los inputs hidden -->
+        <div class="form-group">
+          <label for="contact_email">Email de contacto</label>
+          <input type="email" id="contact_email" name="contact_email" placeholder="contacto@ejemplo.com">
+          <small style="color:#6b7280;">Los voluntarios podrán contactarte por este email (opcional)</small>
+        </div>
+        <div class="form-group">
+          <label for="phone_number">Teléfono de contacto</label>
+          <input type="tel" id="phone_number" name="phone_number" placeholder="+34 123 456 789">
+          <small style="color:#6b7280;">Número de teléfono para coordinación (opcional)</small>
+        </div>
         <input type="hidden" id="lat" name="lat">
         <input type="hidden" id="lng" name="lng">
         <button type="submit" class="btn btn-primary" style="margin-top:1rem;">
@@ -725,7 +736,10 @@ async function createTask(e) {
       beneficiaries: parseInt(document.getElementById('beneficiaries').value, 10),
       is_urgent: document.getElementById('is_urgent').checked,
       cause_id: document.getElementById('cause-select').value || null,
-      end_date: document.getElementById('end_date').value || null
+      end_date: document.getElementById('end_date').value || null,
+      // ✅ NUEVOS CAMPOS DE CONTACTO
+      contact_email: document.getElementById('contact_email').value.trim() || null,
+      phone_number: document.getElementById('phone_number').value.trim() || null
     };
 
     // Sube la foto a Supabase Storage si existe
