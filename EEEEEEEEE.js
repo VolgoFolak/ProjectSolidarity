@@ -35,26 +35,21 @@ app.use(cookieParser());
 app.use(bodyParser.urlencoded({ extended: true }));
 // Detecta entorno y configura URLs y cookie de sesión
 const isLocalhost = process.env.NODE_ENV !== 'production';
-const frontendUrl = isLocalhost ? 'http://localhost:3000' : 'https://www.project-solidarity.com';
-
 const corsOptions = {
-  origin: frontendUrl,
+  origin: isLocalhost ? 'http://localhost:3000' : 'https://www.project-solidarity.com',
   credentials: true,
-  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'Accept'],
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS']
 };
 app.use(require('cors')(corsOptions));
 
 app.use(require('express-session')({
-  secret: process.env.SESSION_SECRET || 'secreto-super-seguro',
+  secret: 'secreto-super-seguro',
   resave: false,
   saveUninitialized: false,
   cookie: {
     secure: !isLocalhost,
     sameSite: isLocalhost ? 'lax' : 'none',
     httpOnly: true,
-    maxAge: 7 * 24 * 60 * 60 * 1000,
-    domain: isLocalhost ? undefined : '.project-solidarity.com'
+    maxAge: 7 * 24 * 60 * 60 * 1000
   }
 }));
 app.use(express.static(path.join(__dirname, 'public')));
@@ -403,23 +398,17 @@ app.post('/create-stripe-account', authenticateUser, async (req, res) => {
 // --- Endpoint mejorado para crear enlace de onboarding Stripe ---
 app.post('/create-account-link', authenticateUser, async (req, res) => {
   try {
-    const { accountId } = req.body;
-    const userId = req.session.user.id; // <-- así obtienes el userId autenticado
-
+    const { accountId, returnUrl, refreshUrl } = req.body;
+    
     // Validaciones
     if (!accountId) {
       return res.status(400).json({ error: 'Se requiere accountId' });
     }
 
-    const frontendUrl = process.env.FRONTEND_URL; // <-- usa process.env
-    if (!frontendUrl) {
-      throw new Error('FRONTEND_URL is not defined');
-    }
-
     const accountLink = await stripe.accountLinks.create({
       account: accountId,
-      refresh_url: `${frontendUrl}/reauth-stripe?user_id=${userId}`,
-      return_url: `${frontendUrl}/causes/stripe-callback?user_id=${userId}`,
+      refresh_url: `${FRONTEND_URL}/reauth-stripe?user_id=${userId}`,
+      return_url: `${FRONTEND_URL}/causes/stripe-callback?user_id=${userId}`,
       type: 'account_onboarding',
     });
 
@@ -428,12 +417,12 @@ app.post('/create-account-link', authenticateUser, async (req, res) => {
     }
 
     res.json({ url: accountLink.url });
-
+    
   } catch (error) {
     console.error('Error creating account link:', error);
-    res.status(500).json({
+    res.status(500).json({ 
       error: 'Error al generar enlace de verificación',
-      details: error.message
+      details: error.message 
     });
   }
 });
@@ -606,64 +595,48 @@ app.delete('/delete-draft/:draftId', authenticateUser, async (req, res) => {
 app.post('/create-final-cause', authenticateUser, async (req, res) => {
   try {
     const { draftId } = req.body;
-    const userId = req.session.user.id;
-
-    // 1. Obtener el borrador con verificación de propiedad
+    
+    // 1. Obtener el borrador
     const { data: draft, error: draftError } = await supabase
       .from('cause_drafts')
       .select('*')
       .eq('id', draftId)
-      .eq('user_id', userId)
       .single();
 
     if (draftError || !draft) {
-      return res.status(404).json({ error: 'Borrador no encontrado o no autorizado' });
+      return res.status(404).json({ error: 'Borrador no encontrado' });
     }
 
-    // 2. Verificar estado de Stripe si es necesario
-    let stripeEnabled = false;
-    let stripeAccountId = null;
-
-    if (draft.stripe_account_id) {
-      const account = await stripe.accounts.retrieve(draft.stripe_account_id);
-      stripeEnabled = account.charges_enabled && account.details_submitted;
-      stripeAccountId = stripeEnabled ? draft.stripe_account_id : null;
+    // 2. Verificar que pertenece al usuario
+    if (draft.user_id !== req.session.user.id) {
+      return res.status(403).json({ error: 'No autorizado' });
     }
 
-    // 3. Crear la causa con políticas RLS
+    // 3. Crear la causa final
     const { data: newCause, error: causeError } = await supabase
       .from('causes')
       .insert([{ 
         ...draft.draft_data,
-        user_id: userId,
+        user_id: req.session.user.id,
         status: 'active',
-        stripe_enabled: stripeEnabled,
-        stripe_account_id: stripeAccountId
+        stripe_enabled: !!draft.stripe_account_id,
+        stripe_account_id: draft.stripe_account_id
       }])
       .select()
       .single();
 
-    if (causeError) {
-      console.error('Error RLS al crear causa:', causeError);
-      throw new Error(causeError.message);
-    }
+    if (causeError) throw causeError;
 
-    // 4. Eliminar borrador y limpiar
+    // 4. Eliminar borrador
     await supabase.from('cause_drafts').delete().eq('id', draftId);
-    await supabase.from('pending_onboardings').delete().eq('draft_id', draftId);
 
-    res.json({ 
-      success: true,
-      cause: newCause,
-      redirectUrl: `/causes/${newCause.id}?creation=success`
-    });
+    res.json({ cause: newCause });
 
   } catch (error) {
     console.error('Error creating final cause:', error);
     res.status(500).json({ 
       error: 'Error creando causa final',
-      details: error.message,
-      code: error.code
+      details: error.message 
     });
   }
 });
@@ -768,71 +741,110 @@ app.post('/api/causes/save-draft', authenticateUser, async (req, res) => {
 // --- Callback de Stripe ---
 app.get('/api/causes/stripe-callback', authenticateUser, async (req, res) => {
   try {
-    const { user_id: userId, draft_id: draftId } = req.query;
+    const { user_id: userId } = req.query;
 
-    // 1. Verificar que el draft pertenece al usuario
-    const { data: draft, error: draftError } = await supabase
-      .from('cause_drafts')
-      .select('*')
-      .eq('id', draftId)
+    // 1. Verificar que el usuario está autenticado
+    if (!req.session.user || req.session.user.id !== userId) {
+      return res.redirect('/causes?stripe_error=unauthorized');
+    }
+
+    // 2. Obtener la cuenta Stripe del usuario
+    const { data: account, error: accountError } = await supabase
+      .from('stripe_accounts')
+      .select('stripe_account_id')
       .eq('user_id', userId)
       .single();
 
-    if (draftError || !draft) {
-      return res.redirect('/causes?error=invalid_draft');
+    if (accountError || !account) {
+      return res.redirect('/causes?stripe_error=no_account');
     }
 
-    // 2. Verificar estado de Stripe
-    const { data: onboarding } = await supabase
-      .from('pending_onboardings')
-      .select('*')
-      .eq('draft_id', draftId)
-      .single();
-
-    if (!onboarding) {
-      return res.redirect('/causes?error=no_onboarding');
+    // 3. Verificar estado con Stripe
+    const stripeAccount = await stripe.accounts.retrieve(account.stripe_account_id);
+    if (!stripeAccount.charges_enabled || !stripeAccount.details_submitted) {
+      return res.redirect('/causes?stripe_error=not_verified');
     }
 
-    const account = await stripe.accounts.retrieve(onboarding.stripe_account_id);
-    
-    if (!account.charges_enabled || !account.details_submitted) {
-      return res.redirect(`/causes/create?draft_id=${draftId}&onboarding_error=incomplete`);
-    }
-
-    // 3. Actualizar estado en Supabase
+    // 4. Actualizar estado en Supabase
     await supabase
       .from('stripe_accounts')
-      .upsert({
-        user_id: userId,
-        stripe_account_id: account.id,
+      .update({
         status: 'active',
         charges_enabled: true,
         details_submitted: true
-      });
+      })
+      .eq('user_id', userId);
 
-    // 4. Crear causa final
-    const createResponse = await fetch(`${frontendUrl}/api/create-final-cause`, {
-      method: 'POST',
-      headers: { 
-        'Content-Type': 'application/json',
-        'Cookie': req.headers.cookie // Pasar cookies para mantener sesión
-      },
-      body: JSON.stringify({ draftId })
-    });
+    // 5. Buscar borrador pendiente
+    const { data: draft } = await supabase
+      .from('cause_drafts')
+      .select('*')
+      .eq('user_id', userId)
+      .order('created_at', { ascending: false })
+      .limit(1)
+      .single();
 
-    if (!createResponse.ok) {
-      const error = await createResponse.json();
-      throw new Error(error.error || 'Error creando causa');
+    if (!draft) {
+      return res.redirect('/causes?stripe_error=no_draft');
     }
 
-    const { cause, redirectUrl } = await createResponse.json();
+    // 6. Crear causa final
+    const { data: cause, error: createError } = await supabase
+      .from('causes')
+      .insert([{
+        ...draft.draft_data,
+        user_id: userId,
+        status: 'active',
+        stripe_enabled: true,
+        stripe_account_id: draft.stripe_account_id
+      }])
+      .select()
+      .single();
 
-    // 5. Redirigir con éxito
-    res.redirect(redirectUrl || `/causes/${cause.id}?stripe=success`);
+    if (createError) throw createError;
+
+    // 7. Eliminar borrador
+    await supabase.from('cause_drafts').delete().eq('id', draft.id);
+
+    // 8. Redirigir con éxito
+    res.redirect(`/causes/${cause.id}?stripe=success`);
 
   } catch (error) {
     console.error('Error in Stripe callback:', error);
-    res.redirect('/causes?error=stripe_callback_failed');
+    res.redirect('/causes?stripe_error=internal_error');
+  }
+});
+
+// --- Endpoint de diagnóstico Stripe ---
+app.get('/api/stripe/debug/:userId', authenticateUser, async (req, res) => {
+  try {
+    const userId = req.params.userId;
+    // 1. Obtener cuenta de Supabase
+    const { data: account, error } = await supabase
+      .from('stripe_accounts')
+      .select('*')
+      .eq('user_id', userId)
+      .single();
+
+    if (error || !account) {
+      return res.json({ error: 'No Stripe account found in database' });
+    }
+
+    // 2. Verificar en Stripe
+    const stripeAccount = await stripe.accounts.retrieve(account.stripe_account_id);
+    res.json({
+      supabaseData: account,
+      stripeData: {
+        id: stripeAccount.id,
+        charges_enabled: stripeAccount.charges_enabled,
+        details_submitted: stripeAccount.details_submitted,
+        requirements: stripeAccount.requirements,
+        payouts_enabled: stripeAccount.payouts_enabled
+      }
+    });
+
+  } catch (error) {
+    res.status(500).json({ error: error.message });
   }
 });
 
@@ -936,7 +948,7 @@ app.post('/api/stripe/create-account', authenticateUser, async (req, res) => {
 // --- Stripe: Callback de onboarding ---
 app.get('/api/causes/stripe-callback', authenticateUser, async (req, res) => {
   try {
-    const { user_id: userId, draft_id: draftId } = req.query;
+    const { user_id: userId } = req.query;
     // 1. Verificar que el usuario está autenticado
     if (!req.session.user || req.session.user.id !== userId) {
       return res.redirect('/causes?stripe_error=unauthorized');
@@ -1090,132 +1102,36 @@ app.get('/stripe/onboarding-complete', authenticateUser, async (req, res) => {
 
 // --- Iniciar onboarding de Stripe ---
 app.post('/start-stripe-onboarding', authenticateUser, async (req, res) => {
-  try {
-    const { draftData, email } = req.body;
-    const userId = req.session.user.id;
+  const { draftData, email } = req.body;
+  // 1. Guardar borrador
+  const { data: draft, error: draftError } = await supabase
+    .from('cause_drafts')
+    .insert([{ draft_data: draftData, user_id: req.session.user.id }])
+    .select()
+    .single();
+  if (draftError) return res.status(500).json({ error: draftError.message });
 
-    // 1. Guardar borrador primero
-    const { data: draft, error: draftError } = await supabase
-      .from('cause_drafts')
-      .insert([{ 
-        user_id: userId,
-        draft_data: draftData,
-        stripe_enabled: false
-      }])
-      .select()
-      .single();
+  // 2. Crear cuenta Stripe
+  const account = await stripe.accounts.create({
+    type: 'express',
+    email,
+    metadata: { draft_id: draft.id, user_id: req.session.user.id }
+  });
 
-    if (draftError) throw draftError;
+  // 3. Guardar onboarding pendiente
+  await supabase.from('pending_onboardings').insert({
+    user_id: req.session.user.id,
+    draft_id: draft.id,
+    stripe_account_id: account.id
+  });
 
-    // 2. Crear cuenta Stripe
-    const account = await stripe.accounts.create({
-      type: 'express',
-      email: email || req.session.user.email,
-      capabilities: {
-        card_payments: { requested: true },
-        transfers: { requested: true }
-      },
-      metadata: { 
-        user_id: userId,
-        draft_id: draft.id 
-      }
-    });
+  // 4. Crear link de onboarding
+  const accountLink = await stripe.accountLinks.create({
+    account: account.id,
+    refresh_url: `${process.env.FRONTEND_URL}/causes/create?draft_id=${draft.id}`,
+    return_url: `${process.env.FRONTEND_URL}/stripe/onboarding-complete?account_id=${account.id}`,
+    type: 'account_onboarding'
+  });
 
-    // 3. Registrar onboarding pendiente
-    await supabase.from('pending_onboardings').insert({
-      user_id: userId,
-      draft_id: draft.id,
-      stripe_account_id: account.id
-    });
-
-    // 4. Crear enlace de onboarding
-    const accountLink = await stripe.accountLinks.create({
-      account: account.id,
-      refresh_url: `${frontendUrl}/causes/create?onboarding_error=refresh`,
-      return_url: `${frontendUrl}/api/causes/stripe-callback?user_id=${userId}&draft_id=${draft.id}`,
-      type: 'account_onboarding'
-    });
-
-    res.json({
-      success: true,
-      url: accountLink.url
-    });
-
-  } catch (error) {
-    console.error('Error in Stripe onboarding:', error);
-    res.status(500).json({
-      error: 'Error iniciando onboarding de Stripe',
-      details: error.message
-    });
-  }
-});
-
-app.get('/api/causes/stripe-callback', authenticateUser, async (req, res) => {
-  try {
-    const { user_id: userId, draft_id: draftId } = req.query;
-
-    // 1. Verificar que el draft pertenece al usuario
-    const { data: draft, error: draftError } = await supabase
-      .from('cause_drafts')
-      .select('*')
-      .eq('id', draftId)
-      .eq('user_id', userId)
-      .single();
-
-    if (draftError || !draft) {
-      return res.redirect('/causes?error=invalid_draft');
-    }
-
-    // 2. Verificar estado de Stripe
-    const { data: onboarding } = await supabase
-      .from('pending_onboardings')
-      .select('*')
-      .eq('draft_id', draftId)
-      .single();
-
-    if (!onboarding) {
-      return res.redirect('/causes?error=no_onboarding');
-    }
-
-    const account = await stripe.accounts.retrieve(onboarding.stripe_account_id);
-    
-    if (!account.charges_enabled || !account.details_submitted) {
-      return res.redirect(`/causes/create?draft_id=${draftId}&onboarding_error=incomplete`);
-    }
-
-    // 3. Actualizar estado en Supabase
-    await supabase
-      .from('stripe_accounts')
-      .upsert({
-        user_id: userId,
-        stripe_account_id: account.id,
-        status: 'active',
-        charges_enabled: true,
-        details_submitted: true
-      });
-
-    // 4. Crear causa final
-    const createResponse = await fetch(`${frontendUrl}/api/create-final-cause`, {
-      method: 'POST',
-      headers: { 
-        'Content-Type': 'application/json',
-        'Cookie': req.headers.cookie // Pasar cookies para mantener sesión
-      },
-      body: JSON.stringify({ draftId })
-    });
-
-    if (!createResponse.ok) {
-      const error = await createResponse.json();
-      throw new Error(error.error || 'Error creando causa');
-    }
-
-    const { cause, redirectUrl } = await createResponse.json();
-
-    // 5. Redirigir con éxito
-    res.redirect(redirectUrl || `/causes/${cause.id}?stripe=success`);
-
-  } catch (error) {
-    console.error('Error in Stripe callback:', error);
-    res.redirect('/causes?error=stripe_callback_failed');
-  }
+  res.json({ url: accountLink.url });
 });
