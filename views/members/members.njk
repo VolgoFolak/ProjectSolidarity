@@ -1,0 +1,1057 @@
+{% extends "layout.njk" %}
+
+{% block title %}Miembros de la comunidad - Solidarity{% endblock %}
+
+{% block head %}
+  {{ super() }}
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <style>
+    :root {
+      --primary: #4a6fa5;
+      --primary-dark: #166088;
+      --primary-light: #e6f0fa;
+      --gray: #e2e8f0;
+      --white: #fff;
+      --accent: #4fc3a1;
+      --accent-dark: #3da58a;
+      --urgent: #e53e3e;
+    }
+    
+    /* Estilos para la página de miembros */
+    .members-container {
+      max-width: 1200px;
+      margin: 2rem auto;
+      padding: 0 2rem;
+    }
+    
+    .members-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 2rem;
+    }
+    
+    .members-header h1 {
+      font-size: 2rem;
+      color: var(--primary);
+      font-weight: 700;
+      margin-bottom: 0;
+    }
+    
+    .members-stats-overview {
+      font-size: 1.1rem;
+      color: #6b7280;
+    }
+    
+    .stats-number {
+      font-weight: 700;
+      color: var(--accent);
+      font-size: 1.3rem;
+    }
+    
+    .members-intro {
+      background: linear-gradient(135deg, #f0f9ff 0%, #e6f0fa 100%);
+      border-radius: 12px;
+      padding: 2rem;
+      margin-bottom: 2rem;
+      border: 1px solid #e2e8f0;
+    }
+    
+    .members-intro h2 {
+      font-size: 1.8rem;
+      color: #166088;
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+    }
+    
+    .members-intro h2 i {
+      color: #4fc3a1;
+    }
+    
+    .members-intro p {
+      color: #4a6fa5;
+      font-size: 1.1rem;
+      line-height: 1.6;
+    }
+    
+    .members-search {
+      margin-bottom: 2rem;
+      display: flex;
+      align-items: center;
+      gap: 0.7rem;
+      background: white;
+      border-radius: 8px;
+      padding: 0.8rem 1.2rem;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    }
+    
+    .members-search input {
+      flex: 1;
+      padding: 0.6rem 0.8rem;
+      border-radius: 5px;
+      border: 1.5px solid var(--gray);
+      font-size: 1.05rem;
+      outline: none;
+      transition: border 0.2s;
+      background: #fff;
+    }
+    
+    .members-search input:focus {
+      border-color: var(--primary);
+    }
+    
+    .members-search i {
+      margin-right: 0.5rem;
+      font-size: 1.2rem;
+    }
+    
+    .tabs {
+      display: flex;
+      border-bottom: 1px solid var(--gray);
+      margin-bottom: 2rem;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none; /* Firefox */
+    }
+    
+    .tabs::-webkit-scrollbar {
+      display: none; /* Chrome, Safari, Opera */
+    }
+    
+    .tab {
+      padding: 0.75rem 1.5rem;
+      cursor: pointer;
+      position: relative;
+      font-weight: 500;
+      color: #6b7280;
+      background: none;
+      border: none;
+      outline: none;
+      white-space: nowrap;
+    }
+    
+    .tab.active {
+      color: var(--primary);
+      font-weight: 600;
+    }
+    
+    .tab.active::after {
+      content: '';
+      position: absolute;
+      bottom: -1px;
+      left: 0;
+      width: 100%;
+      height: 3px;
+      background: var(--primary);
+    }
+    
+    /* Grid para mostrar miembros */
+    .members-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+    
+    /* Tarjeta de miembro */
+    .member-card {
+      background: white;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+      transition: all 0.3s ease;
+      border: 1px solid var(--gray);
+      display: flex;
+      flex-direction: column;
+      position: relative;
+    }
+    
+    .member-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+    }
+    
+    .member-rank {
+      position: absolute;
+      top: 1rem;
+      right: 1rem;
+      background: var(--primary);
+      color: white;
+      width: 2rem;
+      height: 2rem;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+      z-index: 2;
+    }
+    
+    .member-rank.top-3 {
+      background: #ffd700; /* Gold */
+      color: #333;
+    }
+    
+    .member-header {
+      padding: 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      border-bottom: 1px solid var(--gray);
+    }
+    
+    .member-avatar {
+      width: 70px;
+      height: 70px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 3px solid var(--primary-light);
+      background: var(--primary-light);
+    }
+    
+    .member-info {
+      flex: 1;
+    }
+    
+    .member-name {
+      font-size: 1.2rem;
+      font-weight: 600;
+      color: var(--primary-dark);
+      margin-bottom: 0.2rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    
+    .member-name i {
+      color: var(--accent);
+      font-size: 0.9rem;
+    }
+    
+    .member-username {
+      color: #6b7280;
+      font-size: 0.9rem;
+      margin-bottom: 0.5rem;
+    }
+    
+    .member-location {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      color: #6b7280;
+      font-size: 0.9rem;
+    }
+    
+    .member-location i {
+      color: var(--primary);
+      font-size: 0.85rem;
+    }
+    
+    .member-stats {
+      padding: 1.5rem;
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1rem;
+    }
+    
+    .stat-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    
+    .stat-value {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--primary);
+    }
+    
+    .stat-label {
+      font-size: 0.85rem;
+      color: #6b7280;
+      text-align: center;
+    }
+    
+    .member-footer {
+      padding: 1rem 1.5rem;
+      border-top: 1px solid var(--gray);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    
+    .member-impact {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    
+    .impact-points {
+      font-weight: 700;
+      color: var(--accent);
+      font-size: 1.1rem;
+    }
+    
+    .impact-label {
+      font-size: 0.9rem;
+      color: #6b7280;
+    }
+    
+    .member-view-profile {
+      background: var(--primary-light);
+      color: var(--primary);
+      border: none;
+      padding: 0.5rem 1rem;
+      border-radius: 50px;
+      font-weight: 600;
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      text-decoration: none;
+    }
+    
+    .member-view-profile:hover {
+      background: var(--primary);
+      color: white;
+      transform: translateY(-2px);
+    }
+    
+    /* Badges */
+    .member-badges {
+      position: absolute;
+      bottom: 1rem;
+      left: 1rem;
+      display: flex;
+      gap: 0.3rem;
+    }
+    
+    .member-badge {
+      width: 25px;
+      height: 25px;
+      border-radius: 50%;
+      background: var(--primary-light);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.7rem;
+      color: var(--primary);
+    }
+    
+    .badge-tooltip {
+      visibility: hidden;
+      position: absolute;
+      bottom: 100%;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(0, 0, 0, 0.8);
+      color: white;
+      padding: 0.3rem 0.6rem;
+      border-radius: 4px;
+      font-size: 0.8rem;
+      white-space: nowrap;
+      z-index: 10;
+      opacity: 0;
+      transition: opacity 0.2s;
+    }
+    
+    .member-badge:hover .badge-tooltip {
+      visibility: visible;
+      opacity: 1;
+    }
+    
+    /* Nivel de miembro */
+    .member-level {
+      position: absolute;
+      top: 1rem;
+      left: 1rem;
+      background: var(--accent);
+      color: white;
+      border-radius: 4px;
+      padding: 0.2rem 0.5rem;
+      font-size: 0.8rem;
+      font-weight: 600;
+      z-index: 2;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      display: flex;
+      align-items: center;
+      gap: 0.3rem;
+    }
+    
+    /* Paginación */
+    .pagination {
+      display: flex;
+      justify-content: center;
+      margin-top: 3rem;
+      gap: 0.5rem;
+    }
+    
+    .page-item {
+      width: 40px;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      cursor: pointer;
+      font-weight: 500;
+      background: white;
+      color: #6b7280;
+      border: 1px solid var(--gray);
+      transition: all 0.2s;
+    }
+    
+    .page-item:hover {
+      background: var(--primary-light);
+      color: var(--primary);
+    }
+    
+    .page-item.active {
+      background: var(--primary);
+      color: white;
+      border-color: var(--primary);
+    }
+    
+    .page-item.disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+    
+    /* Loading */
+    .loading-container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 300px;
+      width: 100%;
+    }
+    
+    .loading-spinner {
+      width: 50px;
+      height: 50px;
+      border: 5px solid var(--primary-light);
+      border-radius: 50%;
+      border-top-color: var(--primary);
+      animation: spin 1s linear infinite;
+    }
+    
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+    
+    /* Estilos responsivos */
+    @media (max-width: 768px) {
+      .members-container {
+        padding: 0 1rem;
+      }
+      
+      .members-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1rem;
+      }
+      
+      .members-grid {
+        grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+      }
+    }
+    
+    @media (max-width: 480px) {
+      .members-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+{% endblock %}
+
+{% block content %}
+  <div class="members-container">
+    <!-- Sección de introducción -->
+    <div class="members-intro">
+      <h2>
+        <i class="fas fa-users"></i>
+        Nuestra Comunidad Solidarity
+      </h2>
+      <p>
+        Conoce a las personas que están cambiando el mundo a través de sus acciones solidarias. 
+        Descubre sus perfiles, contribuciones e impacto social y conéctate con quienes comparten tus valores.
+      </p>
+    </div>
+    
+    <!-- Cabecera: título y botón (opcional) -->
+    <div class="members-header">
+      <h1 class="main-title">
+        Miembros de la Comunidad
+      </h1>
+      <div class="members-stats-overview">
+        <span id="total-members" class="stats-number">0</span> miembros registrados
+      </div>
+    </div>
+    
+    <!-- Búsqueda -->
+    <div class="members-search">
+      <i class="fas fa-search" style="color:#4a6fa5;"></i>
+      <input type="text" id="search-input" placeholder="Buscar por nombre, usuario, país...">
+    </div>
+    
+    <!-- Tabs para filtros -->
+    <div class="tabs">
+      <button class="tab active" data-filter="all">Todos</button>
+      <button class="tab" data-filter="impact">Mayor impacto</button>
+      <button class="tab" data-filter="volunteering">Más voluntariados</button>
+      <button class="tab" data-filter="causes">Más causas</button>
+      <button class="tab" data-filter="sharing">Más compartidos</button>
+      <button class="tab" data-filter="recent">Recién unidos</button>
+      <button class="tab" data-filter="community">Más comunidades</button>
+      <button class="tab" data-filter="international">Internacionales</button>
+    </div>
+    
+    <!-- Contenedor para los miembros (se llenará dinámicamente) -->
+    <div class="members-grid" id="membersList">
+      <!-- Los miembros se cargarán dinámicamente aquí -->
+      <div class="loading-container">
+        <div class="loading-spinner"></div>
+      </div>
+    </div>
+    
+    <!-- Paginación -->
+    <div class="pagination" id="pagination">
+      <!-- Pagination will be generated dynamically -->
+    </div>
+  </div>
+  
+  <!-- Modal para ver detalles del perfil (opcional) -->
+  <div id="profileModal" class="modal" style="display:none; position:fixed; z-index:9999; left:0; top:0; width:100vw; height:100vh; background:rgba(0,0,0,0.35); align-items:center; justify-content:center;">
+    <div class="modal-content" style="background:#fff; border-radius:18px; max-width:700px; width:95vw; padding:2rem; box-shadow:0 8px 32px rgba(74,111,165,0.13); position:relative; max-height:90vh; overflow-y:auto;">
+      <button id="closeProfileModal" style="position:absolute; top:1.5rem; right:1.5rem; background:none; border:none; font-size:1.8rem; color:#6b7280; cursor:pointer; transition:color 0.2s;" onmouseover="this.style.color='#4a6fa5'" onmouseout="this.style.color='#6b7280'">&times;</button>
+      <div id="profileModalBody" style="padding:0.5rem;">
+        <!-- Contenido dinámico del perfil -->
+      </div>
+    </div>
+  </div>
+{% endblock %}
+
+{% block scripts %}
+  {{ super() }}
+  <script>
+    // Diccionario de países
+    const countryNames = {
+      ES: "España",
+      MX: "México",
+      AR: "Argentina",
+      CO: "Colombia",
+      CL: "Chile",
+      PE: "Perú",
+      VE: "Venezuela",
+      UY: "Uruguay",
+      US: "Estados Unidos",
+      FR: "Francia",
+      DE: "Alemania",
+      IT: "Italia",
+      PT: "Portugal"
+      // ...
+    };
+
+    // Variables globales
+    let currentFilter = "all";
+    let currentPage = 1;
+    let itemsPerPage = 12;
+    let totalMembers = 0;
+    let allMembers = [];
+    let filteredMembers = [];
+    let searchTerm = "";
+    
+    document.addEventListener('DOMContentLoaded', async function() {
+      // Inicializar la carga de miembros
+      await loadMembersFromSupabase();
+      
+      // Event listener para las pestañas de filtro
+      document.querySelectorAll('.tab').forEach(tab => {
+        tab.addEventListener('click', function() {
+          document.querySelector('.tab.active').classList.remove('active');
+          this.classList.add('active');
+          currentFilter = this.getAttribute('data-filter');
+          currentPage = 1;
+          applyFiltersAndUpdateView();
+        });
+      });
+      
+      // Event listener para la búsqueda
+      document.getElementById('search-input').addEventListener('input', function() {
+        searchTerm = this.value.trim().toLowerCase();
+        currentPage = 1;
+        applyFiltersAndUpdateView();
+      });
+      
+      // Cerrar modal de perfil
+      document.getElementById('closeProfileModal').addEventListener('click', function() {
+        document.getElementById('profileModal').style.display = 'none';
+        document.body.style.overflow = '';
+      });
+      
+      // Cerrar modal al hacer clic fuera
+      document.getElementById('profileModal').addEventListener('click', function(e) {
+        if (e.target === this) {
+          this.style.display = 'none';
+          document.body.style.overflow = '';
+        }
+      });
+    });
+
+    // Cargar miembros desde Supabase con manejo eficiente de errores y carga
+    async function loadMembersFromSupabase() {
+      try {
+        // Loading state
+        document.getElementById('membersList').innerHTML = `
+          <div class="loading-container">
+            <div class="loading-spinner"></div>
+          </div>
+        `;
+        
+        // 1. Obtener los datos básicos de los perfiles (elimina verified)
+        const { data: profiles, error } = await supabase
+          .from('profiles')
+          .select(`
+            id,
+            username,
+            first_name,
+            last_name,
+            photo_url,
+            city,
+            country,
+            impact_points,
+            bio,
+            created_at
+          `)
+          .order('impact_points', { ascending: false });
+          
+        if (error) throw error;
+        
+        // 2. Get additional data for each profile
+        const memberData = [];
+
+        for (const profile of profiles) {
+          // Get causes count
+          const { count: causesCount } = await supabase
+            .from('causes_members')
+            .select('id', { count: 'exact', head: true })
+            .eq('user_id', profile.id);
+
+          // Get volunteering count
+          const { count: volunteeringCount } = await supabase
+            .from('volunteering_members')
+            .select('id', { count: 'exact', head: true })
+            .eq('user_id', profile.id)
+            .eq('status', 'active');
+
+          const { count: teamsCount } = await supabase
+            .from('team_members')
+            .select('id', { count: 'exact', head: true })
+            .eq('user_id', profile.id);
+
+          const { count: challengesCount } = await supabase
+            .from('challenges_members')
+            .select('id', { count: 'exact', head: true })
+            .eq('user_id', profile.id);
+
+          const { count: tasksCount } = await supabase
+            .from('task_members')
+            .select('id', { count: 'exact', head: true })
+            .eq('user_id', profile.id);
+
+          // Si no tienes tabla shares, simplemente pon 0
+          const sharesCount = 0;
+
+          memberData.push({
+            ...profile,
+            causesCount: causesCount || 0,
+            volunteeringCount: volunteeringCount || 0,
+            teamsCount: teamsCount || 0,
+            challengesCount: challengesCount || 0,
+            tasksCount: tasksCount || 0,
+            sharesCount: sharesCount
+          });
+        }
+
+        allMembers = memberData;
+        totalMembers = memberData.length;
+        document.getElementById('total-members').textContent = totalMembers;
+        
+        // Apply filters and update view
+        applyFiltersAndUpdateView();
+      } catch (error) {
+        console.error('Error loading members:', error);
+        document.getElementById('membersList').innerHTML = `
+          <div style="text-align: center; padding: 2rem; grid-column: 1/-1;">
+            <p>Error cargando miembros. Por favor intenta de nuevo más tarde.</p>
+            <button class="btn btn-primary" style="padding:0.6rem 1.2rem; background:var(--primary); color:white; border:none; border-radius:5px; cursor:pointer; margin-top:1rem;" onclick="loadMembersFromSupabase()">
+              <i class="fas fa-sync"></i> Reintentar
+            </button>
+          </div>
+        `;
+      }
+    }
+
+    // Aplicar filtros y actualizar la vista
+    function applyFiltersAndUpdateView() {
+      // Apply search filter
+      if (searchTerm) {
+        filteredMembers = allMembers.filter(member => {
+          const fullName = `${member.first_name || ''} ${member.last_name || ''}`.toLowerCase();
+          const username = (member.username || '').toLowerCase();
+          const country = (member.country || '').toLowerCase();
+          const city = (member.city || '').toLowerCase();
+          
+          return fullName.includes(searchTerm) || 
+                 username.includes(searchTerm) || 
+                 country.includes(searchTerm) || 
+                 city.includes(searchTerm);
+        });
+      } else {
+        filteredMembers = [...allMembers];
+      }
+      
+      // Apply tab filter
+      switch (currentFilter) {
+        case 'impact':
+          filteredMembers.sort((a, b) => (b.impact_points || 0) - (a.impact_points || 0));
+          break;
+        case 'volunteering':
+          filteredMembers.sort((a, b) => b.volunteeringCount - a.volunteeringCount);
+          break;
+        case 'causes':
+          filteredMembers.sort((a, b) => b.causesCount - a.causesCount);
+          break;
+        case 'sharing':
+          filteredMembers.sort((a, b) => b.sharesCount - a.sharesCount);
+          break;
+        case 'recent':
+          filteredMembers.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+          break;
+        case 'community':
+          filteredMembers.sort((a, b) => b.communitiesCount - a.communitiesCount);
+          break;
+        case 'international':
+          // Filter only international members and then sort by country
+          filteredMembers = filteredMembers.filter(m => m.country && m.country.trim() !== '');
+          filteredMembers.sort((a, b) => (a.country || '').localeCompare(b.country || ''));
+          break;
+        default:
+          // Default sorting by impact points
+          filteredMembers.sort((a, b) => (b.impact_points || 0) - (a.impact_points || 0));
+      }
+      
+      // Update the view with paginated results
+      updateMembersView();
+      updatePagination();
+    }
+
+    // Actualizar la vista de miembros (con paginación)
+    function updateMembersView() {
+      const membersList = document.getElementById('membersList');
+      membersList.innerHTML = '';
+      
+      // Calculate pagination
+      const start = (currentPage - 1) * itemsPerPage;
+      const end = start + itemsPerPage;
+      const paginatedMembers = filteredMembers.slice(start, end);
+      
+      // If no members found
+      if (paginatedMembers.length === 0) {
+        membersList.innerHTML = `
+          <div style="text-align: center; padding: 2rem; grid-column: 1/-1; color: #6b7280;">
+            <i class="fas fa-search" style="font-size: 2rem; margin-bottom: 1rem;"></i>
+            <p>No se encontraron miembros que coincidan con tu búsqueda.</p>
+          </div>
+        `;
+        return;
+      }
+      
+      // Create member cards
+      paginatedMembers.forEach((member, index) => {
+        const rank = start + index + 1;
+        const memberCard = createMemberCard(member, rank);
+        membersList.appendChild(memberCard);
+      });
+    }
+
+    // Crear una tarjeta de miembro
+    function createMemberCard(member, rank) {
+      const card = document.createElement('div');
+      card.className = 'member-card';
+      card.style.display = 'flex';
+      card.style.flexDirection = 'row';
+      card.style.alignItems = 'center';
+      card.style.justifyContent = 'space-between';
+      card.style.gap = '1.5rem';
+      card.style.marginBottom = '1.5rem';
+      card.style.width = '100%';
+
+      // País completo
+      let countryDisplay = member.country;
+      if (countryDisplay && countryDisplay.length === 2) {
+        countryDisplay = countryNames[countryDisplay.toUpperCase()] || member.country;
+      }
+
+      card.innerHTML = `
+        <div style="display:flex;align-items:center;gap:1.2rem;min-width:260px;">
+          <div class="member-rank" style="position:static;background:var(--primary);color:white;width:2.2rem;height:2.2rem;font-size:1.1rem;">${rank}</div>
+          <img src="${member.photo_url || '/img/default-avatar.png'}" alt="${member.username || 'Usuario'}" class="member-avatar" style="width:70px;height:70px;">
+          <div>
+            <div class="member-name" style="font-size:1.1rem;font-weight:600;color:var(--primary-dark);">${member.first_name || ''} ${member.last_name || ''}</div>
+            <div class="member-username" style="color:#6b7280;font-size:0.95rem;">@${member.username || 'usuario'}</div>
+            <div class="member-location" style="color:#6b7280;font-size:0.9rem;">
+              <i class="fas fa-map-marker-alt"></i>
+              ${member.city ? member.city + (countryDisplay ? ', ' : '') : ''} ${countryDisplay || 'Sin ubicación'}
+            </div>
+          </div>
+        </div>
+        <div style="display:flex;align-items:center;gap:2.2rem;flex:1;justify-content:center;">
+          <div style="text-align:center;">
+            <div style="font-weight:700;color:var(--primary);font-size:1.2rem;">${member.impact_points || 0}</div>
+            <div style="font-size:0.85rem;color:#6b7280;">Impacto</div>
+          </div>
+          <div style="text-align:center;">
+            <div style="font-weight:700;color:var(--primary);font-size:1.2rem;">${member.volunteeringCount}</div>
+            <div style="font-size:0.85rem;color:#6b7280;">Voluntariados</div>
+          </div>
+          <div style="text-align:center;">
+            <div style="font-weight:700;color:var(--primary);font-size:1.2rem;">${member.causesCount}</div>
+            <div style="font-size:0.85rem;color:#6b7280;">Causas</div>
+          </div>
+          <div style="text-align:center;">
+            <div style="font-weight:700;color:var(--primary);font-size:1.2rem;">${member.teamsCount}</div>
+            <div style="font-size:0.85rem;color:#6b7280;">Equipos</div>
+          </div>
+          <div style="text-align:center;">
+            <div style="font-weight:700;color:var(--primary);font-size:1.2rem;">${member.challengesCount}</div>
+            <div style="font-size:0.85rem;color:#6b7280;">Retos</div>
+          </div>
+          <div style="text-align:center;">
+            <div style="font-weight:700;color:var(--primary);font-size:1.2rem;">${member.tasksCount}</div>
+            <div style="font-size:0.85rem;color:#6b7280;">Tareas</div>
+          </div>
+          <div style="text-align:center;">
+            <div style="font-weight:700;color:var(--primary);font-size:1.2rem;">${member.sharesCount}</div>
+            <div style="font-size:0.85rem;color:#6b7280;">Compartidos</div>
+          </div>
+        </div>
+        <div style="display:flex;flex-direction:column;align-items:flex-end;gap:0.7rem;min-width:120px;">
+          <a href="/profile/${member.id}" class="member-view-profile" style="background:var(--primary-light);color:var(--primary);padding:0.5rem 1.2rem;border-radius:50px;font-weight:600;text-decoration:none;display:flex;align-items:center;gap:0.5rem;">
+            <i class="fas fa-user"></i> Ver perfil
+          </a>
+        </div>
+      `;
+
+      // Event listener para mostrar el perfil
+      const profileButton = card.querySelector('.member-view-profile');
+      profileButton.addEventListener('click', function(e) {
+        e.preventDefault();
+        showMemberProfile(member);
+      });
+
+      return card;
+    }
+
+    // Crear HTML para las insignias de un miembro
+    function createBadgesHTML(badges) {
+      try {
+        const badgeArray = typeof badges === 'string' ? JSON.parse(badges) : badges;
+        if (!Array.isArray(badgeArray)) return '';
+        
+        return badgeArray.map(badge => {
+          return `
+            <div class="member-badge">
+              <i class="fas fa-${badge.icon || 'award'}"></i>
+              <span class="badge-tooltip">${badge.name || 'Insignia'}</span>
+            </div>
+          `;
+        }).join('');
+      } catch (e) {
+        console.error('Error parsing badges:', e);
+        return '';
+      }
+    }
+    
+    // Crear insignia de intereses
+    function createInterestBadge(interests) {
+      try {
+        const interestsArray = typeof interests === 'string' ? JSON.parse(interests) : interests;
+        if (!Array.isArray(interestsArray) || interestsArray.length === 0) return '';
+        
+        return `
+          <div class="member-badge">
+            <i class="fas fa-heart"></i>
+            <span class="badge-tooltip">Intereses: ${interestsArray.join(', ')}</span>
+          </div>
+        `;
+      } catch (e) {
+        console.error('Error parsing interests:', e);
+        return '';
+      }
+    }
+
+    // Actualizar la paginación
+    function updatePagination() {
+      const pagination = document.getElementById('pagination');
+      pagination.innerHTML = '';
+      
+      const totalPages = Math.ceil(filteredMembers.length / itemsPerPage);
+      if (totalPages <= 1) return; // No need for pagination
+      
+      // Previous button
+      const prevBtn = document.createElement('div');
+      prevBtn.className = `page-item ${currentPage === 1 ? 'disabled' : ''}`;
+      prevBtn.innerHTML = '<i class="fas fa-chevron-left"></i>';
+      if (currentPage > 1) {
+        prevBtn.addEventListener('click', () => {
+          goToPage(currentPage - 1);
+        });
+      }
+      pagination.appendChild(prevBtn);
+      
+      // Add page numbers
+      let startPage = Math.max(1, currentPage - 2);
+      let endPage = Math.min(totalPages, startPage + 4);
+      
+      // Adjust start if we're near the end
+      if (endPage - startPage < 4) {
+        startPage = Math.max(1, endPage - 4);
+      }
+      
+      for (let i = startPage; i <= endPage; i++) {
+        const pageBtn = document.createElement('div');
+        pageBtn.className = `page-item ${i === currentPage ? 'active' : ''}`;
+        pageBtn.textContent = i;
+        pageBtn.addEventListener('click', () => {
+          goToPage(i);
+        });
+        pagination.appendChild(pageBtn);
+      }
+      
+      // Next button
+      const nextBtn = document.createElement('div');
+      nextBtn.className = `page-item ${currentPage === totalPages ? 'disabled' : ''}`;
+      nextBtn.innerHTML = '<i class="fas fa-chevron-right"></i>';
+      if (currentPage < totalPages) {
+        nextBtn.addEventListener('click', () => {
+          goToPage(currentPage + 1);
+        });
+      }
+      pagination.appendChild(nextBtn);
+    }
+
+    // Ir a una página específica
+    function goToPage(page) {
+      if (page === currentPage) return;
+      currentPage = page;
+      
+      // Update view with new page
+      updateMembersView();
+      updatePagination();
+      
+      // Scroll to top of members list
+      document.getElementById('membersList').scrollIntoView({ behavior: 'smooth' });
+    }
+
+    // Mostrar el perfil de un miembro en modal
+    async function showMemberProfile(member) {
+      const profileModal = document.getElementById('profileModal');
+      const profileModalBody = document.getElementById('profileModalBody');
+      const joinDate = new Date(member.created_at).toLocaleDateString('es-ES', { year: 'numeric', month: 'long', day: 'numeric' });
+
+      // Nivel
+      const impactPoints = member.impact_points || 0;
+      let level = 'Principiante';
+      let levelIcon = 'seedling';
+      if (impactPoints >= 5000) { level = 'Maestro'; levelIcon = 'crown'; }
+      else if (impactPoints >= 2000) { level = 'Experto'; levelIcon = 'star'; }
+      else if (impactPoints >= 500) { level = 'Avanzado'; levelIcon = 'award'; }
+      else if (impactPoints >= 100) { level = 'Intermedio'; levelIcon = 'leaf'; }
+
+      profileModalBody.innerHTML = `
+        <div style="display:flex;align-items:center;gap:1.5rem;margin-bottom:2rem;">
+          <img src="${member.photo_url || '/img/default-avatar.png'}"
+               alt="${member.username || 'Usuario'}"
+               style="width:100px;height:100px;border-radius:50%;object-fit:cover;border:3px solid var(--primary-light);"
+               onerror="this.src='/img/default-avatar.png'">
+          <div>
+            <h2 style="color:var(--primary);margin-bottom:0.5rem;font-size:1.8rem;">
+              ${member.first_name || ''} ${member.last_name || ''}
+            </h2>
+            <div style="color:#6b7280;margin-bottom:0.5rem;font-size:1.1rem;">@${member.username || 'usuario'}</div>
+            <div style="display:flex;align-items:center;gap:0.5rem;color:#6b7280;">
+              <i class="fas fa-map-marker-alt" style="color:var(--primary);"></i>
+              ${member.city ? member.city + (member.country ? ', ' : '') : ''} ${member.country || 'Sin ubicación'}
+            </div>
+            <div style="margin-top:0.5rem;">
+              <span class="member-level" style="background:var(--accent);color:white;padding:0.2rem 0.7rem;border-radius:4px;font-size:0.95rem;font-weight:600;display:inline-flex;align-items:center;gap:0.3rem;">
+                <i class="fas fa-${levelIcon}"></i> ${level}
+              </span>
+            </div>
+          </div>
+        </div>
+        <div style="margin-bottom:2rem;">
+          <div style="font-size:1.1rem;color:var(--primary-dark);font-weight:600;margin-bottom:0.5rem;">
+            <i class="fas fa-quote-left"></i> Slogan
+          </div>
+          <div style="color:#4a6fa5;font-size:1.05rem;margin-bottom:1rem;">
+            Conoce a las personas que están cambiando el mundo a través de sus acciones solidarias.
+            Descubre sus perfiles, contribuciones e impacto social y conéctate con quienes comparten tus valores.
+          </div>
+          <div style="font-size:1.1rem;color:var(--primary-dark);font-weight:600;margin-bottom:0.5rem;">
+            <i class="fas fa-info-circle"></i> Descripción
+          </div>
+          <div style="color:#4b5563;line-height:1.6;">
+            ${member.bio || 'Este usuario no ha añadido una biografía todavía.'}
+          </div>
+        </div>
+        <div style="display:flex;flex-wrap:wrap;gap:1.5rem;justify-content:center;margin-bottom:2rem;">
+          <div style="text-align:center;min-width:110px;">
+            <div style="font-size:1.5rem;font-weight:700;color:var(--primary);">${member.impact_points || 0}</div>
+            <div style="color:#6b7280;font-size:0.95rem;">Impacto</div>
+          </div>
+          <div style="text-align:center;min-width:110px;">
+            <div style="font-size:1.5rem;font-weight:700;color:var(--primary);">${member.volunteeringCount}</div>
+            <div style="color:#6b7280;font-size:0.95rem;">Voluntariados</div>
+          </div>
+          <div style="text-align:center;min-width:110px;">
+            <div style="font-size:1.5rem;font-weight:700;color:var(--primary);">${member.causesCount}</div>
+            <div style="color:#6b7280;font-size:0.95rem;">Causas</div>
+          </div>
+          <div style="text-align:center;min-width:110px;">
+            <div style="font-size:1.5rem;font-weight:700;color:var(--primary);">${member.teamsCount}</div>
+            <div style="color:#6b7280;font-size:0.95rem;">Equipos</div>
+          </div>
+          <div style="text-align:center;min-width:110px;">
+            <div style="font-size:1.5rem;font-weight:700;color:var(--primary);">${member.challengesCount}</div>
+            <div style="color:#6b7280;font-size:0.95rem;">Retos</div>
+          </div>
+          <div style="text-align:center;min-width:110px;">
+            <div style="font-size:1.5rem;font-weight:700;color:var(--primary);">${member.tasksCount}</div>
+            <div style="color:#6b7280;font-size:0.95rem;">Tareas</div>
+          </div>
+          <div style="text-align:center;min-width:110px;">
+            <div style="font-size:1.5rem;font-weight:700;color:var(--primary);">${member.sharesCount}</div>
+            <div style="color:#6b7280;font-size:0.95rem;">Compartidos</div>
+          </div>
+        </div>
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-top:2rem;border-top:1px solid var(--gray);padding-top:1.5rem;">
+          <div style="color:#6b7280;">
+            <i class="fas fa-calendar-check"></i> Miembro desde ${joinDate}
+          </div>
+          <a href="/profile/${member.id}" class="btn btn-primary" style="display:flex;align-items:center;gap:0.5rem;text-decoration:none;padding:0.6rem 1.2rem;background:var(--primary);color:white;border-radius:8px;font-weight:600;">
+            <i class="fas fa-external-link-alt"></i> Ver perfil completo
+          </a>
+        </div>
+      `;
+
+      profileModal.style.display = 'flex';
+      document.body.style.overflow = 'hidden';
+    }
+  </script>
+{% endblock %}

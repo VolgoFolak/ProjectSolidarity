@@ -1,0 +1,993 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Configuración del Perfil | Solidarity</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #4a6fa5;
+            --primary-light: #6d8fc7;
+            --secondary: #166088;
+            --accent: #4fc3a1;
+            --accent-dark: #3aa389;
+            --dark: #2d3748;
+            --darker: #1a202c;
+            --light: #f8f9fa;
+            --gray: #e2e8f0;
+            --white: #ffffff;
+            --btn-bg: #4a6fa5;
+            --btn-bg-hover: #3da58a;
+            --btn-outline: #fff;
+            --btn-outline-border: #4a6fa5;
+            --btn-outline-hover: #eaf3fa;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: var(--light);
+            color: var(--darker);
+            line-height: 1.6;
+            padding: 0;
+        }
+
+        .profile-settings-container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            background: var(--white);
+            border-radius: 18px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.07);
+            overflow: hidden;
+        }
+
+        .profile-header {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 2.5rem;
+            text-align: center;
+            position: relative;
+        }
+
+        .back-btn {
+            position: absolute;
+            top: 1.5rem;
+            left: 1.5rem;
+            color: white;
+            font-size: 1.3rem;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .profile-header-content {
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        .profile-header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            font-weight: 800;
+        }
+
+        .profile-header p {
+            font-size: 1.15rem;
+            opacity: 0.9;
+        }
+
+        .profile-main {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 2rem;
+            padding: 2.5rem;
+        }
+
+        @media (min-width: 992px) {
+            .profile-main {
+                grid-template-columns: 300px 1fr;
+            }
+        }
+
+        .profile-sidebar {
+            border-right: 1px solid var(--gray);
+            padding-right: 1.5rem;
+        }
+
+        .sidebar-nav {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .sidebar-item {
+            padding: 0.9rem 1.2rem;
+            border-radius: 8px;
+            color: var(--dark);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            transition: all 0.2s;
+        }
+
+        .sidebar-item.active, .sidebar-item:hover {
+            background: #e6f0fa;
+            color: var(--primary);
+            font-weight: 600;
+        }
+
+        .profile-content {
+            padding: 0 1rem;
+        }
+
+        .section {
+            margin-bottom: 2.5rem;
+            display: none;
+        }
+
+        .section.active {
+            display: block;
+        }
+
+        .section-header {
+            margin-bottom: 1.8rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-bottom: 0.8rem;
+            border-bottom: 2px solid var(--gray);
+        }
+
+        .section-header h2 {
+            font-size: 1.6rem;
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 1.5rem;
+        }
+
+        @media (min-width: 768px) {
+            .form-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        .form-group {
+            margin-bottom: 1.2rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: var(--dark);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .form-group input, 
+        .form-group select, 
+        .form-group textarea {
+            width: 100%;
+            padding: 0.9rem 1.2rem;
+            border: 1px solid var(--gray);
+            border-radius: 8px;
+            font-size: 1rem;
+            background: #f8fafc;
+            transition: all 0.2s;
+        }
+
+        .form-group input:focus, 
+        .form-group select:focus, 
+        .form-group textarea:focus {
+            border-color: var(--primary);
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(74, 111, 165, 0.15);
+        }
+
+        .photo-section {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1.5rem;
+            padding: 1.5rem;
+            background: #f8fafc;
+            border-radius: 12px;
+            margin-bottom: 2rem;
+        }
+
+        .photo-preview {
+            width: 160px;
+            height: 160px;
+            border-radius: 50%;
+            overflow: hidden;
+            border: 4px solid var(--accent);
+            position: relative;
+        }
+
+        .photo-preview img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .photo-actions {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            width: 100%;
+            max-width: 300px;
+        }
+
+        .photo-upload {
+            display: none;
+        }
+
+        .btn {
+            padding: 0.8rem 1.5rem;
+            border-radius: 30px;
+            border: none;
+            font-weight: 500;
+            font-size: 1em;
+            cursor: pointer;
+            transition: background 0.2s, color 0.2s;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.7rem;
+        }
+
+        .btn-primary {
+            background: var(--btn-bg);
+            color: #fff;
+        }
+
+        .btn-primary:hover {
+            background: var(--btn-bg-hover);
+        }
+
+        .btn-outline {
+            background: var(--btn-outline);
+            color: var(--primary);
+            border: 2px solid var(--btn-outline-border);
+        }
+
+        .btn-outline:hover {
+            background: var(--btn-outline-hover);
+        }
+
+        .btn-sm {
+            padding: 0.5rem 1.2rem;
+            font-size: 0.9rem;
+        }
+
+        .interests-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-top: 1.2rem;
+        }
+
+        .interest-item {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            padding: 0.8rem;
+            background: #f8fafc;
+            border-radius: 8px;
+            border: 1px solid var(--gray);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .interest-item:hover {
+            border-color: var(--primary);
+        }
+
+        .interest-item.selected {
+            background: #e6f0fa;
+            border-color: var(--primary);
+        }
+
+        .interest-checkbox {
+            display: none;
+        }
+
+        .security-card {
+            background: #f8fafc;
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            border: 1px solid var(--gray);
+        }
+
+        .security-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.2rem;
+        }
+
+        .security-status {
+            display: flex;
+            align-items: center;
+            gap: 0.7rem;
+            font-weight: 600;
+        }
+
+        .security-status.verified {
+            color: var(--accent);
+        }
+
+        .security-status.unverified {
+            color: #e53e3e;
+        }
+
+        .social-connections {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 1.2rem;
+            margin-top: 1.5rem;
+        }
+
+        .social-card {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1.2rem;
+            background: #f8fafc;
+            border-radius: 12px;
+            border: 1px solid var(--gray);
+        }
+
+        .social-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            color: white;
+        }
+
+        .social-google { background: #DB4437; }
+        .social-facebook { background: #4267B2; }
+        .social-twitter { background: #1DA1F2; }
+
+        .social-info {
+            flex: 1;
+        }
+
+        .social-name {
+            font-weight: 600;
+            margin-bottom: 0.2rem;
+        }
+
+        .social-status {
+            font-size: 0.9rem;
+            color: #6b7280;
+        }
+
+        .actions-footer {
+            display: flex;
+            justify-content: flex-end;
+            gap: 1rem;
+            padding-top: 2rem;
+            margin-top: 2rem;
+            border-top: 1px solid var(--gray);
+        }
+
+        .notification-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.2rem;
+            background: #f8fafc;
+            border-radius: 12px;
+            margin-bottom: 1rem;
+            border: 1px solid var(--gray);
+        }
+
+        .notification-info {
+            flex: 1;
+        }
+
+        .notification-title {
+            font-weight: 600;
+            margin-bottom: 0.3rem;
+        }
+
+        .notification-desc {
+            color: #6b7280;
+            font-size: 0.95rem;
+        }
+
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 50px;
+            height: 26px;
+        }
+
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: .4s;
+            border-radius: 34px;
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 18px;
+            width: 18px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+
+        input:checked + .slider {
+            background-color: var(--accent);
+        }
+
+        input:checked + .slider:before {
+            transform: translateX(24px);
+        }
+
+        .delete-section {
+            background: #fff5f5;
+            border-radius: 12px;
+            padding: 2rem;
+            text-align: center;
+            border: 1px solid #fed7d7;
+        }
+
+        .delete-warning {
+            color: #e53e3e;
+            font-size: 1.1rem;
+            margin-bottom: 1.5rem;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .delete-btn {
+            background: #e53e3e;
+            color: white;
+            padding: 0.9rem 2rem;
+        }
+
+        .delete-btn:hover {
+            background: #c53030;
+        }
+    </style>
+</head>
+<body>
+    <div class="profile-settings-container">
+        <div class="profile-header">
+            <a href="profile.html" class="back-btn">
+                <i class="fas fa-arrow-left"></i> Volver
+            </a>
+            <div class="profile-header-content">
+                <h1>Configuración del Perfil</h1>
+                <p>Personaliza tu experiencia en Solidarity y gestiona tus preferencias</p>
+            </div>
+        </div>
+
+        <div class="profile-main">
+            <div class="profile-sidebar">
+                <nav class="sidebar-nav">
+                    <a href="#" class="sidebar-item active" data-section="personal-info">
+                        <i class="fas fa-user"></i> Información Personal
+                    </a>
+                    <a href="#" class="sidebar-item" data-section="account-security">
+                        <i class="fas fa-shield-alt"></i> Seguridad de la Cuenta
+                    </a>
+                    <a href="#" class="sidebar-item" data-section="interests">
+                        <i class="fas fa-heart"></i> Intereses
+                    </a>
+                    <a href="#" class="sidebar-item" data-section="notifications">
+                        <i class="fas fa-bell"></i> Notificaciones
+                    </a>
+                    <a href="#" class="sidebar-item" data-section="social-accounts">
+                        <i class="fas fa-share-alt"></i> Redes Sociales
+                    </a>
+                    <a href="#" class="sidebar-item" data-section="privacy">
+                        <i class="fas fa-lock"></i> Privacidad
+                    </a>
+                    <a href="#" class="sidebar-item" data-section="delete-account">
+                        <i class="fas fa-exclamation-triangle"></i> Eliminar Cuenta
+                    </a>
+                </nav>
+            </div>
+
+            <div class="profile-content">
+                <!-- Información Personal -->
+                <div class="section active" id="personal-info">
+                    <div class="section-header">
+                        <h2><i class="fas fa-user"></i> Información Personal</h2>
+                    </div>
+
+                    <div class="photo-section">
+                        <div class="photo-preview">
+                            <img src="https://randomuser.me/api/portraits/women/68.jpg" alt="Foto de perfil" id="profile-photo">
+                        </div>
+                        <div class="photo-actions">
+                            <input type="file" id="photo-upload" class="photo-upload" accept="image/*">
+                            <button class="btn btn-outline" id="change-photo-btn">
+                                <i class="fas fa-camera"></i> Cambiar Foto
+                            </button>
+                            <button class="btn btn-outline">
+                                <i class="fas fa-magic"></i> Usar Avatar
+                            </button>
+                        </div>
+                    </div>
+
+                    <form class="form-grid">
+                        <div class="form-group">
+                            <label for="first-name"><i class="fas fa-signature"></i> Nombre</label>
+                            <input type="text" id="first-name" value="María">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="last-name"><i class="fas fa-signature"></i> Apellidos</label>
+                            <input type="text" id="last-name" value="García López">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="username"><i class="fas fa-at"></i> Nombre de usuario</label>
+                            <input type="text" id="username" value="maria_solidaria">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="email"><i class="fas fa-envelope"></i> Correo electrónico</label>
+                            <input type="email" id="email" value="maria.garcia@ejemplo.com" readonly>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="country"><i class="fas fa-globe-europe"></i> País</label>
+                            <select id="country">
+                                <option value="es">España</option>
+                                <option value="mx" selected>México</option>
+                                <option value="ar">Argentina</option>
+                                <option value="co">Colombia</option>
+                                <option value="cl">Chile</option>
+                                <option value="pe">Perú</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="birthdate"><i class="fas fa-birthday-cake"></i> Fecha de nacimiento</label>
+                            <input type="date" id="birthdate" value="1985-07-15">
+                        </div>
+                        
+                        <div class="form-group" style="grid-column: 1 / -1;">
+                            <label for="slogan"><i class="fas fa-quote-left"></i> Tu lema personal</label>
+                            <input type="text" id="slogan" value="Pequeñas acciones, grandes cambios">
+                        </div>
+                        
+                        <div class="form-group" style="grid-column: 1 / -1;">
+                            <label for="bio"><i class="fas fa-book-open"></i> Sobre ti</label>
+                            <textarea id="bio" rows="4">Soy una apasionada del voluntariado y la ayuda comunitaria. Creo que juntos podemos construir un mundo mejor mediante acciones solidarias concretas. Me encanta organizar eventos benéficos y participar en limpiezas de playas.</textarea>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- Seguridad de la Cuenta -->
+                <div class="section" id="account-security">
+                    <div class="section-header">
+                        <h2><i class="fas fa-shield-alt"></i> Seguridad de la Cuenta</h2>
+                    </div>
+
+                    <div class="security-card">
+                        <div class="security-info">
+                            <div class="security-status verified">
+                                <i class="fas fa-check-circle"></i>
+                                <span>Correo electrónico verificado</span>
+                            </div>
+                            <button class="btn btn-outline btn-sm">
+                                <i class="fas fa-sync"></i> Reenviar verificación
+                            </button>
+                        </div>
+                        <p>Tu dirección de correo electrónico está verificada. Esto nos ayuda a mantener segura tu cuenta y a recuperarla si pierdes el acceso.</p>
+                    </div>
+
+                    <h3 style="margin: 2rem 0 1rem 0; color: var(--primary);">
+                        <i class="fas fa-key"></i> Cambiar Contraseña
+                    </h3>
+
+                    <form>
+                        <div class="form-group">
+                            <label for="current-password"><i class="fas fa-lock"></i> Contraseña actual</label>
+                            <input type="password" id="current-password">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="new-password"><i class="fas fa-lock"></i> Nueva contraseña</label>
+                            <input type="password" id="new-password">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="confirm-password"><i class="fas fa-lock"></i> Confirmar nueva contraseña</label>
+                            <input type="password" id="confirm-password">
+                        </div>
+                    </form>
+
+                    <h3 style="margin: 2rem 0 1rem 0; color: var(--primary);">
+                        <i class="fas fa-mobile-alt"></i> Verificación en Dos Pasos
+                    </h3>
+                    
+                    <div class="security-card">
+                        <div class="security-info">
+                            <div class="security-status unverified">
+                                <i class="fas fa-times-circle"></i>
+                                <span>No activada</span>
+                            </div>
+                            <button class="btn btn-primary btn-sm">
+                                <i class="fas fa-plus"></i> Activar
+                            </button>
+                        </div>
+                        <p>La verificación en dos pasos añade una capa adicional de seguridad a tu cuenta. Cuando la actives, necesitarás ingresar un código especial cada vez que inicies sesión.</p>
+                    </div>
+                </div>
+
+                <!-- Intereses -->
+                <div class="section" id="interests">
+                    <div class="section-header">
+                        <h2><i class="fas fa-heart"></i> Tus Intereses</h2>
+                    </div>
+                    <p>Selecciona los temas que más te interesan para personalizar tu experiencia en Solidarity y recibir contenido relevante.</p>
+                    
+                    <div class="interests-grid">
+                        <label class="interest-item selected">
+                            <input type="checkbox" class="interest-checkbox" checked>
+                            <i class="fas fa-leaf" style="color: #2ecc71;"></i> Medio Ambiente
+                        </label>
+                        
+                        <label class="interest-item selected">
+                            <input type="checkbox" class="interest-checkbox" checked>
+                            <i class="fas fa-book" style="color: #3498db;"></i> Educación
+                        </label>
+                        
+                        <label class="interest-item">
+                            <input type="checkbox" class="interest-checkbox">
+                            <i class="fas fa-heartbeat" style="color: #e74c3c;"></i> Salud
+                        </label>
+                        
+                        <label class="interest-item selected">
+                            <input type="checkbox" class="interest-checkbox" checked>
+                            <i class="fas fa-paw" style="color: #f39c12;"></i> Animales
+                        </label>
+                        
+                        <label class="interest-item">
+                            <input type="checkbox" class="interest-checkbox">
+                            <i class="fas fa-utensils" style="color: #9b59b6;"></i> Alimentación
+                        </label>
+                        
+                        <label class="interest-item">
+                            <input type="checkbox" class="interest-checkbox">
+                            <i class="fas fa-female" style="color: #e84393;"></i> Igualdad de Género
+                        </label>
+                        
+                        <label class="interest-item">
+                            <input type="checkbox" class="interest-checkbox">
+                            <i class="fas fa-hand-holding-heart" style="color: #d63031;"></i> Pobreza
+                        </label>
+                        
+                        <label class="interest-item selected">
+                            <input type="checkbox" class="interest-checkbox" checked>
+                            <i class="fas fa-hands-helping" style="color: #00b894;"></i> Voluntariado
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Notificaciones -->
+                <div class="section" id="notifications">
+                    <div class="section-header">
+                        <h2><i class="fas fa-bell"></i> Configuración de Notificaciones</h2>
+                    </div>
+                    <p>Controla cómo y cuándo recibes notificaciones de Solidarity.</p>
+                    
+                    <div class="notification-item">
+                        <div class="notification-info">
+                            <div class="notification-title">Notificaciones por correo</div>
+                            <div class="notification-desc">Recibe resúmenes semanales y noticias importantes</div>
+                        </div>
+                        <label class="switch">
+                            <input type="checkbox" checked>
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+                    
+                    <div class="notification-item">
+                        <div class="notification-info">
+                            <div class="notification-title">Notificaciones push</div>
+                            <div class="notification-desc">Mensajes instantáneos en tu dispositivo</div>
+                        </div>
+                        <label class="switch">
+                            <input type="checkbox" checked>
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+                    
+                    <div class="notification-item">
+                        <div class="notification-info">
+                            <div class="notification-title">Actividad en mis causas</div>
+                            <div class="notification-desc">Actualizaciones sobre causas que sigues</div>
+                        </div>
+                        <label class="switch">
+                            <input type="checkbox" checked>
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+                    
+                    <div class="notification-item">
+                        <div class="notification-info">
+                            <div class="notification-title">Recordatorios de tareas</div>
+                            <div class="notification-desc">Avisos sobre tus tareas pendientes</div>
+                        </div>
+                        <label class="switch">
+                            <input type="checkbox">
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+                    
+                    <div class="notification-item">
+                        <div class="notification-info">
+                            <div class="notification-title">Eventos cercanos</div>
+                            <div class="notification-desc">Información sobre eventos de voluntariado en tu área</div>
+                        </div>
+                        <label class="switch">
+                            <input type="checkbox" checked>
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Redes Sociales -->
+                <div class="section" id="social-accounts">
+                    <div class="section-header">
+                        <h2><i class="fas fa-share-alt"></i> Cuentas Sociales Conectadas</h2>
+                    </div>
+                    <p>Conecta tus cuentas sociales para acceder más fácilmente y compartir tus logros solidarios.</p>
+                    
+                    <div class="social-connections">
+                        <div class="social-card">
+                            <div class="social-icon social-google">
+                                <i class="fab fa-google"></i>
+                            </div>
+                            <div class="social-info">
+                                <div class="social-name">Google</div>
+                                <div class="social-status connected">Conectado</div>
+                            </div>
+                            <button class="btn btn-outline btn-sm">
+                                <i class="fas fa-unlink"></i> Desconectar
+                            </button>
+                        </div>
+                        
+                        <div class="social-card">
+                            <div class="social-icon social-facebook">
+                                <i class="fab fa-facebook-f"></i>
+                            </div>
+                            <div class="social-info">
+                                <div class="social-name">Facebook</div>
+                                <div class="social-status not-connected">No conectado</div>
+                            </div>
+                            <button class="btn btn-primary btn-sm">
+                                <i class="fas fa-link"></i> Conectar
+                            </button>
+                        </div>
+                        
+                        <div class="social-card">
+                            <div class="social-icon social-twitter">
+                                <i class="fab fa-twitter"></i>
+                            </div>
+                            <div class="social-info">
+                                <div class="social-name">Twitter</div>
+                                <div class="social-status not-connected">No conectado</div>
+                            </div>
+                            <button class="btn btn-primary btn-sm">
+                                <i class="fas fa-link"></i> Conectar
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Privacidad -->
+                <div class="section" id="privacy">
+                    <div class="section-header">
+                        <h2><i class="fas fa-lock"></i> Configuración de Privacidad</h2>
+                    </div>
+                    
+                    <div class="notification-item">
+                        <div class="notification-info">
+                            <div class="notification-title">Perfil público</div>
+                            <div class="notification-desc">Permite que otros usuarios vean tu perfil y actividades</div>
+                        </div>
+                        <label class="switch">
+                            <input type="checkbox" checked>
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+                    
+                    <div class="notification-item">
+                        <div class="notification-info">
+                            <div class="notification-title">Mostrar ubicación</div>
+                            <div class="notification-desc">Comparte tu ciudad en tu perfil público</div>
+                        </div>
+                        <label class="switch">
+                            <input type="checkbox" checked>
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+                    
+                    <div class="notification-item">
+                        <div class="notification-info">
+                            <div class="notification-title">Mostrar puntos de impacto</div>
+                            <div class="notification-desc">Permite que otros vean tu contribución total</div>
+                        </div>
+                        <label class="switch">
+                            <input type="checkbox">
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+                    
+                    <div class="notification-item">
+                        <div class="notification-info">
+                            <div class="notification-title">Mostrar actividades recientes</div>
+                            <div class="notification-desc">Comparte tus acciones recientes en tu perfil</div>
+                        </div>
+                        <label class="switch">
+                            <input type="checkbox" checked>
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+                    
+                    <div class="notification-item">
+                        <div class="notification-info">
+                            <div class="notification-title">Recibir mensajes de otros usuarios</div>
+                            <div class="notification-desc">Permite que otros usuarios te contacten</div>
+                        </div>
+                        <label class="switch">
+                            <input type="checkbox" checked>
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+                    
+                    <div class="notification-item">
+                        <div class="notification-info">
+                            <div class="notification-title">Incluir en rankings</div>
+                            <div class="notification-desc">Aparece en los rankings de impacto y participación</div>
+                        </div>
+                        <label class="switch">
+                            <input type="checkbox" checked>
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Eliminar Cuenta -->
+                <div class="section" id="delete-account">
+                    <div class="section-header">
+                        <h2><i class="fas fa-exclamation-triangle"></i> Eliminar Cuenta</h2>
+                    </div>
+                    
+                    <div class="delete-section">
+                        <div class="delete-warning">
+                            <i class="fas fa-exclamation-circle"></i>
+                            ¡Advertencia! Eliminar tu cuenta es permanente. Perderás todos tus datos, puntos de impacto, historial de actividades y conexiones con comunidades. Esta acción no se puede deshacer.
+                        </div>
+                        
+                        <div class="form-group" style="max-width: 400px; margin: 0 auto 1.5rem;">
+                            <label for="delete-confirm"><i class="fas fa-key"></i> Contraseña actual</label>
+                            <input type="password" id="delete-confirm">
+                        </div>
+                        
+                        <button class="btn delete-btn">
+                            <i class="fas fa-trash-alt"></i> Eliminar mi cuenta permanentemente
+                        </button>
+                    </div>
+                </div>
+
+                <div class="actions-footer">
+                    <button class="btn btn-outline">
+                        <i class="fas fa-times"></i> Cancelar
+                    </button>
+                    <button class="btn btn-primary">
+                        <i class="fas fa-save"></i> Guardar Cambios
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Navegación entre secciones
+            const sidebarItems = document.querySelectorAll('.sidebar-item');
+            const sections = document.querySelectorAll('.section');
+            
+            sidebarItems.forEach(item => {
+                item.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    
+                    // Actualizar navegación activa
+                    sidebarItems.forEach(i => i.classList.remove('active'));
+                    this.classList.add('active');
+                    
+                    // Mostrar sección correspondiente
+                    const sectionId = this.getAttribute('data-section');
+                    sections.forEach(section => {
+                        section.classList.remove('active');
+                        if (section.id === sectionId) {
+                            section.classList.add('active');
+                        }
+                    });
+                });
+            });
+            
+            // Cambio de foto de perfil
+            const photoUpload = document.getElementById('photo-upload');
+            const changePhotoBtn = document.getElementById('change-photo-btn');
+            const profilePhoto = document.getElementById('profile-photo');
+            
+            changePhotoBtn.addEventListener('click', function() {
+                photoUpload.click();
+            });
+            
+            photoUpload.addEventListener('change', function(e) {
+                if (e.target.files && e.target.files[0]) {
+                    const reader = new FileReader();
+                    
+                    reader.onload = function(event) {
+                        profilePhoto.src = event.target.result;
+                    }
+                    
+                    reader.readAsDataURL(e.target.files[0]);
+                }
+            });
+            
+            // Interacción con elementos de interés
+            const interestItems = document.querySelectorAll('.interest-item');
+            
+            interestItems.forEach(item => {
+                item.addEventListener('click', function() {
+                    this.classList.toggle('selected');
+                    const checkbox = this.querySelector('.interest-checkbox');
+                    checkbox.checked = !checkbox.checked;
+                });
+            });
+        });
+    </script>
+</body>
+</html>

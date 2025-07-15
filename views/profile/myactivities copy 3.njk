@@ -1,0 +1,1575 @@
+{% extends "layout.njk" %}
+
+{% block title %}Solidarity - Mis Actividades{% endblock %}
+
+{% block head %}
+  {{ super() }}
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <style>
+    :root {
+      --primary: #4a6fa5;
+      --primary-dark: #166088;
+      --gray: #e2e8f0;
+      --white: #fff;
+      --accent: #4fc3a1;
+      --accent-dark: #3da58a;
+      --urgent: #e53e3e;
+      --challenge: #ffe066;
+      --challenge-dark: #a67c00;
+      --volunteering: #00bcd4;
+      --volunteering-dark: #0097a7;
+    }
+
+    .main-container {
+      max-width: 1200px;
+      margin: 2rem auto;
+      padding: 0 2rem;
+    }
+
+    .section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 2rem;
+    }
+
+    .section-header h1 {
+      font-size: 2rem;
+      color: var(--primary);
+      font-weight: 700;
+    }
+
+    .search-container {
+      margin-bottom: 2rem;
+      display: flex;
+      align-items: center;
+      gap: 0.7rem;
+    }
+
+    .search-container input {
+      flex: 1;
+      padding: 0.6rem 1.2rem;
+      border-radius: 7px;
+      border: 1.5px solid var(--gray);
+      font-size: 1.05rem;
+      outline: none;
+      transition: border 0.2s;
+      background: #fff;
+    }
+
+    .search-container input:focus {
+      border-color: var(--primary);
+    }
+
+    .tabs {
+      display: flex;
+      border-bottom: 1px solid var(--gray);
+      margin-bottom: 2rem;
+      flex-wrap: wrap;
+    }
+
+    .tab {
+      padding: 0.75rem 1.5rem;
+      cursor: pointer;
+      position: relative;
+      font-weight: 500;
+      color: #6b7280;
+      background: none;
+      border: none;
+      outline: none;
+    }
+
+    .tab.active {
+      color: var(--primary);
+      font-weight: 600;
+    }
+
+    .tab.active::after {
+      content: '';
+      position: absolute;
+      bottom: -1px;
+      left: 0;
+      width: 100%;
+      height: 3px;
+      background: var(--primary);
+    }
+
+    /* Grid de actividades */
+    .activities-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+      gap: 2rem;
+    }
+
+    /* Tarjetas de causas */
+    .cause-card {
+      background: #fff;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+      border: 1px solid var(--gray);
+      display: flex;
+      flex-direction: column;
+      transition: all 0.3s;
+      position: relative;
+    }
+    .cause-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+      border-color: var(--primary);
+    }
+    .cause-image img {
+      width: 100%;
+      height: 180px;
+      object-fit: cover;
+      border-top-left-radius: 12px;
+      border-top-right-radius: 12px;
+    }
+    .cause-content {
+      padding: 1.2rem 1.5rem 1.5rem 1.5rem;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+    .cause-content h3 {
+      font-size: 1.2rem;
+      color: var(--primary);
+      margin-bottom: 0.5rem;
+      font-weight: 700;
+    }
+    .cause-content p {
+      color: #4a5568;
+      font-size: 0.97rem;
+      margin-bottom: 1rem;
+      flex: 1;
+    }
+    .progress-container {
+      margin-bottom: 1rem;
+    }
+    .progress-bar {
+      width: 100%;
+      background: var(--gray);
+      border-radius: 4px;
+      height: 8px;
+      position: relative;
+      overflow: hidden;
+      margin-bottom: 0.5rem;
+    }
+    .progress {
+      height: 100%;
+      background: var(--primary);
+      border-radius: 4px;
+      transition: width 0.4s cubic-bezier(.4,1,.7,1);
+    }
+    .progress-info {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.9rem;
+      color: #6b7280;
+    }
+    .meta {
+      display: flex;
+      gap: 1.2rem;
+      font-size: 0.9rem;
+      margin-bottom: 1rem;
+      color: #6b7280;
+    }
+    .actions {
+      display: flex;
+      gap: 0.7rem;
+      margin-top: 1rem;
+    }
+
+    /* Tarjetas de tareas */
+    .task-card {
+      background: #fff;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+      border: 1px solid var(--gray);
+      display: flex;
+      flex-direction: column;
+      transition: all 0.3s;
+      position: relative;
+    }
+    .task-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+      border-color: var(--accent);
+    }
+    .task-image img {
+      width: 100%;
+      height: 180px;
+      object-fit: cover;
+      border-top-left-radius: 12px;
+      border-top-right-radius: 12px;
+    }
+    .task-content {
+      padding: 1.2rem 1.5rem 1.5rem 1.5rem;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+    .task-content h3 {
+      font-size: 1.2rem;
+      color: var(--accent);
+      margin-bottom: 0.5rem;
+      font-weight: 700;
+    }
+    .task-content p {
+      color: #4a5568;
+      font-size: 0.97rem;
+      margin-bottom: 1rem;
+      flex: 1;
+    }
+    .task-meta {
+      display: flex;
+      gap: 1.2rem;
+      font-size: 0.9rem;
+      margin-bottom: 1rem;
+      color: #6b7280;
+    }
+    .task-actions {
+      display: flex;
+      gap: 0.7rem;
+      margin-top: 1rem;
+    }
+
+    /* Tarjetas de retos */
+    .challenge-card {
+      background: #fffbe6;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+      border: 1px solid #ffe066;
+      display: flex;
+      flex-direction: column;
+      transition: all 0.3s;
+      position: relative;
+    }
+    .challenge-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 25px #ffe06655;
+      border-color: #ffd600;
+    }
+    .challenge-image img {
+      width: 100%;
+      height: 180px;
+      object-fit: cover;
+      border-top-left-radius: 12px;
+      border-top-right-radius: 12px;
+    }
+    .challenge-content {
+      padding: 1.2rem 1.5rem 1.5rem 1.5rem;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+    .challenge-content h3 {
+      font-size: 1.2rem;
+      color: var(--challenge-dark);
+      margin-bottom: 0.5rem;
+      font-weight: 700;
+    }
+    .challenge-content p {
+      color: #4a5568;
+      font-size: 0.97rem;
+      margin-bottom: 1rem;
+      flex: 1;
+    }
+    .challenge-meta {
+      display: flex;
+      gap: 1.2rem;
+      font-size: 0.9rem;
+      margin-bottom: 1rem;
+      color: #6b7280;
+    }
+    .challenge-actions {
+      display: flex;
+      gap: 0.7rem;
+      margin-top: 1rem;
+    }
+
+    /* Tarjetas de voluntariado */
+    .volunteering-card {
+      background: #e6faff;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+      border: 1px solid #00bcd4;
+      display: flex;
+      flex-direction: column;
+      transition: all 0.3s;
+      position: relative;
+    }
+    .volunteering-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 25px #00bcd422;
+      border-color: #0097a7;
+    }
+    .volunteering-image img {
+      width: 100%;
+      height: 180px;
+      object-fit: cover;
+      border-top-left-radius: 12px;
+      border-top-right-radius: 12px;
+    }
+    .volunteering-content {
+      padding: 1.2rem 1.5rem 1.5rem 1.5rem;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+    .volunteering-content h3 {
+      font-size: 1.2rem;
+      color: var(--volunteering-dark);
+      margin-bottom: 0.5rem;
+      font-weight: 700;
+    }
+    .volunteering-content p {
+      color: #4a5568;
+      font-size: 0.97rem;
+      margin-bottom: 1rem;
+      flex: 1;
+    }
+    .volunteering-meta {
+      display: flex;
+      gap: 1.2rem;
+      font-size: 0.9rem;
+      margin-bottom: 1rem;
+      color: #6b7280;
+    }
+    .volunteering-actions {
+      display: flex;
+      gap: 0.7rem;
+      margin-top: 1rem;
+    }
+
+    /* Modal administración */
+    .admin-modal {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.5);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+      opacity: 0;
+      visibility: hidden;
+      transition: all 0.3s;
+    }
+    .admin-modal.active {
+      opacity: 1;
+      visibility: visible;
+    }
+    .admin-modal-content {
+      background: white;
+      border-radius: 12px;
+      width: 90%;
+      max-width: 800px;
+      max-height: 90vh;
+      overflow-y: auto;
+      padding: 2rem;
+      box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+      position: relative;
+    }
+    .close-admin-modal {
+      position: absolute;
+      top: 1rem;
+      right: 1rem;
+      background: none;
+      border: none;
+      font-size: 1.5rem;
+      cursor: pointer;
+      color: #6b7280;
+    }
+    .admin-tabs {
+      display: flex;
+      border-bottom: 1px solid #e2e8f0;
+      margin-bottom: 1.5rem;
+    }
+    .admin-tab {
+      padding: 0.75rem 1.5rem;
+      cursor: pointer;
+      position: relative;
+      font-weight: 500;
+      color: #6b7280;
+      background: none;
+      border: none;
+      outline: none;
+    }
+    .admin-tab.active {
+      color: var(--primary);
+      font-weight: 600;
+    }
+    .admin-tab.active::after {
+      content: '';
+      position: absolute;
+      bottom: -1px;
+      left: 0;
+      width: 100%;
+      height: 3px;
+      background: var(--primary);
+    }
+    .admin-tab-content {
+      display: none;
+    }
+    .admin-tab-content.active {
+      display: block;
+    }
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+    .stat-card {
+      background: #f8fafc;
+      border-radius: 8px;
+      padding: 1.5rem;
+      text-align: center;
+    }
+    .stat-value {
+      font-size: 2rem;
+      font-weight: 700;
+      color: var(--primary);
+      margin-bottom: 0.5rem;
+    }
+    .stat-label {
+      color: #6b7280;
+      font-size: 0.9rem;
+    }
+    .progress-bar {
+      width: 100%;
+      background: var(--gray);
+      border-radius: 4px;
+      height: 8px;
+      position: relative;
+      overflow: hidden;
+      margin-bottom: 0.5rem;
+      box-shadow: none;
+    }
+    .progress-fill {
+      height: 100%;
+      background: var(--primary);
+      border-radius: 4px;
+      transition: width 0.4s cubic-bezier(.4,1,.7,1);
+      color: #fff;
+      font-size: 0.95em;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      padding-right: 8px;
+      box-shadow: none;
+    }
+    .progress-info {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.9rem;
+      color: #6b7280;
+    }
+    .members-list {
+      margin-top: 1rem;
+    }
+    .member-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1rem;
+      border-bottom: 1px solid #e2e8f0;
+    }
+    .member-info {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+    .member-avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      object-fit: cover;
+    }
+    .member-name {
+      font-weight: 600;
+    }
+    .member-actions {
+      display: flex;
+      gap: 0.5rem;
+    }
+    .form-section-title {
+      color: var(--primary);
+      font-size: 1.25rem;
+      font-weight: 700;
+      margin-bottom: 1.2rem;
+      display: flex;
+      align-items: center;
+      gap: 0.7rem;
+    }
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.2rem 2.2rem;
+    }
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
+    }
+    .form-group-full {
+      grid-column: 1 / -1;
+    }
+    .form-group label {
+      color: var(--primary);
+      font-weight: 600;
+      font-size: 1rem;
+      margin-bottom: 0.2rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .form-group input[type="text"],
+    .form-group input[type="number"],
+    .form-group select,
+    .form-group textarea {
+      padding: 0.7rem 1rem;
+      border-radius: 8px;
+      border: 1.5px solid var(--gray);
+      font-size: 1rem;
+      background: #f8fafc;
+      color: #2d3748;
+      transition: border 0.2s;
+    }
+    .form-group input[type="text"]:focus,
+    .form-group input[type="number"]:focus,
+    .form-group select:focus,
+    .form-group textarea:focus {
+      border: 1.5px solid var(--primary);
+      outline: none;
+    }
+    .form-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      margin-top: 2rem;
+      justify-content: flex-end;
+    }
+    @media (max-width: 700px) {
+      .form-grid {
+        grid-template-columns: 1fr;
+      }
+      .form-actions {
+        flex-direction: column;
+        align-items: stretch;
+      }
+      .admin-modal-content {
+        width: 95%;
+        padding: 1rem;
+      }
+      .member-item {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1rem;
+      }
+      .member-actions {
+        width: 100%;
+        justify-content: flex-end;
+      }
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .activities-grid {
+        grid-template-columns: 1fr;
+      }
+      .cause-card, .task-card, .challenge-card, .volunteering-card {
+        margin-bottom: 1.5rem;
+      }
+      .actions, .task-actions, .challenge-actions, .volunteering-actions {
+        flex-direction: column;
+      }
+    }
+
+    /* Estilo para la info del modal, similar al modal "ver más" */
+    .modal-info-title {
+      font-size: 1.18rem;
+      font-weight: 700;
+      color: var(--primary-dark);
+      margin-bottom: 0.3rem;
+    }
+    .modal-info-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1.1rem;
+      font-size: 0.97rem;
+      color: #6b7280;
+      margin-bottom: 0.7rem;
+      align-items: center;
+    }
+    .modal-info-summary {
+      font-size: 1.01rem;
+      color: #4a5568;
+      margin-bottom: 0.6rem;
+      font-style: italic;
+    }
+    .modal-info-desc {
+      font-size: 1.05rem;
+      color: #374151;
+      margin-bottom: 0.5rem;
+      white-space: pre-line;
+    }
+    .modal-info-progress {
+      margin-bottom: 0.7rem;
+    }
+    .modal-info-progress-bar {
+      width: 100%;
+      background: var(--gray);
+      border-radius: 4px;
+      height: 8px;
+      position: relative;
+      overflow: hidden;
+      margin-bottom: 0.3rem;
+    }
+    .modal-info-progress-inner {
+      height: 100%;
+      background: var(--primary);
+      border-radius: 4px;
+      transition: width 0.4s cubic-bezier(.4,1,.7,1);
+    }
+    .modal-info-progress-labels {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.93rem;
+      color: #6b7280;
+    }
+
+    /* Solo añade o modifica este bloque para los títulos y subtítulos del modal admin */
+    .admin-modal-content h2#adminModalTitle {
+      font-size: 1.6rem;
+      font-weight: 800;
+      color: var(--primary);
+      margin-bottom: 2rem;
+      text-align: center;
+      letter-spacing: -1px;
+      display: flex;
+      align-items: center;
+      gap: 0.7rem;
+      justify-content: center;
+    }
+    .admin-modal-content h3,
+    .admin-modal-content .form-section-title {
+      color: var(--primary);
+      font-size: 1.18rem;
+      font-weight: 700;
+      margin-bottom: 1.2rem;
+      margin-top: 0.5rem;
+      letter-spacing: -0.5px;
+      display: flex;
+      align-items: center;
+      gap: 0.7rem;
+    }
+    .admin-modal-content label {
+      color: var(--primary);
+      font-weight: 600;
+      font-size: 1rem;
+      margin-bottom: 0.2rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .admin-modal-content .stat-value {
+      color: var(--primary);
+      font-size: 1.5rem;
+      font-weight: 700;
+    }
+    .admin-modal-content .stat-label {
+      color: #6b7280;
+      font-size: 0.97rem;
+      font-weight: 500;
+    }
+    .admin-modal-content .progress-info {
+      color: #4a6fa5;
+      font-size: 0.97rem;
+      font-weight: 500;
+    }
+    .admin-modal-content .role-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4em;
+      padding: 0.25em 0.7em;
+      border-radius: 999px;
+      font-size: 0.93em;
+      font-weight: 600;
+      background: #e3eefd;
+      color: var(--primary-dark);
+    }
+    .admin-modal-content .role-badge.admin {
+      background: #4a6fa5;
+      color: #fff;
+    }
+    .admin-modal-content .role-badge.member {
+      background: #e3eefd;
+      color: var(--primary-dark);
+      border-radius: 999px;
+      font-size: 0.93em;
+      font-weight: 600;
+      padding: 0.25em 0.7em;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4em;
+      border: none;
+      box-shadow: none;
+      cursor: default;
+      pointer-events: none;
+      user-select: none;
+      transition: background 0.2s, color 0.2s;
+    }
+    .admin-modal-content .role-badge.member i {
+      color: var(--primary-dark);
+      font-size: 1em;
+    }
+   
+    /* Fin de bloque de homogeneidad visual para títulos y badges del modal admin */
+    /* Badge "Miembro" bonito y homogéneo en TODAS las tarjetas, no solo en el modal */
+.role-badge.member {
+  background: #e3eefd;
+  color: var(--primary-dark);
+  border-radius: 999px;
+  font-size: 0.93em;
+  font-weight: 600;
+  padding: 0.25em 0.7em;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4em;
+  border: none;
+  box-shadow: none;
+  cursor: default;
+  pointer-events: none;
+  user-select: none;
+  transition: background 0.2s, color 0.2s;
+}
+.role-badge.member i {
+  color: var(--primary-dark);
+  font-size: 1em;
+}
+  </style>
+{% endblock %}
+
+{% block content %}
+  <div class="main-container">
+    <div class="section-header">
+      <h1>Tus Actividades Solidarias</h1>
+    </div>
+    <div class="search-container">
+      <input type="text" id="search-input" placeholder="Buscar entre tus actividades...">
+      <i class="fas fa-search" style="color:#4a6fa5;"></i>
+    </div>
+    <div class="tabs">
+      <button class="tab active" data-filter="all">Todas</button>
+      <button class="tab" data-filter="cause">Causas</button>
+      <button class="tab" data-filter="task">Tareas</button>
+      <button class="tab" data-filter="challenge">Retos</button>
+      <button class="tab" data-filter="volunteering">Voluntariados</button>
+      <button class="tab" data-filter="created">Creadas por mí</button>
+      <button class="tab" data-filter="completed">Completadas</button>
+    </div>
+    <div class="activities-grid" id="activitiesGrid"></div>
+    <div class="pagination" id="pagination">
+      <button id="prevPage" class="btn btn-outline" disabled>
+        <i class="fas fa-chevron-left"></i>
+      </button>
+      <span id="pageInfo">1</span>
+      <button id="nextPage" class="btn btn-outline" disabled>
+        <i class="fas fa-chevron-right"></i>
+      </button>
+    </div>
+  </div>
+
+<!-- Modal de administración de actividad (idéntico a myteams.njk) -->
+<div class="admin-modal" id="adminModal">
+  <div class="admin-modal-content">
+    <button class="close-admin-modal" id="closeAdminModal">&times;</button>
+    <h2 id="adminModalTitle">Administrar Actividad</h2>
+    <div class="admin-tabs">
+      <button class="admin-tab active" data-tab="overview">Resumen</button>
+      <button class="admin-tab" data-tab="members">Miembros</button>
+      <button class="admin-tab" data-tab="settings">Configuración</button>
+      <button class="admin-tab" data-tab="content">Contenido</button>
+    </div>
+    <div class="admin-tab-content active" id="overviewTab">
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-value" id="participantsCount">0</div>
+          <div class="stat-label">Participantes</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value" id="impactPoints">0</div>
+          <div class="stat-label">Puntos de Impacto</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value" id="beneficiariesCount">0</div>
+          <div class="stat-label">Beneficiarios</div>
+        </div>
+      </div>
+      <h3>Progreso de la actividad</h3>
+      <div class="progress-bar">
+        <div class="progress-fill" id="activityProgress" style="width: 0%"></div>
+      </div>
+      <div class="progress-info">
+        <span id="progressPercent">0% completado</span>
+        <span id="progressAmount">0 € de 0 €</span>
+      </div>
+      <div style="margin-top:1.5rem;">
+        <strong>Resumen:</strong> <span id="activitySummary"></span><br>
+        <strong>Descripción:</strong> <span id="activityDescription"></span>
+      </div>
+    </div>
+    <div class="admin-tab-content" id="membersTab">
+      <h3>Miembros actuales</h3>
+      <div class="members-list" id="membersList"></div>
+    </div>
+    <div class="admin-tab-content" id="settingsTab">
+      <form id="activitySettingsForm" class="solidarity-form">
+        <h3 class="form-section-title"><i class="fas fa-cog"></i> Configuración de la actividad</h3>
+        <div class="form-grid">
+          <div class="form-group">
+        <label for="editActivityTitle"><i class="fas fa-heading"></i> Título de la actividad</label>
+        <input type="text" id="editActivityTitle" name="editActivityTitle" required>
+      </div>
+      <div class="form-group">
+        <label for="editActivityCategory"><i class="fas fa-layer-group"></i> Categoría</label>
+        <select id="editActivityCategory" name="editActivityCategory" required>...</select>
+      </div>
+      <div class="form-group">
+        <label for="editActivityPrivacy"><i class="fas fa-lock"></i> Privacidad</label>
+        <select id="editActivityPrivacy" name="editActivityPrivacy" required>...</select>
+      </div>
+      <div class="form-group">
+        <label for="editActivityGoal"><i class="fas fa-euro-sign"></i> Meta de recaudación (€)</label>
+        <input type="number" id="editActivityGoal" name="editActivityGoal" min="0">
+      </div>
+      <div class="form-group">
+        <label for="editActivityTags"><i class="fas fa-tags"></i> Etiquetas (separadas por comas)</label>
+        <input type="text" id="editActivityTags" name="editActivityTags">
+      </div>
+      <div class="form-group form-group-full">
+        <label for="editActivityDesc"><i class="fas fa-align-left"></i> Descripción</label>
+        <textarea id="editActivityDesc" name="editActivityDesc" rows="4" required></textarea>
+      </div>
+      <div class="form-group form-group-full">
+        <label for="editActivityPhoto"><i class="fas fa-image"></i> Foto/logo de la actividad</label>
+        <input type="file" id="editActivityPhoto" name="editActivityPhoto" accept="image/*">
+        <img id="editActivityPhotoPreview" style="max-width: 200px; margin-top: 1rem; display: none; border-radius: 12px;">
+      </div>
+    </div>
+    <div class="form-actions">
+      <button type="submit" class="btn btn-primary">
+        <i class="fas fa-save"></i> Guardar Cambios
+      </button>
+    </div>
+  </form>
+</div>
+    <div class="admin-tab-content" id="contentTab">
+      <h3>Mensaje para los participantes</h3>
+      <textarea id="activityMessage" rows="5" style="width: 100%; margin-bottom: 1rem;"></textarea>
+      <button class="btn btn-primary" id="saveMessageBtn">
+        <i class="fas fa-bullhorn"></i> Publicar Mensaje
+      </button>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+  {{ super() }}
+  <script>
+    document.addEventListener('DOMContentLoaded', async function() {
+      let currentPage = 1;
+      const itemsPerPage = 9;
+      let allActivities = [];
+      let filteredActivities = [];
+      let userId = null;
+      let currentAdminActivity = null;
+
+      // Obtener usuario actual
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session?.user) {
+        window.location.href = '/login?return=/profile/myactivities';
+        return;
+      }
+      userId = session.user.id;
+
+      // Cargar actividades
+      await loadUserActivities();
+
+      // Filtros y búsqueda
+      document.querySelectorAll('.tab').forEach(tab => {
+        tab.addEventListener('click', function() {
+          document.querySelector('.tab.active').classList.remove('active');
+          this.classList.add('active');
+          currentPage = 1;
+          filterAndRenderActivities();
+        });
+      });
+      document.getElementById('search-input').addEventListener('input', function() {
+        currentPage = 1;
+        filterAndRenderActivities();
+      });
+      document.getElementById('prevPage').addEventListener('click', function() {
+        if (currentPage > 1) { currentPage--; renderActivities(); }
+      });
+      document.getElementById('nextPage').addEventListener('click', function() {
+        const totalPages = Math.ceil(filteredActivities.length / itemsPerPage);
+        if (currentPage < totalPages) { currentPage++; renderActivities(); }
+      });
+
+      // Modal cerrar
+      document.getElementById('closeAdminModal').addEventListener('click', closeAdminModal);
+      document.getElementById('adminModal').addEventListener('click', function(e) {
+        if (e.target === this) closeAdminModal();
+      });
+
+      // Tabs del modal
+      document.querySelectorAll('.admin-tab').forEach(tab => {
+        tab.addEventListener('click', function() {
+          const tabId = this.getAttribute('data-tab');
+          document.querySelectorAll('.admin-tab-content').forEach(content => content.classList.remove('active'));
+          document.querySelectorAll('.admin-tab').forEach(t => t.classList.remove('active'));
+          this.classList.add('active');
+          document.getElementById(`${tabId}Tab`).classList.add('active');
+        });
+      });
+
+      // -------- MODAL ADMINISTRAR ACTIVIDAD --------
+      window.openAdminActivityModal = async function(activity) {
+        currentAdminActivity = activity;
+        document.getElementById('adminModalTitle').textContent = `Administrar ${activity.title}`;
+        document.getElementById('adminModal').classList.add('active');
+        document.body.style.overflow = 'hidden';
+
+        // 1. Mostrar resumen y descripción
+        document.getElementById('activitySummary').textContent = activity.short_description || 'Sin resumen';
+        document.getElementById('activityDescription').textContent = activity.description || 'Sin descripción';
+
+        // 2. Mostrar stats
+        document.getElementById('participantsCount').textContent = activity.participants || 0;
+        document.getElementById('impactPoints').textContent = activity.impact || 0;
+        document.getElementById('beneficiariesCount').textContent = activity.beneficiaries || 0;
+
+        // 3. Progreso
+        const recaudado = activity.raised || 0;
+        const meta = activity.goal || 0;
+        const porcentaje = meta ? Math.min(100, Math.round((recaudado / meta) * 100)) : 0;
+        document.getElementById('activityProgress').style.width = porcentaje + '%';
+        document.getElementById('progressPercent').textContent = `${porcentaje}% completado`;
+        document.getElementById('progressAmount').textContent = `${recaudado} € de ${meta} €`;
+
+        // 4. Configuración dinámica según tipo de actividad
+        const settingsForm = document.getElementById('activitySettingsForm');
+        const formGrid = settingsForm.querySelector('.form-grid');
+        formGrid.innerHTML = ''; // Limpiar campos previos
+
+        // Helper para el preview de imagen
+        function renderImageInput(currentUrl) {
+          return `
+            <div class="form-group form-group-full" style="display:flex; flex-direction:column; align-items:center; gap:0.7rem;">
+              <label style="align-self:flex-start;" for="editActivityImage"><i class="fas fa-image"></i> Imagen principal</label>
+              <img id="activityImagePreview" src="${currentUrl || '/img/causa-default.jpg'}" alt="Preview" style="width:120px;height:120px;object-fit:cover;border-radius:12px;border:1.5px solid #e2e8f0;box-shadow:0 2px 8px #e2e8f0;">
+              <input type="file" id="editActivityImageFile" accept="image/*" style="margin-top:0.5rem;">
+              <input type="hidden" id="editActivityImage" name="editActivityImage" value="${currentUrl || ''}">
+              <small style="color:#888;">Formatos permitidos: JPG, PNG. Tamaño máx: 2MB.</small>
+            </div>
+          `;
+        }
+
+        if (activity.type === 'cause') {
+          formGrid.innerHTML = `
+            <div class="form-group form-group-full">
+              <label for="editActivityTitle"><i class="fas fa-heading"></i> Título</label>
+              <input type="text" id="editActivityTitle" name="editActivityTitle" required value="${activity.title || ''}">
+            </div>
+            ${renderImageInput(activity.photo_url)}
+            <div class="form-group form-group-full">
+              <label for="editActivityDesc"><i class="fas fa-align-left"></i> Descripción</label>
+              <textarea id="editActivityDesc" name="editActivityDesc" rows="4">${activity.description || ''}</textarea>
+            </div>
+            <div class="form-group form-group-full">
+              <label for="editActivitySummary"><i class="fas fa-align-left"></i> Resumen</label>
+              <input type="text" id="editActivitySummary" name="editActivitySummary" value="${activity.short_description || ''}">
+            </div>
+            <div class="form-group">
+              <label for="editActivityGoal"><i class="fas fa-euro-sign"></i> Meta de donación (€)</label>
+              <input type="number" id="editActivityGoal" name="editActivityGoal" min="0" value="${activity.goal || ''}">
+            </div>
+            <div class="form-group">
+              <label for="editActivityBeneficiaries"><i class="fas fa-users"></i> Beneficiarios</label>
+              <input type="number" id="editActivityBeneficiaries" name="editActivityBeneficiaries" min="0" value="${activity.beneficiaries || ''}">
+            </div>
+            <div class="form-group">
+              <label for="editActivityUrgent"><i class="fas fa-bolt"></i> ¿Urgente?</label>
+              <select id="editActivityUrgent" name="editActivityUrgent">
+                <option value="false" ${!activity.urgent ? 'selected' : ''}>No</option>
+                <option value="true" ${activity.urgent ? 'selected' : ''}>Sí</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="editActivityCategory"><i class="fas fa-tag"></i> Categoría</label>
+              <input type="text" id="editActivityCategory" name="editActivityCategory" value="${activity.category || ''}">
+            </div>
+          `;
+        } else if (activity.type === 'task') {
+          formGrid.innerHTML = `
+            <div class="form-group form-group-full">
+              <label for="editActivityTitle"><i class="fas fa-heading"></i> Título</label>
+              <input type="text" id="editActivityTitle" name="editActivityTitle" required value="${activity.title || ''}">
+            </div>
+            ${renderImageInput(activity.photo_url)}
+            <div class="form-group form-group-full">
+              <label for="editActivityDesc"><i class="fas fa-align-left"></i> Descripción</label>
+              <textarea id="editActivityDesc" name="editActivityDesc" rows="4">${activity.description || ''}</textarea>
+            </div>
+            <div class="form-group form-group-full">
+              <label for="editActivitySummary"><i class="fas fa-align-left"></i> Resumen</label>
+              <input type="text" id="editActivitySummary" name="editActivitySummary" value="${activity.short_description || ''}">
+            </div>
+            <div class="form-group">
+              <label for="editActivityDate"><i class="fas fa-calendar-alt"></i> Fecha</label>
+              <input type="date" id="editActivityDate" name="editActivityDate" value="${activity.date ? activity.date.split('T')[0] : ''}">
+            </div>
+            <div class="form-group">
+              <label for="editActivityLocation"><i class="fas fa-map-marker-alt"></i> Ubicación</label>
+              <input type="text" id="editActivityLocation" name="editActivityLocation" value="${activity.location || ''}">
+            </div>
+            <div class="form-group">
+              <label for="editActivityParticipants"><i class="fas fa-users"></i> Participantes</label>
+              <input type="number" id="editActivityParticipants" name="editActivityParticipants" min="0" value="${activity.participants || ''}">
+            </div>
+            <div class="form-group">
+              <label for="editActivityCategory"><i class="fas fa-tag"></i> Categoría</label>
+              <input type="text" id="editActivityCategory" name="editActivityCategory" value="${activity.category || ''}">
+            </div>
+          `;
+        } else if (activity.type === 'challenge') {
+          formGrid.innerHTML = `
+            <div class="form-group form-group-full">
+              <label for="editActivityTitle"><i class="fas fa-heading"></i> Título</label>
+              <input type="text" id="editActivityTitle" name="editActivityTitle" required value="${activity.title || ''}">
+            </div>
+            ${renderImageInput(activity.photo_url)}
+            <div class="form-group form-group-full">
+              <label for="editActivityDesc"><i class="fas fa-align-left"></i> Descripción</label>
+              <textarea id="editActivityDesc" name="editActivityDesc" rows="4">${activity.description || ''}</textarea>
+            </div>
+            <div class="form-group form-group-full">
+              <label for="editActivitySummary"><i class="fas fa-align-left"></i> Resumen</label>
+              <input type="text" id="editActivitySummary" name="editActivitySummary" value="${activity.short_description || ''}">
+            </div>
+            <div class="form-group">
+              <label for="editActivityStart"><i class="fas fa-calendar-day"></i> Inicio</label>
+              <input type="date" id="editActivityStart" name="editActivityStart" value="${activity.start_date ? activity.start_date.split('T')[0] : ''}">
+            </div>
+            <div class="form-group">
+              <label for="editActivityEnd"><i class="fas fa-calendar-check"></i> Fin</label>
+              <input type="date" id="editActivityEnd" name="editActivityEnd" value="${activity.end_date ? activity.end_date.split('T')[0] : ''}">
+            </div>
+            <div class="form-group">
+              <label for="editActivityLocation"><i class="fas fa-map-marker-alt"></i> Ubicación</label>
+              <input type="text" id="editActivityLocation" name="editActivityLocation" value="${activity.location || ''}">
+            </div>
+            <div class="form-group">
+              <label for="editActivityParticipants"><i class="fas fa-users"></i> Participantes</label>
+              <input type="number" id="editActivityParticipants" name="editActivityParticipants" min="0" value="${activity.participants || ''}">
+            </div>
+            <div class="form-group">
+              <label for="editActivityCategory"><i class="fas fa-tag"></i> Categoría</label>
+              <input type="text" id="editActivityCategory" name="editActivityCategory" value="${activity.category || ''}">
+            </div>
+          `;
+        } else if (activity.type === 'volunteering') {
+          formGrid.innerHTML = `
+            <div class="form-group form-group-full">
+              <label for="editActivityTitle"><i class="fas fa-heading"></i> Título</label>
+              <input type="text" id="editActivityTitle" name="editActivityTitle" required value="${activity.title || ''}">
+            </div>
+            ${renderImageInput(activity.photo_url)}
+            <div class="form-group form-group-full">
+              <label for="editActivityDesc"><i class="fas fa-align-left"></i> Descripción</label>
+              <textarea id="editActivityDesc" name="editActivityDesc" rows="4">${activity.description || ''}</textarea>
+            </div>
+            <div class="form-group form-group-full">
+              <label for="editActivitySummary"><i class="fas fa-align-left"></i> Resumen</label>
+              <input type="text" id="editActivitySummary" name="editActivitySummary" value="${activity.short_description || ''}">
+            </div>
+            <div class="form-group">
+              <label for="editActivityDate"><i class="fas fa-calendar-alt"></i> Fecha</label>
+              <input type="date" id="editActivityDate" name="editActivityDate" value="${activity.date ? activity.date.split('T')[0] : ''}">
+            </div>
+            <div class="form-group">
+              <label for="editActivityLocation"><i class="fas fa-map-marker-alt"></i> Ubicación</label>
+              <input type="text" id="editActivityLocation" name="editActivityLocation" value="${activity.location || ''}">
+            </div>
+            <div class="form-group">
+              <label for="editActivityParticipants"><i class="fas fa-users"></i> Participantes</label>
+              <input type="number" id="editActivityParticipants" name="editActivityParticipants" min="0" value="${activity.participants || ''}">
+            </div>
+            <div class="form-group">
+              <label for="editActivityCategory"><i class="fas fa-tag"></i> Categoría</label>
+              <input type="text" id="editActivityCategory" name="editActivityCategory" value="${activity.category || ''}">
+            </div>
+          `;
+        }
+
+        // --- Imagen: preview y subida ---
+        const fileInput = document.getElementById('editActivityImageFile');
+        if (fileInput) {
+          fileInput.addEventListener('change', function (e) {
+            const file = e.target.files[0];
+            if (file) {
+              if (!file.type.startsWith('image/')) {
+                alert('El archivo debe ser una imagen.');
+                return;
+              }
+              if (file.size > 2 * 1024 * 1024) {
+                alert('La imagen no puede superar los 2MB.');
+                return;
+              }
+              const reader = new FileReader();
+              reader.onload = function (ev) {
+                document.getElementById('activityImagePreview').src = ev.target.result;
+                // Si quieres subir a Supabase Storage, aquí deberías hacerlo y luego guardar la URL en el input hidden
+                // Por ahora, solo preview local:
+                document.getElementById('editActivityImage').value = ev.target.result;
+              };
+              reader.readAsDataURL(file);
+            }
+          });
+        }
+
+        // 5. Cargar miembros según tipo de actividad
+        let members = [];
+        let membersTable = '';
+        let idField = '';
+        if (activity.type === 'cause') {
+          membersTable = 'causes_members';
+          idField = 'cause_id';
+        } else if (activity.type === 'task') {
+          membersTable = 'task_members';
+          idField = 'task_id';
+        } else if (activity.type === 'challenge') {
+          membersTable = 'challenges_members';
+          idField = 'challenge_id';
+        } else if (activity.type === 'volunteering') {
+          membersTable = 'volunteering_members';
+          idField = 'volunteering_id';
+        }
+
+        if (membersTable && idField) {
+          // Traer user_id, role y status de la tabla de miembros
+          const { data: memberRows } = await supabase
+            .from(membersTable)
+            .select('user_id, role, status')
+            .eq(idField, activity.id);
+
+          if (memberRows && memberRows.length > 0) {
+            // Traer username y photo_url de cada usuario
+            const userIds = memberRows.map(m => m.user_id);
+            const { data: profiles } = await supabase
+              .from('profiles')
+              .select('id, username, photo_url')
+              .in('id', userIds);
+
+            members = memberRows.map(m => {
+              const profile = profiles?.find(p => p.id === m.user_id) || {};
+              return {
+                ...m,
+                username: profile.username || m.user_id,
+                photo_url: profile.photo_url || 'https://via.placeholder.com/40?text=U'
+              };
+            });
+          }
+        }
+
+        // Renderizar miembros
+        const membersList = document.getElementById('membersList');
+        membersList.innerHTML = '';
+        if (members.length === 0) {
+          membersList.innerHTML = '<div style="color:#888;">No hay miembros en esta actividad.</div>';
+        } else {
+          members.forEach(member => {
+            membersList.innerHTML += `
+              <div class="member-item">
+                <div class="member-info">
+                  <img src="${member.photo_url}" class="member-avatar" alt="${member.username}">
+                  <span class="member-name">${member.username}</span>
+                </div>
+                <div class="member-actions">
+                  <span class="role-badge ${member.role === 'founder' ? 'admin' : 'member'}">
+                    <i class="fas fa-user"></i> ${member.role}
+                  </span>
+                </div>
+              </div>
+            `;
+          });
+        }
+      };
+
+      // Guardar cambios de configuración en Supabase
+      document.getElementById('activitySettingsForm').addEventListener('submit', async function(e) {
+        e.preventDefault();
+        if (!currentAdminActivity) return;
+
+        let updateFields = {};
+        if (currentAdminActivity.type === 'cause') {
+          updateFields = {
+            title: document.getElementById('editActivityTitle').value.trim(),
+            goal: parseFloat(document.getElementById('editActivityGoal').value) || 0,
+            beneficiaries: parseInt(document.getElementById('editActivityBeneficiaries').value) || 0,
+            urgent: document.getElementById('editActivityUrgent').value === 'true',
+            short_description: document.getElementById('editActivitySummary').value.trim(),
+            description: document.getElementById('editActivityDesc').value.trim()
+          };
+        } else if (currentAdminActivity.type === 'task') {
+          updateFields = {
+            title: document.getElementById('editActivityTitle').value.trim(),
+            date: document.getElementById('editActivityDate').value,
+            participants: parseInt(document.getElementById('editActivityParticipants').value) || 0,
+            short_description: document.getElementById('editActivitySummary').value.trim(),
+            description: document.getElementById('editActivityDesc').value.trim()
+          };
+        } else if (currentAdminActivity.type === 'challenge') {
+          updateFields = {
+            title: document.getElementById('editActivityTitle').value.trim(),
+            start_date: document.getElementById('editActivityStart').value,
+            end_date: document.getElementById('editActivityEnd').value,
+            participants: parseInt(document.getElementById('editActivityParticipants').value) || 0,
+            short_description: document.getElementById('editActivitySummary').value.trim(),
+            description: document.getElementById('editActivityDesc').value.trim()
+          };
+        } else if (currentAdminActivity.type === 'volunteering') {
+          updateFields = {
+            title: document.getElementById('editActivityTitle').value.trim(),
+            date: document.getElementById('editActivityDate').value,
+            location: document.getElementById('editActivityLocation').value.trim(),
+            participants: parseInt(document.getElementById('editActivityParticipants').value) || 0,
+            short_description: document.getElementById('editActivitySummary').value.trim(),
+            description: document.getElementById('editActivityDesc').value.trim()
+          };
+        }
+
+        let table = '';
+        if (currentAdminActivity.type === 'cause') table = 'causes';
+        if (currentAdminActivity.type === 'task') table = 'tasks';
+        if (currentAdminActivity.type === 'challenge') table = 'challenges';
+        if (currentAdminActivity.type === 'volunteering') table = 'volunteering';
+
+        if (!table) return;
+
+        const { error } = await supabase
+          .from(table)
+          .update(updateFields)
+          .eq('id', currentAdminActivity.id);
+
+        if (error) {
+          alert('Error al guardar cambios: ' + error.message);
+        } else {
+          alert('¡Cambios guardados!');
+          await loadUserActivities();
+          closeAdminModal();
+        }
+      });
+
+      function closeAdminModal() {
+        document.getElementById('adminModal').classList.remove('active');
+        document.body.style.overflow = '';
+      }
+
+      async function loadUserActivities() {
+        // ...tu código de carga de actividades, igual que antes...
+        // (No lo repito aquí para no hacer la respuesta muy larga, pero no cambia)
+        // Solo cambia la función renderActivities:
+        try {
+          // 1. Causas
+          const { data: createdCauses } = await supabase
+            .from('causes')
+            .select('*')
+            .eq('user_id', userId);
+          const { data: joinedCauses } = await supabase
+            .from('causes_members')
+            .select('cause_id, role, status')
+            .eq('user_id', userId);
+          let joinedCausesDetails = [];
+          if (joinedCauses && joinedCauses.length > 0) {
+            const causeIds = joinedCauses.map(j => j.cause_id);
+            const { data: causesDetails } = await supabase
+              .from('causes')
+              .select('*')
+              .in('id', causeIds);
+            joinedCausesDetails = causesDetails.map(cause => {
+              const part = joinedCauses.find(j => j.cause_id === cause.id);
+              return { ...cause, role: part.role, status: part.status };
+            });
+          }
+
+          // 2. Tareas
+          const { data: createdTasks } = await supabase
+            .from('tasks')
+            .select('*')
+            .eq('user_id', userId);
+          const { data: joinedTasks } = await supabase
+            .from('task_members')
+            .select('task_id, role, status')
+            .eq('user_id', userId);
+          let joinedTasksDetails = [];
+          if (joinedTasks && joinedTasks.length > 0) {
+            const taskIds = joinedTasks.map(j => j.task_id);
+            const { data: tasksDetails } = await supabase
+              .from('tasks')
+              .select('*')
+              .in('id', taskIds);
+            joinedTasksDetails = tasksDetails.map(task => {
+              const part = joinedTasks.find(j => j.task_id === task.id);
+              return { ...task, role: part.role, status: part.status };
+            });
+          }
+
+          // 3. Retos
+          const { data: createdChallenges } = await supabase
+            .from('challenges')
+            .select('*')
+            .eq('creator_id', userId);
+          const { data: joinedChallenges } = await supabase
+            .from('challenges_members')
+            .select('challenge_id, role, status')
+            .eq('user_id', userId);
+          let joinedChallengesDetails = [];
+          if (joinedChallenges && joinedChallenges.length > 0) {
+            const challengeIds = joinedChallenges.map(j => j.challenge_id);
+            const { data: challengesDetails } = await supabase
+              .from('challenges')
+              .select('*')
+              .in('id', challengeIds);
+            joinedChallengesDetails = challengesDetails.map(challenge => {
+              const part = joinedChallenges.find(j => j.challenge_id === challenge.id);
+              return { ...challenge, role: part.role, status: part.status };
+            });
+          }
+
+          // 4. Voluntariados
+          const { data: createdVolunteering } = await supabase
+            .from('volunteering')
+            .select('*')
+            .eq('user_id', userId);
+          const { data: joinedVolunteering } = await supabase
+            .from('volunteering_members')
+            .select('volunteering_id, role, status')
+            .eq('user_id', userId);
+          let joinedVolunteeringDetails = [];
+          if (joinedVolunteering && joinedVolunteering.length > 0) {
+            const volunteeringIds = joinedVolunteering.map(j => j.volunteering_id);
+            const { data: volunteeringDetails } = await supabase
+              .from('volunteering')
+              .select('*')
+              .in('id', volunteeringIds);
+            joinedVolunteeringDetails = volunteeringDetails.map(vol => {
+              const part = joinedVolunteering.find(j => j.volunteering_id === vol.id);
+              return { ...vol, role: part.role, status: part.status };
+            });
+          }
+
+          // Unificar y normalizar
+          const normalize = (arr, type, isCreator = false) =>
+            arr.map(item => ({
+              ...item,
+              type,
+              isCreator,
+              status: item.status || 'in_progress'
+            }));
+
+          allActivities = [
+            ...normalize(createdCauses || [], 'cause', true),
+            ...normalize(joinedCausesDetails || [], 'cause', false),
+            ...normalize(createdTasks || [], 'task', true),
+            ...normalize(joinedTasksDetails || [], 'task', false),
+            ...normalize(createdChallenges || [], 'challenge', true),
+            ...normalize(joinedChallengesDetails || [], 'challenge', false),
+            ...normalize(createdVolunteering || [], 'volunteering', true),
+            ...normalize(joinedVolunteeringDetails || [], 'volunteering', false)
+          ];
+
+          // Eliminar duplicados
+          const activityMap = new Map();
+          allActivities.forEach(act => {
+            activityMap.set(`${act.type}-${act.id}`, act);
+          });
+          allActivities = Array.from(activityMap.values());
+
+          // Ordenar por fecha
+          allActivities.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+
+          filteredActivities = [...allActivities];
+          currentPage = 1;
+          renderActivities();
+        } catch (error) {
+          console.error('Error loading user activities:', error);
+          showEmptyState();
+        }
+      }
+
+      function showEmptyState() {
+        const container = document.getElementById('activitiesGrid');
+        container.innerHTML = `
+          <div class="empty-state" style="grid-column: 1 / -1; text-align: center; padding: 3rem;">
+            <i class="fas fa-clipboard-list" style="font-size: 3rem; color: #a0aec0; margin-bottom: 1rem;"></i>
+            <h3 style="color: #4a5568; margin-bottom: 0.5rem;">No tienes actividades solidarias aún</h3>
+            <p style="color: #718096; margin-bottom: 1.5rem;">Empieza creando una nueva actividad o únete a alguna existente.</p>
+            <a href="/causes" class="btn btn-primary" style="margin-right: 1rem;">
+              <i class="fas fa-heart"></i> Explorar causas
+            </a>
+            <a href="/tasks" class="btn btn-accent" style="margin-right: 1rem;">
+              <i class="fas fa-tasks"></i> Ver tareas
+            </a>
+            <a href="/challenges" class="btn btn-warning">
+              <i class="fas fa-trophy"></i> Descubrir retos
+            </a>
+          </div>
+        `;
+        document.getElementById('pagination').style.display = 'none';
+      }
+
+      function filterAndRenderActivities() {
+        const activeFilter = document.querySelector('.tab.active').getAttribute('data-filter');
+        const searchTerm = document.getElementById('search-input').value.toLowerCase();
+
+        filteredActivities = allActivities.filter(activity => {
+          if (activeFilter !== 'all') {
+            if (activeFilter === 'created' && !activity.isCreator) return false;
+            if (activeFilter === 'completed' && activity.status !== 'completed') return false;
+            if (['cause', 'task', 'challenge', 'volunteering'].includes(activeFilter) &&
+                activity.type !== activeFilter) return false;
+          }
+          if (searchTerm) {
+            const matchesTitle = activity.title && activity.title.toLowerCase().includes(searchTerm);
+            const matchesDesc = activity.description && activity.description.toLowerCase().includes(searchTerm);
+            return matchesTitle || matchesDesc;
+          }
+          return true;
+        });
+
+        renderActivities();
+      }
+
+      function renderActivities() {
+        const startIdx = (currentPage - 1) * itemsPerPage;
+        const endIdx = startIdx + itemsPerPage;
+        const paginatedActivities = filteredActivities.slice(startIdx, endIdx);
+        const container = document.getElementById('activitiesGrid');
+        container.innerHTML = '';
+
+        if (paginatedActivities.length === 0) {
+          showEmptyState();
+          return;
+        }
+
+        document.getElementById('pagination').style.display = 'flex';
+
+        paginatedActivities.forEach(activity => {
+          // Normaliza datos
+          const img = activity.photo_url || '/img/causa-default.jpg';
+          const resumen = activity.short_description || activity.description || 'Sin descripción';
+          const meta = activity.goal || 0;
+          const recaudado = activity.raised || 0;
+          const porcentaje = meta ? Math.min(100, Math.round((recaudado / meta) * 100)) : 0;
+          const fecha = formatDate(activity.created_at);
+          let metaExtra = '';
+          let url = '#';
+          let tipo = '';
+          if (activity.type === 'cause') {
+            metaExtra = `<span><i class="fas fa-users"></i> ${activity.beneficiaries || 0} beneficiarios</span>`;
+            url = `/causes/${activity.id}`;
+            tipo = 'Causa';
+          } else if (activity.type === 'task') {
+            metaExtra = `<span><i class="fas fa-users"></i> ${activity.participants || 0} participantes</span>`;
+            url = `/tasks/${activity.id}`;
+            tipo = 'Tarea';
+          } else if (activity.type === 'challenge') {
+            metaExtra = `<span><i class="fas fa-users"></i> ${activity.participants || 0} participantes</span>`;
+            url = `/challenges/${activity.id}`;
+            tipo = 'Reto';
+          } else if (activity.type === 'volunteering') {
+            metaExtra = `<span><i class="fas fa-users"></i> ${activity.participants || 0} participantes</span>`;
+            url = `/volunteering/${activity.id}`;
+            tipo = 'Voluntariado';
+          }
+
+          // Tarjeta homogénea
+          const card = document.createElement('div');
+          card.className = 'cause-card'; // Usamos el mismo estilo base de causa para todas
+          card.innerHTML = `
+            <div class="cause-image">
+              <img src="${img}" alt="${activity.title}">
+            </div>
+            <div class="cause-content">
+              <h3>${activity.title}</h3>
+              <p>${resumen}</p>
+              <div class="progress-container">
+                <div class="progress-bar">
+                  <div class="progress" style="width: ${porcentaje}%"></div>
+                </div>
+                <div class="progress-info">
+                  <span>${recaudado}€</span>
+                  <span>${meta}€</span>
+                </div>
+              </div>
+              <div class="meta">
+                ${metaExtra}
+                <span><i class="fas fa-calendar-alt"></i> ${fecha}</span>
+              </div>
+              <div class="actions">
+                <a href="${url}" class="btn btn-primary btn-sm"><i class="fas fa-eye"></i> Ver más</a>
+                ${(activity.role === 'founder' || activity.role === 'admin')
+                  ? `<button class="btn btn-accent btn-sm admin-activity-btn"><i class="fas fa-cog"></i> Administrar</button>`
+                  : `<span class="role-badge member"><i class="fas fa-user"></i> Miembro</span>`
+                }
+              </div>
+            </div>
+          `;
+          // Evento administrar
+          const adminBtn = card.querySelector('.admin-activity-btn');
+          if (adminBtn) {
+            adminBtn.addEventListener('click', (e) => {
+              e.preventDefault();
+              openAdminActivityModal(activity);
+            });
+          }
+          container.appendChild(card);
+        });
+
+        updatePagination();
+      }
+
+      function updatePagination() {
+        const totalPages = Math.max(1, Math.ceil(filteredActivities.length / itemsPerPage));
+        document.getElementById('pageInfo').textContent = `${currentPage} / ${totalPages}`;
+        document.getElementById('prevPage').disabled = currentPage <= 1;
+        document.getElementById('nextPage').disabled = currentPage >= totalPages;
+      }
+
+      function formatDate(dateString) {
+        const date = new Date(dateString);
+        return date.toLocaleDateString('es-ES', {
+          day: 'numeric',
+          month: 'short',
+          year: 'numeric'
+        });
+      }
+
+      function closeAdminModal() {
+        document.getElementById('adminModal').classList.remove('active'); // <-- usa adminModal
+        document.body.style.overflow = '';
+      }
+    });
+  </script>
+{% endblock %}

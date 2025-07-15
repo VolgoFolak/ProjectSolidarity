@@ -1,0 +1,2966 @@
+{% extends "layout.njk" %}
+
+{% block title %}Solidarity - Mis Actividades{% endblock %}
+
+{% block head %}
+  {{ super() }}
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <style>
+    :root {
+      --primary: #4a6fa5;
+      --primary-dark: #166088;
+      --gray: #e2e8f0;
+      --white: #fff;
+      --accent: #4fc3a1;
+      --accent-dark: #3da58a;
+      --urgent: #e53e3e;
+      --challenge: #ffe066;
+      --challenge-dark: #a67c00;
+      --volunteering: #00bcd4;
+      --volunteering-dark: #0097a7;
+    }
+
+    .main-container {
+      max-width: 1200px;
+      margin: 2rem auto;
+      padding: 0 2rem;
+    }
+
+    .section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 2rem;
+    }
+
+    .section-header h1 {
+      font-size: 2rem;
+      color: var(--primary);
+      font-weight: 700;
+    }
+
+    .search-container {
+      margin-bottom: 2rem;
+      display: flex;
+      align-items: center;
+      gap: 0.7rem;
+    }
+
+    .search-container input {
+      flex: 1;
+      padding: 0.6rem 1.2rem;
+      border-radius: 7px;
+      border: 1.5px solid var(--gray);
+      font-size: 1.05rem;
+      outline: none;
+      transition: border 0.2s;
+      background: #fff;
+    }
+
+    .search-container input:focus {
+      border-color: var(--primary);
+    }
+
+    /* --- CSS COMPLETO DE TAREAS (copiado de index.njk) --- */
+    .tasks-grid, .activities-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+      gap: 2rem;
+    }
+    .task-card {
+      background: white;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+      transition: all 0.3s ease;
+      border: 1px solid var(--gray);
+      display: flex;
+      flex-direction: column;
+    }
+    .task-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+    }
+    .task-image {
+      height: 180px;
+      overflow: hidden;
+      position: relative;
+    }
+    .task-image img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.3s ease;
+    }
+    .task-card:hover .task-image img {
+      transform: scale(1.05);
+    }
+    .task-badge {
+      position: absolute;
+      top: 1rem;
+      right: 1rem;
+      background: rgba(255, 255, 255, 0.9);
+      padding: 0.3rem 0.8rem;
+      border-radius: 50px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
+    .task-badge.urgent {
+      background: var(--urgent);
+      color: white;
+    }
+    .task-badge.points {
+      background: var(--primary);
+      color: white;
+      left: 1rem;
+      right: auto;
+    }
+    .task-content {
+      padding: 1.5rem;
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+    }
+    .task-content h3 {
+      font-size: 1.3rem;
+      margin-bottom: 0.8rem;
+      color: #2d3748;
+    }
+    .task-content p {
+      color: #6b7280;
+      margin-bottom: 1.5rem;
+      font-size: 0.95rem;
+      line-height: 1.6;
+      flex-grow: 1;
+    }
+    .task-meta {
+      display: flex;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+      font-size: 0.85rem;
+      flex-wrap: wrap;
+    }
+    .meta-item {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      color: #6b7280;
+    }
+    .meta-item i {
+      color: var(--primary);
+    }
+    .beneficiaries-count {
+      display: inline-flex;
+      align-items: center;
+      background: #f0f9ff;
+      color: var(--primary);
+      padding: 0.3rem 0.8rem;
+      border-radius: 50px;
+      font-size: 0.85rem;
+      font-weight: 600;
+    }
+    .beneficiaries-count i {
+      margin-right: 0.3rem;
+    }
+    .linked-cause {
+      display: inline-flex;
+      align-items: center;
+      background: #f0f0ff;
+      color: var(--primary);
+      padding: 0.3rem 0.8rem;
+      border-radius: 50px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      margin-bottom: 1rem;
+    }
+    .linked-cause img {
+      width: 22px;
+      height: 22px;
+      object-fit: cover;
+      border-radius: 50%;
+      border: 1px solid #e5e7eb;
+      margin-right: 0.4em;
+    }
+    .task-progress {
+      margin-bottom: 1.5rem;
+    }
+    .progress-bar {
+      height: 8px;
+      background: var(--gray);
+      border-radius: 4px;
+      overflow: hidden;
+      margin-bottom: 0.5rem;
+    }
+    .progress-fill {
+      height: 100%;
+      background: var(--primary);
+      border-radius: 4px;
+    }
+    .progress-info {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.9rem;
+      color: #6b7280;
+    }
+    .task-actions {
+      display: flex;
+      gap: 0.8rem;
+    }
+    .task-actions .btn {
+      flex: 1;
+      text-align: center;
+      justify-content: center;
+    }
+    .btn-accent {
+      background: var(--accent);
+      color: white;
+    }
+    .btn-accent:hover {
+      background: var(--accent-dark);
+      transform: translateY(-2px);
+    }
+
+    /* Añade esto dentro del bloque <style> */
+    .cause-actions, .task-actions, .challenge-actions, .volunteering-actions {
+      display: flex;
+      gap: 0.8rem;
+      margin-top: auto;
+    }
+
+    .cause-actions .btn, 
+    .task-actions .btn, 
+    .challenge-actions .btn, 
+    .volunteering-actions .btn {
+      flex: 1;
+      text-align: center;
+      justify-content: center;
+      padding: 0.8rem 1.2rem;      /* Igual que causas */
+      border-radius: 50px;
+      font-weight: 600;
+      font-size: 1rem;             /* Igual que causas */
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;                 /* Un poco más de espacio entre icono y texto */
+      transition: all 0.3s ease;
+      border: none;
+      cursor: pointer;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.08);
+    }
+
+    .cause-actions .btn:hover, 
+    .task-actions .btn:hover, 
+    .challenge-actions .btn:hover, 
+    .volunteering-actions .btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(0,0,0,0.12);
+    }
+
+    .btn-primary {
+      background: var(--primary);
+      color: white;
+    }
+    .btn-primary:hover {
+      background: var(--primary-dark);
+    }
+
+    .btn-accent {
+      background: var(--accent);
+      color: white;
+    }
+    .btn-accent:hover {
+      background: var(--accent-dark);
+    }
+
+    .btn-warning {
+      background: var(--challenge);
+      color: #333;
+    }
+    .btn-warning:hover {
+      background: var(--challenge-dark);
+      color: white;
+    }
+
+    .btn-secondary {
+      background: var(--volunteering);
+      color: white;
+    }
+    .btn-secondary:hover {
+      background: var(--volunteering-dark);
+    }
+    /* Responsive */
+    @media (max-width: 768px) {
+      .activities-grid, .tasks-grid {
+        grid-template-columns: 1fr;
+      }
+      .task-actions {
+        flex-direction: column;
+      }
+    }
+
+    .force-left {
+      text-align: left !important;
+      justify-content: flex-start !important;
+      align-items: flex-start !important;
+    }
+
+    /* --- ESTILOS DEL MODAL DE ADMINISTRACIÓN --- */
+    .admin-modal {
+      display: none;
+      position: fixed;
+      z-index: 10000;
+      left: 0;
+      top: 0;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(0, 0, 0, 0.7);
+      align-items: center;
+      justify-content: center;
+      overflow-y: auto;
+    }
+
+    .admin-modal.active {
+      display: flex;
+    }
+
+    .admin-modal-content {
+      background: #fff;
+      border-radius: 12px;
+      padding: 2rem;
+      max-width: 900px;
+      width: 90vw;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+      position: relative;
+    }
+
+    /* 🎨 MEJORAS ESTÉTICAS ESPECÍFICAS DEL MODAL ADMIN 🎨 */
+    .admin-modal h2,
+    .admin-modal h3 {
+      color: var(--primary) !important;
+      font-weight: 700;
+      margin-bottom: 1.2rem;
+    }
+
+    .admin-modal h2 {
+      font-size: 1.8rem;
+      text-align: center;
+      border-bottom: 2px solid var(--gray);
+      padding-bottom: 1rem;
+    }
+
+    .admin-modal h3 {
+      font-size: 1.3rem;
+      display: flex;
+      align-items: center;
+      gap: 0.7rem;
+    }
+
+    .admin-modal h3 i {
+      color: var(--accent);
+      font-size: 1.1rem;
+    }
+
+    /* Mejorar miembros con roles específicos */
+    .admin-modal .member-item .member-name {
+      font-weight: 600;
+      color: #2d3748;
+    }
+
+    .admin-modal .member-item .member-name.founder {
+      color: var(--primary) !important;
+      font-weight: 700;
+    }
+
+    .admin-modal .member-item .member-name.coordinator {
+      color: var(--accent) !important;
+      font-weight: 700;
+    }
+
+    /* Mejorar barras de progreso en el modal */
+    .admin-modal .progress-bar {
+      height: 10px;
+      background: #f1f5f9;
+      border-radius: 5px;
+      overflow: hidden;
+      margin-bottom: 0.8rem;
+      border: 1px solid #e2e8f0;
+    }
+
+    .admin-modal .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--primary) 0%, var(--accent) 100%);
+      border-radius: 4px;
+      min-width: 2px; /* Mostrar al menos algo aunque sea 0% */
+      transition: width 0.3s ease;
+    }
+
+    .admin-modal .progress-fill[style*="width: 0%"] {
+      background: #e2e8f0;
+      min-width: 100%;
+      opacity: 0.5;
+    }
+
+    .admin-modal .progress-info {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.9rem;
+      color: #4a5568;
+      font-weight: 500;
+    }
+
+    /* Mejorar stats cards */
+    .admin-modal .stat-card {
+      background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+      border-radius: 12px;
+      padding: 1.5rem;
+      text-align: center;
+      box-shadow: 0 2px 8px rgba(74, 111, 165, 0.08);
+      border: 1px solid #e2e8f0;
+    }
+
+    .admin-modal .stat-value {
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: var(--primary);
+      margin-bottom: 0.5rem;
+    }
+
+    .admin-modal .stat-label {
+      font-size: 0.9rem;
+      color: #64748b;
+      font-weight: 500;
+    }
+
+    /* Mejorar tabs */
+    .admin-modal .admin-tab {
+      flex: none;
+      padding: 0.8rem 1.4rem;
+      border-radius: 8px 8px 0 0;
+      background: none;
+      color: #64748b;
+      font-weight: 600;
+      border: none;
+      border-bottom: 2px solid transparent;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .admin-modal .admin-tab:hover {
+      color: var(--primary);
+      background: #f8fafc;
+    }
+
+    .admin-modal .admin-tab.active {
+      background: #fff;
+      color: var(--primary);
+      border-bottom: 2px solid var(--primary);
+      box-shadow: 0 2px 8px rgba(74, 111, 165, 0.11);
+      z-index: 2;
+    }
+
+    /* Mejorar formularios en el modal */
+    .admin-modal .solidarity-form {
+      background: linear-gradient(135deg, #f8fafc 0%, #ffffff 100%);
+      padding: 2rem;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(74, 111, 165, 0.08);
+      margin-top: 1rem;
+      border: 1px solid #e2e8f0;
+    }
+
+    .admin-modal .form-section-title {
+      font-size: 1.4rem;
+      margin-bottom: 1.5rem;
+      color: var(--primary) !important;
+      display: flex;
+      align-items: center;
+      gap: 0.7rem;
+    }
+
+    .admin-modal .form-section-title i {
+      color: var(--accent);
+    }
+
+    /* Mejorar member items específicamente */
+    .admin-modal .member-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1rem;
+      background: linear-gradient(135deg, #f8fafc 0%, #ffffff 100%);
+      border-radius: 10px;
+      margin-bottom: 0.8rem;
+      box-shadow: 0 2px 8px rgba(74, 111, 165, 0.06);
+      border: 1px solid #e2e8f0;
+    }
+
+    .admin-modal .member-avatar {
+      width: 45px;
+      height: 45px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 2px solid #e2e8f0;
+    }
+
+    .admin-modal .role-badge {
+      padding: 0.4rem 0.8rem;
+      border-radius: 15px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .admin-modal .role-badge.founder,
+    .admin-modal .role-badge.admin {
+      background: var(--primary);
+      color: white;
+    }
+
+    .admin-modal .role-badge.coordinator {
+      background: var(--accent);
+      color: white;
+    }
+
+    .admin-modal .role-badge.member {
+      background: #e2e8f0;
+      color: #4a5568;
+    }
+
+    /* --- ESTILOS DEL MODAL DE ADMINISTRACIÓN --- */
+    .admin-modal {
+      display: none;
+      position: fixed;
+      z-index: 10000;
+      left: 0;
+      top: 0;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(0, 0, 0, 0.7);
+      align-items: center;
+      justify-content: center;
+      overflow-y: auto;
+    }
+
+    .admin-modal.active {
+      display: flex;
+    }
+
+    .admin-modal-content {
+      background: #fff;
+      border-radius: 12px;
+      padding: 2rem;
+      max-width: 900px;
+      width: 90vw;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+      position: relative;
+    }
+
+    .close-admin-modal {
+      position: absolute;
+      top: 1rem;
+      right: 1rem;
+      background: none;
+      border: none;
+      font-size: 1.5rem;
+      color: #6b7280;
+      cursor: pointer;
+      transition: color 0.2s;
+    }
+
+    .close-admin-modal:hover {
+      color: var(--primary);
+    }
+
+    .admin-tabs {
+      display: flex;
+      gap: 0.5rem;
+      margin-bottom: 1.2rem;
+      border-bottom: 2px solid #e2e8f0;
+      overflow-x: auto;
+      scrollbar-width: none;
+    }
+    .admin-tabs::-webkit-scrollbar { display: none; }
+    .admin-tab {
+      flex: none;
+      padding: 0.7rem 1.2rem;
+      border-radius: 8px 8px 0 0;
+      background: none;
+      color: #4a5568;
+      font-weight: 600;
+      border: none;
+      border-bottom: 2px solid transparent;
+      cursor: pointer;
+      transition: background 0.2s, color 0.2s, border-bottom 0.2s;
+    }
+    .admin-tab.active {
+      background: #fff;
+      color: var(--primary);
+      border-bottom: 2px solid var(--primary);
+      box-shadow: 0 2px 8px #4a6fa511;
+      z-index: 2;
+    }
+
+    .admin-tab-content {
+      display: none;
+    }
+
+    .admin-tab-content.active {
+      display: block;
+    }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+      gap: 1.5rem;
+      margin-bottom: 2rem;
+    }
+
+    .stat-card {
+      background: #f9fafb;
+      border-radius: 10px;
+      padding: 1.5rem;
+      text-align: center;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .stat-value {
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: var(--primary);
+      margin-bottom: 0.5rem;
+    }
+
+    .stat-label {
+      font-size: 0.9rem;
+      color: #6b7280;
+    }
+
+    .progress-bar {
+      height: 8px;
+      background: #e2e8f0;
+      border-radius: 4px;
+      overflow: hidden;
+      margin-bottom: 0.5rem;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: var(--primary);
+      border-radius: 4px;
+    }
+
+    .progress-info {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.9rem;
+      color: #6b7280;
+    }
+
+    /* Estilos específicos para el modal de administración */
+    .admin-modal h2 {
+      font-size: 1.8rem;
+      margin-bottom: 1.5rem;
+      color: var(--primary);
+      text-align: center;
+    }
+
+    .admin-modal .btn {
+      width: 100%;
+      padding: 0.8rem;
+      border-radius: 50px;
+      font-weight: 600;
+      font-size: 1rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      transition: all 0.3s ease;
+    }
+
+    .admin-modal .btn-primary {
+      background: var(--primary);
+      color: white;
+    }
+
+    .admin-modal .btn-primary:hover {
+      background: var(--primary-dark);
+    }
+
+    .admin-modal .btn-accent {
+      background: var(--accent);
+      color: white;
+    }
+
+    .admin-modal .btn-accent:hover {
+      background: var(--accent-dark);
+    }
+
+    .admin-modal .btn-warning {
+      background: var(--challenge);
+      color: #333;
+    }
+
+    .admin-modal .btn-warning:hover {
+      background: var(--challenge-dark);
+      color: white;
+    }
+
+    .admin-modal .btn-secondary {
+      background: var(--volunteering);
+      color: white;
+    }
+    .admin-modal .btn-secondary:hover {
+      background: var(--volunteering-dark);
+    }
+
+    /* Estilos para el formulario de configuración de actividad */
+    .solidarity-form {
+      background: #f9fafb;
+      padding: 2rem;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      margin-top: 1rem;
+    }
+
+    .solidarity-form .form-section-title {
+      font-size: 1.5rem;
+      margin-bottom: 1.5rem;
+      color: var(--primary);
+    }
+
+    .solidarity-form .form-group {
+      margin-bottom: 1.5rem;
+    }
+
+    .solidarity-form label {
+      font-weight: 500;
+      margin-bottom: 0.5rem;
+      display: block;
+      color: #4a5568;
+    }
+
+    .solidarity-form input,
+    .solidarity-form select,
+    .solidarity-form textarea {
+      width: 100%;
+      padding: 0.8rem;
+      border-radius: 8px;
+      border: 1.5px solid var(--gray);
+      font-size: 1rem;
+      outline: none;
+      transition: border 0.2s;
+      background: #fff;
+    }
+
+    .solidarity-form input:focus,
+    .solidarity-form select:focus,
+    .solidarity-form textarea:focus {
+      border-color: var(--primary);
+    }
+
+    .solidarity-form .btn {
+      width: auto;
+      padding: 0.7rem 1.2rem;
+      border-radius: 50px;
+      font-weight: 600;
+      font-size: 1rem;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      transition: all 0.3s ease;
+    }
+
+    .solidarity-form .btn-primary {
+      background: var(--primary);
+      color: white;
+    }
+
+    .solidarity-form .btn-primary:hover {
+      background: var(--primary-dark);
+    }
+
+    .solidarity-form .btn-accent {
+      background: var(--accent);
+      color: white;
+    }
+
+    .solidarity-form .btn-accent:hover {
+      background: var(--accent-dark);
+    }
+
+    .solidarity-form .btn-warning {
+      background: var(--challenge);
+      color: #333;
+    }
+
+    .solidarity-form .btn-warning:hover {
+      background: var(--challenge-dark);
+      color: white;
+    }
+
+    .solidarity-form .btn-secondary {
+      background: var(--volunteering);
+      color: white;
+    }
+
+    .solidarity-form .btn-secondary:hover {
+      background: var(--volunteering-dark);
+    }
+
+    /* Estilos para las tarjetas de actividad en el modal de administración */
+    .activity-cards-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+      gap: 1rem;
+    }
+
+    .activity-card {
+      background: #fff;
+      border-radius: 12px;
+      padding: 1.5rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      transition: transform 0.2s;
+    }
+
+    .activity-card:hover {
+      transform: translateY(-4px);
+    }
+
+    .activity-card img {
+      width: 50px;
+      height: 50px;
+      margin-bottom: 1rem;
+    }
+
+    /* Estilos para la lista de miembros */
+    .members-list {
+      max-height: 300px;
+      overflow-y: auto;
+      margin-bottom: 1.5rem;
+    }
+
+    .member-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.8rem;
+      background: #f9fafb;
+      border-radius: 8px;
+      margin-bottom: 0.7rem;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .member-info {
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+    }
+
+    .member-avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      object-fit: cover;
+    }
+
+    .member-name {
+      font-weight: 500;
+      color: #2d3748;
+    }
+
+    .role-badge {
+      padding: 0.3rem 0.6rem;
+      border-radius: 12px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .role-badge.founder {
+      background: #4a6fa5;
+      color: white;
+    }
+
+    .role-badge.coordinator {
+      background: #3da58a;
+      color: white;
+    }
+
+    .role-badge.admin {
+      background: #166088;
+      color: white;
+    }
+
+    /* Estilos para los movimientos recientes */
+    #recentActivities {
+      max-height: 300px;
+      overflow-y: auto;
+    }
+
+    .activity-item {
+      display: flex;
+      align-items: center;
+      padding: 0.8rem;
+      background: #f9fafb;
+      border-radius: 8px;
+      margin-bottom: 0.7rem;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .activity-item i {
+      font-size: 1.5rem;
+      color: var(--primary);
+      flex-shrink: 0;
+    }
+
+    .activity-item div {
+      flex-grow: 1;
+      text-align: left;
+    }
+
+    .activity-item .badge {
+      background: var(--primary);
+      color: white;
+      padding: 0.4rem 0.8rem;
+      border-radius: 10px;
+      font-size: 0.85rem;
+    }
+
+    /* Tabs estilo myteams */
+    .admin-tabs {
+      display: flex;
+      gap: 0.5rem;
+      margin-bottom: 1.2rem;
+      border-bottom: 2px solid #e2e8f0;
+      overflow-x: auto;
+      scrollbar-width: none;
+    }
+    .admin-tabs::-webkit-scrollbar { display: none; }
+    .admin-tab {
+      flex: none;
+      padding: 0.7rem 1.2rem;
+      border-radius: 8px 8px 0 0;
+      background: none;
+      color: #4a5568;
+      font-weight: 600;
+      border: none;
+      border-bottom: 2px solid transparent;
+      cursor: pointer;
+      transition: background 0.2s, color 0.2s, border-bottom 0.2s;
+    }
+    .admin-tab.active {
+      background: #fff;
+      color: var(--primary);
+      border-bottom: 2px solid var(--primary);
+      box-shadow: 0 2px 8px #4a6fa511;
+      z-index: 2;
+    }
+
+    /* Scroll interno para el formulario de configuración */
+    #settingsTab .solidarity-form {
+      max-height: 60vh;
+      overflow-y: auto;
+      padding-right: 1rem;
+    }
+    /* 🎯 SOLUCIÓN SÚPER ESPECÍFICA: SOLO TÍTULOS 🎯 */
+#taskModal h1:first-child,
+#challengeModal h1:first-child,
+#volunteeringModal h1:first-child,
+#taskModalBody > h1:first-child,
+#challengeModalBody > h1:first-child,
+#volunteeringModalBody > h1:first-child {
+  text-align: left !important;
+  margin-left: 0 !important;
+  margin-right: auto !important;
+}
+
+/* 🎯 SOLO PÁRRAFOS Y DIVS DE CONTENIDO 🎯 */
+#taskModalBody > p,
+#challengeModalBody > p,
+#volunteeringModalBody > p,
+#taskModalBody > div:not(.share-section):not(.modal-actions):not(.task-actions):not(.challenge-actions):not(.volunteering-actions),
+#challengeModalBody > div:not(.share-section):not(.modal-actions):not(.task-actions):not(.challenge-actions):not(.volunteering-actions),
+#volunteeringModalBody > div:not(.share-section):not(.modal-actions):not(.task-actions):not(.challenge-actions):not(.volunteering-actions) {
+  text-align: left !important;
+}
+    @media (max-width: 600px) {
+      #settingsTab .solidarity-form {
+        max-height: 45vh;
+        padding: 1rem 0.5rem;
+      }
+    }
+
+    /* Color azul Solidarity solo para los labels del formulario de configuración del modal admin */
+#adminModal #settingsTab .solidarity-form label {
+  color: #166088 !important; /* Azul Solidarity */
+}
+/* Corrige iconos y barras de progreso de causas y tareas al azul Solidarity */
+.causes-section .meta-item i,
+.cause-card .meta-item i,
+#causeModal .meta-item i,
+.tasks-section .meta-item i,
+.task-card .meta-item i,
+#taskModal .meta-item i {
+  color: var(--primary) !important;
+}
+
+.causes-section .progress-fill,
+.cause-card .progress-fill,
+#causeModal .progress-fill,
+.tasks-section .progress-fill,
+.task-card .progress-fill,
+#taskModal .progress-fill {
+  background: var(--primary) !important;
+}
+/* Subtítulos y labels de configuración del modal admin igual que myteams.njk */
+#adminModal #settingsTab .form-section-title,
+#adminModal #settingsTab label {
+  font-family: 'Inter', 'Segoe UI', Arial, sans-serif;
+  font-size: 1.08rem;
+  font-weight: 600;
+  color: #166088;
+  letter-spacing: 0.01em;
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  margin-bottom: 1rem;
+}
+
+#adminModal #settingsTab .form-section-title i {
+  font-size: 1.1em;
+  color: #166088;
+  margin-right: 0.4em;
+}
+  </style>
+{% endblock %}
+
+{% block content %}
+  <div class="main-container">
+    <div class="section-header">
+      <h1>Tus Actividades Solidarias</h1>
+    </div>
+    <div class="search-container">
+      <input type="text" id="search-input" placeholder="Buscar entre tus actividades...">
+      <i class="fas fa-search" style="color:#4a6fa5;"></i>
+    </div>
+
+    <!-- Estado vacío general (aparece antes de las secciones) -->
+    <div id="generalEmptyState" class="empty-state" style="text-align: center; padding: 3rem; margin-bottom: 2rem; background: linear-gradient(135deg, #f0f9ff 0%, #e6f0fa 100%); border-radius: 12px; border: 1px solid var(--gray);">
+      <i class="fas fa-clipboard-list" style="font-size: 3rem; color: #a0aec0; margin-bottom: 1rem;"></i>
+      <h3 style="color: #4a5568; margin-bottom: 0.5rem;">No tienes actividades solidarias aún</h3>
+      <p style="color: #718096; margin-bottom: 1.5rem;">Empieza creando una nueva actividad o únete a alguna existente.</p>
+      <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
+        <a href="/causes" class="btn btn-primary" style="display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.8rem 1.5rem; border-radius: 8px; font-weight: 600; text-decoration: none; background: var(--primary); color: white;">
+          <i class="fas fa-heart"></i> Explorar causas
+        </a>
+        <a href="/tasks" class="btn btn-accent" style="display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.8rem 1.5rem; border-radius: 8px; font-weight: 600; text-decoration: none; background: var(--accent); color: white;">
+          <i class="fas fa-tasks"></i> Ver tareas
+        </a>
+        <a href="/challenges" class="btn btn-warning" style="display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.8rem 1.5rem; border-radius: 8px; font-weight: 600; text-decoration: none; background: var(--challenge); color: #333;">
+          <i class="fas fa-trophy"></i> Descubrir retos
+        </a>
+        <a href="/volunteering" class="btn btn-secondary" style="display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.8rem 1.5rem; border-radius: 8px; font-weight: 600; text-decoration: none; background: var(--volunteering); color: white;">
+          <i class="fas fa-hands-helping"></i> Ver voluntariados
+        </a>
+      </div>
+    </div>
+
+    <!-- Sección de Causas -->
+    <section class="activity-section causes-section" style="margin-bottom: 3.5rem;">
+      <div class="activity-section-header"
+           style="display:flex;align-items:center;gap:1.1rem;margin-bottom:2.2rem;
+                  background:linear-gradient(90deg,#e6f4ea 0%,#fff 100%);
+                  border-radius:14px;padding:1.2rem 1.7rem;box-shadow:0 2px 12px #e3eefd55;">
+        <div style="background:var(--accent);color:#fff;border-radius:50%;width:48px;height:48px;display:flex;align-items:center;justify-content:center;font-size:2rem;box-shadow:0 2px 8px #4fc3a133;">
+          <i class="fas fa-heart"></i>
+        </div>
+        <div>
+          <h2 style="color:var(--accent);font-weight:900;font-size:1.45rem;margin:0;letter-spacing:-1px;">Tus causas</h2>
+          <div style="color:#3da58a;font-size:1rem;font-weight:500;">Todas tus causas solidarias activas</div>
+        </div>
+      </div>
+      <div class="activities-grid" id="causesGrid"></div>
+    </section>
+
+    <!-- Sección de Tareas -->
+    <section class="activity-section tasks-section" style="margin-bottom: 3.5rem;">
+      <div class="activity-section-header"
+           style="display:flex;align-items:center;gap:1.1rem;margin-bottom:2.2rem;
+                  background:linear-gradient(90deg,#e3eefd 0%,#fff 100%);
+                  border-radius:14px;padding:1.2rem 1.7rem;box-shadow:0 2px 12px #e3eefd55;">
+        <div style="background:var(--primary);color:#fff;border-radius:50%;width:48px;height:48px;display:flex;align-items:center;justify-content:center;font-size:2rem;box-shadow:0 2px 8px #4a6fa533;">
+          <i class="fas fa-tasks"></i>
+        </div>
+        <div>
+          <h2 style="color:var(--primary);font-weight:900;font-size:1.45rem;margin:0;letter-spacing:-1px;">Tus tareas</h2>
+          <div style="color:#166088;font-size:1rem;font-weight:500;">Tus tareas pendientes y completadas</div>
+        </div>
+      </div>
+      <div class="activities-grid tasks-grid" id="tasksGrid"></div>
+    </section>
+
+    <!-- Sección de Retos -->
+    <section class="activity-section challenges-section" style="margin-bottom: 3.5rem;">
+      <div class="activity-section-header"
+           style="display:flex;align-items:center;gap:1.1rem;margin-bottom:2.2rem;
+                  background:linear-gradient(90deg,#fffbe6 0%,#fff 100%);
+                  border-radius:14px;padding:1.2rem 1.7rem;box-shadow:0 2px 12px #ffe06655;">
+        <div style="background:var(--challenge-dark);color:#fff;border-radius:50%;width:48px;height:48px;display:flex;align-items:center;justify-content:center;font-size:2rem;box-shadow:0 2px 8px #ffe06633;">
+          <i class="fas fa-trophy"></i>
+        </div>
+        <div>
+          <h2 style="color:var(--challenge-dark);font-weight:900;font-size:1.45rem;margin:0;letter-spacing:-1px;">Tus retos</h2>
+          <div style="color:#a67c00;font-size:1rem;font-weight:500;">Tus retos y desafíos solidarios</div>
+        </div>
+      </div>
+      <div class="activities-grid" id="challengesGrid"></div>
+    </section>
+
+    <!-- Sección de Voluntariado -->
+    <section class="activity-section volunteering-section" style="margin-bottom: 3.5rem;">
+      <div class="activity-section-header"
+           style="display:flex;align-items:center;gap:1.1rem;margin-bottom:2.2rem;
+                  background:linear-gradient(90deg,#e6faff 0%,#fff 100%);
+                  border-radius:14px;padding:1.2rem 1.7rem;box-shadow:0 2px 12px #00bcd433;">
+        <div style="background:var(--volunteering-dark);color:#fff;border-radius:50%;width:48px;height:48px;display:flex;align-items:center;justify-content:center;font-size:2rem;box-shadow:0 2px 8px #00bcd433;">
+          <i class="fas fa-hands-helping"></i>
+        </div>
+        <div>
+          <h2 style="color:var(--volunteering-dark);font-weight:900;font-size:1.45rem;margin:0;letter-spacing:-1px;">Tus voluntariados</h2>
+          <div style="color:#0097a7;font-size:1rem;font-weight:500;">Tus acciones de voluntariado</div>
+        </div>
+      </div>
+      <div class="activities-grid" id="volunteeringGrid"></div>
+    </section>
+  </div>
+
+  <!-- Modal de administración para actividades (puedes ponerlo justo antes de cerrar el main-container o al final del block content) -->
+  <div class="admin-modal" id="adminModal">
+    <div class="admin-modal-content">
+      <button class="close-admin-modal" id="closeAdminModal">&times;</button>
+      <h2 id="adminModalTitle">Administrar Actividad</h2>
+      <div class="admin-tabs">
+        <button class="admin-tab active" data-tab="overview">Resumen</button>
+        <button class="admin-tab" data-tab="crearactividad">Crear actividad</button>
+        <button class="admin-tab" data-tab="members">Miembros</button>
+        <button class="admin-tab" data-tab="settings">Configuración</button>
+        <button class="admin-tab" data-tab="content">Contenido</button>
+      </div>
+      <div class="admin-tab-content active" id="overviewTab">
+        <div class="stats-grid">
+          <div class="stat-card">
+            <div class="stat-value" id="membersCount">0</div>
+            <div class="stat-label">Miembros</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-value" id="activitiesCount">0</div>
+            <div class="stat-label">Actividades</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-value" id="impactPoints">0</div>
+            <div class="stat-label">Puntos de Impacto</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-value" id="beneficiariesCount">0</div>
+            <div class="stat-label">Beneficiarios</div>
+          </div>
+        </div>
+        <h3>Progreso de la actividad</h3>
+        <div class="progress-bar">
+          <div class="progress-fill" id="communityProgress" style="width: 0%"></div>
+        </div>
+        <div class="progress-info">
+          <span id="progressPercent">0% completado</span>
+          <span id="progressAmount">0 € de 0 €</span>
+        </div>
+      </div>
+      <div class="admin-tab-content" id="crearactividadTab">
+        <h3 style="margin-bottom:1.5rem;">Crear nueva actividad</h3>
+        <div class="activity-cards-grid">
+          <div class="activity-card" style="background:linear-gradient(135deg,#e3f0ff 0%,#f8fafc 100%);border-radius:14px;padding:1.7rem 1.5rem;display:flex;flex-direction:column;align-items:center;box-shadow:0 4px 16px #4a6fa511;min-width:170px;max-width:320px;">
+            <div style="background:#4a6fa5;padding:1rem;border-radius:50%;margin-bottom:1rem;box-shadow:0 2px 8px #4a6fa522;">
+              <img src="https://cdn-icons-png.flaticon.com/512/833/833472.png" alt="Causa" style="width:44px;height:44px;">
+            </div>
+            <button class="btn btn-primary btn-lg" id="createCauseBtnTab" style="width:100%;margin-bottom:0.7rem;">
+              <i class="fas fa-heart"></i> Crear Causa
+            </button>
+            <span style="color:#4a6fa5;font-size:1em;text-align:center;">Apoya una causa solidaria</span>
+          </div>
+          <div class="activity-card" style="background:linear-gradient(135deg,#e6fff7 0%,#f8fafc 100%);border-radius:14px;padding:1.7rem 1.5rem;display:flex;flex-direction:column;align-items:center;box-shadow:0 4px 16px #4fc3a122;min-width:170px;max-width:320px;">
+            <div style="background:#4fc3a1;padding:1rem;border-radius:50%;margin-bottom:1rem;box-shadow:0 2px 8px #4fc3a122;">
+              <img src="https://cdn-icons-png.flaticon.com/512/3079/3079165.png" alt="Tarea" style="width:44px;height:44px;">
+            </div>
+            <button class="btn btn-accent btn-lg" id="createTaskBtnTab" style="width:100%;margin-bottom:0.7rem;background:#4fc3a1;color:#fff;">
+              <i class="fas fa-tasks"></i> Crear Tarea
+            </button>
+            <span style="color:#249e7a;font-size:1em;text-align:center;">Organiza tareas concretas</span>
+          </div>
+          <div class="activity-card" style="background:linear-gradient(135deg,#fffbe6 0%,#fffdf7 100%);border-radius:14px;padding:1.7rem 1.5rem;display:flex;flex-direction:column;align-items:center;box-shadow:0 4px 16px #ffe06644;min-width:170px;max-width:320px;">
+            <div style="background:#ffe066;padding:1rem;border-radius:50%;margin-bottom:1rem;box-shadow:0 2px 8px #ffe06688;">
+              <img src="https://cdn-icons-png.flaticon.com/512/2278/2278992.png" alt="Reto" style="width:44px;height:44px;">
+            </div>
+            <button class="btn btn-warning btn-lg" id="createChallengeBtnTab" style="width:100%;margin-bottom:0.7rem;background:#ffe066;color:#a67c00;border:none;">
+              <i class="fas fa-trophy"></i> Crear Reto
+            </button>
+            <span style="color:#a67c00;font-size:1em;text-align:center;">Lanza un reto divertido</span>
+          </div>
+          <div class="activity-card" style="background:linear-gradient(135deg,#e6faff 0%,#f8fafc 100%);border-radius:14px;padding:1.7rem 1.5rem;display:flex;flex-direction:column;align-items:center;box-shadow:0 4px 16px #4fc3a122;min-width:170px;max-width:320px;">
+            <div style="background:#00bcd4;padding:1rem;border-radius:50%;margin-bottom:1rem;box-shadow:0 2px 8px #00bcd422;">
+              <img src="https://cdn-icons-png.flaticon.com/512/616/616494.png" alt="Voluntariado" style="width:44px;height:44px;">
+            </div>
+            <button class="btn btn-info btn-lg" id="createVolunteeringBtnTab" style="width:100%;margin-bottom:0.7rem;background:#00bcd4;color:#fff;border:none;">
+              <i class="fas fa-hands-helping"></i> Crear Voluntariado
+            </button>
+            <span style="color:#249e7a;font-size:1em;text-align:center;">Convoca voluntariado</span>
+          </div>
+        </div>
+      </div>
+      <div class="admin-tab-content" id="membersTab">
+        <h3>Miembros actuales</h3>
+        <div class="members-list" id="membersList"></div>
+        <h3 style="margin-top: 2rem;">Invitar nuevos miembros</h3>
+        <div class="invite-form">
+          <input type="email" id="inviteEmail" placeholder="Correo electrónico del usuario a invitar">
+          <select id="inviteRole" class="form-control">
+            <option value="member">Miembro</option>
+            <option value="coordinator">Coordinador</option>
+            <option value="founder">Fundador</option>
+          </select>
+          <button class="btn btn-primary" id="sendInviteBtn" style="margin-top: 1rem;">
+            <i class="fas fa-paper-plane"></i> Enviar Invitación
+          </button>
+        </div>
+      </div>
+      <div class="admin-tab-content" id="settingsTab">
+        <form id="activitySettingsForm" class="solidarity-form">
+          <h3 class="form-section-title"><i class="fas fa-cog"></i> Configuración de la actividad</h3>
+          <div class="form-grid">
+            <div class="form-group">
+              <label for="editActivityName"><i class="fas fa-users"></i> Nombre de la actividad</label>
+              <input type="text" id="editActivityName" name="editActivityName" required>
+            </div>
+            <div class="form-group">
+              <label for="editActivityCategory"><i class="fas fa-layer-group"></i> Categoría</label>
+              <select id="editActivityCategory" name="editActivityCategory" required>
+                <option value="medio_ambiente">Medio Ambiente</option>
+                <option value="educacion">Educación</option>
+                <option value="salud">Salud</option>
+                <option value="animales">Animales</option>
+                <option value="comunidad">Comunidad</option>
+                <option value="otros">Otros</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="editActivityPrivacy"><i class="fas fa-lock"></i> Privacidad</label>
+              <select id="editActivityPrivacy" name="editActivityPrivacy" required>
+                <option value="public">Pública</option>
+                <option value="private">Privada</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="editActivityGoal"><i class="fas fa-euro-sign"></i> Meta de recaudación (€)</label>
+              <input type="number" id="editActivityGoal" name="editActivityGoal" min="0">
+            </div>
+            <div class="form-group">
+              <label for="editActivityTags"><i class="fas fa-tags"></i> Etiquetas (separadas por comas)</label>
+              <input type="text" id="editActivityTags" name="editActivityTags">
+            </div>
+            <div class="form-group form-group-full">
+              <label for="editActivityDesc"><i class="fas fa-align-left"></i> Descripción</label>
+              <textarea id="editActivityDesc" name="editActivityDesc" rows="4" required></textarea>
+            </div>
+            <div class="form-group form-group-full">
+              <label for="editActivityPhoto"><i class="fas fa-image"></i> Foto/logo de la actividad</label>
+              <input type="file" id="editActivityPhoto" name="editActivityPhoto" accept="image/*">
+              <img id="editActivityPhotoPreview" style="max-width: 200px; margin-top: 1rem; display: none; border-radius: 12px;">
+            </div>
+          </div>
+          <div class="form-actions">
+            <button type="submit" class="btn btn-primary">
+              <i class="fas fa-save"></i> Guardar Cambios
+            </button>
+          </div>
+        </form>
+      </div>
+      <div class="admin-tab-content" id="contentTab">
+        <h3>Mensaje para la actividad</h3>
+        <textarea id="activityMessage" rows="5" style="width: 100%; margin-bottom: 1rem;"></textarea>
+        <button class="btn btn-primary" id="saveMessageBtn">
+          <i class="fas fa-bullhorn"></i> Publicar Mensaje
+        </button>
+        <h3 style="margin-top: 2rem;">Movimientos recientes</h3>
+        <div id="recentActivities"></div>
+      </div>
+    </div>
+  </div>
+{% endblock %}
+
+{% block scripts %}
+  {{ super() }}
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="/js/modules/causes-renderer.js"></script>
+  <script src="/js/modules/tasks-renderer.js"></script>
+  <script src="/js/modules/challenges-renderer.js"></script>
+  <script src="/js/modules/volunteering-renderer.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', async function() {
+      // --- Funciones auxiliares básicas ---
+      function showToast(message, type = 'success') {
+        const toast = document.createElement('div');
+        toast.textContent = message;
+        toast.style.position = 'fixed';
+        toast.style.bottom = '30px';
+        toast.style.left = '50%';
+        toast.style.transform = 'translateX(-50%)';
+        toast.style.padding = '14px 28px';
+        toast.style.borderRadius = '8px';
+        toast.style.backgroundColor = type === 'success' ? '#4fc3a1' : type === 'info' ? '#4a6fa5' : '#e53e3e';
+        toast.style.color = '#fff';
+        toast.style.fontWeight = '600';
+        toast.style.fontSize = '1.05rem';
+        toast.style.boxShadow = '0 4px 16px rgba(0,0,0,0.13)';
+        toast.style.zIndex = '99999';
+        toast.style.opacity = '0';
+        toast.style.transition = 'opacity 0.3s';
+        document.body.appendChild(toast);
+        setTimeout(() => { toast.style.opacity = '1'; }, 10);
+        setTimeout(() => {
+          toast.style.opacity = '0';
+          setTimeout(() => toast.remove(), 350);
+        }, 2200);
+      }
+
+      // --- Variables globales ---
+      let userId = null;
+      let userActivities = {
+        causes: [],
+        tasks: [],
+        challenges: [],
+        volunteering: []
+      };
+
+      // --- Obtener usuario actual ---
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session?.user) {
+        window.location.href = '/login?return=/profile/myactivities';
+        return;
+      }
+      userId = session.user.id;
+
+      // --- Cargar causas map para challenges ---
+      async function loadCausesMap() {
+        const { data: causes } = await supabase.from('causes').select('id, title, photo_url, short_description');
+        if (causes) {
+          window.causesMap = {};
+          causes.forEach(c => {
+            window.causesMap[c.id] = {
+              title: c.title,
+              photo_url: c.photo_url,
+              short_description: c.short_description
+            };
+          });
+        }
+      }
+
+      // --- Función para obtener o crear el modal de challenge ---
+      function getOrCreateChallengeModal() {
+        let modal = document.getElementById('challengeModal');
+        if (!modal) {
+          modal = document.createElement('div');
+          modal.id = 'challengeModal';
+          modal.style.cssText = 'display:none; position:fixed; z-index:9999; left:0; top:0; width:100vw; height:100vh; background:rgba(0,0,0,0.35); align-items:center; justify-content:center;';
+          
+          modal.innerHTML = `
+            <div class="modal-content" style="background:#fff; border-radius:18px; max-width:800px; width:95vw; padding:2rem; box-shadow:0 8px 32px rgba(74,111,165,0.13); position:relative; max-height:90vh; overflow-y:auto; text-align:left;">
+              <button id="closeChallengeModal" style="position:absolute; top:1.5rem; right:1.5rem; background:none; border:none; font-size:1.8rem; color:#6b7280; cursor:pointer; transition:color 0.2s;" onmouseover="this.style.color='#4a6fa5'" onmouseout="this.style.color='#6b7280'">&times;</button>
+              <div id="challengeModalBody" style="text-align:left;">
+                <!-- Contenido dinámico -->
+              </div>
+            </div>
+          `;
+          document.body.appendChild(modal);
+          
+          // Agregar evento para cerrar
+          document.getElementById('closeChallengeModal').onclick = function() {
+            modal.style.display = 'none';
+            document.body.style.overflow = '';
+          };
+          
+          // Cerrar al hacer clic fuera
+          modal.onclick = function(e) {
+            if (e.target === modal) {
+              modal.style.display = 'none';
+              document.body.style.overflow = '';
+            }
+          };
+        }
+        return modal;
+      }
+
+      // --- Función para obtener o crear el modal de volunteering ---
+      function getOrCreateVolunteeringModal() {
+        let modal = document.getElementById('volunteeringModal');
+        if (!modal) {
+          modal = document.createElement('div');
+          modal.id = 'volunteeringModal';
+          modal.style.cssText = 'display:none; position:fixed; z-index:9999; left:0; top:0; width:100vw; height:100vh; background:rgba(0,0,0,0.35); align-items:center; justify-content:center;';
+          
+          modal.innerHTML = `
+            <div class="modal-content" style="background:#fff; border-radius:18px; max-width:800px; width:95vw; padding:2rem; box-shadow:0 8px 32px rgba(74,111,165,0.13); position:relative; max-height:90vh; overflow-y:auto; text-align:left;">
+              <button id="closeVolunteeringModal" style="position:absolute; top:1.5rem; right:1.5rem; background:none; border:none; font-size:1.8rem; color:#6b7280; cursor:pointer; transition:color 0.2s;" onmouseover="this.style.color='#4a6fa5'" onmouseout="this.style.color='#6b7280'">&times;</button>
+              <div id="volunteeringModalBody" style="text-align:left;">
+                <!-- Contenido dinámico -->
+              </div>
+            </div>
+          `;
+          document.body.appendChild(modal);
+          
+          // Agregar evento para cerrar
+          document.getElementById('closeVolunteeringModal').onclick = function() {
+            modal.style.display = 'none';
+            document.body.style.overflow = '';
+          };
+          
+          // Cerrar al hacer clic fuera
+          modal.onclick = function(e) {
+            if (e.target === modal) {
+              modal.style.display = 'none';
+              document.body.style.overflow = '';
+            }
+          };
+        }
+        return modal;
+      }
+
+      // --- Función para obtener o crear el modal de task ---
+      function getOrCreateTaskModal() {
+        let modal = document.getElementById('taskModal');
+        if (!modal) {
+          modal = document.createElement('div');
+          modal.id = 'taskModal';
+          modal.style.cssText = 'display:none; position:fixed; z-index:9999; left:0; top:0; width:100vw; height:100vh; background:rgba(0,0,0,0.35); align-items:center; justify-content:center;';
+          
+          modal.innerHTML = `
+            <div class="modal-content" style="background:#fff; border-radius:18px; max-width:800px; width:95vw; padding:2rem; box-shadow:0 8px 32px rgba(74,111,165,0.13); position:relative; max-height:90vh; overflow-y:auto; text-align:left;">
+              <button id="closeTaskModal" style="position:absolute; top:1.5rem; right:1.5rem; background:none; border:none; font-size:1.8rem; color:#6b7280; cursor:pointer; transition:color 0.2s;" onmouseover="this.style.color='#4a6fa5'" onmouseout="this.style.color='#6b7280'">&times;</button>
+              <div id="taskModalBody" style="text-align:left;">
+                <!-- Contenido dinámico -->
+              </div>
+            </div>
+          `;
+          document.body.appendChild(modal);
+          
+          // Agregar evento para cerrar
+          document.getElementById('closeTaskModal').onclick = function() {
+            modal.style.display = 'none';
+            document.body.style.overflow = '';
+          };
+          
+          // Cerrar al hacer clic fuera
+          modal.onclick = function(e) {
+            if (e.target === modal) {
+              modal.style.display = 'none';
+              document.body.style.overflow = '';
+            }
+          };
+        }
+        return modal;
+      }
+
+      // --- Función para cargar causas del usuario ---
+      async function loadUserCauses() {
+        try {
+          // 1. Obtener causas creadas por el usuario (fundador)
+          const { data: createdCauses, error: createdError } = await supabase
+            .from('causes')
+            .select('*')
+            .eq('user_id', userId);
+
+          if (createdError) {
+            console.error('Error cargando causas creadas:', createdError);
+          }
+
+          // 2. Obtener causas donde el usuario es miembro
+          const { data: memberships, error: membershipsError } = await supabase
+            .from('causes_members')
+            .select('cause_id, role, status')
+            .eq('user_id', userId)
+            .eq('status', 'active');
+
+          if (membershipsError) {
+            console.error('Error cargando membresías:', membershipsError);
+          }
+
+          // 3. Si hay membresías, obtener los detalles de esas causas
+          let joinedCauses = [];
+          if (memberships && memberships.length > 0) {
+            const causeIds = memberships.map(m => m.cause_id);
+            const { data: causesDetails, error: detailsError } = await supabase
+              .from('causes')
+              .select('*')
+              .in('id', causeIds);
+
+            if (detailsError) {
+              console.error('Error cargando detalles de causas:', detailsError);
+            } else if (causesDetails) {
+              // Agregar información de rol a cada causa
+              joinedCauses = causesDetails.map(cause => {
+                const membership = memberships.find(m => m.cause_id === cause.id);
+                return {
+                  ...cause,
+                  userRole: membership ? membership.role : 'member',
+                  isCreator: false
+                };
+              });
+            }
+          }
+
+          // 4. Combinar causas creadas y causas donde es miembro
+          const allUserCauses = [
+            ...(createdCauses || []).map(cause => ({ ...cause, userRole: 'founder', isCreator: true })),
+            ...joinedCauses
+          ];
+
+          // 5. Eliminar duplicados (en caso de que sea fundador Y miembro)
+          const uniqueCauses = allUserCauses.reduce((acc, current) => {
+            const existing = acc.find(cause => cause.id === current.id);
+            if (!existing) {
+              acc.push(current);
+            } else if (current.userRole === 'founder') {
+              // Si ya existe pero este es fundador, reemplazar
+              const index = acc.findIndex(cause => cause.id === current.id);
+              acc[index] = current;
+            }
+            return acc;
+          }, []);
+
+          // 6. Actualizar array de actividades
+          userActivities.causes = uniqueCauses;
+
+          console.log('Causas del usuario cargadas:', uniqueCauses);
+
+        } catch (error) {
+          console.error('Error en loadUserCauses:', error);
+          userActivities.causes = [];
+        }
+      }
+
+      // --- Función para cargar tareas del usuario ---
+      async function loadUserTasks() {
+        try {
+          // 1. Obtener tareas creadas por el usuario (fundador)
+          const { data: createdTasks, error: createdError } = await supabase
+            .from('tasks')
+            .select(`
+              *,
+              linkedCause:causes!tasks_cause_id_fkey(id, title, photo_url)
+            `)
+            .eq('user_id', userId);
+
+          if (createdError) {
+            console.error('Error cargando tareas creadas:', createdError);
+          }
+
+          // 2. Obtener tareas donde el usuario es miembro (cualquier rol, cualquier status)
+          const { data: memberships, error: membershipsError } = await supabase
+            .from('task_members')  // ✅ CORREGIDO: era 'tasks_members'
+            .select('task_id, role, status')
+            .eq('user_id', userId)
+            .eq('status', 'active');  // Añadir filtro de status como en retos
+
+          if (membershipsError) {
+            console.error('Error cargando membresías de tareas:', membershipsError);
+          }
+
+          // 3. Si hay membresías, obtener los detalles de esas tareas
+          let joinedTasks = [];
+          if (memberships && memberships.length > 0) {
+            const taskIds = memberships.map(m => m.task_id);
+            const { data: tasksDetails, error: detailsError } = await supabase
+              .from('tasks')
+              .select(`
+                *,
+                linkedCause:causes!tasks_cause_id_fkey(id, title, photo_url)
+              `)
+              .in('id', taskIds);
+
+            if (detailsError) {
+              console.error('Error cargando detalles de tareas:', detailsError);
+            } else if (tasksDetails) {
+              // Agregar información de rol a cada tarea
+              joinedTasks = tasksDetails.map(task => {
+                const membership = memberships.find(m => m.task_id === task.id);
+                return {
+                  ...task,
+                  userRole: membership ? membership.role : 'member',
+                  isCreator: false
+                };
+              });
+            }
+          }
+
+          // 4. Combinar tareas creadas y tareas donde es miembro
+          const allUserTasks = [
+            ...(createdTasks || []).map(task => ({ ...task, userRole: 'founder', isCreator: true })),
+            ...joinedTasks
+          ];
+
+          // 5. Eliminar duplicados (en caso de que sea fundador Y miembro)
+          const uniqueTasks = allUserTasks.reduce((acc, current) => {
+            const existing = acc.find(task => task.id === current.id);
+            if (!existing) {
+              acc.push(current);
+            } else if (current.userRole === 'founder') {
+              // Si ya existe pero este es fundador, reemplazar
+              const index = acc.findIndex(task => task.id === current.id);
+              acc[index] = current;
+            }
+            return acc;
+          }, []);
+
+          // 6. Procesar datos para compatibilidad con el renderer
+          uniqueTasks.forEach(task => {
+            // Mapear linkedCause para compatibilidad con el renderer
+            if (task.linkedCause && Array.isArray(task.linkedCause)) {
+              task.linkedCause = task.linkedCause[0] || null;
+            }
+            
+            // Asegurar que tenga una imagen por defecto si no tiene
+            if (!task.photo_url) {
+              task.photo_url = '/images/default-task.jpg';
+            }
+
+            // Marcar que ya está participando (para el renderer)
+            task.isParticipating = true;
+          });
+
+          // 7. Actualizar array de actividades
+          userActivities.tasks = uniqueTasks;
+
+          console.log('Tareas del usuario cargadas:', uniqueTasks);
+
+        } catch (error) {
+          console.error('Error en loadUserTasks:', error);
+          userActivities.tasks = [];
+        }
+      }
+
+      // --- Función para cargar retos del usuario ---
+      async function loadUserChallenges() {
+        try {
+          // 1. Obtener retos creados por el usuario (fundador)
+          const { data: createdChallenges, error: createdError } = await supabase
+            .from('challenges')
+            .select('*')
+            .eq('creator_id', userId);
+
+          if (createdError) {
+            console.error('Error cargando retos creados:', createdError);
+          }
+
+          // 2. Obtener retos donde el usuario es miembro
+          const { data: memberships, error: membershipsError } = await supabase
+            .from('challenges_members')
+            .select('challenge_id, role, status')
+            .eq('user_id', userId)
+            .eq('status', 'active');
+
+          if (membershipsError) {
+            console.error('Error cargando membresías de retos:', membershipsError);
+          }
+
+          // 3. Si hay membresías, obtener los detalles de esos retos
+          let joinedChallenges = [];
+          if (memberships && memberships.length > 0) {
+            const challengeIds = memberships.map(m => m.challenge_id);
+            const { data: challengesDetails, error: detailsError } = await supabase
+              .from('challenges')
+              .select('*')
+              .in('id', challengeIds);
+
+            if (detailsError) {
+              console.error('Error cargando detalles de retos:', detailsError);
+            } else if (challengesDetails) {
+              // Agregar información de rol a cada reto
+              joinedChallenges = challengesDetails.map(challenge => {
+                const membership = memberships.find(m => m.challenge_id === challenge.id);
+                return {
+                  ...challenge,
+                  userRole: membership ? membership.role : 'member',
+                  isCreator: false
+                };
+              });
+            }
+          }
+
+          // 4. Combinar retos creados y retos donde es miembro
+          const allUserChallenges = [
+            ...(createdChallenges || []).map(challenge => ({ ...challenge, userRole: 'founder', isCreator: true })),
+            ...joinedChallenges
+          ];
+
+          // 5. Eliminar duplicados (en caso de que sea fundador Y miembro)
+          const uniqueChallenges = allUserChallenges.reduce((acc, current) => {
+            const existing = acc.find(challenge => challenge.id === current.id);
+            if (!existing) {
+              acc.push(current);
+            } else if (current.userRole === 'founder') {
+              // Si ya existe pero este es fundador, reemplazar
+              const index = acc.findIndex(challenge => challenge.id === current.id);
+              acc[index] = current;
+            }
+            return acc;
+          }, []);
+
+          // 6. Enriquecer con información de causa vinculada
+          for (let challenge of uniqueChallenges) {
+            if (challenge.cause_id && window.causesMap && window.causesMap[challenge.cause_id]) {
+              challenge.linkedCause = window.causesMap[challenge.cause_id];
+            }
+          }
+
+          // 7. Actualizar array de actividades
+          userActivities.challenges = uniqueChallenges;
+
+          console.log('Retos del usuario cargados:', uniqueChallenges);
+
+        } catch (error) {
+          console.error('Error en loadUserChallenges:', error);
+          userActivities.challenges = [];
+        }
+      }
+
+      // --- Función para cargar voluntariados del usuario ---
+      async function loadUserVolunteering() {
+        try {
+          // 1. Obtener voluntariados creados por el usuario (fundador)
+          const { data: createdVolunteering, error: createdError } = await supabase
+            .from('volunteering')
+            .select(`
+              *,
+              linkedCause:causes!volunteering_cause_id_fkey(id, title, photo_url)
+            `)
+            .eq('user_id', userId);
+
+          if (createdError) {
+            console.error('Error cargando voluntariados creados:', createdError);
+          }
+
+          // 2. Obtener voluntariados donde el usuario es miembro
+          const { data: memberships, error: membershipsError } = await supabase
+            .from('volunteering_members')
+            .select('volunteering_id, role, status')
+            .eq('user_id', userId)
+            .eq('status', 'active');
+
+          if (membershipsError) {
+            console.error('Error cargando membresías de voluntariados:', membershipsError);
+          }
+
+          // 3. Si hay membresías, obtener los detalles de esos voluntariados
+          let joinedVolunteering = [];
+          if (memberships && memberships.length > 0) {
+            const volunteeringIds = memberships.map(m => m.volunteering_id);
+            const { data: volunteeringDetails, error: detailsError } = await supabase
+              .from('volunteering')
+              .select(`
+                *,
+                linkedCause:causes!volunteering_cause_id_fkey(id, title, photo_url)
+              `)
+              .in('id', volunteeringIds);
+
+            if (detailsError) {
+              console.error('Error cargando detalles de voluntariados:', detailsError);
+            } else if (volunteeringDetails) {
+              // Agregar información de rol a cada voluntariado
+              joinedVolunteering = volunteeringDetails.map(volunteering => {
+                const membership = memberships.find(m => m.volunteering_id === volunteering.id);
+                return {
+                  ...volunteering,
+                  userRole: membership ? membership.role : 'member',
+                  isCreator: false
+                };
+              });
+            }
+          }
+
+          // 4. Combinar voluntariados creados y voluntariados donde es miembro
+          const allUserVolunteering = [
+            ...(createdVolunteering || []).map(volunteering => ({ ...volunteering, userRole: 'founder', isCreator: true })),
+            ...joinedVolunteering
+          ];
+
+          // 5. Eliminar duplicados (en caso de que sea fundador Y miembro)
+          const uniqueVolunteering = allUserVolunteering.reduce((acc, current) => {
+            const existing = acc.find(volunteering => volunteering.id === current.id);
+            if (!existing) {
+              acc.push(current);
+            } else if (current.userRole === 'founder') {
+              // Si ya existe pero este es fundador, reemplazar
+              const index = acc.findIndex(volunteering => volunteering.id === current.id);
+              acc[index] = current;
+            }
+            return acc;
+          }, []);
+
+          // 6. Procesar datos para compatibilidad con el renderer (como en index.njk)
+          uniqueVolunteering.forEach(volunteering => {
+            // Mapear linkedCause para compatibilidad con el renderer
+            if (volunteering.linkedCause && Array.isArray(volunteering.linkedCause)) {
+              volunteering.linkedCause = volunteering.linkedCause[0] || null;
+            }
+            
+            // Asegurar que tenga una imagen por defecto si no tiene
+            if (!volunteering.photo_url) {
+              volunteering.photo_url = '/images/default-volunteering.jpg';
+            }
+
+            // Marcar que ya está participando (para el renderer)
+            volunteering.isParticipating = true;
+          });
+
+          // 7. Actualizar array de actividades
+          userActivities.volunteering = uniqueVolunteering;
+
+          console.log('Voluntariados del usuario cargados:', uniqueVolunteering);
+
+        } catch (error) {
+          console.error('Error en loadUserVolunteering:', error);
+          userActivities.volunteering = [];
+        }
+      }
+
+      // --- Función para obtener actividades del usuario ---
+      async function loadUserActivities() {
+        try {
+          // Cargar causes map ANTES que los challenges
+          await loadCausesMap();
+          
+          // Cargar causas del usuario
+          await loadUserCauses();
+          
+          // Cargar tareas del usuario
+          await loadUserTasks();
+          
+          // Cargar retos del usuario
+          await loadUserChallenges();
+          
+          // Cargar voluntariados del usuario
+          await loadUserVolunteering();
+          
+          renderActivities();
+        } catch (error) {
+          console.error('Error cargando actividades:', error);
+          showToast('Error al cargar actividades', 'error');
+        }
+      }
+
+      // --- Función para renderizar actividades ---
+      function renderActivities() {
+        const totalActivities = userActivities.causes.length + 
+                               userActivities.tasks.length + 
+                               userActivities.challenges.length + 
+                               userActivities.volunteering.length;
+
+        // Si no hay ninguna actividad, mostrar estado general
+        if (totalActivities === 0) {
+          document.getElementById('generalEmptyState').style.display = 'block';
+        } else {
+          document.getElementById('generalEmptyState').style.display = 'none';
+        }
+
+        // Renderizar cada sección
+        renderSection('causesGrid', userActivities.causes, 'causes');
+        renderSection('tasksGrid', userActivities.tasks, 'tasks');
+        renderSection('challengesGrid', userActivities.challenges, 'challenges');
+        renderSection('volunteeringGrid', userActivities.volunteering, 'volunteering');
+      }
+
+      // --- Función para renderizar una sección específica ---
+      function renderSection(gridId, activities, type) {
+        const grid = document.getElementById(gridId);
+        
+        if (activities.length === 0) {
+          const emptyMessages = {
+            causes: {
+              title: 'No tienes causas solidarias aún',
+              subtitle: 'Explora y únete a causas que te importen',
+              icon: 'fas fa-heart',
+              buttonText: 'Explorar causas',
+              buttonLink: '/causes',
+              buttonColor: 'var(--accent)'
+            },
+            tasks: {
+              title: 'No tienes tareas pendientes',
+              subtitle: 'Encuentra tareas donde puedas ayudar',
+              icon: 'fas fa-tasks',
+              buttonText: 'Ver tareas',
+              buttonLink: '/tasks',
+              buttonColor: 'var(--primary)'
+            },
+            challenges: {
+              title: 'No tienes retos activos',
+              subtitle: 'Acepta desafíos solidarios y suma impacto',
+              icon: 'fas fa-trophy',
+              buttonText: 'Descubrir retos',
+              buttonLink: '/challenges',
+              buttonColor: 'var(--challenge-dark)'
+            },
+            volunteering: {
+              title: 'No tienes voluntariados',
+              subtitle: 'Únete a oportunidades de voluntariado',
+              icon: 'fas fa-hands-helping',
+              buttonText: 'Ver voluntariados',
+              buttonLink: '/volunteering',
+              buttonColor: 'var(--volunteering-dark)'
+            }
+          };
+
+          const message = emptyMessages[type];
+          
+          grid.innerHTML = `
+            <div style="grid-column: 1 / -1; text-align: center; padding: 2.5rem; background: linear-gradient(135deg, rgba(74, 111, 165, 0.05) 0%, rgba(255, 255, 255, 0.8) 100%); border-radius: 12px; border: 2px dashed #e2e8f0;">
+              <i class="${message.icon}" style="font-size: 2.5rem; color: ${message.buttonColor}; margin-bottom: 1rem; opacity: 0.7;"></i>
+              <h4 style="color: #4a5568; margin-bottom: 0.5rem; font-size: 1.1rem; font-weight: 600;">${message.title}</h4>
+              <p style="color: #718096; margin-bottom: 1.5rem; font-size: 0.95rem;">${message.subtitle}</p>
+              <a href="${message.buttonLink}" 
+                 style="display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.7rem 1.2rem; border-radius: 8px; font-weight: 600; text-decoration: none; background: ${message.buttonColor}; color: white; transition: all 0.2s; font-size: 0.9rem;"
+                 onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 4px 12px rgba(0,0,0,0.15)';"
+                 onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none';">
+                <i class="${message.icon}"></i> ${message.buttonText}
+              </a>
+            </div>
+          `;
+        } else {
+          // Renderizar actividades reales
+          if (type === 'causes' && window.causesRenderer) {
+            // Usar el causes-renderer para renderizar las causas
+            window.causesRenderer.renderGrid(activities, grid, { showUserRole: true, showAdminButton: true });
+            
+            // Agregar badges de rol después del renderizado
+            setTimeout(() => {
+              activities.forEach(cause => {
+                const cards = grid.querySelectorAll('.cause-card');
+                cards.forEach(card => {
+                  // Buscar la tarjeta correspondiente y agregar badge de rol
+                  if (card.querySelector('h3')?.textContent === cause.title) {
+                    addRoleBadge(card, cause.userRole, cause.isCreator);
+                    addAdminButton(card, 'cause', cause.id, cause.userRole);
+                  }
+                });
+              });
+            }, 100);
+            
+          } else if (type === 'tasks' && window.tasksRenderer) {
+            // Asegurarse de que el grid tenga las clases CSS correctas
+            if (!grid.classList.contains('tasks-grid')) {
+              grid.classList.add('tasks-grid');
+            }
+            
+            // Guardar tasks globalmente para compatibilidad con modales
+            window.tasks = activities;
+            window.tasksRenderer.renderGrid(activities, grid, { showUserRole: true, showAdminButton: true });
+            
+            // Agregar event listeners para los modales después del renderizado
+            setTimeout(() => {
+              // Event listeners para "Ver más" de tasks
+              grid.querySelectorAll('.view-task-btn').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                  e.preventDefault();
+                  const taskId = btn.getAttribute('data-task-id');
+                  if (window.showTaskModal) {
+                    window.showTaskModal(taskId);
+                  }
+                });
+              });
+
+              // Agregar badges de rol y botones de admin después del renderizado
+              activities.forEach(task => {
+                const cards = grid.querySelectorAll('.task-card');
+                cards.forEach(card => {
+                  // Buscar la tarjeta correspondiente y agregar badge de rol
+                  const titleElement = card.querySelector('h3');
+                  if (titleElement && titleElement.textContent.trim() === task.title.trim()) {
+                    addRoleBadgeToTask(card, task.userRole, task.isCreator);
+                    addAdminButton(card, 'task', task.id, task.userRole);
+                  }
+                });
+              });
+            }, 200);
+            
+          } else if (type === 'challenges' && window.challengesRenderer) {
+            // Asegurarse de que el grid tenga las clases CSS correctas
+            if (!grid.classList.contains('challenges-grid')) {
+              grid.classList.add('challenges-grid');
+            }
+            
+            // Guardar challenges globalmente para compatibilidad con modales
+            window.challenges = activities;
+            
+            // Usar el challenges-renderer para renderizar los retos
+            window.challengesRenderer.renderGrid(activities, grid, { showUserRole: true, showAdminButton: true });
+            
+            // Agregar event listeners para los modales después del renderizado
+            setTimeout(() => {
+              // Event listeners para "Ver más" de challenges
+              grid.querySelectorAll('.view-challenge-btn').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                  e.preventDefault();
+                  const challengeId = btn.getAttribute('data-challenge-id');
+                  if (window.showChallengeModal) {
+                    window.showChallengeModal(challengeId);
+                  }
+                });
+              });
+
+              // Agregar badges de rol y botones de admin después del renderizado
+              activities.forEach(challenge => {
+                const cards = grid.querySelectorAll('.challenge-card');
+                cards.forEach(card => {
+                  const titleElement = card.querySelector('h3');
+                  if (titleElement && titleElement.textContent.trim() === challenge.title.trim()) {
+                    addRoleBadgeToChallenge(card, challenge.userRole, challenge.isCreator);
+                    addAdminButton(card, 'challenge', challenge.id, challenge.userRole);
+                  }
+                });
+              });
+            }, 200);
+            
+          } else if (type === 'volunteering' && window.volunteeringRenderer) {
+            // Asegurarse de que el grid tenga las clases CSS correctas
+            if (! grid.classList.contains('volunteering-grid')) {
+              grid.classList.add('volunteering-grid');
+            }
+            
+            // Guardar volunteering globalmente para compatibilidad con modales Y renderers (igual que index.njk)
+            window.volunteerings = activities;
+            
+            // Usar el volunteering-renderer para renderizar los voluntariados
+            window.volunteeringRenderer.renderGrid(activities, grid, { showUserRole: true, showAdminButton: true });
+            
+            // Agregar event listeners después del renderizado (igual que index.njk)
+            setTimeout(() => {
+              // Agregar badges de rol y botones de admin después del renderizado
+              activities.forEach(volunteering => {
+                const cards = grid.querySelectorAll('.volunteering-card');
+                cards.forEach(card => {
+                  const titleElement = card.querySelector('h3');
+                  if (titleElement && titleElement.textContent.trim() === volunteering.title.trim()) {
+                    addRoleBadgeToVolunteering(card, volunteering.userRole, volunteering.isCreator);
+                    addAdminButton(card, 'volunteering', volunteering.id, volunteering.userRole);
+                  }
+                });
+              });
+            }, 200);
+            
+          } else {
+            grid.innerHTML = `
+              <div style="grid-column: 1 / -1; text-align: center; padding: 2rem; color: #4a6fa5;">
+                Tienes ${activities.length} ${type} (renderizado pendiente)
+              </div>
+            `;
+          }
+        }
+      }
+
+      // --- FUNCIÓN PARA AGREGAR BOTONES DE ADMINISTRACIÓN ---
+      function addAdminButton(card, activityType, activityId, userRole) {
+        // Solo mostrar botón si es fundador o admin
+        if (!['founder', 'admin', 'coordinator'].includes(userRole)) return;
+        
+        const actionsDiv = card.querySelector(`.${activityType}-actions, .cause-actions, .task-actions, .challenge-actions, .volunteering-actions`);
+        if (!actionsDiv) return;
+        
+        // Verificar si ya existe un botón de admin
+        if (actionsDiv.querySelector('.admin-activity-btn')) return;
+        
+        const adminBtn = document.createElement('button');
+        adminBtn.className = 'btn btn-secondary admin-activity-btn';
+        adminBtn.setAttribute('data-activity-type', activityType);
+        adminBtn.setAttribute('data-activity-id', activityId);
+        adminBtn.style.cssText = 'flex: 1; text-align: center; justify-content: center; background: #6b7280; color: white; border: none; padding: 0.8rem 1.2rem; border-radius: 50px; font-weight: 600; font-size: 1rem; display: flex; align-items: center; gap: 0.5rem; transition: all 0.3s ease; cursor: pointer; box-shadow: 0 2px 5px rgba(0,0,0,0.08);';
+        adminBtn.innerHTML = '<i class="fas fa-cog"></i> Administrar';
+        
+        // Hover effects
+        adminBtn.onmouseover = function() {
+          this.style.background = '#4b5563';
+          this.style.transform = 'translateY(-2px)';
+          this.style.boxShadow = '0 4px 8px rgba(0,0,0,0.12)';
+        };
+        adminBtn.onmouseout = function() {
+          this.style.background = '#6b7280';
+          this.style.transform = 'translateY(0)';
+          this.style.boxShadow = '0 2px 5px rgba(0,0,0,0.08)';
+        };
+        
+        actionsDiv.appendChild(adminBtn);
+      }
+
+      // --- Función para renderizar actividades (ACTUALIZADA) ---
+      function renderActivities() {
+        const totalActivities = userActivities.causes.length + 
+                               userActivities.tasks.length + 
+                               userActivities.challenges.length + 
+                               userActivities.volunteering.length;
+
+        if (totalActivities === 0) {
+          document.getElementById('generalEmptyState').style.display = 'block';
+        } else {
+          document.getElementById('generalEmptyState').style.display = 'none';
+        }
+
+        renderSection('causesGrid', userActivities.causes, 'causes');
+        renderSection('tasksGrid', userActivities.tasks, 'tasks');
+        renderSection('challengesGrid', userActivities.challenges, 'challenges');
+        renderSection('volunteeringGrid', userActivities.volunteering, 'volunteering');
+        
+        // Reasignar event listeners después del renderizado
+        setTimeout(() => {
+          reassignAdminEventListeners();
+        }, 500);
+      }
+
+      // --- FUNCIÓN PARA REASIGNAR EVENT LISTENERS DE ADMINISTRACIÓN ---
+      function reassignAdminEventListeners() {
+        // Limpiar todos los event listeners anteriores
+        document.querySelectorAll('.admin-activity-btn').forEach(btn => {
+          btn.replaceWith(btn.cloneNode(true));
+        });
+
+        // Reasignar event listeners para botones de administración
+        document.querySelectorAll('.admin-activity-btn').forEach(btn => {
+          btn.addEventListener('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            
+            const activityType = btn.getAttribute('data-activity-type');
+            const activityId = btn.getAttribute('data-activity-id');
+            let activity = null;
+            
+            console.log('🔧 Abriendo admin para:', activityType, activityId);
+            
+            if (activityType === 'cause') {
+              activity = userActivities.causes.find(c => c.id == activityId);
+            } else if (activityType === 'task') {
+              activity = userActivities.tasks.find(t => t.id == activityId);
+            } else if (activityType === 'challenge') {
+              activity = userActivities.challenges.find(c => c.id == activityId);
+            } else if (activityType === 'volunteering') {
+              activity = userActivities.volunteering.find(v => v.id == activityId);
+            }
+            
+            if (activity) {
+              openAdminActivityModal(activity, activityType);
+            } else {
+              console.error('❌ Actividad no encontrada:', activityType, activityId);
+              showToast('Error: Actividad no encontrada', 'error');
+            }
+          });
+        });
+        
+        console.log('✅ Event listeners de administración reasignados');
+      }
+
+      // --- ADMIN - Manejo de actividades (botones en tarjetas) ---
+      document.querySelectorAll('.admin-activity-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+          const activityType = btn.getAttribute('data-activity-type');
+          const activityId = btn.getAttribute('data-activity-id');
+          let activity = null;
+          if (activityType === 'cause') {
+            activity = window.causes?.find(c => c.id == activityId);
+          } else if (activityType === 'task') {
+            activity = window.tasks?.find(t => t.id == activityId);
+          } else if (activityType === 'challenge') {
+            activity = window.challenges?.find(c => c.id == activityId);
+          } else if (activityType === 'volunteering') {
+            activity = window.volunteerings?.find(v => v.id == activityId);
+          }
+          if (activity) openAdminActivityModal(activity);
+        });
+      });
+
+      window.openAdminActivityModal = async function(activity, activityType = 'cause') {
+        console.log('🔧 Abriendo modal de administración para:', activityType, activity.id);
+        
+        // Abrir modal y setear título
+        document.getElementById('adminModalTitle').textContent = `Administrar ${activity.title}`;
+        document.getElementById('adminModal').classList.add('active');
+        document.body.style.overflow = 'hidden';
+
+        // Determinar tabla de miembros según el tipo
+        const memberTables = {
+          cause: 'causes_members',
+          task: 'task_members',
+          challenge: 'challenges_members',
+          volunteering: 'volunteering_members'
+        };
+        
+        const memberTable = memberTables[activityType];
+        const idField = activityType === 'cause' ? 'cause_id' : 
+                       activityType === 'task' ? 'task_id' :
+                       activityType === 'challenge' ? 'challenge_id' : 'volunteering_id';
+
+        // ----------- PESTAÑA MIEMBROS -----------
+        const membersList = document.getElementById('membersList');
+        membersList.innerHTML = '<div style="color:#888;">Cargando miembros...</div>';
+        
+        let members = [];
+        if (memberTable) {
+          const { data: memberRows } = await supabase
+            .from(memberTable)
+            .select('user_id, role, status')
+            .eq(idField, activity.id);
+
+          if (memberRows && memberRows.length > 0) {
+            const userIds = memberRows.map(m => m.user_id);
+            const { data: profiles } = await supabase
+              .from('profiles')
+              .select('id, username, photo_url')
+              .in('id', userIds);
+
+            members = memberRows.map(m => {
+              const profile = profiles?.find(p => p.id === m.user_id) || {};
+              return {
+                ...m,
+                username: profile.username || m.user_id,
+                photo_url: profile.photo_url || 'https://via.placeholder.com/40?text=U'
+              };
+            });
+          }
+        }
+        
+        membersList.innerHTML = members.length
+          ? members.map(member => `
+          <div class="member-item" style="display:flex;align-items:center;gap:1rem;margin-bottom:1rem;">
+            <img src="${member.photo_url}" alt="${member.username}" style="width:40px;height:40px;border-radius:50%;object-fit:cover;border:1.5px solid #e2e8f0;">
+            <span style="font-weight:600;">${member.username}</span>
+            <span class="role-badge ${member.role === 'founder' ? 'admin' : 'member'}" style="margin-left:auto;">
+              <i class="fas fa-user"></i> ${member.role}
+            </span>
+          </div>
+        `).join('')
+        : '<div style="color:#888;">No hay miembros en esta actividad.</div>';
+
+        // ----------- PESTAÑA CONFIGURACIÓN -----------
+        const formGrid = document.getElementById('activitySettingsForm').querySelector('.form-grid');
+        
+        // Campos comunes para todos los tipos
+        const commonFields = `
+          <div class="form-group">
+            <label for="editActivityTitle"><i class="fas fa-heading"></i> Título de la actividad</label>
+            <input type="text" id="editActivityTitle" name="editActivityTitle" required value="${activity.title || ''}">
+          </div>
+          <div class="form-group">
+            <label for="editActivityPhoto"><i class="fas fa-image"></i> Foto principal</label>
+            <input type="file" id="editActivityPhoto" name="editActivityPhoto" accept="image/*">
+            <img id="editActivityPhotoPreview" class="preview-img" alt="Vista previa de la foto" src="${activity.photo_url || ''}" style="${activity.photo_url ? 'display:block; max-width:200px; margin-top:1rem; border-radius:12px;' : 'display:none;'}">
+          </div>
+          <div class="form-group">
+            <label for="editActivitySummary"><i class="fas fa-align-left"></i> Descripción corta</label>
+            <textarea id="editActivitySummary" name="editActivitySummary" maxlength="180" required>${activity.short_description || activity.summary || ''}</textarea>
+          </div>
+          <div class="form-group">
+            <label for="editActivityDesc"><i class="fas fa-align-left"></i> Descripción completa</label>
+            <textarea id="editActivityDesc" name="editActivityDesc" required>${activity.description || ''}</textarea>
+          </div>
+        `;
+
+let specificFields = '';
+if (activityType === 'cause') {
+  specificFields = `
+    <div class="form-inline-group">
+      <div class="form-group">
+        <label for="editActivityGoal"><i class="fas fa-euro-sign"></i> Meta de recaudación (€)</label>
+        <input type="number" id="editActivityGoal" name="editActivityGoal" min="1" step="0.01" required value="${activity.goal || ''}">
+      </div>
+      <div class="form-group">
+        <label for="editActivityBeneficiaries"><i class="fas fa-users"></i> Nº de beneficiarios</label>
+        <input type="number" id="editActivityBeneficiaries" name="editActivityBeneficiaries" min="1" required value="${activity.beneficiaries || ''}">
+      </div>
+    </div>
+  `;
+} else if (activityType === 'task') {
+  specificFields = `
+    <div class="form-inline-group">
+      <div class="form-group">
+        <label for="editActivityDeadline"><i class="fas fa-calendar-alt"></i> Fecha límite</label>
+        <input type="date" id="editActivityDeadline" name="editActivityDeadline" value="${activity.deadline ? activity.deadline.split('T')[0] : ''}">
+      </div>
+      <div class="form-group">
+        <label for="editActivityHours"><i class="fas fa-clock"></i> Horas requeridas</label>
+        <input type="number" id="editActivityHours" name="editActivityHours" min="1" value="${activity.hours_required || ''}">
+      </div>
+    </div>
+  `;
+} else if (activityType === 'challenge') {
+  specificFields = `
+    <div class="form-inline-group">
+      <div class="form-group">
+        <label for="editActivityDeadline"><i class="fas fa-calendar-alt"></i> Fecha límite</label>
+        <input type="date" id="editActivityDeadline" name="editActivityDeadline" value="${activity.deadline ? activity.deadline.split('T')[0] : ''}">
+      </div>
+      <div class="form-group">
+        <label for="editActivityType"><i class="fas fa-bolt"></i> Tipo de reto</label>
+        <select id="editActivityType" name="editActivityType">
+          <option value="general" ${activity.challenge_type === 'general' ? 'selected' : ''}>General</option>
+          <option value="duel" ${activity.challenge_type === 'duel' ? 'selected' : ''}>Duelo 1vs1</option>
+          <option value="open" ${activity.challenge_type === 'open' ? 'selected' : ''}>Abierto</option>
+          <option value="community" ${activity.challenge_type === 'community' ? 'selected' : ''}>Comunitario</option>
+          <option value="creative" ${activity.challenge_type === 'creative' ? 'selected' : ''}>Creativo</option>
+        </select>
+      </div>
+    </div>
+  `;
+} else if (activityType === 'volunteering') {
+  specificFields = `
+    <div class="form-inline-group">
+      <div class="form-group">
+        <label for="editActivityStartDate"><i class="fas fa-calendar-plus"></i> Fecha de inicio</label>
+        <input type="date" id="editActivityStartDate" name="editActivityStartDate" value="${activity.start_date ? activity.start_date.split('T')[0] : ''}">
+      </div>
+      <div class="form-group">
+        <label for="editActivityEndDate"><i class="fas fa-calendar-check"></i> Fecha de fin</label>
+        <input type="date" id="editActivityEndDate" name="editActivityEndDate" value="${activity.end_date ? activity.end_date.split('T')[0] : ''}">
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="editActivityHours"><i class="fas fa-clock"></i> Horas requeridas</label>
+      <input type="number" id="editActivityHours" name="editActivityHours" min="1" value="${activity.hours_required || ''}">
+    </div>
+  `;
+}
+
+const locationAndPointsFields = `
+  <div class="form-inline-group">
+    <div class="form-group">
+      <label for="editActivityCity"><i class="fas fa-city"></i> Ciudad</label>
+      <input type="text" id="editActivityCity" name="editActivityCity" required value="${activity.city || ''}">
+    </div>
+    <div class="form-group">
+      <label for="editActivityCountry"><i class="fas fa-flag"></i> País</label>
+      <input type="text" id="editActivityCountry" name="editActivityCountry" required value="${activity.country || ''}">
+    </div>
+  </div>
+  <div class="form-group">
+    <label for="editActivityPoints"><i class="fas fa-star"></i> Puntos por colaborar</label>
+    <input type="number" id="editActivityPoints" name="editActivityPoints" min="1" max="1000" required value="${activity.points || 50}">
+    <div class="points-info" id="editPointsText">
+      <i class="fas fa-star"></i>
+      Colaborar en esta actividad otorgará <strong>${activity.points || 50} puntos</strong> a cada participante.
+    </div>
+  </div>
+`;
+
+formGrid.innerHTML = commonFields + specificFields + locationAndPointsFields;
+
+        // Preview imagen
+        document.getElementById('editActivityPhoto').addEventListener('change', function(e) {
+          const file = e.target.files[0];
+          const preview = document.getElementById('editActivityPhotoPreview');
+          if (file) {
+            const reader = new FileReader();
+            reader.onload = function(evt) {
+              preview.src = evt.target.result;
+              preview.style.display = 'block';
+            };
+            reader.readAsDataURL(file);
+          } else {
+            preview.src = '';
+            preview.style.display = 'none';
+          }
+        });
+
+        // Actualizar texto de puntos
+        document.getElementById('editActivityPoints').addEventListener('input', function() {
+          const val = this.value || 0;
+          document.getElementById('editPointsText').innerHTML = `<i class="fas fa-star"></i> Colaborar en esta actividad otorgará <strong>${val} puntos</strong> a cada participante.`;
+        });
+
+        // Guardar cambios en Supabase
+        document.getElementById('activitySettingsForm').onsubmit = async function(e) {
+          e.preventDefault();
+          
+          const updates = {
+            title: document.getElementById('editActivityTitle').value.trim(),
+            description: document.getElementById('editActivityDesc').value.trim(),
+            city: document.getElementById('editActivityCity').value.trim(),
+            country: document.getElementById('editActivityCountry').value.trim(),
+            points: parseInt(document.getElementById('editActivityPoints').value, 10)
+          };
+
+          // Campo summary específico según el tipo
+          const summaryField = document.getElementById('editActivitySummary');
+          if (summaryField) {
+            if (activityType === 'cause') {
+              updates.short_description = summaryField.value.trim();
+            } else {
+              updates.summary = summaryField.value.trim();
+            }
+          }
+
+          // Campos específicos por tipo
+          if (activityType === 'cause') {
+            updates.goal = parseFloat(document.getElementById('editActivityGoal').value);
+            updates.beneficiaries = parseInt(document.getElementById('editActivityBeneficiaries').value, 10);
+          } else if (activityType === 'task') {
+            const deadline = document.getElementById('editActivityDeadline').value;
+            const hours = document.getElementById('editActivityHours').value;
+            if (deadline) updates.deadline = deadline;
+            if (hours) updates.hours_required = parseInt(hours, 10);
+          } else if (activityType === 'challenge') {
+            const deadline = document.getElementById('editActivityDeadline').value;
+            const type = document.getElementById('editActivityType').value;
+            if (deadline) updates.deadline = deadline;
+            if (type) updates.challenge_type = type;
+          } else if (activityType === 'volunteering') {
+            const startDate = document.getElementById('editActivityStartDate').value;
+            const endDate = document.getElementById('editActivityEndDate').value;
+            const hours = document.getElementById('editActivityHours').value;
+            if (startDate) updates.start_date = startDate;
+            if (endDate) updates.end_date = endDate;
+            if (hours) updates.hours_required = parseInt(hours, 10);
+          }
+
+          // Imagen: solo si se selecciona una nueva
+          const fileInput = document.getElementById('editActivityPhoto');
+          if (fileInput.files[0]) {
+            const file = fileInput.files[0];
+            const fileExt = file.name.split('.').pop();
+            const fileName = `${Date.now()}-${Math.random().toString(36).substr(2, 9)}.${fileExt}`;
+            const filePath = `public/${fileName}`;
+            
+            const storageTable = activityType === 'cause' ? 'causes' :
+                               activityType === 'task' ? 'tasks' :
+                               activityType === 'challenge' ? 'challenges' : 'volunteering';
+            
+            const { error: uploadError } = await supabase.storage
+              .from(storageTable)
+              .upload(filePath, file, { upsert: true });
+              
+            if (uploadError) {
+              showToast('Error subiendo la foto: ' + uploadError.message, 'error');
+              return;
+            }
+            
+            const { data } = supabase.storage.from(storageTable).getPublicUrl(filePath);
+            updates.photo_url = data.publicUrl;
+          }
+
+          // Determinar tabla de destino
+          const tables = {
+            cause: 'causes',
+            task: 'tasks', 
+            challenge: 'challenges',
+            volunteering: 'volunteering'
+          };
+          
+          const table = tables[activityType];
+          
+          console.log('💾 Guardando cambios en tabla:', table, updates);
+          
+          // Actualiza en Supabase
+          const { error } = await supabase
+            .from(table)
+            .update(updates)
+            .eq('id', activity.id);
+            
+          if (!error) {
+            showToast('Actividad actualizada correctamente', 'success');
+            document.getElementById('adminModal').classList.remove('active');
+            document.body.style.overflow = '';
+            
+            // RECARGAR ACTIVIDADES DESDE LA BASE DE DATOS
+            console.log('🔄 Recargando actividades desde la base de datos...');
+            await loadUserActivities();
+          } else {
+            console.error('❌ Error al guardar cambios:', error);
+            showToast('Error al guardar cambios: ' + error.message, 'error');
+          }
+        };
+
+        // --- Rellenar stats del resumen ---
+        document.getElementById('membersCount').textContent = members.length;
+        document.getElementById('activitiesCount').textContent = 1;
+        document.getElementById('impactPoints').textContent = activity.points || 0;
+        document.getElementById('beneficiariesCount').textContent = activity.beneficiaries || 0;
+        
+        if (activityType === 'cause') {
+          document.getElementById('progressPercent').textContent = activity.goal ? `${Math.round((activity.raised || 0) / activity.goal * 100)}% completado` : '0% completado';
+          document.getElementById('progressAmount').textContent = `${activity.raised || 0} € de ${activity.goal || 0} €`;
+          document.getElementById('communityProgress').style.width = activity.goal ? `${Math.round((activity.raised || 0) / activity.goal * 100)}%` : '0%';
+        } else {
+          document.getElementById('progressPercent').textContent = '100% activo';
+          document.getElementById('progressAmount').textContent = 'En funcionamiento';
+          document.getElementById('communityProgress').style.width = '100%';
+        }
+
+        // --- Tabs funcionales ---
+        document.querySelectorAll('.admin-tab').forEach(tab => {
+          tab.onclick = function() {
+            document.querySelectorAll('.admin-tab').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.admin-tab-content').forEach(c => c.classList.remove('active'));
+            this.classList.add('active');
+            const tabId = this.getAttribute('data-tab');
+            document.getElementById(tabId + 'Tab').classList.add('active');
+          };
+        });
+
+        // --- Cerrar modal ---
+        document.getElementById('closeAdminModal').onclick = function() {
+          document.getElementById('adminModal').classList.remove('active');
+          document.body.style.overflow = '';
+        };
+        
+        document.getElementById('adminModal').onclick = function(e) {
+          if (e.target === this) {
+            document.getElementById('adminModal').classList.remove('active');
+            document.body.style.overflow = '';
+          }
+        };
+      };
+
+      // --- Búsqueda (placeholder) ---
+      document.getElementById('search-input')?.addEventListener('input', function(e) {
+        const query = e.target.value.toLowerCase();
+      });
+
+      // --- Event listeners para cerrar modales y limpiar ---
+      document.addEventListener('click', function(e) {
+        // Cerrar modales al hacer clic en el botón de cerrar o fuera
+        if (
+          e.target.closest('#closeTaskModal') ||
+          (e.target.id === 'taskModal' && e.target !== document.getElementById('taskModalBody'))
+        ) {
+          cleanUpModals();
+          const modal = document.getElementById('taskModal');
+          if (modal) modal.style.display = 'none';
+          document.body.style.overflow = '';
+        }
+
+        if (
+          e.target.closest('#closeChallengeModal') ||
+          (e.target.id === 'challengeModal' && e.target !== document.getElementById('challengeModalBody'))
+        ) {
+          cleanUpModals();
+          const modal = document.getElementById('challengeModal');
+          if (modal) modal.style.display = 'none';
+          document.body.style.overflow = '';
+        }
+
+        if (
+          e.target.closest('#closeVolunteeringModal') ||
+          (e.target.id === 'volunteeringModal' && e.target !== document.getElementById('volunteeringModalBody'))
+        ) {
+          cleanUpModals();
+          const modal = document.getElementById('volunteeringModal');
+          if (modal) modal.style.display = 'none';
+          document.body.style.overflow = '';
+        }
+      });
+
+      // Limpiar al cambiar de ruta (SPA)
+      window.addEventListener('beforeunload', cleanUpModals);
+
+      // --- ADMIN - Manejo de actividades (botones en tarjetas) ---
+      document.querySelectorAll('.admin-activity-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+          const activityType = btn.getAttribute('data-activity-type');
+          const activityId = btn.getAttribute('data-activity-id');
+          let activity = null;
+          if (activityType === 'cause') {
+            activity = window.causes?.find(c => c.id == activityId);
+          } else if (activityType === 'task') {
+            activity = window.tasks?.find(t => t.id == activityId);
+          } else if (activityType === 'challenge') {
+            activity = window.challenges?.find(c => c.id == activityId);
+          } else if (activityType === 'volunteering') {
+            activity = window.volunteerings?.find(v => v.id == activityId);
+          }
+          if (activity) openAdminActivityModal(activity);
+        });
+      });
+
+      window.openAdminActivityModal = async function(activity, activityType = 'cause') {
+        console.log('🔧 Abriendo modal de administración para:', activityType, activity.id);
+        
+        // Abrir modal y setear título
+        document.getElementById('adminModalTitle').textContent = `Administrar ${activity.title}`;
+        document.getElementById('adminModal').classList.add('active');
+        document.body.style.overflow = 'hidden';
+
+        // Determinar tabla de miembros según el tipo
+        const memberTables = {
+          cause: 'causes_members',
+          task: 'task_members',
+          challenge: 'challenges_members',
+          volunteering: 'volunteering_members'
+        };
+        
+        const memberTable = memberTables[activityType];
+        const idField = activityType === 'cause' ? 'cause_id' : 
+                       activityType === 'task' ? 'task_id' :
+                       activityType === 'challenge' ? 'challenge_id' : 'volunteering_id';
+
+        // ----------- PESTAÑA MIEMBROS -----------
+        const membersList = document.getElementById('membersList');
+        membersList.innerHTML = '<div style="color:#888;">Cargando miembros...</div>';
+        
+        let members = [];
+        if (memberTable) {
+          const { data: memberRows } = await supabase
+            .from(memberTable)
+            .select('user_id, role, status')
+            .eq(idField, activity.id);
+
+          if (memberRows && memberRows.length > 0) {
+            const userIds = memberRows.map(m => m.user_id);
+            const { data: profiles } = await supabase
+              .from('profiles')
+              .select('id, username, photo_url')
+              .in('id', userIds);
+
+            members = memberRows.map(m => {
+              const profile = profiles?.find(p => p.id === m.user_id) || {};
+              return {
+                ...m,
+                username: profile.username || m.user_id,
+                photo_url: profile.photo_url || 'https://via.placeholder.com/40?text=U'
+              };
+            });
+          }
+        }
+        
+        membersList.innerHTML = members.length
+          ? members.map(member => `
+          <div class="member-item" style="display:flex;align-items:center;gap:1rem;margin-bottom:1rem;">
+            <img src="${member.photo_url}" alt="${member.username}" style="width:40px;height:40px;border-radius:50%;object-fit:cover;border:1.5px solid #e2e8f0;">
+            <span style="font-weight:600;">${member.username}</span>
+            <span class="role-badge ${member.role === 'founder' ? 'admin' : 'member'}" style="margin-left:auto;">
+              <i class="fas fa-user"></i> ${member.role}
+            </span>
+          </div>
+        `).join('')
+        : '<div style="color:#888;">No hay miembros en esta actividad.</div>';
+
+        // ----------- PESTAÑA CONFIGURACIÓN -----------
+        const formGrid = document.getElementById('activitySettingsForm').querySelector('.form-grid');
+        
+        // Campos comunes para todos los tipos
+        const commonFields = `
+          <div class="form-group">
+            <label for="editActivityTitle">Título de la actividad</label>
+            <input type="text" id="editActivityTitle" name="editActivityTitle" required value="${activity.title || ''}">
+          </div>
+          <div class="form-group">
+            <label for="editActivityPhoto">Foto principal</label>
+            <input type="file" id="editActivityPhoto" name="editActivityPhoto" accept="image/*">
+            <img id="editActivityPhotoPreview" class="preview-img" alt="Vista previa de la foto" src="${activity.photo_url || ''}" style="${activity.photo_url ? 'display:block; max-width:200px; margin-top:1rem; border-radius:12px;' : 'display:none;'}">
+          </div>
+          <div class="form-group">
+            <label for="editActivitySummary">Descripción corta</label>
+            <textarea id="editActivitySummary" name="editActivitySummary" maxlength="180" required>${activity.short_description || activity.summary || ''}</textarea>
+          </div>
+          <div class="form-group">
+            <label for="editActivityDesc">Descripción completa</label>
+            <textarea id="editActivityDesc" name="editActivityDesc" required>${activity.description || ''}</textarea>
+          </div>
+        `;
+
+        // Campos específicos según el tipo
+        let specificFields = '';
+        if (activityType === 'cause') {
+          specificFields = `
+            <div class="form-inline-group">
+              <div class="form-group">
+                <label for="editActivityGoal">Meta de recaudación (€)</label>
+                <input type="number" id="editActivityGoal" name="editActivityGoal" min="1" step="0.01" required value="${activity.goal || ''}">
+              </div>
+              <div class="form-group">
+                <label for="editActivityBeneficiaries">Nº de beneficiarios</label>
+                <input type="number" id="editActivityBeneficiaries" name="editActivityBeneficiaries" min="1" required value="${activity.beneficiaries || ''}">
+              </div>
+            </div>
+          `;
+        } else if (activityType === 'task') {
+          specificFields = `
+            <div class="form-inline-group">
+              <div class="form-group">
+                <label for="editActivityDeadline">Fecha límite</label>
+                <input type="date" id="editActivityDeadline" name="editActivityDeadline" value="${activity.deadline ? activity.deadline.split('T')[0] : ''}">
+              </div>
+              <div class="form-group">
+                <label for="editActivityHours">Horas requeridas</label>
+                <input type="number" id="editActivityHours" name="editActivityHours" min="1" value="${activity.hours_required || ''}">
+              </div>
+            </div>
+          `;
+        } else if (activityType === 'challenge') {
+          specificFields = `
+            <div class="form-inline-group">
+              <div class="form-group">
+                <label for="editActivityDeadline">Fecha límite</label>
+                <input type="date" id="editActivityDeadline" name="editActivityDeadline" value="${activity.deadline ? activity.deadline.split('T')[0] : ''}">
+              </div>
+              <div class="form-group">
+                <label for="editActivityType">Tipo de reto</label>
+                <select id="editActivityType" name="editActivityType">
+                  <option value="general" ${activity.challenge_type === 'general' ? 'selected' : ''}>General</option>
+                  <option value="duel" ${activity.challenge_type === 'duel' ? 'selected' : ''}>Duelo 1vs1</option>
+                  <option value="open" ${activity.challenge_type === 'open' ? 'selected' : ''}>Abierto</option>
+                  <option value="community" ${activity.challenge_type === 'community' ? 'selected' : ''}>Comunitario</option>
+                  <option value="creative" ${activity.challenge_type === 'creative' ? 'selected' : ''}>Creativo</option>
+                </select>
+              </div>
+            </div>
+          `;
+        } else if (activityType === 'volunteering') {
+          specificFields = `
+            <div class="form-inline-group">
+              <div class="form-group">
+                <label for="editActivityStartDate">Fecha de inicio</label>
+                <input type="date" id="editActivityStartDate" name="editActivityStartDate" value="${activity.start_date ? activity.start_date.split('T')[0] : ''}">
+              </div>
+              <div class="form-group">
+                <label for="editActivityEndDate">Fecha de fin</label>
+                <input type="date" id="editActivityEndDate" name="editActivityEndDate" value="${activity.end_date ? activity.end_date.split('T')[0] : ''}">
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="editActivityHours">Horas requeridas</label>
+              <input type="number" id="editActivityHours" name="editActivityHours" min="1" value="${activity.hours_required || ''}">
+            </div>
+          `;
+        }
+
+        const locationAndPointsFields = `
+          <div class="form-inline-group">
+            <div class="form-group">
+              <label for="editActivityCity">Ciudad</label>
+              <input type="text" id="editActivityCity" name="editActivityCity" required value="${activity.city || ''}">
+            </div>
+            <div class="form-group">
+              <label for="editActivityCountry">País</label>
+              <input type="text" id="editActivityCountry" name="editActivityCountry" required value="${activity.country || ''}">
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="editActivityPoints">Puntos por colaborar</label>
+            <input type="number" id="editActivityPoints" name="editActivityPoints" min="1" max="1000" required value="${activity.points || 50}">
+            <div class="points-info" id="editPointsText">
+              <i class="fas fa-star"></i>
+              Colaborar en esta actividad otorgará <strong>${activity.points || 50} puntos</strong> a cada participante.
+            </div>
+          </div>
+        `;
+
+        formGrid.innerHTML = commonFields + specificFields + locationAndPointsFields;
+
+        // Preview imagen
+        document.getElementById('editActivityPhoto').addEventListener('change', function(e) {
+          const file = e.target.files[0];
+          const preview = document.getElementById('editActivityPhotoPreview');
+          if (file) {
+            const reader = new FileReader();
+            reader.onload = function(evt) {
+              preview.src = evt.target.result;
+              preview.style.display = 'block';
+            };
+            reader.readAsDataURL(file);
+          } else {
+            preview.src = '';
+            preview.style.display = 'none';
+          }
+        });
+
+        // Actualizar texto de puntos
+        document.getElementById('editActivityPoints').addEventListener('input', function() {
+          const val = this.value || 0;
+          document.getElementById('editPointsText').innerHTML = `<i class="fas fa-star"></i> Colaborar en esta actividad otorgará <strong>${val} puntos</strong> a cada participante.`;
+        });
+
+        // Guardar cambios en Supabase
+        document.getElementById('activitySettingsForm').onsubmit = async function(e) {
+          e.preventDefault();
+          
+          const updates = {
+            title: document.getElementById('editActivityTitle').value.trim(),
+            description: document.getElementById('editActivityDesc').value.trim(),
+            city: document.getElementById('editActivityCity').value.trim(),
+            country: document.getElementById('editActivityCountry').value.trim(),
+            points: parseInt(document.getElementById('editActivityPoints').value, 10)
+          };
+
+          // Campo summary específico según el tipo
+          const summaryField = document.getElementById('editActivitySummary');
+          if (summaryField) {
+            if (activityType === 'cause') {
+              updates.short_description = summaryField.value.trim();
+            } else {
+              updates.summary = summaryField.value.trim();
+            }
+          }
+
+          // Campos específicos por tipo
+          if (activityType === 'cause') {
+            updates.goal = parseFloat(document.getElementById('editActivityGoal').value);
+            updates.beneficiaries = parseInt(document.getElementById('editActivityBeneficiaries').value, 10);
+          } else if (activityType === 'task') {
+            const deadline = document.getElementById('editActivityDeadline').value;
+            const hours = document.getElementById('editActivityHours').value;
+            if (deadline) updates.deadline = deadline;
+            if (hours) updates.hours_required = parseInt(hours, 10);
+          } else if (activityType === 'challenge') {
+            const deadline = document.getElementById('editActivityDeadline').value;
+            const type = document.getElementById('editActivityType').value;
+            if (deadline) updates.deadline = deadline;
+            if (type) updates.challenge_type = type;
+          } else if (activityType === 'volunteering') {
+            const startDate = document.getElementById('editActivityStartDate').value;
+            const endDate = document.getElementById('editActivityEndDate').value;
+            const hours = document.getElementById('editActivityHours').value;
+            if (startDate) updates.start_date = startDate;
+            if (endDate) updates.end_date = endDate;
+            if (hours) updates.hours_required = parseInt(hours, 10);
+          }
+
+          // Imagen: solo si se selecciona una nueva
+          const fileInput = document.getElementById('editActivityPhoto');
+          if (fileInput.files[0]) {
+            const file = fileInput.files[0];
+            const fileExt = file.name.split('.').pop();
+            const fileName = `${Date.now()}-${Math.random().toString(36).substr(2, 9)}.${fileExt}`;
+            const filePath = `public/${fileName}`;
+            
+            const storageTable = activityType === 'cause' ? 'causes' :
+                               activityType === 'task' ? 'tasks' :
+                               activityType === 'challenge' ? 'challenges' : 'volunteering';
+            
+            const { error: uploadError } = await supabase.storage
+              .from(storageTable)
+              .upload(filePath, file, { upsert: true });
+              
+            if (uploadError) {
+              showToast('Error subiendo la foto: ' + uploadError.message, 'error');
+              return;
+            }
+            
+            const { data } = supabase.storage.from(storageTable).getPublicUrl(filePath);
+            updates.photo_url = data.publicUrl;
+          }
+
+          // Determinar tabla de destino
+          const tables = {
+            cause: 'causes',
+            task: 'tasks', 
+            challenge: 'challenges',
+            volunteering: 'volunteering'
+          };
+          
+          const table = tables[activityType];
+          
+          console.log('💾 Guardando cambios en tabla:', table, updates);
+          
+          // Actualiza en Supabase
+          const { error } = await supabase
+            .from(table)
+            .update(updates)
+            .eq('id', activity.id);
+            
+          if (!error) {
+            showToast('Actividad actualizada correctamente', 'success');
+            document.getElementById('adminModal').classList.remove('active');
+            document.body.style.overflow = '';
+            
+            // RECARGAR ACTIVIDADES DESDE LA BASE DE DATOS
+            console.log('🔄 Recargando actividades desde la base de datos...');
+            await loadUserActivities();
+          } else {
+            console.error('❌ Error al guardar cambios:', error);
+            showToast('Error al guardar cambios: ' + error.message, 'error');
+          }
+        };
+
+        // --- Rellenar stats del resumen ---
+        document.getElementById('membersCount').textContent = members.length;
+        document.getElementById('activitiesCount').textContent = 1;
+        document.getElementById('impactPoints').textContent = activity.points || 0;
+        document.getElementById('beneficiariesCount').textContent = activity.beneficiaries || 0;
+        
+        if (activityType === 'cause') {
+          document.getElementById('progressPercent').textContent = activity.goal ? `${Math.round((activity.raised || 0) / activity.goal * 100)}% completado` : '0% completado';
+          document.getElementById('progressAmount').textContent = `${activity.raised || 0} € de ${activity.goal || 0} €`;
+          document.getElementById('communityProgress').style.width = activity.goal ? `${Math.round((activity.raised || 0) / activity.goal * 100)}%` : '0%';
+        } else {
+          document.getElementById('progressPercent').textContent = '100% activo';
+          document.getElementById('progressAmount').textContent = 'En funcionamiento';
+          document.getElementById('communityProgress').style.width = '100%';
+        }
+
+        // --- Tabs funcionales ---
+        document.querySelectorAll('.admin-tab').forEach(tab => {
+          tab.onclick = function() {
+            document.querySelectorAll('.admin-tab').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.admin-tab-content').forEach(c => c.classList.remove('active'));
+            this.classList.add('active');
+            const tabId = this.getAttribute('data-tab');
+            document.getElementById(tabId + 'Tab').classList.add('active');
+          };
+        });
+
+        // --- Cerrar modal ---
+        document.getElementById('closeAdminModal').onclick = function() {
+          document.getElementById('adminModal').classList.remove('active');
+          document.body.style.overflow = '';
+        };
+        
+        document.getElementById('adminModal').onclick = function(e) {
+          if (e.target === this) {
+            document.getElementById('adminModal').classList.remove('active');
+            document.body.style.overflow = '';
+          }
+        };
+      };
+
+      // --- FUNCIONES DE LIMPIEZA Y CIERRE ---
+      // --- Función para limpiar completamente los modales ---
+      function cleanUpModals() {
+        // Limpiar contenido de los modales
+        const taskModalBody = document.getElementById('taskModalBody');
+        const challengeModalBody = document.getElementById('challengeModalBody');
+        const volunteeringModalBody = document.getElementById('volunteeringModalBody');
+        
+        if (taskModalBody) taskModalBody.innerHTML = '';
+        if (challengeModalBody) challengeModalBody.innerHTML = '';
+        if (volunteeringModalBody) volunteeringModalBody.innerHTML = '';
+        
+        // Eliminar cualquier sección de compartir residual
+        const oldShareSections = document.querySelectorAll('.share-section');
+        oldShareSections.forEach(section => section.remove());
+        
+        // Limpiar cualquier evento de compartir anterior
+        const oldShareButtons = document.querySelectorAll('.share-btn');
+        oldShareButtons.forEach(btn => {
+          btn.replaceWith(btn.cloneNode(true)); // Clonar para eliminar event listeners
+        });
+        
+        console.log('✅ Modales y secciones de compartir limpiados');
+      }
+
+      // --- Cargar actividades al inicializar ---
+      await loadUserActivities();
+    });
+  </script>
+{% endblock %}

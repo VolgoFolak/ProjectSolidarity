@@ -1,0 +1,269 @@
+{% extends "layout.njk" %}
+
+{% block title %}Mensajes | Solidarity{% endblock %}
+
+{% block head %}
+{{ super() }}
+<style>
+  .messages-container {
+    max-width: 1200px;
+    margin: 2rem auto;
+    padding: 0 1rem;
+  }
+  
+  .messages-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+  }
+  
+  .conversations-list {
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    overflow: hidden;
+  }
+  
+  .conversation {
+    display: flex;
+    align-items: center;
+    padding: 1rem;
+    border-bottom: 1px solid var(--gray);
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+  
+  .conversation:hover {
+    background: var(--light);
+  }
+  
+  .conversation.active {
+    background: #f0f9ff;
+    border-left: 3px solid var(--primary);
+  }
+  
+  .conversation-avatar {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-right: 1rem;
+  }
+  
+  .conversation-info {
+    flex: 1;
+  }
+  
+  .conversation-name {
+    font-weight: 600;
+    color: var(--dark);
+  }
+  
+  .conversation-preview {
+    color: #6b7280;
+    font-size: 0.9rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  
+  .conversation-time {
+    font-size: 0.8rem;
+    color: #9ca3af;
+  }
+  
+  .unread-indicator {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: var(--accent);
+  }
+  
+  .no-conversations {
+    text-align: center;
+    padding: 2rem;
+    color: #6b7280;
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="messages-container">
+  <div class="messages-header">
+    <h1>Mensajes</h1>
+    <a href="/messages/new" class="btn btn-primary">
+      <i class="fas fa-plus"></i> Nuevo mensaje
+    </a>
+  </div>
+  
+  <div class="conversations-list">
+    <div id="conversations-container">
+      <div class="no-conversations">
+        <i class="fas fa-comments fa-2x" style="margin-bottom: 1rem;"></i>
+        <h3>No tienes conversaciones</h3>
+        <p>Empieza una nueva conversación con otro usuario</p>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+{{ super() }}
+<script>
+document.addEventListener('DOMContentLoaded', async () => {
+  const container = document.getElementById('conversations-container');
+  container.innerHTML = `<div style="text-align:center;padding:2rem;color:#888;"><i class="fas fa-spinner fa-spin"></i> Cargando...</div>`;
+
+  // Obtener usuario actual
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) {
+    container.innerHTML = `<div style="color:#e53e3e;text-align:center;padding:2rem;">Debes iniciar sesión para ver tus mensajes.</div>`;
+    return;
+  }
+
+  // Paso 1: Obtener IDs de conversaciones donde participa el usuario
+  let { data: participantRows, error: partError } = await supabase
+    .from('conversation_participants')
+    .select('conversation_id,last_read_message_id')
+    .eq('profile_id', user.id);
+
+  if (partError) {
+    container.innerHTML = `<div style="color:#e53e3e;text-align:center;padding:2rem;">Error al cargar conversaciones</div>`;
+    return;
+  }
+  if (!participantRows || participantRows.length === 0) {
+    container.innerHTML = `
+      <div class="no-conversations">
+        <i class="fas fa-comments fa-2x" style="margin-bottom: 1rem;"></i>
+        <h3>No tienes conversaciones</h3>
+        <p>Empieza una nueva conversación con otro usuario</p>
+      </div>
+    `;
+    return;
+  }
+
+  // Paso 2: Obtener detalles de cada conversación (en lote)
+  const conversationIds = participantRows.map(row => row.conversation_id);
+  let { data: conversations, error: convError } = await supabase
+    .from('conversations')
+    .select(`
+      id,
+      created_at,
+      last_message_id,
+      participants:conversation_participants (
+        profile:profiles (id, username, photo_url)
+      ),
+      last_message:messages!conversations_last_message_id_fkey (
+        id, content, created_at, sender_id
+      )
+    `)
+    .in('id', conversationIds);
+
+  if (convError) {
+    container.innerHTML = `<div style="color:#e53e3e;text-align:center;padding:2rem;">Error al cargar detalles de conversaciones</div>`;
+    return;
+  }
+
+  // Unir last_read_message_id a cada conversación
+  conversations.forEach(conv => {
+    const part = participantRows.find(p => p.conversation_id === conv.id);
+    conv.last_read_message_id = part ? part.last_read_message_id : null;
+  });
+
+  // Ordenar por fecha del último mensaje
+  conversations.sort((a, b) => {
+    const aDate = a.last_message ? new Date(a.last_message.created_at) : new Date(a.created_at);
+    const bDate = b.last_message ? new Date(b.last_message.created_at) : new Date(b.created_at);
+    return bDate - aDate;
+  });
+
+  // Renderizar conversaciones
+  if (!conversations || conversations.length === 0) {
+    container.innerHTML = `
+      <div class="no-conversations">
+        <i class="fas fa-comments fa-2x" style="margin-bottom: 1rem;"></i>
+        <h3>No tienes conversaciones</h3>
+        <p>Empieza una nueva conversación con otro usuario</p>
+      </div>
+    `;
+    return;
+  }
+
+  container.innerHTML = '';
+  conversations.forEach(conv => {
+    // Encontrar el/los otros participantes
+    const others = (conv.participants || []).map(p => p.profile).filter(p => p && p.id !== user.id);
+    const isGroup = others.length > 1;
+    const other = others[0] || { username: 'Desconocido', photo_url: '' };
+
+    // Preview del último mensaje
+    let preview = '<span style="color:#bbb;">Sin mensajes aún</span>';
+    if (conv.last_message && conv.last_message.content) {
+      const senderName = isGroup && conv.last_message.sender_id !== user.id
+        ? (others.find(o => o.id === conv.last_message.sender_id)?.username || 'Alguien') + ': '
+        : '';
+      preview = senderName + escapeHtml(conv.last_message.content);
+    }
+
+    // Fecha/hora
+    const time = conv.last_message && conv.last_message.created_at
+      ? formatTime(conv.last_message.created_at)
+      : '';
+
+    // Mensajes no leídos
+    const unread = conv.last_message_id && conv.last_read_message_id !== conv.last_message_id;
+
+    // Renderizar
+    const conversationEl = document.createElement('div');
+    conversationEl.className = 'conversation' + (unread ? ' active' : '');
+    conversationEl.tabIndex = 0;
+    conversationEl.setAttribute('role', 'button');
+    conversationEl.setAttribute('aria-label', `Abrir conversación con ${isGroup ? 'el grupo' : other.username}`);
+    conversationEl.innerHTML = `
+      <img src="${other.photo_url || '/img/default-user.png'}" 
+           alt="${escapeHtml(other.username)}" class="conversation-avatar">
+      <div class="conversation-info">
+        <div class="conversation-name">${escapeHtml(isGroup ? 'Grupo' : other.username)}</div>
+        <div class="conversation-preview">${preview}</div>
+      </div>
+      <div class="conversation-time">${time}</div>
+      ${unread ? '<div class="unread-indicator" title="Tienes mensajes sin leer"></div>' : ''}
+    `;
+
+    conversationEl.addEventListener('click', () => {
+      window.location.href = `/messages/${conv.id}`;
+    });
+    conversationEl.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') conversationEl.click();
+    });
+
+    container.appendChild(conversationEl);
+  });
+
+  // Helpers
+  function escapeHtml(text) {
+    if (!text) return '';
+    return text.replace(/[&<>"']/g, function(m) {
+      return ({
+        '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+      })[m];
+    });
+  }
+  function formatTime(dateString) {
+    if (!dateString) return '';
+    const date = new Date(dateString);
+    const now = new Date();
+    if (
+      date.getDate() === now.getDate() &&
+      date.getMonth() === now.getMonth() &&
+      date.getFullYear() === now.getFullYear()
+    ) {
+      return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+    }
+    return date.toLocaleDateString();
+  }
+});
+</script>
+{% endblock %}

@@ -1,0 +1,440 @@
+<!-- filepath: c:\Users\gabi2\Desktop\Solidarity-web\views\maps\index.njk -->
+{% extends "layout.njk" %}
+
+{% block title %}Mapa de Ayudas - Solidarity{% endblock %}
+
+{% block head %}
+  {{ super() }}
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <style>
+    /* SOLO estilos específicos del mapa, el resto en layout */
+    .map-main-container {
+        max-width: 1100px;
+        margin: 1.5rem auto 0 auto; /* Reducido de 3rem a 1.5rem para acercar a navbar */
+        background: #fff;
+        border-radius: 18px;
+        box-shadow: 0 8px 32px rgba(0,0,0,0.07);
+        padding: 1.8rem 2rem 2.5rem 2rem; /* Reducido el padding superior */
+    }
+    .map-title {
+        font-size: 2rem;
+        font-weight: 800;
+        color: var(--primary, #3182ce);
+        margin-bottom: 1.5rem; /* Aumentado para dar espacio a las estadísticas */
+        letter-spacing: -1px;
+    }
+    .map-filters {
+        display: flex;
+        gap: 1rem;
+        margin-bottom: 1.2rem;
+        flex-wrap: wrap;
+    }
+    .map-filter-btn {
+        background: #f4f8fb;
+        border: none;
+        border-radius: 8px;
+        padding: 0.6rem 1.5rem;
+        font-size: 1.05rem;
+        font-weight: 600;
+        color: var(--primary, #3182ce);
+        cursor: pointer;
+        transition: background 0.2s, color 0.2s;
+    }
+    .map-filter-btn.active, .map-filter-btn:hover {
+        background: #e6f0fa;
+        color: var(--primary-dark, #174e85);
+    }
+    #community-map {
+        width: 100%;
+        height: 420px;
+        border-radius: 12px;
+        border: 1.5px solid #e5e7eb;
+        box-shadow: 0 2px 12px rgba(49,130,206,0.06);
+        margin-bottom: 2.2rem;
+    }
+    .leaflet-control-zoom {
+        box-shadow: 0 2px 8px rgba(49,130,206,0.10);
+        border-radius: 10px;
+        overflow: hidden;
+    }
+    .popup-photo {
+        width: 38px;
+        height: 38px;
+        border-radius: 50%;
+        object-fit: cover;
+        margin-bottom: 7px;
+        border: 2px solid #3182ce;
+        box-shadow: 0 1px 4px rgba(49,130,206,0.10);
+        display: block;
+        margin-left: auto;
+        margin-right: auto;
+    }
+    .map-stats-section {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 2rem;
+        margin-bottom: 1.8rem; /* Espacio entre estadísticas y mapa */
+        justify-content: space-between;
+        background: #f8fafc;
+        border-radius: 14px;
+        padding: 1.2rem 1rem;
+    }
+    .map-stat-block {
+        text-align: center;
+        flex: 1 1 120px; /* Reducido para que entren mejor en la nueva posición */
+        min-width: 120px;
+    }
+    .map-stat-block .number {
+        font-size: 1.8rem; /* Reducido ligeramente */
+        font-weight: 900;
+        color: var(--primary, #3182ce);
+        margin-bottom: 0.2rem;
+        min-height: 1.8rem;
+        letter-spacing: -1px;
+    }
+    .map-stat-block .label {
+        color: #6b7280;
+        font-size: 0.92rem; /* Reducido ligeramente */
+    }
+    @media (max-width: 900px) {
+        .map-main-container {
+            padding: 1.2rem 0.5rem;
+        }
+        .map-stats-section {
+            flex-direction: row; /* Mantenerlo en filas */
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+        .map-stat-block {
+            flex: 1 1 calc(25% - 1rem); /* 4 por fila en tabletas */
+            min-width: 100px;
+        }
+    }
+    @media (max-width: 600px) {
+        .map-stat-block {
+            flex: 1 1 calc(50% - 1rem); /* 2 por fila en móviles */
+        }
+    }
+    .map-stats-section.map-stats-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        grid-template-rows: repeat(2, 1fr);
+        gap: 1.5rem 2rem;
+        margin-bottom: 1.8rem;
+        background: #f8fafc;
+        border-radius: 14px;
+        padding: 1.2rem 1rem;
+    }
+    @media (max-width: 900px) {
+        .map-stats-section.map-stats-grid {
+            grid-template-columns: repeat(2, 1fr);
+            grid-template-rows: repeat(4, 1fr);
+            gap: 1rem;
+        }
+    }
+    @media (max-width: 600px) {
+        .map-stats-section.map-stats-grid {
+            grid-template-columns: 1fr;
+            grid-template-rows: repeat(8, 1fr);
+        }
+    }
+  </style>
+{% endblock %}
+
+{% block content %}
+<div class="map-main-container">
+    <div class="map-title">
+        <i class="fas fa-globe-europe"></i> Mapa de Ayudas de la Comunidad
+    </div>
+    
+    <!-- Estadísticas en 2 filas de 4 columnas -->
+    <div class="map-stats-section map-stats-grid">
+        <div class="map-stat-block">
+            <div class="number" id="stat-people">0</div>
+            <div class="label">Personas ayudadas</div>
+        </div>
+        <div class="map-stat-block">
+            <div class="number" id="stat-causes">0</div>
+            <div class="label">Causas</div>
+        </div>
+        <div class="map-stat-block">
+            <div class="number" id="stat-volunteering">0</div>
+            <div class="label">Voluntariados</div>
+        </div>
+        <div class="map-stat-block">
+            <div class="number" id="stat-tasks">0</div>
+            <div class="label">Tareas</div>
+        </div>
+        <div class="map-stat-block">
+            <div class="number" id="stat-challenges">0</div>
+            <div class="label">Retos</div>
+        </div>
+        <div class="map-stat-block">
+            <div class="number" id="stat-donations">0 €</div>
+            <div class="label">Donaciones</div>
+        </div>
+        <div class="map-stat-block">
+            <div class="number" id="stat-countries">0</div>
+            <div class="label">Países</div>
+        </div>
+        <div class="map-stat-block">
+            <div class="number" id="stat-cities">0</div>
+            <div class="label">Ciudades</div>
+        </div>
+    </div>
+
+    <div class="map-filters">
+        <button class="map-filter-btn active" data-type="all">Todos</button>
+        <button class="map-filter-btn" data-type="causa">Causas</button>
+        <button class="map-filter-btn" data-type="tarea">Tareas</button>
+        <button class="map-filter-btn" data-type="reto">Retos</button>
+        <button class="map-filter-btn" data-type="voluntariado">Voluntariados</button>
+        <button class="map-filter-btn" data-type="miembro">Miembros</button>
+    </div>
+    <div id="community-map"></div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+  {{ super() }}
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script>
+    // Iconos de marcadores
+    const markerIcons = {
+      causa:    new L.Icon({iconUrl: 'https://cdn.jsdelivr.net/gh/pointhi/leaflet-color-markers@master/img/marker-icon-red.png',    shadowUrl: 'https://cdn.jsdelivr.net/gh/pointhi/leaflet-color-markers@master/img/marker-shadow.png', iconSize: [18,30], iconAnchor: [9,30], popupAnchor: [1,-24], shadowSize: [30,30]}),
+      tarea:    new L.Icon({iconUrl: 'https://cdn.jsdelivr.net/gh/pointhi/leaflet-color-markers@master/img/marker-icon-blue.png',   shadowUrl: 'https://cdn.jsdelivr.net/gh/pointhi/leaflet-color-markers@master/img/marker-shadow.png', iconSize: [18,30], iconAnchor: [9,30], popupAnchor: [1,-24], shadowSize: [30,30]}),
+      voluntariado: new L.Icon({iconUrl: 'https://cdn.jsdelivr.net/gh/pointhi/leaflet-color-markers@master/img/marker-icon-green.png', shadowUrl: 'https://cdn.jsdelivr.net/gh/pointhi/leaflet-color-markers@master/img/marker-shadow.png', iconSize: [18,30], iconAnchor: [9,30], popupAnchor: [1,-24], shadowSize: [30,30]}),
+      reto: new L.Icon({iconUrl: 'https://cdn.jsdelivr.net/gh/pointhi/leaflet-color-markers@master/img/marker-icon-yellow.png', shadowUrl: 'https://cdn.jsdelivr.net/gh/pointhi/leaflet-color-markers@master/img/marker-shadow.png', iconSize: [18,30], iconAnchor: [9,30], popupAnchor: [1,-24], shadowSize: [30,30]}),
+      miembro: new L.Icon({iconUrl: 'https://cdn.jsdelivr.net/gh/pointhi/leaflet-color-markers@master/img/marker-icon-violet.png', shadowUrl: 'https://cdn.jsdelivr.net/gh/pointhi/leaflet-color-markers@master/img/marker-shadow.png', iconSize: [18,30], iconAnchor: [9,30], popupAnchor: [1,-24], shadowSize: [30,30]})
+    };
+
+    let currentFilter = "all";
+    let markers = [];
+
+    // Función para traer y unificar datos reales
+    async function fetchMapData() {
+      const { data: causes } = await supabase.from('causes').select('*');
+      const { data: tasks } = await supabase.from('tasks').select('*');
+      const { data: challenges } = await supabase.from('challenges').select('*');
+      const { data: volunteering } = await supabase.from('volunteering').select('*');
+      const { data: members } = await supabase.from('profiles').select('*');
+
+      const communityActions = [
+        ...(causes || []).map(c => ({
+          type: "causa",
+          title: c.title,
+          desc: c.description,
+          city: c.city,
+          country: c.country,
+          lat: c.lat,
+          lng: c.lng,
+          link: `/causes/${c.id}`,
+          photo: c.photo_url || '/img/causa-default.jpg'
+        })),
+        ...(tasks || []).map(t => ({
+          type: "tarea",
+          title: t.title,
+          desc: t.description,
+          city: t.city,
+          country: t.country,
+          lat: t.lat,
+          lng: t.lng,
+          link: `/tasks/${t.id}`,
+          photo: t.photo_url || '/img/task-default.jpg'
+        })),
+        ...(challenges || []).map(r => ({
+          type: "reto",
+          title: r.title,
+          desc: r.description,
+          city: r.city,
+          country: r.country,
+          lat: r.lat,
+          lng: r.lng,
+          link: `/challenges/${r.id}`,
+          photo: r.photo_url || '/img/challenge-default.jpg'
+        })),
+        ...(volunteering || []).map(v => ({
+          type: "voluntariado",
+          title: v.title,
+          desc: v.description,
+          city: v.city,
+          country: v.country,
+          lat: v.lat,
+          lng: v.lng,
+          link: `/volunteering/${v.id}`,
+          photo: v.photo_url || '/img/volunteer-default.jpg'
+        }))
+      ];  
+
+      const communityMembers = (members || []).map(m => ({
+        name: m.name,
+        city: m.city,
+        country: m.country,
+        lat: m.lat,
+        lng: m.lng,
+        photo: m.photo,
+        profile: `/profile/${m.id}`
+      }));
+
+      // Estadísticas reales
+      const stats = {
+        people: (causes || []).reduce((sum, c) => sum + (c.beneficiaries || 0), 0),
+        causes: (causes || []).length,
+        volunteering: (volunteering || []).length,
+        tasks: (tasks || []).length,
+        challenges: (challenges || []).length,
+        donations: (causes || []).reduce((sum, c) => sum + (c.raised || 0), 0),
+        cities: new Set(communityActions.map(a => a.city)).size,
+        countries: new Set(communityActions.map(a => a.country)).size
+      };
+
+      return { communityActions, communityMembers, stats };
+    }
+
+    function sleep(ms) {
+      return new Promise(resolve => setTimeout(resolve, ms));
+    }
+
+    // Renderiza marcadores según filtro
+    async function renderMapMarkers(type, communityActions, communityMembers) {
+      markers.forEach(m => m.remove());
+      markers = [];
+      let filtered = [];
+      if (type === "miembro") {
+        filtered = communityMembers;
+        for (const m of filtered) {
+          if (m.lat && m.lng) {
+            const marker = L.marker([m.lat, m.lng], {icon: markerIcons.miembro}).addTo(map)
+              .bindPopup(`
+                <img src="${m.photo}" class="popup-photo" alt="Foto miembro">
+                <strong>${m.name}</strong><br>
+                <span style="color:#6b7280;">${m.city}, ${m.country}</span><br>
+                <a href="${m.profile}" class="action-link" target="_blank" style="color:#3182ce;font-weight:600;">Ver perfil</a>
+              `);
+            markers.push(marker);
+          }
+        }
+      } else {
+        filtered = (type === "all") ? communityActions : communityActions.filter(a => a.type === type);
+        for (const action of filtered) {
+          let lat = action.lat, lng = action.lng;
+          if (!lat || !lng) {
+            // Espera un poco entre peticiones para no saturar Nominatim
+            await sleep(300);
+            const coords = await geocodeCity(action.city, action.country);
+            if (coords) {
+              lat = coords.lat;
+              lng = coords.lng;
+            }
+          }
+          if (lat && lng) {
+            const marker = L.marker([lat, lng], {icon: markerIcons[action.type]}).addTo(map)
+              .bindPopup(`
+                <img src="${action.photo}" class="popup-photo" alt="Foto acción">
+                <strong>${action.title}</strong><br>
+                <span style="color:#6b7280;">${action.city}, ${action.country}</span><br>
+                <span style="font-size:0.97rem;">${action.desc}</span><br>
+                <a href="${action.link}" class="action-link" target="_blank" style="color:#3182ce;font-weight:600;">Ver acción</a>
+              `);
+            markers.push(marker);
+          }
+        }
+      }
+      // Ajustar vista
+      const validMarkers = markers.map(m => m.getLatLng());
+      if (validMarkers.length > 0) {
+        const bounds = L.latLngBounds(validMarkers);
+        if (bounds.isValid()) map.fitBounds(bounds, { padding: [30, 30] });
+      }
+    }
+
+    // Animar los números
+    function animateCounter(id, target, prefix = '', suffix = '', duration = 1200) {
+      const el = document.getElementById(id);
+      let count = 0;
+      const steps = 50;
+      const step = Math.max(1, Math.ceil(target / steps));
+      const intervalTime = Math.max(10, Math.floor(duration / (target / step)));
+      const interval = setInterval(() => {
+        count += step;
+        if (count >= target) {
+          el.textContent = prefix + target + suffix;
+          clearInterval(interval);
+        } else {
+          el.textContent = prefix + count + suffix;
+        }
+      }, intervalTime);
+    }
+
+    // Geocodificación de ciudad y país
+    async function geocodeCity(city, country) {
+      const url = `https://nominatim.openstreetmap.org/search?city=${encodeURIComponent(city)}&country=${encodeURIComponent(country)}&format=json&limit=1`;
+      const res = await fetch(url, { headers: { 'Accept-Language': 'es' } });
+      const data = await res.json();
+      if (data && data.length > 0) {
+        return { lat: parseFloat(data[0].lat), lng: parseFloat(data[0].lon) };
+      }
+      return null;
+    }
+
+    // Mapa
+    const map = L.map('community-map', { zoomControl: true, dragging: true, scrollWheelZoom: false }).setView([20, 0], 2.1);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '&copy; OpenStreetMap contributors'
+    }).addTo(map);
+    map.zoomControl.setPosition('topright');
+
+    // Al cargar la página
+    document.addEventListener('DOMContentLoaded', async function() {
+      const { communityActions, communityMembers, stats } = await fetchMapData();
+
+      // Estadísticas reales (primero)
+      animateCounter('stat-people', stats.people);
+      animateCounter('stat-causes', stats.causes);
+      animateCounter('stat-volunteering', stats.volunteering);
+      animateCounter('stat-tasks', stats.tasks);
+      animateCounter('stat-challenges', stats.challenges);
+      animateCounter('stat-donations', stats.donations, '', ' €');
+      animateCounter('stat-cities', stats.cities);
+      animateCounter('stat-countries', stats.countries);
+
+      // Filtros
+      document.querySelectorAll('.map-filter-btn').forEach(btn => {
+        btn.addEventListener('click', async function() {
+          document.querySelector('.map-filter-btn.active').classList.remove('active');
+          this.classList.add('active');
+          currentFilter = this.getAttribute('data-type');
+          await renderMapMarkers(currentFilter, communityActions, communityMembers);
+        });
+      });
+
+      // Inicial (después)
+      await renderMapMarkers(currentFilter, communityActions, communityMembers);
+    });
+
+    // Cabecera dinámica usuario logueado
+    window.addEventListener('DOMContentLoaded', function() {
+      if (document.getElementById('auth-buttons') && document.getElementById('user-info')) {
+        fetch('/me', { credentials: 'include' })
+          .then(res => res.json())
+          .then(data => {
+            if (data.logged) {
+              document.getElementById('auth-buttons').style.display = 'none';
+              document.getElementById('user-info').style.display = 'flex';
+              document.getElementById('user-photo').src = data.user.photo || '/img/default-user.png';
+              document.getElementById('user-name').textContent = data.user.name;
+            } else {
+              document.getElementById('auth-buttons').style.display = 'flex';
+              document.getElementById('user-info').style.display = 'none';
+            }
+          });
+
+        // Logout
+        document.getElementById('logoutBtn').onclick = function() {
+          fetch('/logout', { method: 'POST', credentials: 'include' })
+            .then(() => window.location.reload());
+        };
+      }
+    });
+  </script>
+{% endblock %}

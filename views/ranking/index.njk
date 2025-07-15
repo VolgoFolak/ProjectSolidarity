@@ -1,0 +1,724 @@
+<!-- filepath: c:\Users\gabi2\Desktop\Solidarity-web\views\ranking\index.njk -->
+{% extends "layout.njk" %}
+
+{% block title %}Ranking Solidario | Solidarity{% endblock %}
+
+{% block head %}
+  {{ super() }}
+  <style>
+    /* SOLO estilos específicos de ranking, no navbar ni footer */
+    .ranking-container {
+      max-width: 1200px;
+      margin: 2rem auto;
+      padding: 0 1rem;
+    }
+    .ranking-header {
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+    .ranking-header h1 {
+      font-size: 2.2rem;
+      color: var(--primary, #4a6fa5);
+      margin-bottom: 0.5rem;
+    }
+    .ranking-header p {
+      color: #666;
+      max-width: 700px;
+      margin: 0 auto;
+    }
+    .league-system {
+      display: flex;
+      justify-content: center;
+      gap: 1rem;
+      margin-bottom: 2rem;
+      flex-wrap: wrap;
+    }
+    .league-card {
+      background: white;
+      border-radius: 10px;
+      padding: 1.5rem;
+      width: 180px;
+      text-align: center;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+      transition: transform 0.3s, box-shadow 0.3s;
+      cursor: pointer;
+      border: 3px solid transparent;
+    }
+    .league-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 15px rgba(0,0,0,0.1);
+    }
+    .league-card.active {
+      border-color: var(--accent, #eab308);
+    }
+    .league-icon {
+      font-size: 2.5rem;
+      margin-bottom: 0.5rem;
+    }
+    .league-1 .league-icon { color: var(--gold, #ffd700); }
+    .league-2 .league-icon { color: var(--silver, #c0c0c0); }
+    .league-3 .league-icon { color: var(--bronze, #cd7f32); }
+    .league-4 .league-icon { color: #4a6fa5; }
+    .league-5 .league-icon { color: #6b7280; }
+    .league-card h3 {
+      margin-bottom: 0.5rem;
+      color: var(--text, #333);
+    }
+    .league-card p {
+      font-size: 0.9rem;
+      color: #666;
+    }
+    .ranking-tabs {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 1.5rem;
+      border-bottom: 1px solid #eee;
+    }
+    .ranking-tab {
+      padding: 0.8rem 1.5rem;
+      cursor: pointer;
+      font-weight: 500;
+      color: #666;
+      border-bottom: 3px solid transparent;
+      transition: all 0.3s;
+      background: none;
+      border: none;
+      outline: none;
+    }
+    .ranking-tab.active {
+      color: var(--primary, #4a6fa5);
+      border-bottom-color: var(--primary, #4a6fa5);
+    }
+    .subranking-tabs {
+      display: flex;
+      gap: 0.7rem;
+      margin-bottom: 1.2rem;
+      justify-content: center;
+    }
+    .subranking-tab {
+      background: #f1f5f9;
+      color: var(--primary, #4a6fa5);
+      border-radius: 999px;
+      padding: 0.4rem 1.1rem;
+      font-size: 1rem;
+      font-weight: 600;
+      border: none;
+      cursor: pointer;
+      transition: background 0.18s, color 0.18s;
+      outline: none;
+    }
+    .subranking-tab.active, .subranking-tab:hover {
+      background: var(--accent, #eab308);
+      color: #fff;
+    }
+    .ranking-info {
+      font-size: 1.05rem;
+      color: #4b5563;
+      margin-bottom: 1.2rem;
+      background: #f8fafc;
+      border-radius: 8px;
+      padding: 0.7rem 1.1rem;
+      text-align: center;
+    }
+    .ranking-table {
+      background: white;
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+      margin-bottom: 2rem;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+    th {
+      background-color: var(--primary, #4a6fa5);
+      color: white;
+      padding: 1rem;
+      text-align: left;
+    }
+    td {
+      padding: 1rem;
+      border-bottom: 1px solid #eee;
+    }
+    tr:last-child td {
+      border-bottom: none;
+    }
+    tr:hover {
+      background-color: #f8f9fa;
+    }
+    .user-cell {
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+    }
+    .user-avatar-sm, .team-avatar-sm {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      object-fit: cover;
+      background-color: #f0f0f0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--primary, #4a6fa5);
+      font-size: 1rem;
+    }
+    .rank {
+      font-weight: 700;
+      color: var(--primary, #4a6fa5);
+      width: 30px;
+      display: inline-block;
+      text-align: center;
+    }
+    .rank-1 { color: var(--gold, #ffd700); }
+    .rank-2 { color: var(--silver, #c0c0c0); }
+    .rank-3 { color: var(--bronze, #cd7f32); }
+    .score {
+      font-weight: 600;
+      color: var(--secondary, #3da58a);
+    }
+    .movement {
+      display: inline-block;
+      width: 20px;
+      text-align: center;
+    }
+    .up { color: #4CAF50; }
+    .down { color: #e74c3c; }
+    .same { color: #666; }
+    .league-info {
+      background: white;
+      border-radius: 10px;
+      padding: 2.2rem 1.5rem 2.2rem 1.5rem;
+      margin-top: 2rem;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.07);
+      text-align: center;
+      max-width: 420px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    .league-info .user-cell {
+      flex-direction: column;
+      align-items: center;
+      gap: 0.7rem;
+      display: flex;
+      margin-bottom: 1.1rem;
+    }
+    .user-avatar-lg {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 4px solid var(--primary, #4a6fa5);
+      box-shadow: 0 2px 8px rgba(74,111,165,0.10);
+      background: #f0f0f0;
+      margin-bottom: 0.5rem;
+    }
+    #user-league {
+      font-size: 1.05rem;
+      color: #374151;
+      margin-bottom: 0.4rem;
+    }
+    #user-progress {
+      font-size: 1.08rem;
+      color: #3da58a;
+      margin-bottom: 0.7rem;
+    }
+    .progreso-title {
+      color: var(--primary, #4a6fa5);
+      font-size: 1.5rem;
+      font-weight: 800;
+      margin-bottom: 1.2rem;
+      margin-top: 0.5rem;
+      text-align: center;
+      letter-spacing: 0.01em;
+    }
+    .user-avatar-xl {
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 4px solid var(--primary, #4a6fa5);
+      box-shadow: 0 2px 8px rgba(74,111,165,0.10);
+      background: #f0f0f0;
+      margin-bottom: 0.5rem;
+    }
+    .user-league-badge {
+      display: inline-block;
+      margin-top: 0.5rem;
+      padding: 0.35em 1em;
+      border-radius: 999px;
+      font-weight: 700;
+      font-size: 1.08em;
+      color: #fff;
+      background: linear-gradient(90deg, #4a6fa5 60%, #3da58a 100%);
+      box-shadow: 0 2px 8px rgba(74,111,165,0.08);
+    }
+    .user-league-badge.bronce {
+      background: linear-gradient(90deg, #cd7f32 60%, #b87333 100%);
+    }
+    .user-league-badge.plata {
+      background: linear-gradient(90deg, #bfc1c2 60%, #e0e0e0 100%);
+      color: #374151;
+    }
+    .user-league-badge.oro {
+      background: linear-gradient(90deg, #ffd700 60%, #ffec8b 100%);
+      color: #7c6f00;
+    }
+    .user-league-badge.platino {
+      background: linear-gradient(90deg, #b3e0ff 60%, #c0c0c0 100%);
+      color: #2a4a5c;
+    }
+    .user-league-badge.diamante {
+      background: linear-gradient(90deg, #00c3ff 60%, #ffff1c 100%);
+      color: #1a3a4a;
+    }
+    .progress-container {
+      margin: 1.2rem 0 0.7rem 0;
+      width: 100%;
+    }
+    .progress-bar-bg {
+      background: #e5e7eb;
+      border-radius: 20px;
+      height: 18px;
+      position: relative;
+      width: 100%;
+      margin: 0 auto;
+      overflow: hidden;
+    }
+    .progress-bar {
+      height: 100%;
+      background: linear-gradient(90deg, var(--secondary, #3da58a), var(--primary, #4a6fa5));
+      border-radius: 20px;
+      transition: width 0.5s;
+    }
+    .progress-label {
+      position: absolute;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 0.98em;
+      color: #222;
+      font-weight: 600;
+      height: 100%;
+      display: flex;
+      align-items: center;
+    }
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 9999;
+      left: 0; top: 0;
+      width: 100vw; height: 100vh;
+      background: rgba(0,0,0,0.35);
+      align-items: center;
+      justify-content: center;
+    }
+    .modal.active, .modal[style*="display: block"] {
+      display: flex !important;
+    }
+    .modal-content {
+      background: #fff;
+      border-radius: 18px;
+      max-width: 480px;
+      width: 95vw;
+      padding: 2.5rem 2.5rem 2rem 2.5rem;
+      box-shadow: 0 8px 32px rgba(74,111,165,0.13);
+      position: relative;
+      border: 2.5px solid var(--primary,#4a6fa5);
+      font-family: inherit;
+      animation: fadeIn 0.2s;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: scale(0.97);}
+      to { opacity: 1; transform: scale(1);}
+    }
+    @media (max-width: 600px) {
+      .league-info {
+        max-width: 98vw;
+        padding: 1.2rem 0.5rem;
+      }
+      .user-avatar-lg {
+        width: 60px;
+        height: 60px;
+      }
+      .user-avatar-xl { width: 70px; height: 70px; }
+    }
+    @media (max-width: 768px) {
+      .league-system { flex-direction: column; align-items: center; }
+      .league-card { width: 100%; max-width: 300px; }
+      table { display: block; overflow-x: auto; }
+    }
+  </style>
+{% endblock %}
+
+{% block content %}
+<main class="ranking-container">
+    <div class="ranking-header">
+        <h1><i class="fas fa-trophy"></i> Ranking Solidario</h1>
+        <p>Descubre tu posición y compite por alcanzar la cima. Los rankings se actualizan semanalmente según tu impacto social.</p>
+    </div>
+    <!-- League System -->
+    <div class="league-system">
+        <div class="league-card league-1 active" onclick="showLeague(1)">
+            <i class="fas fa-crown league-icon"></i>
+            <h3>Liga Diamante</h3>
+            <p>4,000+ pts</p>
+        </div>
+        <div class="league-card league-2" onclick="showLeague(2)">
+            <i class="fas fa-gem league-icon"></i>
+            <h3>Liga Platino</h3>
+            <p>3,000-3,999 pts</p>
+        </div>
+        <div class="league-card league-3" onclick="showLeague(3)">
+            <i class="fas fa-award league-icon"></i>
+            <h3>Liga Oro</h3>
+            <p>2,000-2,999 pts</p>
+        </div>
+        <div class="league-card league-4" onclick="showLeague(4)">
+            <i class="fas fa-star league-icon"></i>
+            <h3>Liga Plata</h3>
+            <p>1,000-1,999 pts</p>
+        </div>
+        <div class="league-card league-5" onclick="showLeague(5)">
+            <i class="fas fa-seedling league-icon"></i>
+            <h3>Liga Bronce</h3>
+            <p>0-999 pts</p>
+        </div>
+    </div>
+    <!-- Ranking Tabs -->
+    <div class="ranking-tabs">
+        <button class="ranking-tab active" data-tab="individual">Individual</button>
+        <button class="ranking-tab" data-tab="comunidades">Comunidades</button>
+        <button class="btn btn-info" id="open-score-system" type="button" style="margin-left:1rem;">
+            <i class="fas fa-info-circle"></i> Sistema de puntuación
+        </button>
+    </div>
+    <!-- Subtabs para Individual -->
+    <div id="subranking-tabs" style="display:block;">
+      <div class="subranking-tabs">
+        <button class="subranking-tab active" data-type="historico">Ranking histórico</button>
+        <button class="subranking-tab" data-type="dinamico">Ranking dinámico semanal</button>
+      </div>
+      <div class="ranking-info" id="ranking-info">
+        <b>Ranking histórico:</b> Acumula todos los puntos de impacto desde que te registraste.<br>
+        <b>Ranking dinámico:</b> Se reinicia cada semana. Sube o baja de liga según tu puntuación semanal. ¡Los 10 mejores de cada liga ascienden y los 10 últimos descienden!
+      </div>
+    </div>
+    <!-- Individual Ranking Table -->
+    <div class="ranking-table" id="individual-table">
+        <table>
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Usuario</th>
+                    <th>Puntos</th>
+                    <th>Cambio</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody id="individual-ranking">
+                <!-- Filled by JavaScript -->
+            </tbody>
+        </table>
+    </div>
+    <!-- Communities Ranking Table (hidden by default) -->
+    <div class="ranking-table" id="comunidades-table" style="display: none;">
+        <table>
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Comunidad</th>
+                    <th>Puntos</th>
+                    <th>Beneficiarios</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody id="communities-ranking">
+                <!-- Filled by JavaScript -->
+            </tbody>
+        </table>
+    </div>
+    <!-- Your League Info -->
+    <div class="league-info">
+        <h3 class="progreso-title"><i class="fas fa-shield-alt"></i> Tu Progreso</h3>
+        <div class="user-cell">
+            <img id="user-photo" src="/img/avatar-default.jpg" class="user-avatar-xl">
+            <div style="margin-top: 0.7rem;">
+                <span id="user-name"></span>
+                <div id="user-league" class="user-league-badge"></div>
+            </div>
+        </div>
+        <div class="progress-container">
+            <div class="progress-bar-bg">
+                <div class="progress-bar" style="width: 0%"></div>
+                <div id="progress-label" class="progress-label"></div>
+            </div>
+        </div>
+        <p id="user-progress"></p>
+        <p style="color:#666;">Próxima actualización del ranking: <strong id="next-update"></strong></p>
+        <div style="margin-top: 1.5rem;">
+            <button class="btn btn-primary"><i class="fas fa-bullhorn"></i> Compartir</button>
+            <button class="btn btn-outline"><i class="fas fa-trophy"></i> Ver Logros</button>
+        </div>
+    </div>
+</main>
+
+<!-- Modal Sistema de Puntuación -->
+<div id="score-system-modal" class="modal" style="display:none;">
+  <div class="modal-content" style="padding:2.5rem 2.5rem 2rem 2.5rem; border-radius:18px; max-width:480px; border:2.5px solid var(--primary,#4a6fa5); box-shadow:0 8px 32px rgba(74,111,165,0.13); font-family:inherit;">
+    <span class="close-modal" id="close-score-system" style="top:16px; right:22px; color:var(--primary,#4a6fa5); font-size:2.2rem;">&times;</span>
+    <div style="text-align:center;">
+      <i class="fas fa-star" style="color:var(--accent,#eab308); font-size:2.3rem; margin-bottom:0.5rem;"></i>
+      <h2 style="color:var(--primary,#4a6fa5); font-size:1.6rem; margin-bottom:1.2rem; font-weight:800;">Sistema de Puntuación Solidarity</h2>
+    </div>
+    <ul style="font-size:1.13em;line-height:1.8; color:#374151; margin-bottom:1.2rem; padding-left:1.2em;">
+      <li><b style="color:var(--accent,#eab308);">+100 puntos</b> al registrarte por primera vez.</li>
+      <li><b style="color:var(--accent,#eab308);">+5 puntos</b> por cada día que hagas login.</li>
+      <li><b style="color:var(--accent,#eab308);">+50 puntos</b> por hacer login 7 días seguidos.</li>
+      <li><b style="color:var(--accent,#eab308);">+50 puntos</b> por cada causa, tarea, reto o voluntariado que publiques.</li>
+      <li><b style="color:var(--accent,#eab308);">Puntos variables</b> al unirte a una causa, reto, tarea o voluntariado (según lo definido al crearla).</li>
+      <li><b style="color:var(--accent,#eab308);">+5 puntos</b> por cada euro donado a una causa.</li>
+      <li><b style="color:var(--accent,#eab308);">+5 puntos</b> cada vez que compartas una causa, tarea, reto, voluntariado o comunidad en redes sociales o apps externas.</li>
+    </ul>
+    <div style="background:#f8fafc; border-radius:8px; padding:0.8em 1em; color:#4a6fa5; font-size:1em; display:flex; align-items:center; gap:0.7em;">
+      <i class="fas fa-info-circle" style="font-size:1.2em; color:var(--primary,#4a6fa5);"></i>
+      <span>Los puntos se suman automáticamente y afectan tu posición en el ranking.</span>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+{{ super() }}
+<script>
+async function fetchRankingData() {
+  // Ranking histórico: suma total de puntos de impacto
+  const { data: usersHistorico, error: errorHistorico } = await supabase
+    .from('profiles')
+    .select('id, username, photo_url, impact_points, actions_count')
+    .order('impact_points', { ascending: false })
+    .limit(100);
+
+  // Ranking dinámico: puntos de la semana (requiere campo semanal en tu BD)
+  const { data: usersDinamico, error: errorDinamico } = await supabase
+    .from('profiles')
+    .select('id, username, photo_url, weekly_points, actions_count')
+    .order('weekly_points', { ascending: false })
+    .limit(100);
+
+  if (errorHistorico) {
+    console.error('Error cargando ranking histórico:', errorHistorico.message);
+  }
+  if (errorDinamico) {
+    console.error('Error cargando ranking dinámico:', errorDinamico.message);
+  }
+
+  return { usersHistorico: usersHistorico || [], usersDinamico: usersDinamico || [] };
+}
+
+function getLeague(points) {
+  if (points >= 4000) return { name: "Diamante", idx: 1 };
+  if (points >= 3000) return { name: "Platino", idx: 2 };
+  if (points >= 2000) return { name: "Oro", idx: 3 };
+  if (points >= 1000) return { name: "Plata", idx: 4 };
+  return { name: "Bronce", idx: 5 };
+}
+
+function renderIndividualRanking(users, type = "historico", currentUserId = null) {
+  const tbody = document.getElementById('individual-ranking');
+  tbody.innerHTML = '';
+  if (!Array.isArray(users) || users.length === 0) {
+    tbody.innerHTML = `<tr><td colspan="5" style="text-align:center;color:#888;">No hay datos para mostrar.</td></tr>`;
+    return;
+  }
+  users.forEach((user, index) => {
+    const points = type === "dinamico"
+      ? (user.weekly_points ?? 0)
+      : (user.impact_points ?? 0);
+    const name = user.username ?? 'Usuario';
+    const avatar = user.photo_url || '/img/avatar-default.jpg';
+    const actions = user.actions_count ?? 0;
+    tbody.innerHTML += `
+      <tr${user.id === currentUserId ? ' style="background:#e6f7f1;"' : ''}>
+        <td><span class="rank${index < 3 ? ` rank-${index + 1}` : ''}">${index + 1}</span></td>
+        <td>
+          <div class="user-cell">
+            <img src="${avatar}" class="user-avatar-sm" alt="Avatar">
+            <span>${name}</span>
+          </div>
+        </td>
+        <td class="score">${points.toLocaleString()}</td>
+        <td>-</td>
+        <td>${actions}</td>
+      </tr>
+    `;
+  });
+}
+
+function renderUserLeague(user) {
+  const userPhoto = document.getElementById('user-photo');
+  const userName = document.getElementById('user-name');
+  const userLeague = document.getElementById('user-league');
+  const progressBar = document.querySelector('.progress-bar');
+  const progressLabel = document.getElementById('progress-label');
+  const userProgress = document.getElementById('user-progress');
+
+  if (!userPhoto || !userName || !userLeague || !progressBar || !progressLabel || !userProgress) return;
+
+  if (!user) {
+    userPhoto.src = '/img/avatar-default.jpg';
+    userName.textContent = 'Inicia sesión para ver tu progreso';
+    userLeague.textContent = '';
+    userLeague.className = 'user-league-badge';
+    progressBar.style.width = '0%';
+    progressLabel.textContent = '';
+    userProgress.innerHTML = '';
+    return;
+  }
+
+  const points = user.impact_points ?? 0;
+  const league = getLeague(points);
+  const avatar = user.photo_url || '/img/avatar-default.jpg';
+  const name = user.username ?? 'Usuario';
+
+  userPhoto.src = avatar;
+  userName.textContent = name;
+
+  // Liga visual
+  let leagueClass = '';
+  switch (league.name.toLowerCase()) {
+    case 'bronce': leagueClass = 'bronce'; break;
+    case 'plata': leagueClass = 'plata'; break;
+    case 'oro': leagueClass = 'oro'; break;
+    case 'platino': leagueClass = 'platino'; break;
+    case 'diamante': leagueClass = 'diamante'; break;
+  }
+  userLeague.textContent = `Liga ${league.name} | ${points} pts`;
+  userLeague.className = `user-league-badge ${leagueClass}`;
+
+  // Barra de progreso y texto
+  const nextLevel = (Math.floor(points / 1000) + 1) * 1000;
+  const progress = Math.min(100, ((points % 1000) / 1000) * 100);
+  progressBar.style.width = `${progress}%`;
+  progressLabel.textContent = '';
+
+  userProgress.innerHTML =
+    points >= 4000
+      ? '¡Estás en la liga más alta! Sigue ayudando.'
+      : `Te faltan <strong>${nextLevel - points}</strong> puntos para ascender de liga.`;
+}
+
+// Cuenta atrás hasta el próximo domingo a medianoche
+function updateCountdown() {
+  const now = new Date();
+  let daysUntilSunday = (7 - now.getDay()) % 7;
+  const nextSunday = new Date(now);
+  nextSunday.setDate(now.getDate() + daysUntilSunday);
+  nextSunday.setHours(0, 0, 0, 0);
+
+  const diff = nextSunday - now;
+  const totalSeconds = Math.floor(diff / 1000);
+  const days = Math.floor(totalSeconds / (60 * 60 * 24));
+  const hours = Math.floor((totalSeconds % (60 * 60 * 24)) / (60 * 60));
+  const minutes = Math.floor((totalSeconds % (60 * 60)) / 60);
+  const seconds = totalSeconds % 60;
+
+  document.getElementById('next-update').innerHTML =
+    `<span style="color:#4a6fa5;font-weight:700;font-size:1.1em;">
+      ${days}d&nbsp;${hours}h&nbsp;${minutes}m&nbsp;${seconds}s
+    </span>`;
+}
+setInterval(updateCountdown, 1000);
+updateCountdown();
+
+async function fetchCurrentUser() {
+  const { data: { user }, error } = await supabase.auth.getUser();
+  if (error || !user) return null;
+
+  const { data: profile, error: profileError } = await supabase
+    .from('profiles')
+    .select('id, username, photo_url, impact_points, weekly_points, actions_count')
+    .eq('id', user.id)
+    .single();
+
+  return profileError ? null : profile;
+}
+
+document.addEventListener('DOMContentLoaded', async function() {
+  const currentUser = await fetchCurrentUser();
+  const currentUserId = currentUser?.id;
+  const { usersHistorico, usersDinamico } = await fetchRankingData();
+  renderIndividualRanking(usersHistorico, "historico", currentUserId);
+  renderUserLeague(currentUser);
+
+  document.querySelectorAll('.subranking-tab').forEach(tab => {
+    tab.addEventListener('click', function() {
+      document.querySelector('.subranking-tab.active').classList.remove('active');
+      this.classList.add('active');
+      const type = this.getAttribute('data-type');
+      if (type === "dinamico") {
+        document.getElementById('ranking-info').innerHTML = `
+          <b>Ranking dinámico:</b> Se reinicia cada semana. Sube o baja de liga según tu puntuación semanal.<br>
+          Los 10 mejores de cada liga ascienden, los 10 últimos descienden. ¡Sigue sumando puntos para subir!
+        `;
+        renderIndividualRanking(usersDinamico, "dinamico", currentUserId);
+      } else {
+        document.getElementById('ranking-info').innerHTML = `
+          <b>Ranking histórico:</b> Acumula todos los puntos de impacto desde que te registraste.<br>
+          ¡Compite por estar en el top histórico de Solidarity!
+        `;
+        renderIndividualRanking(usersHistorico, "historico", currentUserId);
+      }
+    });
+  });
+
+  document.querySelectorAll('.ranking-tab').forEach(tab => {
+    tab.addEventListener('click', function () {
+      document.querySelectorAll('.ranking-tab').forEach(t => t.classList.remove('active'));
+      this.classList.add('active');
+      document.getElementById('individual-table').style.display = 'none';
+      document.getElementById('comunidades-table').style.display = 'none';
+      document.getElementById('subranking-tabs').style.display = 'none';
+
+      const tabType = this.getAttribute('data-tab');
+      if (tabType === "individual") {
+        document.getElementById('individual-table').style.display = '';
+        document.getElementById('subranking-tabs').style.display = 'block';
+      }
+      if (tabType === "comunidades") {
+        document.getElementById('comunidades-table').style.display = '';
+      }
+    });
+  });
+
+  // Modal sistema de puntuación
+  const openBtn = document.getElementById('open-score-system');
+  const closeBtn = document.getElementById('close-score-system');
+  const modal = document.getElementById('score-system-modal');
+  if (openBtn && closeBtn && modal) {
+    openBtn.addEventListener('click', function() {
+      modal.classList.add('active');
+      modal.style.display = 'flex';
+    });
+    closeBtn.addEventListener('click', function() {
+      modal.classList.remove('active');
+      modal.style.display = 'none';
+    });
+    window.addEventListener('click', function(e) {
+      if (e.target === modal) {
+        modal.classList.remove('active');
+        modal.style.display = 'none';
+      }
+    });
+  }
+});
+
+function showLeague(leagueNumber) {
+  document.querySelectorAll('.league-card').forEach(card => {
+    card.classList.remove('active');
+  });
+  document.querySelector(`.league-${leagueNumber}`).classList.add('active');
+}
+</script>
+{% endblock %}

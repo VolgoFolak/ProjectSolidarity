@@ -1,0 +1,1079 @@
+{% extends "layout.njk" %}
+
+{% block title %}Solidarity - Comunidades{% endblock %}
+
+{% block head %}
+  {{ super() }}
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <style>
+    :root {
+      --primary: #4a6fa5;
+      --primary-dark: #166088;
+      --gray: #e2e8f0;
+      --white: #fff;
+      --accent: #4fc3a1;
+      --accent-dark: #3da58a;
+      --urgent: #e53e3e;
+      --radius: 1.7rem;
+    }
+
+    .main-container {
+      max-width: 1200px;
+      margin: 2rem auto;
+      padding: 0 2rem;
+    }
+
+    .section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 2rem;
+    }
+
+    .section-header h1 {
+      font-size: 2rem;
+      color: var(--primary);
+      font-weight: 700;
+    }
+
+    .search-container {
+      margin-bottom: 2rem;
+      display: flex;
+      align-items: center;
+      gap: 0.7rem;
+    }
+
+    .search-container input {
+      flex: 1;
+      padding: 0.6rem 1.2rem;
+      border-radius: 7px;
+      border: 1.5px solid var(--gray);
+      font-size: 1.05rem;
+      outline: none;
+      transition: border 0.2s;
+      background: #fff;
+    }
+
+    .search-container input:focus {
+      border-color: var(--primary);
+    }
+
+    .tabs {
+      display: flex;
+      border-bottom: 1px solid var(--gray);
+      margin-bottom: 2rem;
+    }
+
+    .tab {
+      padding: 0.75rem 1.5rem;
+      cursor: pointer;
+      position: relative;
+      font-weight: 500;
+      color: #6b7280;
+      background: none;
+      border: none;
+      outline: none;
+    }
+
+    .tab.active {
+      color: var(--primary);
+      font-weight: 600;
+    }
+
+    .tab.active::after {
+      content: '';
+      position: absolute;
+      bottom: -1px;
+      left: 0;
+      width: 100%;
+      height: 3px;
+      background: var(--primary);
+    }
+
+    /* Intro y destacados */
+    .teams-intro {
+      background: linear-gradient(135deg, #f0f7ff 0%, #e6f0fa 100%);
+      border-radius: 16px;
+      padding: 2.5rem;
+      margin-bottom: 3rem;
+      display: flex;
+      align-items: center;
+      gap: 2rem;
+      border: 1px solid var(--gray);
+    }
+
+    .teams-intro-icon {
+      font-size: 3.5rem;
+      color: var(--accent);
+    }
+
+    .teams-intro-content h2 {
+      font-size: 1.8rem;
+      color: var(--primary);
+      margin-bottom: 0.5rem;
+    }
+
+    .teams-intro-content p {
+      color: #4a5568;
+      line-height: 1.6;
+    }
+
+    .teams-highlights {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 1.5rem;
+      margin-bottom: 3rem;
+    }
+
+    .highlight-card {
+      background: white;
+      border-radius: 10px;
+      padding: 1.5rem;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+      border: 1px solid var(--gray);
+      transition: all 0.3s ease;
+    }
+
+    .highlight-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+      border-color: var(--accent);
+    }
+
+    .highlight-icon {
+      font-size: 1.8rem;
+      color: var(--accent);
+      margin-bottom: 1rem;
+    }
+
+    .highlight-title {
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: var(--primary);
+      margin-bottom: 0.5rem;
+    }
+
+    .highlight-desc {
+      color: #6b7280;
+      font-size: 0.95rem;
+      line-height: 1.5;
+    }
+
+    /* Modal y formulario */
+    .modal-bg {
+      display: none;
+      position: fixed;
+      top: 0; left: 0; width: 100vw; height: 100vh;
+      background: rgba(0,0,0,0.35);
+      z-index: 9999;
+      align-items: center;
+      justify-content: center;
+    }
+    .modal-bg.active { display: flex; }
+    .modal-content {
+      background: #fff;
+      border-radius: 18px;
+      max-width: 540px;
+      width: 95vw;
+      padding: 2.5rem 1.5rem 2rem 1.5rem;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.13);
+      position: relative;
+      animation: fadeIn 0.3s;
+      max-height: 90vh;
+      overflow-y: auto;
+    }
+    .close-modal {
+      position: absolute;
+      top: 1.1rem; right: 1.3rem;
+      background: none;
+      border: none;
+      font-size: 2rem;
+      color: #aaa;
+      cursor: pointer;
+      transition: color 0.2s;
+    }
+    .close-modal:hover { color: var(--primary, #4a6fa5); }
+    .create-team-title {
+      font-size: 1.5rem;
+      font-weight: 800;
+      color: var(--primary, #4a6fa5);
+      margin-bottom: 1.2rem;
+      text-align: center;
+    }
+    .team-form .form-group label { 
+      font-weight: 600; 
+      color: var(--primary, #4a6fa5); 
+      margin-bottom: 0.5rem;
+      display: block;
+    }
+    .team-form .form-group input,
+    .team-form .form-group textarea,
+    .team-form .form-group select {
+      width: 100%;
+      padding: 0.7rem 1rem;
+      border-radius: 8px;
+      border: 1px solid #e5e7eb;
+      margin-bottom: 0.2rem;
+      font-size: 1rem;
+      background: #f8fafc;
+      transition: border 0.2s;
+    }
+    .team-form .form-group input:focus,
+    .team-form .form-group textarea:focus,
+    .team-form .form-group select:focus {
+      border: 1.5px solid var(--accent, #4fc3a1);
+      outline: none;
+      background: #fff;
+    }
+    .team-form .form-group textarea {
+      min-height: 90px;
+      resize: vertical;
+    }
+    .form-inline-group {
+      display: flex;
+      gap: 1rem;
+    }
+    .form-inline-group .form-group { flex: 1; }
+    .preview-img {
+      width: 100%;
+      max-width: 320px;
+      height: 180px;
+      object-fit: cover;
+      border-radius: 10px;
+      margin-top: 0.5rem;
+      border: 1px solid #e5e7eb;
+      display: none;
+    }
+    .after-create {
+      margin-top: 2rem;
+      background: var(--primary-light, #e6f0fa);
+      color: #444;
+      border-radius: 10px;
+      padding: 1.5rem 1rem;
+      text-align: center;
+    }
+
+    /* Grid clásico de comunidades */
+    .teams-grid-classic {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+      gap: 2rem;
+    }
+    .team-card-classic {
+      background: white;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+      transition: all 0.3s ease;
+      border: 1px solid var(--gray);
+    }
+    .team-card-classic:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+    }
+    .team-image-classic {
+      height: 180px;
+      overflow: hidden;
+      position: relative;
+    }
+    .team-image-classic img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.3s ease;
+    }
+    .team-card-classic:hover .team-image-classic img {
+      transform: scale(1.05);
+    }
+    .team-badge-classic {
+      position: absolute;
+      top: 1rem;
+      right: 1rem;
+      background: rgba(255, 255, 255, 0.9);
+      padding: 0.3rem 0.8rem;
+      border-radius: 50px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      z-index: 2;
+    }
+    .team-badge-classic.points {
+      background: var(--primary);
+      color: white;
+      left: 1rem;
+      right: auto;
+    }
+    .team-badge-classic[style*="background:#ffe066"] {
+      background: #ffe066 !important;
+      color: #b8860b !important;
+    }
+    .team-badge-classic[style*="background:var(--gray)"] {
+      background: var(--gray) !important;
+      color: var(--primary-dark) !important;
+    }
+    .team-badge-classic[style*="background:#ffd600"] {
+      background: #ffd600 !important;
+      color: #a67c00 !important;
+    }
+    .team-content-classic {
+      padding: 1.5rem;
+    }
+    .team-content-classic h3 {
+      font-size: 1.3rem;
+      margin-bottom: 0.8rem;
+      color: #2d3748;
+    }
+    .team-content-classic p {
+      color: #6b7280;
+      margin-bottom: 1.5rem;
+      font-size: 0.95rem;
+      line-height: 1.6;
+    }
+    .team-meta-classic {
+      display: flex;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+      font-size: 0.85rem;
+      flex-wrap: wrap;
+    }
+    .meta-item-classic {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      color: #6b7280;
+    }
+    .meta-item-classic i {
+      color: var(--primary);
+    }
+    .members-count-classic {
+      display: inline-flex;
+      align-items: center;
+      background: #f0f9ff;
+      color: var(--primary);
+      padding: 0.3rem 0.8rem;
+      border-radius: 50px;
+      font-size: 0.85rem;
+      font-weight: 600;
+    }
+    .members-count-classic i {
+      margin-right: 0.3rem;
+    }
+    .team-progress-classic {
+      margin-bottom: 1.5rem;
+    }
+    .team-actions-classic {
+      display: flex;
+      gap: 0.8rem;
+    }
+
+    /* Barra de progreso y tags (si no están en tu style.css) */
+    /* Barra de progreso igual que causas */
+    .progress-bar {
+      width: 100%;
+      background: var(--gray);
+      border-radius: 4px;
+      height: 8px;
+      position: relative;
+      overflow: hidden;
+      margin-bottom: 0.5rem;
+      box-shadow: none;
+    }
+    .progress-fill {
+      height: 100%;
+      background: var(--primary);
+      border-radius: 4px;
+      transition: width 0.4s cubic-bezier(.4,1,.7,1);
+      color: #fff;
+      font-size: 0.95em;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      padding-right: 8px;
+      box-shadow: none;
+    }
+    .progress-info {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.9rem;
+      color: #6b7280;
+    }
+    .team-badge-classic[style*="background:#ffe600"] {
+      background: #ffe600 !important;
+      color: #b8860b !important;
+    }
+
+    .pagination {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 1.2rem;
+      margin: 3rem 0 1.5rem 0;
+    }
+    .pagination .btn {
+      min-width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      padding: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.15rem;
+    }
+    #pageInfo {
+      font-weight: 600;
+      color: var(--primary);
+      font-size: 1.1rem;
+      min-width: 38px;
+      text-align: center;
+      letter-spacing: 0.03em;
+    }
+
+    .team-tags-classic {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.3em;
+      margin-bottom: 0.7em;
+    }
+    .team-tag-classic {
+      background: #e6f0fa;
+      color: var(--primary);
+      border-radius: 50px;
+      padding: 0.22em 0.95em;
+      font-size: 0.92em;
+      font-weight: 600;
+      margin-bottom: 0.2em;
+      margin-right: 0.3em;
+      transition: background 0.2s, color 0.2s;
+      border: 1px solid #dbeafe;
+      letter-spacing: 0.01em;
+      white-space: nowrap;
+    }
+    .team-tag-classic.tag-more {
+      background: #ffe600;
+      color: #a67c00;
+      border: 1px solid #ffe600;
+    }
+
+    @media (max-width: 768px) {
+      .teams-intro {
+        flex-direction: column;
+        text-align: center;
+        padding: 1.5rem;
+      }
+      .teams-highlights {
+        grid-template-columns: 1fr;
+      }
+      .team-card-classic {
+        margin-bottom: 1.5rem;
+      }
+    }
+    /* Forzar el mismo border-radius en todos los botones, aunque tengan estilos inline */
+    button,
+    .btn,
+    .btn-primary,
+    .btn-accent,
+    .btn-outline,
+    .btn-secondary,
+    .modal-content button,
+    .team-actions-classic .btn {
+      border-radius: 2rem !important;
+      font-weight: 600;
+    }
+  </style>
+{% endblock %}
+
+{% block content %}
+  <!-- Modal para usuarios no logueados -->
+  <div class="modal-bg" id="loginModal">
+    <div class="modal-content">
+      <h3>Para crear una comunidad</h3>
+      <p>Debes ser un usuario registrado. ¿Deseas iniciar sesión o registrarte ahora?</p>
+      <div class="modal-buttons">
+        <a href="/login?return=/teams" class="btn btn-primary">Iniciar Sesión</a>
+        <a href="/register?return=/teams" class="btn btn-outline">Registrarse</a>
+        <button id="cancelModal" class="btn">Cancelar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal CREAR COMUNIDAD (idéntico a tareas, solo cambia el contenido específico) -->
+  <div class="modal-bg" id="createTeamModal">
+    <div class="modal-content">
+      <button class="close-modal" id="closeCreateTeamModal" title="Cerrar">&times;</button>
+      <div class="create-task-title" style="font-size:1.5rem; font-weight:800; color:var(--primary,#4a6fa5); margin-bottom:1.2rem; text-align:center;">
+        <i class="fas fa-users"></i> Crear Nueva Comunidad
+      </div>
+      <form class="team-form" id="teamForm" autocomplete="off" enctype="multipart/form-data">
+        <div class="form-group">
+          <label for="teamName">Nombre de la comunidad</label>
+          <input type="text" id="teamName" name="name" placeholder="Ej: Voluntarios por el Bosque" required>
+        </div>
+        <div class="form-group">
+          <label for="teamPhoto">Foto o logo</label>
+          <input type="file" id="teamPhoto" name="photo" accept="image/*">
+          <img id="previewTeamImg" class="preview-img" alt="Vista previa de la foto" style="display:none;">
+        </div>
+        <div class="form-group">
+          <label for="teamSummary">Resumen (opcional)</label>
+          <input type="text" id="teamSummary" name="summary" maxlength="120" placeholder="Breve resumen visible en la tarjeta">
+        </div>
+        <div class="form-group">
+          <label for="teamDesc">Descripción</label>
+          <textarea id="teamDesc" name="description" rows="4" required placeholder="Describe la misión, valores y objetivos de la comunidad"></textarea>
+        </div>
+        <div class="form-group">
+          <label for="teamCategory">Categoría</label>
+          <select id="teamCategory" name="category" required>
+            <option value="">Selecciona una</option>
+            <option value="medio_ambiente">Medio Ambiente</option>
+            <option value="educacion">Educación</option>
+            <option value="salud">Salud</option>
+            <option value="animales">Animales</option>
+            <option value="comunidad">Comunidad</option>
+            <option value="otros">Otros</option>
+          </select>
+        </div>
+        <div class="form-inline-group">
+          <div class="form-group">
+            <label for="teamPrivacy">Privacidad</label>
+            <select id="teamPrivacy" name="privacy" required>
+              <option value="public">Pública (cualquiera puede unirse)</option>
+              <option value="private">Privada (requiere invitación)</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="teamGoal">Meta de recaudación (€) (opcional)</label>
+            <input type="number" id="teamGoal" name="goal" min="0" placeholder="Ej: 1000">
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="teamTags">Etiquetas (separadas por comas)</label>
+          <input type="text" id="teamTags" name="tags" placeholder="ej: reciclaje, voluntariado, jóvenes">
+        </div>
+        <button type="submit" class="btn btn-primary" style="margin-top:1rem;">
+          <i class="fas fa-plus"></i> Crear Comunidad
+        </button>
+      </form>
+      <div class="after-create" id="afterCreateTeam" style="display:none;">
+        <h3>¡Comunidad creada con éxito!</h3>
+        <p>¿Quieres invitar miembros o ver todas las comunidades?</p>
+        <a href="#" id="inviteMembersBtn" class="btn btn-accent">
+          <i class="fas fa-user-plus"></i> Invitar miembros
+        </a>
+        <br>
+        <a href="/teams" class="btn btn-outline" style="margin-top:1rem;">
+          <i class="fas fa-users"></i> Ver comunidades
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal de ver más comunidad (idéntico a tareas, solo cambia textos/campos) -->
+  <div id="teamModal" class="modal-bg">
+    <div class="modal-content" style="background:#fff; border-radius:18px; max-width:800px; width:95vw; padding:2rem; box-shadow:0 8px 32px rgba(74,111,165,0.13); position:relative; max-height:90vh; overflow-y:auto;">
+      <button id="closeTeamModal" style="position:absolute; top:1.5rem; right:1.5rem; background:none; border:none; font-size:1.8rem; color:#6b7280; cursor:pointer; transition:color 0.2s;" onmouseover="this.style.color='#4a6fa5'" onmouseout="this.style.color='#6b7280'">&times;</button>
+      <div id="teamModalBody" style="padding:0.5rem;">
+        <!-- Contenido dinámico generado por showTeamModal -->
+      </div>
+    </div>
+  </div>
+
+  <!-- Contenido principal de la página de comunidades -->
+  <div class="main-container">
+    <!-- Sección introductoria -->
+    <div class="teams-intro">
+      <div class="teams-intro-icon">
+        <i class="fas fa-people-group"></i>
+      </div>
+      <div class="teams-intro-content">
+        <h2>Comunidades Solidarias</h2>
+        <p>Únete a grupos de personas que trabajan juntas para generar impacto positivo. Colabora en causas, tareas y retos compartidos, y multiplica tu capacidad de ayudar a quienes más lo necesitan.</p>
+      </div>
+    </div>
+    
+    <!-- Destacados -->
+    <div class="teams-highlights">
+      <div class="highlight-card">
+        <div class="highlight-icon"><i class="fas fa-layer-group"></i></div>
+        <div class="highlight-title">Multi-actividad</div>
+        <div class="highlight-desc">Cada comunidad gestiona múltiples acciones simultáneas: causas, tareas, retos y voluntariados.</div>
+      </div>
+      <div class="highlight-card">
+        <div class="highlight-icon"><i class="fas fa-comments"></i></div>
+        <div class="highlight-title">Coordinación</div>
+        <div class="highlight-desc">Organizaos mediante el chat interno, calendario compartido y tableros de progreso.</div>
+      </div>
+      <div class="highlight-card">
+        <div class="highlight-icon"><i class="fas fa-heart"></i></div>
+        <div class="highlight-title">Impacto colectivo</div>
+        <div class="highlight-desc">Suma tus puntos individuales al impacto total de la comunidad.</div>
+      </div>
+      <div class="highlight-card">
+        <div class="highlight-icon"><i class="fas fa-hands-helping"></i></div>
+        <div class="highlight-title">Beneficiarios</div>
+        <div class="highlight-desc">Visualiza el número total de personas y causas beneficiadas por vuestro equipo.</div>
+      </div>
+    </div>
+    
+    <!-- Cabecera con búsqueda y creación -->
+    <div class="section-header">
+      <h1>Explora Comunidades</h1>
+      <a href="#" id="create-team-btn" class="btn btn-primary">
+        <i class="fas fa-plus"></i> Crear Comunidad
+      </a>
+    </div>
+    
+    <div class="search-container">
+      <input type="text" id="search-input" placeholder="Buscar por nombre, descripción, etiquetas...">
+      <i class="fas fa-search" style="color:#4a6fa5;"></i>
+    </div>
+    
+    <!-- Tabs de categorías -->
+    <div class="tabs">
+      <button class="tab active" data-filter="all">Todas</button>
+      <button class="tab" data-filter="medio_ambiente">Medio Ambiente</button>
+      <button class="tab" data-filter="educacion">Educación</button>
+      <button class="tab" data-filter="salud">Salud</button>
+      <button class="tab" data-filter="animales">Animales</button>
+      <button class="tab" data-filter="comunidad">Comunidad</button>
+    </div>
+    
+    <!-- Grid de comunidades -->
+    <div class="teams-grid" id="teamsGrid">
+      <!-- Las comunidades se cargarán dinámicamente -->
+    </div>
+    
+    <!-- Paginación -->
+    <div class="pagination" id="pagination">
+      <button id="prevPage" class="btn btn-outline" disabled>
+        <i class="fas fa-chevron-left"></i>
+      </button>
+      <span id="pageInfo">1</span>
+      <button id="nextPage" class="btn btn-outline" disabled>
+        <i class="fas fa-chevron-right"></i>
+      </button>
+    </div>
+  </div>
+{% endblock %}
+
+{% block scripts %}
+  {{ super() }}
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="/js/modules/teams-renderer.js"></script>
+  <script src="/js/compartir.js"></script>
+  <script>
+
+     // Obtén la sesión actual
+    let session = null;
+    (async () => {
+      const { data } = await supabase.auth.getSession();
+      session = data.session;
+
+      // Inicializa el renderer de equipos
+      window.initTeamsRenderer({
+        supabase,
+        session,
+        onShowTeamModal: showTeamModal
+      });
+    })();
+
+    // Función para mostrar el modal de detalle de comunidad (usa tu HTML COMPLETO)
+    async function showTeamModal(teamId) {
+      // 1. Carga la comunidad
+      const { data: team, error } = await supabase
+        .from('teams')
+        .select('*')
+        .eq('id', teamId)
+        .single();
+
+      if (error || !team) {
+        alert('Error al cargar la comunidad');
+        return;
+      }
+
+      window._currentTeam = team;
+
+      // 2. Prepara datos
+      const createdDate = new Date(team.created_at).toLocaleDateString('es-ES', {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric'
+      });
+      const recaudado = team.funds_raised || 0;
+      const meta = team.goal || 0;
+      const porcentaje = meta ? Math.min(100, Math.round((recaudado / meta) * 100)) : 0;
+      const beneficiaries = team.beneficiaries || 0;
+      const impact = team.impact || 0;
+      const category = getCategoryName(team.category);
+      const privacy = team.privacy === 'private' ? 'Privada' : 'Pública';
+
+      // 2.1 Cargar miembros de la comunidad con perfil
+      const { data: members } = await supabase
+        .from('team_members')
+        .select(`
+          id,
+          role,
+          joined_at,
+          profiles:user_id (
+            id,
+            username,
+            photo_url
+          )
+        `)
+        .eq('team_id', teamId)
+        .order('joined_at', { ascending: true });
+
+      // 3. Renderiza el modal (usa tu HTML COMPLETO, igual que ahora)
+      document.getElementById('teamModalBody').innerHTML = `
+  <div class="modal-cause-container">
+    <h1 class="modal-cause-title" style="font-size:2rem; font-weight:800; color:var(--primary); margin-bottom:2.7rem; text-align:center; width:100%;">${team.name}</h1>
+    <div class="modal-cause-header" style="display:flex; gap:2.5rem; margin-bottom:2.7rem;">
+      <div class="modal-cause-image-wrapper" style="flex:1; min-width:320px; height:300px; border-radius:12px; overflow:hidden; position:relative; box-shadow:0 4px 12px rgba(0,0,0,0.08);">
+        <div class="modal-cause-badge" style="top:1.5rem; left:1.5rem; right:auto; background:var(--accent); color:white; position:absolute; padding:0.5rem 1rem; border-radius:50px; font-size:0.9rem; font-weight:600; display:flex; align-items:center; gap:0.6rem; box-shadow:0 2px 8px rgba(0,0,0,0.1); z-index:2;">
+          <i class="fas fa-users"></i> Comunidad
+        </div>
+        ${team.privacy === 'private' ? `
+        <div class="modal-cause-badge" style="right:1.5rem; left:auto; top:1.5rem; background:var(--gray); color:var(--primary-dark); position:absolute; padding:0.5rem 1rem; border-radius:50px; font-size:0.9rem; font-weight:600; display:flex; align-items:center; gap:0.6rem; box-shadow:0 2px 8px rgba(0,0,0,0.1); z-index:2;">
+          <i class="fas fa-lock"></i> Privada
+        </div>` : ''}
+        <img class="modal-cause-image" src="${team.photo_url || 'https://via.placeholder.com/350x180?text=Comunidad'}"
+             alt="Imagen de la comunidad ${team.name}"
+             style="width:100%;height:100%;object-fit:cover;"
+             onerror="this.src='https://via.placeholder.com/350x180?text=Comunidad'">
+      </div>
+      <div class="modal-cause-info" style="flex:1.5; display:flex; flex-direction:column; justify-content:flex-start;">
+        <div class="modal-cause-progress-container" style="background:#f8fafc; padding:1.2rem; border-radius:12px; margin-bottom:1.2rem; border:1px solid #e5e7eb;">
+          <div class="progress-bar">
+            <div class="progress-fill" style="width:${porcentaje}%"></div>
+          </div>
+          <div class="progress-info">
+            <span>${porcentaje}% completado</span>
+            <span>${recaudado} € de ${meta} €</span>
+          </div>
+        </div>
+        <div class="modal-cause-meta-grid" style="display:grid; grid-template-columns:1fr 1fr; gap:1.2rem; margin-bottom:1.5rem;">
+          <div class="meta-item">
+            <span class="meta-icon" style="color:var(--primary);font-size:1.1rem;width:1.5rem;text-align:center;"><i class="fas fa-users"></i></span>
+            <span style="color:#6b7280;font-size:0.95rem;">${members?.length || 0} miembros</span>
+          </div>
+          <div class="meta-item">
+            <span class="meta-icon" style="color:var(--primary);font-size:1.1rem;width:1.5rem;text-align:center;"><i class="fas fa-heart"></i></span>
+            <span style="color:#6b7280;font-size:0.95rem;">${beneficiaries} beneficiarios</span>
+          </div>
+          <div class="meta-item">
+            <span class="meta-icon" style="color:var(--primary);font-size:1.1rem;width:1.5rem;text-align:center;"><i class="fas fa-layer-group"></i></span>
+            <span style="color:#6b7280;font-size:0.95rem;">${category}</span>
+          </div>
+          <div class="meta-item">
+            <span class="meta-icon" style="color:var(--primary);font-size:1.1rem;width:1.5rem;text-align:center;"><i class="fas fa-calendar-alt"></i></span>
+            <span style="color:#6b7280;font-size:0.95rem;">${createdDate}</span>
+          </div>
+        </div>
+        <div class="points-notice" style="background:#f0f9ff; border-left:4px solid var(--accent); padding:1rem; border-radius:0 8px 8px 0; font-size:0.95rem; display:flex; align-items:center; gap:0.7rem;">
+          <i class="fas fa-bolt" style="color: var(--accent);"></i>
+          Participar en esta comunidad otorgará <strong>${impact} puntos</strong> de impacto
+        </div>
+      </div>
+    </div>
+    <div class="modal-cause-content" style="margin-top:0;">
+      <div class="content-section" style="margin-bottom:2.2rem;">
+        <h3 class="content-title" style="font-size:1.2rem; font-weight:600; color:var(--primary); margin-bottom:0.9rem; display:flex; align-items:center; gap:0.7rem;">
+          <i class="fas fa-quote-left"></i> Resumen
+        </h3>
+        <p class="content-text" style="line-height:1.7; color:#4b5563; font-size:1.05rem; margin-left:0; margin-right:0; text-align:justify;">${team.summary || 'Sin resumen.'}</p>
+      </div>
+      <div class="content-section" style="margin-bottom:2.2rem;">
+        <h3 class="content-title" style="font-size:1.2rem; font-weight:600; color:var(--primary); margin-bottom:0.9rem; display:flex; align-items:center; gap:0.7rem;">
+          <i class="fas fa-align-left"></i> Descripción
+        </h3>
+        <p class="content-text" style="line-height:1.7; color:#4b5563; font-size:1.05rem; margin-left:0; margin-right:0; text-align:justify;">${team.description || 'Esta comunidad no tiene descripción.'}</p>
+      </div>
+      <div class="content-section" style="margin-bottom:2.2rem;">
+        <h3 class="content-title" style="font-size:1.1rem;font-weight:600;color:var(--primary);margin-bottom:1rem;display:flex;align-items:center;gap:0.7rem;">
+          <i class="fas fa-users"></i> Miembros (${members?.length || 0})
+        </h3>
+        <div class="members-grid" style="display:grid;grid-template-columns:repeat(auto-fill, minmax(140px, 1fr));gap:1.2rem;">
+          ${
+            members && members.length > 0
+              ? members.map(member => `
+                <div class="member-card" style="display:flex;flex-direction:column;align-items:center;gap:0.5rem;">
+                  <img src="${member.profiles?.photo_url || ("https://ui-avatars.com/api/?name=" + encodeURIComponent(member.profiles?.username || "U") + "&background=4a6fa5&color=fff&size=64")}"
+                       alt="${member.profiles?.username || "Usuario"}"
+                       style="width:60px;height:60px;border-radius:50%;object-fit:cover;border:2px solid #e2e8f0;">
+                  <div style="text-align:center;">
+                    <div style="font-weight:600;font-size:0.95rem;">
+                      ${member.profiles?.username || 'Usuario'}
+                    </div>
+                    <div style="font-size:0.85rem;color:#6b7280;">
+                      ${member.role === 'admin' ? 'Administrador' : member.role === 'moderator' ? 'Moderador' : 'Miembro'}
+                    </div>
+                  </div>
+                </div>
+              `).join('')
+              : `<div style="text-align:center;color:#6b7280;grid-column:1/-1;padding:1rem;">
+                  Esta comunidad aún no tiene miembros
+                </div>`
+          }
+        </div>
+      </div>
+      <div class="content-section" style="margin-bottom:2.2rem;">
+        <h3 class="content-title" style="font-size:1.1rem;font-weight:600;color:var(--primary);margin-bottom:0.5rem;display:flex;align-items:center;gap:0.7rem;">
+          <i class="fas fa-info-circle"></i> Detalles adicionales
+        </h3>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;">
+          <div>
+            <p style="font-weight:600;color:var(--primary);margin-bottom:0.3rem;">Privacidad</p>
+            <p style="color:#6b7280;">${privacy}</p>
+          </div>
+          <div>
+            <p style="font-weight:600;color:var(--primary);margin-bottom:0.3rem;">Meta de recaudación</p>
+            <p style="color:#6b7280;">${meta} €</p>
+          </div>
+          <div>
+            <p style="font-weight:600;color:var(--primary);margin-bottom:0.3rem;">ID</p>
+            <p style="color:#6b7280;">${team.id}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="cause-actions" style="display:flex; gap:0.8rem; margin-top:2.2rem;">
+      <button class="btn btn-primary" style="flex:1;" id="joinTeamBtn">
+        <i class="fas fa-user-plus"></i> Unirse
+      </button>
+      <button class="btn btn-accent" style="flex:1;" id="shareTeamBtn">
+        <i class="fas fa-share-alt"></i> Compartir
+      </button>
+    </div>
+    <div class="share-section" id="shareSectionTeam"></div>
+  </div>
+`;
+
+      document.getElementById('teamModal').classList.add('active');
+      document.body.style.overflow = 'hidden';
+
+      // Botón Unirse (puedes mantener tu lógica actual)
+      document.getElementById('joinTeamBtn').onclick = async function() {
+        const { data: { session } } = await supabase.auth.getSession();
+        if (!session?.user) {
+          alert('Debes iniciar sesión para unirte a la comunidad.');
+          return;
+        }
+        alert('¡Solicitud de unión enviada! (Aquí puedes poner tu lógica real)');
+      };
+
+      // Botón Compartir
+      document.getElementById('shareTeamBtn').onclick = function() {
+        window.mostrarCompartirEquipo(team.id);
+      };
+
+      // Cerrar modal
+      document.getElementById('closeTeamModal').onclick = function() {
+        document.getElementById('teamModal').classList.remove('active');
+        document.body.style.overflow = '';
+        window.history.pushState({}, '', '/teams');
+      };
+      document.getElementById('teamModal').onclick = function(e) {
+        if (e.target === this) {
+          this.classList.remove('active');
+          document.body.style.overflow = '';
+        }
+      };
+
+      // Función auxiliar para nombres de categoría (puedes moverla a un módulo si quieres)
+      function getCategoryName(category) {
+        const categories = {
+          'medio_ambiente': 'Medio Ambiente',
+          'educacion': 'Educación',
+          'salud': 'Salud',
+          'animales': 'Animales',
+          'comunidad': 'Comunidad',
+          'otros': 'Otros'
+        };
+        return categories[category] || 'General';
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+  // --- MODAL CREAR COMUNIDAD ---
+  document.getElementById('create-team-btn').onclick = async function(e) {
+    e.preventDefault();
+    const { data: { session } } = await supabase.auth.getSession();
+    if (session?.user) {
+      document.getElementById('createTeamModal').classList.add('active');
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.getElementById('loginModal').classList.add('active');
+    }
+  };
+  document.getElementById('closeCreateTeamModal').onclick = function() {
+    document.getElementById('createTeamModal').classList.remove('active');
+    document.body.style.overflow = '';
+    document.getElementById('teamForm').reset();
+    document.getElementById('previewTeamImg').style.display = 'none';
+    document.getElementById('teamForm').style.display = 'block';
+    document.getElementById('afterCreateTeam').style.display = 'none';
+  };
+  document.getElementById('createTeamModal').onclick = function(e) {
+    if (e.target === this) {
+      this.classList.remove('active');
+      document.body.style.overflow = '';
+      document.getElementById('teamForm').style.display = 'block';
+      document.getElementById('afterCreateTeam').style.display = 'none';
+    }
+  };
+  document.getElementById('cancelModal').onclick = function() {
+    document.getElementById('loginModal').classList.remove('active');
+  };
+  document.getElementById('loginModal').onclick = function(e) {
+    if (e.target === this) this.classList.remove('active');
+  };
+  // Vista previa de imagen
+  document.getElementById('teamPhoto').addEventListener('change', function(e) {
+    const file = e.target.files[0];
+    const preview = document.getElementById('previewTeamImg');
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = function(evt) {
+        preview.src = evt.target.result;
+        preview.style.display = 'block';
+      };
+      reader.readAsDataURL(file);
+    } else {
+      preview.src = '';
+      preview.style.display = 'none';
+    }
+  });
+
+  // Envío del formulario de creación de comunidad
+  document.getElementById('teamForm').addEventListener('submit', async function(e) {
+    e.preventDefault();
+    const { data: { session } } = await supabase.auth.getSession();
+    if (!session?.user) {
+      alert('Debes iniciar sesión para crear una comunidad');
+      return;
+    }
+
+    const name = document.getElementById('teamName').value;
+    const description = document.getElementById('teamDesc').value;
+    const summary = document.getElementById('teamSummary').value;
+    const category = document.getElementById('teamCategory').value;
+    const privacy = document.getElementById('teamPrivacy').value;
+    const tags = document.getElementById('teamTags').value
+      .split(',')
+      .map(t => t.trim())
+      .filter(Boolean);
+    const goal = document.getElementById('teamGoal').value || null;
+
+    const fileInput = document.getElementById('teamPhoto');
+    let photo = null;
+
+    try {
+      // Subir imagen si existe
+      if (fileInput.files && fileInput.files[0]) {
+        const file = fileInput.files[0];
+        const fileExt = file.name.split('.').pop();
+        const fileName = `${Date.now()}_${Math.random().toString(36).substring(2)}.${fileExt}`;
+        const filePath = `teams/${fileName}`;
+        const { error: uploadError } = await supabase.storage
+          .from('teams')
+          .upload(filePath, file);
+        if (uploadError) throw uploadError;
+        const { data: urlData } = supabase.storage
+          .from('teams')
+          .getPublicUrl(filePath);
+        photo = urlData.publicUrl;
+      }
+
+      // Crear la comunidad
+      const { data, error } = await supabase
+        .from('teams')
+        .insert([{
+          name,
+          description,
+          summary,
+          category,
+          privacy,
+          tags,
+          photo_url: photo, // ✅ CAMBIADO DE photo A photo_url
+          goal,
+          creator_id: session.user.id,
+          created_at: new Date().toISOString()
+        }])
+        .select();
+
+      if (error) throw error;
+
+      // Añadir al usuario como admin de la comunidad
+      await supabase
+        .from('team_members')
+        .insert([{
+          team_id: data[0].id,
+          user_id: session.user.id,
+          role: 'admin',
+          joined_at: new Date().toISOString()
+        }]);
+
+      document.getElementById('teamForm').style.display = 'none';
+      document.getElementById('afterCreateTeam').style.display = 'block';
+      document.getElementById('inviteMembersBtn').href = `/teams/${data[0].id}/invite`;
+      if (typeof loadTeams === 'function') await loadTeams();
+
+    } catch (error) {
+      console.error('Error creating team:', error);
+      alert(`Error al crear la comunidad: ${error.message}`);
+    }
+  });
+
+  // Botón "Invitar miembros"
+  document.getElementById('inviteMembersBtn').addEventListener('click', function(e) {
+    // Puedes personalizar la lógica aquí
+    // Por defecto, va al enlace generado
+  });
+
+  // Abrir modal automáticamente si la URL es /teams/:id
+  const match = window.location.pathname.match(/^\/teams\/([a-zA-Z0-9\-]+)$/);
+  if (match && typeof showTeamModal === 'function') {
+    showTeamModal(match[1]);
+  }
+});
+
+
+window.mostrarCompartirEquipo = function(teamId) {
+  const team =
+    (window.allTeams?.find(t => t.id == teamId)) ||
+    (window.teams?.find(t => t.id == teamId)) ||
+    (window._currentTeam && window._currentTeam.id == teamId ? window._currentTeam : null);
+
+  if (!team) {
+    console.error('❌ No se encontró la comunidad con ID:', teamId);
+    return;
+  }
+
+  if (window.renderCompartir) {
+    window.renderCompartir({
+      title: team.name,
+      summary: team.summary || (team.description?.substring(0, 120) + '...'),
+      photo_url: team.photo_url || 'https://via.placeholder.com/350x180?text=Comunidad', // ✅ CAMBIADO DE photo A photo_url
+      link: `${window.location.origin}/teams/${team.id}`,
+      type: 'comunidad'
+    }, 'shareSectionTeam');
+
+    document.getElementById('shareSectionTeam').scrollIntoView({
+      behavior: 'smooth',
+      block: 'center'
+    });
+  } else {
+    const link = `${window.location.origin}/teams/${team.id}`;
+    navigator.clipboard.writeText(link).then(() => {
+      alert('¡Enlace copiado!');
+    }).catch(() => {
+      prompt('Copia este enlace:', link);
+    });
+  }
+};
+  </script>
+{% endblock %}

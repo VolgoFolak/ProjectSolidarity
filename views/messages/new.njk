@@ -1,0 +1,348 @@
+{% extends "layout.njk" %}
+{% block title %}Nuevo mensaje | Solidarity{% endblock %}
+{% block head %}
+{{ super() }}
+<style>
+  .new-message-container {
+    max-width: 600px;
+    margin: 1.2rem auto 2.5rem auto;
+    background: #fff;
+    border-radius: 18px;
+    box-shadow: 0 4px 24px rgba(79,195,161,0.13);
+    padding: 2.2rem 1.2rem 2.2rem 1.2rem; /* Menos padding lateral */
+    display: flex;
+    flex-direction: column;
+    gap: 2.2rem;
+    position: relative;
+  }
+  .mail-title {
+    display: flex;
+    align-items: center;
+    gap: 1.1rem;
+    justify-content: center; /* Centrado */
+    margin-bottom: 0.5rem;
+    padding-left: 0;
+  }
+  .mail-title-icon {
+    font-size: 2.3rem;
+    color: var(--accent);
+    filter: drop-shadow(0 2px 8px #b2dfdb88);
+    animation: bounce 1.2s infinite alternate;
+  }
+  @keyframes bounce {
+    to { transform: translateY(-7px) scale(1.08);}
+  }
+  .mail-title-text {
+    color: var(--primary);
+    font-weight: 900;
+    font-size: 1.7rem;
+    letter-spacing: 0.01em;
+    text-shadow: 0 2px 8px #b2dfdb22;
+    text-align: center;
+  }
+  .mail-fields-area {
+    background: #f8fafc;
+    border-radius: 12px;
+    padding: 1.1rem 0.2rem 1.2rem 0.2rem; /* Más ancho útil */
+    box-shadow: 0 2px 8px #b2dfdb11;
+    display: flex;
+    flex-direction: column;
+    gap: 1.2rem;
+  }
+  .mail-field-label {
+    font-weight: 700;
+    color: var(--primary);
+    margin-bottom: 0.3rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 1.08em;
+    justify-content: flex-start;
+    text-align: left;
+    padding-left: 0.1rem;
+  }
+  .mail-field {
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+    align-items: stretch;
+  }
+  .search-input, .subject-input {
+    width: 99%;
+    max-width: 99%;
+    min-width: 0;
+    padding: 0.85rem 1.1rem;
+    border: 1.5px solid var(--gray);
+    border-radius: 8px;
+    font-size: 1.07rem;
+    background: #fff;
+    margin-bottom: 0.2rem;
+    transition: border 0.2s;
+    margin-left: 0;
+    margin-right: 0;
+    align-self: center;
+  }
+  .search-input:focus, .subject-input:focus {
+    border: 1.5px solid var(--accent);
+    outline: none;
+  }
+  .search-results {
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.07);
+    max-height: 220px;
+    overflow-y: auto;
+    margin-bottom: 0.5rem;
+    z-index: 10;
+    position: relative;
+  }
+  .user-result {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 0.7rem 1rem;
+    cursor: pointer;
+    border-bottom: 1px solid #f0f0f0;
+    transition: background 0.15s;
+  }
+  .user-result:last-child { border-bottom: none; }
+  .user-result:hover { background: #eaf3fb; }
+  .user-avatar {
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid #e2e8f0;
+    background: #fff;
+  }
+  #selected-user {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    background: #e3f7f3;
+    border: 1.5px solid #b2dfdb;
+    border-radius: 8px;
+    padding: 0.7rem 1rem;
+    margin-bottom: 0.5rem;
+    box-shadow: 0 2px 8px #b2dfdb22;
+    max-width: 99%;
+    align-self: center;
+  }
+  #remove-recipient {
+    background: transparent;
+    border: none;
+    color: #e53e3e;
+    font-size: 1.2rem;
+    cursor: pointer;
+    margin-left: 0.5rem;
+  }
+  .message-content label {
+    font-weight: 700;
+    color: var(--primary);
+    margin-bottom: 0.3rem;
+    display: block;
+    text-align: left;
+  }
+  #subject-input {
+    font-weight: 500;
+    letter-spacing: 0.01em;
+  }
+  #message-content {
+    width: 99%;
+    max-width: 99%;
+    min-width: 0;
+    min-height: 120px; /* Más corto */
+    padding: 1.1rem 1.2rem;
+    border: 1.5px solid var(--gray);
+    border-radius: 8px;
+    font-size: 1.07rem;
+    margin-bottom: 1.2rem;
+    resize: vertical;
+    background: #fff;
+    box-shadow: 0 1px 4px #b2dfdb11;
+    align-self: center;
+  }
+  #message-content:focus {
+    border: 1.5px solid var(--primary);
+    outline: none;
+  }
+  .btn-send-mail {
+    width: 100%;
+    max-width: 220px;
+    margin: 0 auto;
+    display: block;
+    font-size: 1.13em;
+    font-weight: 700;
+    background: linear-gradient(90deg, var(--primary), var(--accent));
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    padding: 1.05rem 0;
+    transition: background 0.18s, box-shadow 0.18s;
+    box-shadow: 0 2px 8px #4fc3a122;
+    letter-spacing: 0.01em;
+  }
+  .btn-send-mail:disabled {
+    background: #b2dfdb;
+    color: #fff;
+    cursor: not-allowed;
+  }
+  @media (max-width: 600px) {
+    .new-message-container { padding: 0.7rem 0.2rem; margin-top: 0.5rem; }
+    .mail-fields-area { padding: 0.5rem 0.2rem; }
+    .mail-title-text { font-size: 1.1rem; }
+    .mail-title-icon { font-size: 1.5rem; }
+    #message-content { min-height: 80px; }
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="new-message-container">
+  <div class="mail-title">
+    <span class="mail-title-icon">
+      <i class="fas fa-envelope-open-text"></i>
+    </span>
+    <span class="mail-title-text">Escribir nuevo mensaje</span>
+  </div>
+  <div class="mail-fields-area">
+    <!-- Para (destinatario) -->
+    <div class="mail-field">
+      <label class="mail-field-label" for="user-search"><i class="fas fa-user"></i> Para:</label>
+      <input type="text" class="search-input" id="user-search" placeholder="Buscar usuario por nombre, apellido o perfil..." autocomplete="off">
+      <div class="search-results" id="search-results"></div>
+      <div id="selected-user" style="display:none;">
+        <img id="selected-avatar" src="/img/default-user.png" class="user-avatar" alt="Avatar usuario seleccionado" onerror="this.src='/img/default-user.png'">
+        <span id="selected-username" style="font-weight:600;"></span>
+        <input type="hidden" id="recipient-id">
+        <button id="remove-recipient" title="Quitar destinatario">&times;</button>
+      </div>
+    </div>
+    <!-- Asunto -->
+    <div class="mail-field">
+      <label class="mail-field-label" for="subject-input"><i class="fas fa-heading"></i> Asunto:</label>
+      <input type="text" class="subject-input" id="subject-input" placeholder="Escribe el asunto del mensaje...">
+    </div>
+    <!-- Mensaje -->
+    <div class="mail-field">
+      <label class="mail-field-label" for="message-content"><i class="fas fa-align-left"></i> Mensaje:</label>
+      <textarea id="message-content" placeholder="Escribe tu mensaje aquí..."></textarea>
+    </div>
+    <button id="send-message" class="btn-send-mail">
+      <i class="fas fa-paper-plane"></i> Enviar mensaje
+    </button>
+  </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+{{ super() }}
+<script>
+async function checkSession() {
+  const res = await fetch('/me', { credentials: 'include' });
+  const data = await res.json();
+  if (!data.logged) {
+    window.location.href = '/login';
+    return;
+  }
+  // Si quieres mostrar modal de bienvenida:
+  if (data.firstLogin) {
+    // document.getElementById('welcomeModal').style.display = 'flex';
+  }
+}
+checkSession();
+document.addEventListener('DOMContentLoaded', () => {
+  const searchInput = document.getElementById('user-search');
+  const searchResults = document.getElementById('search-results');
+  const selectedUser = document.getElementById('selected-user');
+  const selectedAvatar = document.getElementById('selected-avatar');
+  const selectedUsername = document.getElementById('selected-username');
+  const recipientId = document.getElementById('recipient-id');
+  const removeRecipient = document.getElementById('remove-recipient');
+  const sendButton = document.getElementById('send-message');
+  const messageContent = document.getElementById('message-content');
+  const subjectInput = document.getElementById('subject-input');
+
+  searchInput.addEventListener('input', async () => {
+    const term = searchInput.value.trim();
+    if (term.length < 2) {
+      searchResults.innerHTML = '';
+      return;
+    }
+    searchResults.innerHTML = `<div style="padding:1rem;text-align:center;color:#888;"><i class="fas fa-spinner fa-spin"></i> Buscando...</div>`;
+    try {
+      const res = await fetch(`/api/users?search=${encodeURIComponent(term)}`);
+      const users = await res.json();
+      searchResults.innerHTML = '';
+      if (!users.length) {
+        searchResults.innerHTML = `<div style="padding:1rem;text-align:center;color:#888;">No se encontraron usuarios</div>`;
+        return;
+      }
+      users.forEach(u => {
+        const el = document.createElement('div');
+        el.className = 'user-result';
+        el.innerHTML = `<img src="${u.photo_url || '/img/default-user.png'}" class="user-avatar" alt="${u.username}" onerror="this.src='/img/default-user.png'"><span>${u.username}</span>`;
+        el.onclick = () => {
+          selectedAvatar.src = u.photo_url || '/img/default-user.png';
+          selectedAvatar.onerror = function() { this.src = '/img/default-user.png'; };
+          selectedUsername.textContent = u.username;
+          recipientId.value = u.id;
+          selectedUser.style.display = '';
+          searchResults.innerHTML = '';
+          searchInput.value = '';
+          selectedUser.style.display = '';
+        };
+        searchResults.appendChild(el);
+      });
+    } catch {
+      searchResults.innerHTML = `<div style="padding:1rem;text-align:center;color:#e53e3e;">Error al buscar usuarios</div>`;
+    }
+  });
+
+  removeRecipient.onclick = () => {
+    selectedUser.style.display = 'none';
+    recipientId.value = '';
+  };
+
+  sendButton.onclick = async () => {
+    if (!recipientId.value || !subjectInput.value.trim() || !messageContent.value.trim()) {
+      alert('Selecciona un usuario, escribe un asunto y un mensaje.');
+      return;
+    }
+    sendButton.disabled = true;
+    sendButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Enviando...';
+    try {
+      const res = await fetch('/api/conversations', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+        body: JSON.stringify({
+          recipient_id: recipientId.value,
+          subject: subjectInput.value.trim(),
+          content: messageContent.value.trim()
+        })
+      });
+
+      if (res.status === 401) {
+        window.location.href = '/login';
+        return;
+      }
+
+      if (!res.ok) throw new Error('Error creando conversación');
+
+      const conversation = await res.json();
+      if (conversation && conversation.id) {
+        window.location.href = `/messages/${conversation.id}`;
+      } else {
+        alert('No se pudo crear la conversación.');
+      }
+    } catch (error) {
+      alert('Error: ' + error.message);
+    }
+    sendButton.disabled = false;
+    sendButton.innerHTML = '<i class="fas fa-paper-plane"></i> Enviar mensaje';
+  };
+});
+</script>
+{% endblock %}
