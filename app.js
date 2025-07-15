@@ -5,7 +5,7 @@ const path = require('path');
 const fs = require('fs');
 const multer = require('multer');
 const nunjucks = require('nunjucks');
-const stripe = require('stripe')('REMOVED_SECRET');
+const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
 const stripeWebhookSecret = 'REMOVED_SECRET';
 
 const { createClient } = require('@supabase/supabase-js');
