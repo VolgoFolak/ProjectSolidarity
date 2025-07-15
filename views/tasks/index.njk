@@ -1,0 +1,936 @@
+{% extends "layout.njk" %}
+
+{% block title %}Tareas - Solidarity{% endblock %}
+
+{% block head %}
+  {{ super() }}
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/choices.js/public/assets/styles/choices.min.css" />
+  <style>
+    :root {
+      --primary: #4a6fa5;
+      --primary-dark: #166088;
+      --gray: #e2e8f0;
+      --white: #fff;
+      --accent: #4fc3a1;
+      --accent-dark: #3da58a;
+      --urgent: #e53e3e;
+    }
+    body {
+      background: #f8fafc;
+      font-family: 'Inter', Arial, sans-serif;
+      color: #2d3748;
+      font-size: 1rem;
+    }
+    .modal-bg {
+      display: none;
+      position: fixed;
+      top: 0; left: 0; width: 100vw; height: 100vh;
+      background: rgba(0,0,0,0.35);
+      z-index: 9999;
+      align-items: center;
+      justify-content: center;
+    }
+    .modal-bg.active { display: flex; }
+    .modal-content {
+      background: #fff;
+      border-radius: 18px;
+      max-width: 540px;
+      width: 95vw;
+      padding: 2.5rem 1.5rem 2rem 1.5rem;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.13);
+      position: relative;
+      animation: fadeIn 0.3s;
+      max-height: 90vh;
+      overflow-y: auto;
+    }
+    .close-modal {
+      position: absolute;
+      top: 1.1rem; right: 1.3rem;
+      background: none;
+      border: none;
+      font-size: 2rem;
+      color: #aaa;
+      cursor: pointer;
+      transition: color 0.2s;
+    }
+    .close-modal:hover { color: var(--primary, #4a6fa5); }
+    .create-task-title {
+      font-size: 1.5rem;
+      font-weight: 800;
+      color: var(--primary, #4a6fa5);
+      margin-bottom: 1.2rem;
+      text-align: center;
+    }
+    .task-form .form-group label { font-weight: 600; color: var(--primary, #4a6fa5); }
+    .task-form .form-group input,
+    .task-form .form-group textarea {
+      width: 100%;
+      padding: 0.7rem 1rem;
+      border-radius: 8px;
+      border: 1px solid #e5e7eb;
+      margin-bottom: 0.2rem;
+      font-size: 1rem;
+      background: #f8fafc;
+      transition: border 0.2s;
+    }
+    .task-form .form-group input:focus,
+    .task-form .form-group textarea:focus {
+      border: 1.5px solid var(--accent, #4fc3a1);
+      outline: none;
+      background: #fff;
+    }
+    .task-form .form-group textarea {
+      min-height: 90px;
+      resize: vertical;
+    }
+    .form-inline-group {
+      display: flex;
+      gap: 1rem;
+    }
+    .form-inline-group .form-group { flex: 1; }
+    .preview-img {
+      width: 100%;
+      max-width: 320px;
+      height: 180px;
+      object-fit: cover;
+      border-radius: 10px;
+      margin-top: 0.5rem;
+      border: 1px solid #e5e7eb;
+      display: none;
+    }
+    .points-info {
+      background: var(--accent, #4fc3a1);
+      color: #fff;
+      border-radius: 8px;
+      padding: 0.7rem 1rem;
+      margin-top: 0.5rem;
+      font-size: 1.05rem;
+      display: flex;
+      align-items: center;
+      gap: 0.7rem;
+    }
+    .after-create {
+      margin-top: 2rem;
+      background: var(--primary-light, #e6f0fa);
+      color: #444;
+      border-radius: 10px;
+      padding: 1.5rem 1rem;
+      text-align: center;
+    }
+    @media (max-width: 600px) {
+      .modal-content { padding: 1.2rem 0.5rem 1.2rem 0.5rem; }
+      .create-task-title { font-size: 1.1rem; }
+      .form-inline-group { flex-direction: column; }
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(-30px);}
+      to { opacity: 1; transform: translateY(0);}
+    }
+    /* SOLO estilos de la página de tareas */
+    .main-container {
+        max-width: 1200px;
+        margin: 2rem auto;
+        padding: 0 2rem;
+    }
+    .tasks-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 2rem;
+    }
+    .tasks-header h1 {
+        font-size: 2rem;
+        color: var(--primary);
+        font-weight: 700;
+    }
+    .tasks-search {
+        margin-bottom: 2rem;
+        display: flex;
+        align-items: center;
+        gap: 0.7rem;
+    }
+    .tasks-search input {
+        flex: 1;
+        padding: 0.6rem 1.2rem;
+        border-radius: 7px;
+        border: 1.5px solid var(--gray);
+        font-size: 1.05rem;
+        outline: none;
+        transition: border 0.2s;
+        background: #fff;
+    }
+    .tasks-search input:focus {
+        border-color: var(--primary);
+    }
+    .tabs {
+        display: flex;
+        border-bottom: 1px solid var(--gray);
+        margin-bottom: 2rem;
+    }
+    .tab {
+        padding: 0.75rem 1.5rem;
+        cursor: pointer;
+        position: relative;
+        font-weight: 500;
+        color: #6b7280;
+        background: none;
+        border: none;
+        outline: none;
+    }
+    .tab.active {
+        color: var(--primary);
+        font-weight: 600;
+    }
+    .tab.active::after {
+        content: '';
+        position: absolute;
+        bottom: -1px;
+        left: 0;
+        width: 100%;
+        height: 3px;
+        background: var(--primary);
+    }
+    .tasks-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+        gap: 2rem;
+    }
+    .task-card {
+        background: white;
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        transition: all 0.3s ease;
+        border: 1px solid var(--gray);
+        display: flex;
+        flex-direction: column;
+    }
+    .task-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+    }
+    .task-image {
+        height: 180px;
+        overflow: hidden;
+        position: relative;
+    }
+    .task-image img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.3s ease;
+    }
+    .task-card:hover .task-image img {
+        transform: scale(1.05);
+    }
+    .task-badge {
+        position: absolute;
+        top: 1rem;
+        right: 1rem;
+        background: rgba(255, 255, 255, 0.9);
+        padding: 0.3rem 0.8rem;
+        border-radius: 50px;
+        font-size: 0.8rem;
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
+    .task-badge.urgent {
+        background: var(--urgent);
+        color: white;
+    }
+    .task-badge.points {
+        background: var(--primary);
+        color: white;
+        left: 1rem;
+        right: auto;
+    }
+    .task-content {
+        padding: 1.5rem;
+        display: flex;
+        flex-direction: column;
+        flex: 1;
+    }
+    .task-content h3 {
+        font-size: 1.3rem;
+        margin-bottom: 0.8rem;
+        color: #2d3748;
+    }
+    .task-content p {
+        color: #6b7280;
+        margin-bottom: 1.5rem;
+        font-size: 0.95rem;
+        line-height: 1.6;
+        flex-grow: 1;
+    }
+    .task-meta {
+        display: flex;
+        gap: 1rem;
+        margin-bottom: 1.5rem;
+        font-size: 0.85rem;
+        flex-wrap: wrap;
+    }
+    .meta-item {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        color: #6b7280;
+    }
+    .meta-item i {
+        color: var(--primary);
+    }
+    .beneficiaries-count {
+        display: inline-flex;
+        align-items: center;
+        background: #f0f9ff;
+        color: var(--primary);
+        padding: 0.3rem 0.8rem;
+        border-radius: 50px;
+        font-size: 0.85rem;
+        font-weight: 600;
+    }
+    .beneficiaries-count i {
+        margin-right: 0.3rem;
+    }
+    .linked-cause {
+        display: inline-flex;
+        align-items: center;
+        background: #f0f0ff;
+        color: var(--primary);
+        padding: 0.3rem 0.8rem;
+        border-radius: 50px;
+        font-size: 0.85rem;
+        font-weight: 600;
+        margin-bottom: 1rem;
+    }
+    .linked-cause img {
+      width: 22px;
+      height: 22px;
+      object-fit: cover;
+      border-radius: 50%;
+      border: 1px solid #e5e7eb;
+      margin-right: 0.4em;
+    }
+    .task-progress {
+        margin-bottom: 1.5rem;
+    }
+    .progress-bar {
+        height: 8px;
+        background: var(--gray);
+        border-radius: 4px;
+        overflow: hidden;
+        margin-bottom: 0.5rem;
+    }
+    .progress-fill {
+        height: 100%;
+        background: var(--primary);
+        border-radius: 4px;
+    }
+    .progress-info {
+        display: flex;
+        justify-content: space-between;
+        font-size: 0.9rem;
+        color: #6b7280;
+    }
+    .task-actions {
+        display: flex;
+        gap: 0.8rem;
+    }
+    .task-actions .btn {
+        flex: 1;
+        text-align: center;
+        justify-content: center;
+    }
+    .btn-accent {
+        background: var(--accent);
+        color: white;
+    }
+    .btn-accent:hover {
+        background: var(--accent-dark);
+        transform: translateY(-2px);
+    }
+    @media (max-width: 900px) {
+        .main-container {
+            padding: 1.2rem 0.5rem;
+        }
+    }
+    @media (max-width: 768px) {
+        .tasks-header {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 1rem;
+        }
+        .tasks-grid {
+            grid-template-columns: 1fr;
+        }
+        .task-actions {
+            flex-direction: column;
+        }
+    }
+    /* NUEVOS ESTILOS PARA LA SECCIÓN DE INTRODUCCIÓN A LAS TAREAS */
+    .tasks-intro {
+      background: linear-gradient(135deg, #f0f9ff 0%, #e6f0fa 100%);
+      border-radius: 12px;
+      padding: 2rem;
+      margin-bottom: 2rem;
+      border: 1px solid #e2e8f0;
+    }
+    .tasks-intro h2 {
+      font-size: 1.8rem;
+      color: #166088;
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+    }
+    .tasks-intro h2 i {
+      color: #4fc3a1;
+    }
+    .tasks-intro p {
+      color: #4a6fa5;
+      font-size: 1.1rem;
+      line-height: 1.6;
+    }
+  </style>
+{% endblock %}
+
+{% block content %}
+  <!-- Modal para usuarios no logueados -->
+  <div class="modal-bg" id="loginModal">
+    <div class="modal-content">
+      <h3>Para crear una tarea</h3>
+      <p>Debes ser un usuario registrado. ¿Deseas iniciar sesión o registrarte ahora?</p>
+      <div class="modal-buttons">
+        <a href="/login?return=/tasks" class="btn btn-primary">Iniciar Sesión</a>
+        <a href="/register?return=/tasks" class="btn btn-outline">Registrarse</a>
+        <button id="cancelModal" class="btn">Cancelar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal emergente para crear tarea -->
+  <div id="createTaskModal" class="modal-bg">
+    <div class="modal-content">
+      <button class="close-modal" id="closeCreateTaskModal" title="Cerrar">&times;</button>
+      <div class="create-task-title">
+        <i class="fas fa-plus-circle"></i> Crear Nueva Tarea Solidaria
+      </div>
+      <form class="task-form" id="taskForm" autocomplete="off">
+        <div class="form-group">
+          <label for="title">Título de la tarea</label>
+          <input type="text" id="title" name="title" placeholder="Ej: Limpieza de playa" required>
+        </div>
+        <div class="form-group">
+          <label for="photo">Foto principal</label>
+          <input type="file" id="photo" name="photo" accept="image/*">
+          <img id="previewImg" class="preview-img" alt="Vista previa de la foto" style="display:none;">
+        </div>
+        <div class="form-group">
+          <label for="summary">Resumen breve</label>
+          <input type="text" id="summary" name="summary" maxlength="120" placeholder="Ej: Recogida de plásticos en la playa" required>
+          <small style="color:#6b7280;">Máx. 120 caracteres. Aparecerá en la tarjeta y en el listado.</small>
+        </div>
+        <div class="form-group">
+          <label for="description">Descripción</label>
+          <textarea id="description" name="description" placeholder="Describe la tarea, qué se necesita y cómo pueden ayudar los voluntarios..." required></textarea>
+        </div>
+        <div class="form-group">
+          <label for="cause_id">Vinculado a causa (opcional)</label>
+          <select id="cause-select" name="cause_id">
+            <option value="">Selecciona una causa</option>
+          </select>
+        </div>
+        <div class="form-inline-group">
+          <div class="form-group">
+            <label for="city">Ciudad</label>
+            <input type="text" id="city" name="city" placeholder="Ej: Madrid" required>
+          </div>
+          <div class="form-group">
+            <label for="country">País</label>
+            <input type="text" id="country" name="country" placeholder="Ej: España" required>
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="points">Puntos por participar</label>
+          <input type="number" id="points" name="points" min="1" max="1000" value="50" required>
+          <div class="points-info" id="pointsText">
+            <i class="fas fa-star"></i>
+            Participar en esta tarea otorgará <strong>50 puntos</strong> a cada voluntario.
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="beneficiaries">Nº de beneficiarios</label>
+          <input type="number" id="beneficiaries" name="beneficiaries" min="1" placeholder="Ej: 100" required>
+        </div>
+        <div class="form-group">
+          <label for="is_urgent">
+            <input type="checkbox" id="is_urgent" name="is_urgent"> Marcar como urgente
+          </label>
+        </div>
+        <div class="form-group">
+          <label for="end_date">Fecha de finalización (opcional)</label>
+          <input type="date" id="end_date" name="end_date">
+        </div>
+        <!-- AGREGAR estos campos después del campo "end_date" y antes de los inputs hidden -->
+        <div class="form-group">
+          <label for="contact_email">Email de contacto</label>
+          <input type="email" id="contact_email" name="contact_email" placeholder="contacto@ejemplo.com">
+          <small style="color:#6b7280;">Los voluntarios podrán contactarte por este email (opcional)</small>
+        </div>
+        <div class="form-group">
+          <label for="phone_number">Teléfono de contacto</label>
+          <input type="tel" id="phone_number" name="phone_number" placeholder="+34 123 456 789">
+          <small style="color:#6b7280;">Número de teléfono para coordinación (opcional)</small>
+        </div>
+        <input type="hidden" id="lat" name="lat">
+        <input type="hidden" id="lng" name="lng">
+        <button type="submit" class="btn btn-primary" style="margin-top:1rem;">
+          <i class="fas fa-paper-plane"></i> Crear Tarea
+        </button>
+      </form>
+      <div class="after-create" id="afterCreate" style="display:none;">
+        <h3>¡Tarea creada con éxito!</h3>
+        <p>¿Quieres ver todas las tareas disponibles o crear otra?</p>
+        <a href="/tasks" class="btn btn-accent">
+          <i class="fas fa-tasks"></i> Ver todas las tareas
+        </a>
+        <br>
+        <a href="#" id="createAnother" class="btn btn-outline" style="margin-top:1rem;">
+          <i class="fas fa-plus"></i> Crear otra tarea
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Sección de introducción a las tareas solidarias -->
+  <div class="main-container">
+    <div class="tasks-intro">
+      <div class="tasks-intro-content">
+        <h2>
+          <i class="fas fa-list-check"></i>
+          ¡Haz tareas solidarias y suma impacto real!
+        </h2>
+        <p>
+          Participa en tareas, ayuda a organizaciones y personas, gana puntos de impacto y desbloquea logros. Cada tarea completada es un paso más hacia un mundo mejor. ¡Tu acción cuenta!
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Contenido principal de la página de tareas -->
+  <div class="main-container">
+    <div class="tasks-header">
+      <h1>Tareas Solidarias</h1>
+      <a href="#" id="create-task-btn" class="btn btn-primary">
+        <i class="fas fa-plus"></i> Crear Tarea
+      </a>
+    </div>
+    <div class="tasks-search">
+      <input type="text" id="search-input" placeholder="Buscar por título, país, descripción...">
+      <i class="fas fa-search" style="color:#4a6fa5;"></i>
+    </div>
+    <div class="tabs">
+      <button class="tab active" data-filter="all">Todas</button>
+      <button class="tab" data-filter="education">Educación</button>
+      <button class="tab" data-filter="health">Salud</button>
+      <button class="tab" data-filter="environment">Medio Ambiente</button>
+      <button class="tab" data-filter="animals">Animales</button>
+      <button class="tab" data-filter="community">Comunidad</button>
+    </div>
+    <div class="tasks-grid" id="tasksList">
+      <!-- Las tareas se cargarán dinámicamente usando el renderer -->
+    </div>
+  </div>
+{% endblock %}
+
+{% block scripts %}
+{{ super() }}
+<script src="https://cdn.jsdelivr.net/npm/choices.js/public/assets/scripts/choices.min.js"></script>
+<script src="/js/share-system.js"></script>
+<script src="/js/compartir.js"></script>
+<script src="/js/modules/tasks-renderer.js"></script>
+<script>
+let currentFilter = "all";
+let causeChoices = null;
+
+document.addEventListener('DOMContentLoaded', async function() {
+  // Inicializar eventos del modal de crear tarea
+  initCreateTaskModal();
+  
+  // Inicializar eventos de búsqueda y filtros
+  initSearchAndFilters();
+  
+  // Cargar tareas al iniciar usando el renderer
+  await loadTasksFromSupabase();
+});
+
+function initCreateTaskModal() {
+  // Abrir modal de crear tarea
+  document.getElementById('create-task-btn').onclick = async function(e) {
+    e.preventDefault();
+    const { data: { session } } = await supabase.auth.getSession();
+    if (session?.user) {
+      await loadCausesForSelect();
+      document.getElementById('createTaskModal').classList.add('active');
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.getElementById('loginModal').classList.add('active');
+    }
+  };
+
+  // Cerrar modal de crear tarea
+  document.getElementById('closeCreateTaskModal').onclick = function() {
+    closeCreateTaskModal();
+  };
+
+  // Cerrar modal al hacer click fuera del contenido
+  document.getElementById('createTaskModal').onclick = function(e) {
+    if (e.target === this) {
+      closeCreateTaskModal();
+    }
+  };
+
+  // Modal login
+  document.getElementById('cancelModal').onclick = function() {
+    document.getElementById('loginModal').classList.remove('active');
+  };
+  document.getElementById('loginModal').onclick = function(e) {
+    if (e.target === this) this.classList.remove('active');
+  };
+
+  // Vista previa de imagen
+  document.getElementById('photo').addEventListener('change', function(e) {
+    const file = e.target.files[0];
+    const preview = document.getElementById('previewImg');
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = function(evt) {
+        preview.src = evt.target.result;
+        preview.style.display = 'block';
+      };
+      reader.readAsDataURL(file);
+    } else {
+      preview.src = '';
+      preview.style.display = 'none';
+    }
+  });
+
+  // Actualizar texto de puntos
+  document.getElementById('points').addEventListener('input', function() {
+    const val = this.value || 0;
+    document.getElementById('pointsText').innerHTML = `<i class="fas fa-star"></i> Participar en esta tarea otorgará <strong>${val} puntos</strong> a cada voluntario.`;
+  });
+
+  // Crear otra tarea tras éxito
+  document.getElementById('createAnother').onclick = function(e) {
+    e.preventDefault();
+    resetCreateTaskForm();
+  };
+
+  // Envío del formulario
+  document.getElementById('taskForm').addEventListener('submit', createTask);
+}
+
+function initSearchAndFilters() {
+  // Tabs
+  document.querySelectorAll('.tab').forEach(tab => {
+    tab.addEventListener('click', function() {
+      document.querySelector('.tab.active').classList.remove('active');
+      this.classList.add('active');
+      loadTasksFromSupabase(this.getAttribute('data-filter'));
+    });
+  });
+
+  // Búsqueda
+  document.getElementById('search-input').addEventListener('input', function() {
+    loadTasksFromSupabase(currentFilter, this.value);
+  });
+}
+
+function closeCreateTaskModal() {
+  document.getElementById('createTaskModal').classList.remove('active');
+  document.body.style.overflow = '';
+  resetCreateTaskForm();
+}
+
+function resetCreateTaskForm() {
+  document.getElementById('taskForm').reset();
+  document.getElementById('previewImg').style.display = 'none';
+  document.getElementById('taskForm').style.display = 'block';
+  document.getElementById('afterCreate').style.display = 'none';
+}
+
+async function loadTasksFromSupabase(filter = "all", searchTerm = "") {
+  currentFilter = filter;
+  let query = supabase
+    .from('tasks')
+    .select('*')
+    .order('created_at', { ascending: false });
+
+  if (filter !== "all") {
+    query = query.eq('category', filter);
+  }
+  if (searchTerm && searchTerm.trim() !== "") {
+    query = query.or(`title.ilike.%${searchTerm}%,description.ilike.%${searchTerm}%,city.ilike.%${searchTerm}%,country.ilike.%${searchTerm}%`);
+  }
+
+  const { data: tasks, error } = await query;
+  const tasksList = document.getElementById('tasksList');
+
+  if (error) {
+    tasksList.innerHTML = '<div style="color:#e53e3e;text-align:center;">Error al cargar las tareas.</div>';
+    return;
+  }
+
+  // Obtener el usuario actual para verificar participación
+  const { data: { session } } = await supabase.auth.getSession();
+  const userId = session?.user?.id;
+
+  // Obtener participaciones del usuario
+  let userTaskIds = [];
+  if (userId) {
+    const { data: memberships } = await supabase
+      .from('task_members')
+      .select('task_id')
+      .eq('user_id', userId);
+    userTaskIds = memberships ? memberships.map(m => m.task_id) : [];
+  }
+
+  // Cargar causas para mostrar vinculaciones
+  const { data: causes } = await supabase.from('causes').select('id, title, photo_url');
+  const causesMap = {};
+  if (causes) {
+    causes.forEach(c => causesMap[c.id] = c);
+  }
+
+  // Procesar tareas con información adicional
+  const tasksWithInfo = tasks ? tasks.map(task => ({
+    ...task,
+    isParticipating: userTaskIds.includes(task.id),
+    linkedCause: task.cause_id && causesMap[task.cause_id] ? causesMap[task.cause_id] : null
+  })) : [];
+
+  // Usar el renderer para mostrar las tareas
+  if (window.tasksRenderer) {
+    window.tasksRenderer.renderGrid(tasksWithInfo, tasksList);
+  } else {
+    tasksList.innerHTML = '<div style="color:#e53e3e;text-align:center;">Error: Renderer no disponible.</div>';
+  }
+}
+
+async function createTask(e) {
+  e.preventDefault();
+  
+  try {
+    // Recoge los datos del formulario
+    const formData = {
+      title: document.getElementById('title').value.trim(),
+      summary: document.getElementById('summary').value.trim(),
+      description: document.getElementById('description').value.trim(),
+      city: document.getElementById('city').value.trim(),
+      country: document.getElementById('country').value.trim(),
+      points: parseInt(document.getElementById('points').value, 10),
+      beneficiaries: parseInt(document.getElementById('beneficiaries').value, 10),
+      is_urgent: document.getElementById('is_urgent').checked,
+      cause_id: document.getElementById('cause-select').value || null,
+      end_date: document.getElementById('end_date').value || null,
+      // ✅ NUEVOS CAMPOS DE CONTACTO
+      contact_email: document.getElementById('contact_email').value.trim() || null,
+      phone_number: document.getElementById('phone_number').value.trim() || null
+    };
+
+    // Sube la foto a Supabase Storage si existe
+    const photoFile = document.getElementById('photo').files[0];
+    let photo_url = null;
+    
+    if (photoFile) {
+      const fileExt = photoFile.name.split('.').pop();
+      const fileName = `${Date.now()}-${Math.random().toString(36).substr(2, 9)}.${fileExt}`;
+      const filePath = `public/${fileName}`;
+      
+      const { error: uploadError } = await supabase.storage
+        .from('tasks')
+        .upload(filePath, photoFile, { upsert: true });
+        
+      if (uploadError) {
+        alert('Error subiendo la foto: ' + uploadError.message);
+        return;
+      }
+      
+      const { data } = supabase.storage.from('tasks').getPublicUrl(filePath);
+      photo_url = data.publicUrl;
+    }
+
+    // Verificar usuario logueado
+    const { data: { session } } = await supabase.auth.getSession();
+    const user = session?.user;
+    
+    if (!user) {
+      alert('Debes iniciar sesión para crear una tarea.');
+      return;
+    }
+
+    // Obtener coordenadas si están disponibles
+    const lat = document.getElementById('lat').value;
+    const lng = document.getElementById('lng').value;
+
+    // Preparar datos de la tarea
+    const taskData = {
+      ...formData,
+      photo_url,
+      participants: 0,
+      type: 'tarea',
+      lat: lat ? parseFloat(lat) : null,
+      lng: lng ? parseFloat(lng) : null,
+      user_id: user.id
+    };
+
+    // Insertar tarea
+    const { data: newTask, error: taskError } = await supabase
+      .from('tasks')
+      .insert([taskData])
+      .select()
+      .single();
+
+    if (taskError) {
+      alert('Error creando la tarea: ' + taskError.message);
+      return;
+    }
+
+    // Agregar al creador como miembro fundador
+    if (newTask) {
+      await supabase
+        .from('task_members')
+        .insert([{ 
+          task_id: newTask.id, 
+          user_id: user.id, 
+          role: 'founder', 
+          status: 'active' 
+        }]);
+    }
+
+    // Mostrar mensaje de éxito
+    document.getElementById('taskForm').style.display = 'none';
+    document.getElementById('afterCreate').style.display = 'block';
+    
+    // Recargar tareas
+    loadTasksFromSupabase();
+    
+  } catch (error) {
+    console.error('Error creando tarea:', error);
+    alert('Error al crear la tarea');
+  }
+}
+
+async function loadCausesForSelect() {
+  try {
+    const { data: causes } = await supabase
+      .from('causes')
+      .select('id, title')
+      .order('title');
+
+    const select = document.getElementById('cause-select');
+    select.innerHTML = '<option value="">Selecciona una causa</option>';
+    
+    if (causes) {
+      causes.forEach(cause => {
+        const option = document.createElement('option');
+        option.value = cause.id;
+        option.textContent = cause.title;
+        select.appendChild(option);
+      });
+    }
+
+    // Inicializar Choices.js si no está ya inicializado
+    if (!causeChoices) {
+      causeChoices = new Choices(select, {
+        searchEnabled: true,
+        searchPlaceholderValue: 'Buscar causa...',
+        noResultsText: 'No se encontraron causas',
+        itemSelectText: 'Presiona para seleccionar'
+      });
+    }
+  } catch (error) {
+    console.error('Error cargando causas:', error);
+  }
+}
+
+// Función para participar en tarea (será llamada por el renderer)
+async function participateInTask(taskId) {
+  if (!supabase) {
+    alert('Error: Supabase no está disponible');
+    return;
+  }
+
+  try {
+    const { data: { session } } = await supabase.auth.getSession();
+    if (!session?.user) {
+      alert('Debes iniciar sesión para participar en tareas');
+      window.location.href = '/login?return=' + encodeURIComponent(window.location.pathname);
+      return;
+    }
+
+    // Verificar si ya participa
+    const { data: existing } = await supabase
+      .from('task_members')
+      .select('id')
+      .eq('task_id', taskId)
+      .eq('user_id', session.user.id)
+      .single();
+
+    if (existing) {
+      alert('Ya participas en esta tarea');
+      return;
+    }
+
+    // Agregar participación
+    const { error } = await supabase
+      .from('task_members')
+      .insert([{
+        task_id: taskId,
+        user_id: session.user.id,
+        role: 'member',
+        status: 'active'
+      }]);
+
+    if (error) {
+      alert('Error al participar: ' + error.message);
+      return;
+    }
+
+    // Actualizar contador de participantes
+    const { error: updateError } = await supabase
+      .from('tasks')
+      .update({ 
+        participants: supabase.sql`participants + 1`
+      })
+      .eq('id', taskId);
+
+    if (!updateError) {
+      alert('¡Te has unido a la tarea exitosamente!');
+      // Recargar las tareas
+      await loadTasksFromSupabase(currentFilter);
+    }
+
+  } catch (error) {
+    console.error('Error participando en tarea:', error);
+    alert('Error al participar en la tarea');
+  }
+}
+
+// Función para compartir tareas (será llamada por el renderer)
+window.mostrarCompartirTarea = function(taskId) {
+  if (window.universalShare) {
+    window.universalShare('tarea', taskId);
+  } else if (window.mostrarCompartir) {
+    window.mostrarCompartir(taskId, 'task');
+  }
+};
+
+// Hacer funciones globales para que las use el renderer
+window.participateInTask = participateInTask;
+</script>
+{% endblock %}

@@ -1,0 +1,1346 @@
+{% extends "layout.njk" %}
+
+{% block title %}Causas - Solidarity{% endblock %}
+
+{% block head %}
+  {{ super() }}
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <style>
+    :root {
+      --primary: #4a6fa5;
+      --primary-dark: #166088;
+      --gray: #e2e8f0;
+      --white: #fff;
+      --accent: #4fc3a1;
+      --accent-dark: #3da58a;
+      --urgent: #e53e3e;
+    }
+    body {
+      background: #f8fafc;
+      font-family: 'Inter', Arial, sans-serif;
+      color: #2d3748;
+      font-size: 1rem;
+    }
+    .modal-bg {
+      display: none;
+      position: fixed;
+      top: 0; left: 0; width: 100vw; height: 100vh;
+      background: rgba(0,0,0,0.35);
+      z-index: 9999;
+      align-items: center;
+      justify-content: center;
+    }
+    .modal-bg.active { display: flex; }
+    .modal-content {
+      background: #fff;
+      border-radius: 18px;
+      max-width: 540px;
+      width: 95vw;
+      padding: 2.5rem 1.5rem 2rem 1.5rem;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.13);
+      position: relative;
+      animation: fadeIn 0.3s;
+      max-height: 90vh;
+      overflow-y: auto;
+    }
+    .close-modal {
+      position: absolute;
+      top: 1.1rem; right: 1.3rem;
+      background: none;
+      border: none;
+      font-size: 2rem;
+      color: #aaa;
+      cursor: pointer;
+      transition: color 0.2s;
+    }
+    .close-modal:hover { color: var(--primary, #4a6fa5); }
+    .create-cause-title {
+      font-size: 1.5rem;
+      font-weight: 800;
+      color: var(--primary, #4a6fa5);
+      margin-bottom: 1.2rem;
+      text-align: center;
+    }
+    .cause-form .form-group label { font-weight: 600; color: var(--primary, #4a6fa5); }
+    .cause-form .form-group input,
+    .cause-form .form-group textarea {
+      width: 100%;
+      padding: 0.7rem 1rem;
+      border-radius: 8px;
+      border: 1px solid #e5e7eb;
+      margin-bottom: 0.2rem;
+      font-size: 1rem;
+      background: #f8fafc;
+      transition: border 0.2s;
+    }
+    .cause-form .form-group input:focus,
+    .cause-form .form-group textarea:focus {
+      border: 1.5px solid var(--accent, #4fc3a1);
+      outline: none;
+      background: #fff;
+    }
+    .cause-form .form-group textarea {
+      min-height: 90px;
+      resize: vertical;
+    }
+    .form-inline-group {
+      display: flex;
+      gap: 1rem;
+    }
+    .form-inline-group .form-group { flex: 1; }
+    .preview-img {
+      width: 100%;
+      max-width: 320px;
+      height: 180px;
+      object-fit: cover;
+      border-radius: 10px;
+      margin-top: 0.5rem;
+      border: 1px solid #e5e7eb;
+      display: none;
+    }
+    .points-info {
+      background: var(--accent, #4fc3a1);
+      color: #fff;
+      border-radius: 8px;
+      padding: 0.7rem 1rem;
+      margin-top: 0.5rem;
+      font-size: 1.05rem;
+      display: flex;
+      align-items: center;
+      gap: 0.7rem;
+    }
+    .after-create {
+      margin-top: 2rem;
+      background: var(--primary-light, #e6f0fa);
+      color: #444;
+      border-radius: 10px;
+      padding: 1.5rem 1rem;
+      text-align: center;
+    }
+    @media (max-width: 600px) {
+      .modal-content { padding: 1.2rem 0.5rem 1.2rem 0.5rem; }
+      .create-cause-title { font-size: 1.1rem; }
+      .form-inline-group { flex-direction: column; }
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(-30px);}
+      to { opacity: 1; transform: translateY(0);}
+    }
+    /* SOLO estilos de la página de causas, NO navbar, logo, nav-links, auth-buttons, user-info, footer */
+    .modal {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0,0,0,0.5);
+        z-index: 1000;
+        justify-content: center;
+        align-items: center;
+    }
+    .modal-content {
+        background: #fff;
+        padding: 2rem;
+        border-radius: 10px;
+        max-width: 500px;
+        width: 90%;
+        text-align: center;
+    }
+    .modal-buttons {
+        display: flex;
+        gap: 1rem;
+        justify-content: center;
+        margin-top: 1.5rem;
+    }
+    .main-container {
+        max-width: 1200px;
+        margin: 2rem auto;
+        padding: 0 2rem;
+    }
+    .causes-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 2rem;
+    }
+    .causes-header h1 {
+        font-size: 2rem;
+        color: var(--primary);
+        font-weight: 700;
+    }
+    .causes-search {
+        margin-bottom: 2rem;
+        display: flex;
+        align-items: center;
+        gap: 0.7rem;
+    }
+    .causes-search input {
+        flex: 1;
+        padding: 0.6rem 1.2rem;
+        border-radius: 7px;
+        border: 1.5px solid var(--gray);
+        font-size: 1.05rem;
+        outline: none;
+        transition: border 0.2s;
+        background: #fff;
+    }
+    // Animación para notificaciones
+    @keyframes fadeInOut {
+      0% { opacity: 0; transform: translateX(-50%) translateY(20px); }
+      15% { opacity: 1; transform: translateX(-50%) translateY(0); }
+      85% { opacity: 1; transform: translateX(-50%) translateY(0); }
+      100% { opacity: 0; transform: translateX(-50%) translateY(-20px); }
+    }
+    .causes-search input:focus {
+        border-color: var(--primary);
+    }
+    .tabs {
+        display: flex;
+        border-bottom: 1px solid var(--gray);
+        margin-bottom: 2rem;
+    }
+    .tab {
+        padding: 0.75rem 1.5rem;
+        cursor: pointer;
+        position: relative;
+        font-weight: 500;
+        color: #6b7280;
+        background: none;
+        border: none;
+        outline: none;
+    }
+    .tab.active {
+        color: var(--primary);
+        font-weight: 600;
+    }
+    .tab.active::after {
+        content: '';
+        position: absolute;
+        bottom: -1px;
+        left: 0;
+        width: 100%;
+        height: 3px;
+        background: var(--primary);
+    }
+    .causes-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+        gap: 2rem;
+    }
+    .cause-card {
+        background: white;
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        transition: all 0.3s ease;
+        border: 1px solid var(--gray);
+        display: flex;
+        flex-direction: column;
+    }
+    .cause-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+    }
+    .cause-image {
+        height: 180px;
+        overflow: hidden;
+        position: relative;
+    }
+    .cause-image img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.3s ease;
+    }
+    .cause-card:hover .cause-image img {
+        transform: scale(1.05);
+    }
+    .cause-badge {
+        position: absolute;
+        top: 1rem;
+        right: 1rem;
+        background: rgba(255, 255, 255, 0.9);
+        padding: 0.3rem 0.8rem;
+        border-radius: 50px;
+        font-size: 0.8rem;
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
+    .cause-badge.urgent {
+        background: var(--urgent);
+        color: white;
+    }
+    .cause-badge.points {
+        background: var(--primary);
+        color: white;
+        left: 1rem;
+        right: auto;
+    }
+    .cause-content {
+        padding: 1.5rem;
+        display: flex;
+        flex-direction: column;
+        flex: 1;
+    }
+    .cause-content h3 {
+        font-size: 1.3rem;
+        margin-bottom: 0.8rem;
+        color: #2d3748;
+    }
+    .cause-content p {
+        color: #6b7280;
+        margin-bottom: 1.5rem;
+        font-size: 0.95rem;
+        line-height: 1.6;
+        flex-grow: 1;
+    }
+    .cause-meta {
+        display: flex;
+        gap: 1rem;
+        margin-bottom: 1.5rem;
+        font-size: 0.85rem;
+        flex-wrap: wrap;
+    }
+    .meta-item {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        color: #6b7280;
+    }
+    .meta-item i {
+        color: var(--primary);
+    }
+    .beneficiaries-count {
+        display: inline-flex;
+        align-items: center;
+        background: #f0f9ff;
+        color: var(--primary);
+        padding: 0.3rem 0.8rem;
+        border-radius: 50px;
+        font-size: 0.85rem;
+        font-weight: 600;
+    }
+    .beneficiaries-count i {
+        margin-right: 0.3rem;
+    }
+    .cause-progress {
+        margin-bottom: 1.5rem;
+    }
+    .progress-bar {
+        height: 8px;
+        background: var(--gray);
+        border-radius: 4px;
+        overflow: hidden;
+        margin-bottom: 0.5rem;
+    }
+    .progress-fill {
+        height: 100%;
+        background: var(--primary);
+        border-radius: 4px;
+    }
+    .progress-info {
+        display: flex;
+        justify-content: space-between;
+        font-size: 0.9rem;
+        color: #6b7280;
+    }
+    .cause-actions {
+        display: flex;
+        gap: 0.8rem;
+    }
+    .cause-actions .btn {
+        flex: 1;
+        text-align: center;
+        justify-content: center;
+    }
+    .btn-accent {
+        background: var(--accent);
+        color: white;
+    }
+    .btn-accent:hover {
+        background: var(--accent-dark);
+        transform: translateY(-2px);
+    }
+    .btn-sm {
+        padding: 0.4rem 0.8rem;
+        font-size: 0.85rem;
+    }
+    @media (max-width: 900px) {
+        .main-container {
+            padding: 1.2rem 0.5rem;
+        }
+    }
+    @media (max-width: 768px) {
+        .causes-header {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 1rem;
+        }
+        .causes-grid {
+            grid-template-columns: 1fr;
+        }
+        .cause-actions {
+            flex-direction: column;
+        }
+    }
+
+    /* Modal de Causa */
+    .modal-cause-container {
+      font-family: 'Poppins', sans-serif;
+      color: #2d3748;
+    }
+    .modal-cause-header {
+      display: flex;
+      gap: 2rem;
+      margin-bottom: 2rem;
+    }
+    @media (max-width: 768px) {
+      .modal-cause-header { flex-direction: column; }
+    }
+    .modal-cause-image-wrapper {
+      flex: 1;
+      min-width: 300px;
+      height: 280px;
+      border-radius: 12px;
+      overflow: hidden;
+      position: relative;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    }
+    .modal-cause-image {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.3s ease;
+    }
+    .modal-cause-badge {
+      position: absolute;
+      top: 1.5rem;
+      right: 1.5rem;
+      background: rgba(255,255,255,0.95);
+      padding: 0.5rem 1rem;
+      border-radius: 50px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      z-index: 2;
+    }
+    .modal-cause-badge.urgent {
+      background: var(--urgent);
+      color: white;
+    }
+    .modal-cause-info {
+      flex: 1.5;
+      display: flex;
+      flex-direction: column;
+    }
+    .modal-cause-title {
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: var(--primary);
+      margin-bottom: 1rem;
+      line-height: 1.3;
+    }
+    .modal-cause-progress-container {
+      background: #f8fafc;
+      padding: 1.5rem;
+      border-radius: 12px;
+      margin-bottom: 1.5rem;
+      border: 1px solid #e5e7eb;
+    }
+    .progress-info {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 0.8rem;
+      font-size: 0.95rem;
+      color: #6b7280;
+    }
+    .modal-cause-meta-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+      gap: 1.2rem;
+      margin-bottom: 1.5rem;
+    }
+    .meta-item {
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+      font-size: 0.95rem;
+    }
+    .meta-icon {
+      color: var(--primary);
+      font-size: 1.1rem;
+      width: 1.5rem;
+      text-align: center;
+    }
+    .points-notice {
+      background: #f0f9ff;
+      border-left: 4px solid var(--accent);
+      padding: 1rem;
+      border-radius: 0 8px 8px 0;
+      margin: 1rem 0;
+      font-size: 0.95rem;
+      display: flex;
+      align-items: center;
+      gap: 0.7rem;
+    }
+    .modal-cause-content { margin-top: 1.5rem; }
+    .content-section { margin-bottom: 2rem; }
+    .content-title {
+      font-size: 1.3rem;
+      font-weight: 600;
+      color: var(--primary);
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.7rem;
+    }
+    .content-text {
+      line-height: 1.7;
+      color: #4b5563;
+      font-size: 1.05rem;
+    }
+    .modal-cause-actions {
+      display: flex;
+      gap: 1rem;
+      margin-top: 1.5rem;
+      flex-wrap: wrap;
+    }
+    .action-btn {
+      flex: 1;
+      min-width: 180px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.7rem;
+      padding: 1rem;
+      border-radius: 8px;
+      font-weight: 600;
+      font-size: 1.05rem;
+      transition: all 0.2s ease;
+      border: none;
+      cursor: pointer;
+    }
+    .action-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+    .action-btn-primary {
+      background: var(--primary);
+      color: white;
+    }
+    .action-btn-accent {
+      background: var(--accent);
+      color: white;
+    }
+    .action-btn-secondary {
+      background: #f8fafc;
+      color: var(--primary);
+      border: 1px solid var(--primary-light);
+    }
+    .share-section {
+      margin-top: 2rem;
+      padding-top: 2rem;
+      border-top: 1px solid #e5e7eb;
+    }
+    .share-title {
+      font-size: 1.3rem;
+      font-weight: 600;
+      color: var(--primary);
+      margin-bottom: 1.5rem;
+      text-align: center;
+    }
+    .share-content {
+      background: #f8fafc;
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+      position: relative;
+    }
+    .share-text {
+      font-size: 1rem;
+      line-height: 1.6;
+      color: #4b5563;
+      margin-bottom: 1rem;
+    }
+    .share-highlight {
+      color: var(--primary);
+      font-weight: 600;
+    }
+    .share-buttons {
+      display: flex;
+      justify-content: center;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+    .share-btn {
+      display: flex;
+      align-items: center;
+      gap: 0.7rem;
+      padding: 0.8rem 1.5rem;
+      border-radius: 8px;
+      font-weight: 600;
+      color: white;
+      transition: all 0.2s;
+      text-decoration: none;
+    }
+    .share-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    }
+    .share-btn-facebook { background: #3b5998; }
+    .share-btn-twitter { background: #1da1f2; }
+    .share-btn-whatsapp { background: #25d366; }
+    .share-btn-link { background: var(--primary); }
+
+    /* Estilos para la sección de introducción de causas */
+    .causes-intro {
+      background: linear-gradient(135deg, #f0f9ff 0%, #e6f0fa 100%);
+      border-radius: 12px;
+      padding: 2rem;
+      margin-bottom: 2rem;
+      border: 1px solid #e2e8f0;
+    }
+    .causes-intro h2 {
+      font-size: 1.8rem;
+      color: #166088;
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+    }
+    .causes-intro h2 i {
+      color: #4fc3a1;
+    }
+    .causes-intro p {
+      color: #4a6fa5;
+      font-size: 1.1rem;
+      line-height: 1.6;
+    }
+
+    /* Estilos específicos para el modal de creación de causas */
+    #createCauseModal .modal-content form,
+    #createCauseModal .modal-content .cause-form,
+    #createCauseModal .modal-content .form-group,
+    #createCauseModal .modal-content .form-inline-group,
+    #createCauseModal .modal-content label,
+    #createCauseModal .modal-content input,
+    #createCauseModal .modal-content textarea,
+    #createCauseModal .modal-content select,
+    #createCauseModal .modal-content .points-info,
+    #createCauseModal .modal-content .after-create {
+      text-align: left !important;
+      align-items: flex-start !important;
+      justify-content: flex-start !important;
+    }
+
+    #createCauseModal .modal-content .create-cause-title {
+      text-align: center !important;
+    }
+  </style>
+{% endblock %}
+
+{% block content %}
+  <!-- Modal para usuarios no logueados -->
+  <div class="modal-bg" id="loginModal">
+    <div class="modal-content">
+      <h3>Para crear una causa</h3>
+      <p>Debes ser un usuario registrado. ¿Deseas iniciar sesión o registrarte ahora?</p>
+      <div class="modal-buttons">
+        <a href="/login?return=/causes" class="btn btn-primary">Iniciar Sesión</a>
+        <a href="/register?return=/causes" class="btn btn-outline">Registrarse</a>
+        <button id="cancelModal" class="btn">Cancelar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal emergente para crear causa -->
+  <div id="createCauseModal" class="modal-bg">
+    <div class="modal-content">
+      <button class="close-modal" id="closeCreateCauseModal" title="Cerrar">&times;</button>
+      <div class="create-cause-title">
+        <i class="fas fa-plus-circle"></i> Crear Nueva Causa Solidaria
+      </div>
+      <form class="cause-form" id="causeForm" autocomplete="off">
+        <!-- Título de la causa -->
+        <div class="form-group">
+          <label for="title">Título de la causa</label>
+          <input type="text" id="title" name="title" placeholder="Ej: Agua limpia para todos" required>
+        </div>
+        <!-- Foto principal (ahora justo después del título) -->
+        <div class="form-group">
+          <label for="photo">Foto principal</label>
+          <input type="file" id="photo" name="photo" accept="image/*">
+          <img id="previewImg" class="preview-img" alt="Vista previa de la foto" style="display:none;">
+        </div>
+        <!-- Resumen corto -->
+        <div class="form-group">
+          <label for="short_description">Descripción corta (máx. 3 líneas)</label>
+          <textarea id="short_description" name="short_description" maxlength="180" placeholder="Resumen breve para mostrar en la tarjeta..." required></textarea>
+        </div>
+        <!-- Descripción larga -->
+        <div class="form-group">
+          <label for="description">Descripción exhaustiva</label>
+          <textarea id="description" name="description" placeholder="Describe la causa, el objetivo, contexto, cómo se usará la ayuda..." required></textarea>
+        </div>
+        <!-- Meta y beneficiarios -->
+        <div class="form-inline-group">
+          <div class="form-group">
+            <label for="goal">Meta de recaudación (€)</label>
+            <input type="number" id="goal" name="goal" min="1" step="0.01" placeholder="Ej: 5000" required>
+          </div>
+          <div class="form-group">
+            <label for="beneficiaries">Nº de beneficiarios</label>
+            <input type="number" id="beneficiaries" name="beneficiaries" min="1" placeholder="Ej: 100" required>
+          </div>
+        </div>
+        <!-- Ciudad y país -->
+        <div class="form-inline-group">
+          <div class="form-group">
+            <label for="city">Ciudad</label>
+            <input type="text" id="city" name="city" placeholder="Ej: Madrid" required>
+          </div>
+          <div class="form-group">
+            <label for="country">País</label>
+            <input type="text" id="country" name="country" placeholder="Ej: España" required>
+          </div>
+        </div>
+        <!-- Puntos -->
+        <div class="form-group">
+          <label for="points">Puntos por colaborar</label>
+          <input type="number" id="points" name="points" min="1" max="1000" value="50" required>
+          <div class="points-info" id="pointsText">
+            <i class="fas fa-star"></i>
+            Colaborar en esta causa otorgará <strong>50 puntos</strong> a cada participante.
+          </div>
+        </div>
+        <!-- Email de contacto -->
+        <div class="form-group">
+          <label for="contact_email">Email de contacto</label>
+          <input type="email" id="contact_email" name="contact_email" placeholder="ejemplo@email.com">
+        </div>
+        <!-- Teléfono de contacto -->
+        <div class="form-group">
+          <label for="phone_number">Teléfono de contacto</label>
+          <input type="tel" id="phone_number" name="phone_number" placeholder="+34 600 123 456">
+        </div>
+        <input type="hidden" id="lat" name="lat">
+        <input type="hidden" id="lng" name="lng">
+        <button type="submit" class="btn btn-primary" style="margin-top:1rem;">
+          <i class="fas fa-paper-plane"></i> Crear Causa
+        </button>
+      </form>
+      <div class="after-create" id="afterCreate" style="display:none;">
+        <h3>¡Causa creada con éxito!</h3>
+        <p>¿Quieres agregar tareas o retos específicos vinculados a esta causa?</p>
+        <a href="/tasks/create" class="btn btn-accent">
+          <i class="fas fa-tasks"></i> Agregar tareas/retos
+        </a>
+        <br>
+        <a href="/causes" class="btn btn-outline" style="margin-top:1rem;">
+          <i class="fas fa-arrow-left"></i> Volver a causas
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal de Causa (compatible con causes-renderer.js) -->
+  <div id="causeModal" class="modal" style="display:none; position:fixed; z-index:9999; left:0; top:0; width:100vw; height:100vh; background:rgba(0,0,0,0.35); align-items:center; justify-content:center;">
+    <div class="modal-content" style="background:#fff; border-radius:18px; max-width:900px; width:95vw; padding:0; position:relative; max-height:90vh; overflow-y:auto;">
+      <button onclick="window.causesRenderer ? window.causesRenderer.closeModal() : (this.closest('.modal').style.display='none', document.body.style.overflow='')" 
+              style="position:absolute; top:1rem; right:1rem; background:none; border:none; font-size:1.5rem; cursor:pointer; z-index:10; color:#666; width:2rem; height:2rem; display:flex; align-items:center; justify-content:center; border-radius:50%; transition:all 0.2s;" 
+              onmouseover="this.style.background='#f3f4f6'" 
+              onmouseout="this.style.background='none'">&times;</button>
+      <div id="modalBody" style="padding:2rem;">
+        <!-- El contenido se genera dinámicamente por causes-renderer.js -->
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal de Administración de Actividad estilo Solidarity -->
+  <div id="activityAdminModal" class="modal-bg">
+    <div class="modal-content" style="max-width:700px; width:95vw; border-radius:18px; padding:2.5rem 1.5rem 2rem 1.5rem; box-shadow:0 8px 32px rgba(74,111,165,0.13); position:relative; max-height:90vh; overflow-y:auto;">
+      <button class="close-modal" id="closeAdminActivityModal" title="Cerrar">&times;</button>
+      <div class="create-cause-title" id="adminActivityTitle" style="margin-bottom:2rem;">
+        <i class="fas fa-cog"></i> Administrar Actividad
+      </div>
+      <div class="tabs" style="margin-bottom:2rem;">
+        <button class="tab active" data-tab="overview">Resumen</button>
+        <button class="tab" data-tab="members">Miembros</button>
+        <button class="tab" data-tab="settings">Configurar</button>
+        <button class="tab" data-tab="activity">Actividad</button>
+      </div>
+      <div id="overviewTab" class="tab-content active">
+        <div class="modal-cause-progress-container" style="background:#f8fafc; padding:1.2rem; border-radius:12px; margin-bottom:1.2rem; border:1px solid #e5e7eb;">
+          <div class="progress-bar">
+            <div class="progress-fill" id="adminActivityProgress" style="width:0%"></div>
+          </div>
+          <div class="progress-info">
+            <span id="adminActivityProgressPercent">0% completado</span>
+            <span id="adminActivityProgressAmount"></span>
+          </div>
+        </div>
+        <div class="modal-cause-meta-grid" style="display:grid; grid-template-columns:1fr 1fr; gap:0.7rem 1.2rem; margin-bottom:1.2rem;">
+          <div class="meta-item"><span class="meta-icon"><i class="fas fa-users"></i></span> <span id="adminActivityMembers">0 miembros</span></div>
+          <div class="meta-item"><span class="meta-icon"><i class="fas fa-star"></i></span> <span id="adminActivityPoints">0 puntos</span></div>
+          <div class="meta-item"><span class="meta-icon"><i class="fas fa-calendar-alt"></i></span> <span id="adminActivityCreated">-</span></div>
+          <div class="meta-item"><span class="meta-icon"><i class="fas fa-info-circle"></i></span> <span id="adminActivityStatus">-</span></div>
+        </div>
+        <div class="points-notice" style="background:#f0f9ff; border-left:4px solid var(--accent); padding:0.8rem; border-radius:0 8px 8px 0; font-size:0.97rem; display:flex; align-items:center; gap:0.7rem;">
+          <i class="fas fa-star" style="color: var(--accent);"></i>
+          <span id="adminActivityNotice"></span>
+        </div>
+        <div class="content-section" style="margin-top:2rem;">
+          <h3 class="content-title"><i class="fas fa-align-left"></i> Descripción</h3>
+          <p class="content-text" id="adminActivityDesc" style="text-align:justify;"></p>
+        </div>
+      </div>
+      <div id="membersTab" class="tab-content">
+        <h3 class="content-title"><i class="fas fa-users"></i> Miembros</h3>
+        <div class="members-list" id="adminActivityMembersList"></div>
+      </div>
+      <div id="settingsTab" class="tab-content">
+        <form id="adminActivityForm" class="cause-form" autocomplete="off">
+          <div id="adminActivityFormFields"></div>
+          <button type="submit" class="btn btn-primary" style="margin-top:1.2rem;">
+            <i class="fas fa-save"></i> Guardar Cambios
+          </button>
+        </form>
+      </div>
+      <div id="activityTab" class="tab-content">
+        <h3 class="content-title"><i class="fas fa-history"></i> Actividad reciente</h3>
+        <div id="adminActivityLog" style="color:#4b5563; font-size:1.05rem;"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Sección de introducción a las causas solidarias (espaciado igual que retos y volunteering) -->
+  <div class="main-container">
+    <div class="causes-intro">
+      <div class="causes-intro-content">
+        <h2>
+          <i class="fas fa-seedling"></i>
+          ¡Descubre causas y suma tu impacto!
+        </h2>
+        <p>
+          Explora causas solidarias, conoce sus historias y encuentra cómo puedes ayudar. Cada causa es una oportunidad para transformar vidas y construir un mundo mejor. ¡Tu apoyo marca la diferencia!
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Contenido principal de la página de causas -->
+  <div class="main-container">
+    <div class="causes-header">
+      <h1>Causas Solidarias</h1>
+      <a href="#" id="create-cause-btn" class="btn btn-primary">
+        <i class="fas fa-plus"></i> Crear Causa
+      </a>
+    </div>
+    <div class="causes-search">
+      <input type="text" id="search-input" placeholder="Buscar por título, país, descripción...">
+      <i class="fas fa-search" style="color:#4a6fa5;"></i>
+    </div>
+    <div class="tabs">
+      <button class="tab active" data-filter="all">Todas</button>
+      <button class="tab" data-filter="education">Educación</button>
+      <button class="tab" data-filter="health">Salud</button>
+      <button class="tab" data-filter="environment">Medio Ambiente</button>
+      <button class="tab" data-filter="animals">Animales</button>
+      <button class="tab" data-filter="community">Comunidad</button>
+    </div>
+    <div class="causes-grid" id="causesList">
+      <!-- Las causas se cargarán dinámicamente desde Supabase -->
+    </div>
+  </div>
+{% endblock %}
+
+{% block scripts %}
+{{ super() }}
+<script src="/js/compartir.js"></script>
+<script src="/js/modules/causes-renderer.js"></script>
+<script>
+// Función para compartir causas (reutiliza compartir.js)
+window.mostrarCompartir = function(causeId) {
+  const cause = window.causes?.find(c => c.id == causeId);
+  if (!cause) {
+    console.error('❌ No se encontró la causa con ID:', causeId);
+    return;
+  }
+  
+  renderCompartir({
+    title: cause.title,
+    summary: cause.short_description || cause.description?.substring(0, 120) + '...',
+    photo_url: cause.photo_url || '/img/causa-default.jpg',
+    link: `${window.location.origin}/causes/${cause.id}`,
+    type: 'causa'
+  }, 'shareSection');
+  
+  document.getElementById('shareSection').scrollIntoView({ 
+    behavior: 'smooth', 
+    block: 'center' 
+  });
+};
+
+document.addEventListener('DOMContentLoaded', async function() {
+  // Detectar URL específica y abrir modal
+  const urlPath = window.location.pathname;
+  const causeMatch = urlPath.match(/\/causes\/([^\/]+)$/);
+  
+  if (causeMatch) {
+    const specificCauseId = causeMatch[1];
+    console.log('🎯 URL detectada para causa específica:', specificCauseId);
+    
+    // Cargar causas y luego abrir modal usando el renderer
+    await loadCausesFromSupabase();
+    
+    if (window.causes && window.causes.length > 0) {
+      const found = window.causes.find(c => c.id === specificCauseId);
+      if (found) {
+        setTimeout(() => {
+          if (window.causesRenderer) {
+            window.causesRenderer.showModal(specificCauseId, window.causes);
+          } else {
+            showCauseModal(specificCauseId);
+          }
+        }, 500);
+      } else {
+        window.location.href = '/causes';
+      }
+    }
+  } else {
+    // Cargar causas normalmente
+    await loadCausesFromSupabase();
+  }
+
+  // Event listeners para crear causa
+  setupCreateCauseListeners();
+  
+  // Event listeners para tabs y búsqueda
+  setupTabsAndSearch();
+});
+
+// Función que usa el renderer si está disponible, sino fallback
+async function loadCausesFromSupabase(filter = "all", searchTerm = "") {
+  if (window.causesRenderer) {
+    const { causes, error } = await window.causesRenderer.loadCausesFromSupabase(filter, searchTerm);
+    
+    if (error) {
+      document.getElementById('causesList').innerHTML = '<div style="color:#e53e3e;text-align:center;">Error al cargar las causas.</div>';
+      return;
+    }
+    
+    const container = document.getElementById('causesList');
+    window.causesRenderer.renderGrid(causes, container);
+    window.causes = causes;
+  } else {
+    // Fallback al código original
+    await loadCausesFromSupabaseOriginal(filter, searchTerm);
+  }
+}
+
+// Función original como fallback
+async function loadCausesFromSupabaseOriginal(filter = "all", searchTerm = "") {
+  let query = supabase
+    .from('causes')
+    .select('*')
+    .order('created_at', { ascending: false });
+
+  if (filter !== "all") {
+    query = query.eq('category', filter);
+  }
+  if (searchTerm && searchTerm.trim() !== "") {
+    query = query.or(`title.ilike.%${searchTerm}%,description.ilike.%${searchTerm}%,city.ilike.%${searchTerm}%,country.ilike.%${searchTerm}%`);
+  }
+  
+  const { data: causes, error } = await query;
+  const causesList = document.getElementById('causesList');
+  
+  if (error) {
+    causesList.innerHTML = '<div style="color:#e53e3e;text-align:center;">Error al cargar las causas.</div>';
+    return;
+  }
+  
+  causesList.innerHTML = '';
+  
+  if (!causes || causes.length === 0) {
+    causesList.innerHTML = '<div style="color:#6b7280;text-align:center;padding:2rem;grid-column:1/-1;">No se encontraron causas.</div>';
+    return;
+  }
+  
+  const { data: { session } } = await supabase.auth.getSession();
+  let donatedIds = [];
+  if (session?.user) {
+    donatedIds = await getUserDonatedCauseIds(session.user.id);
+  }
+
+  causes.forEach(cause => {
+    const progress = cause.goal ? Math.min(Math.round((cause.raised / cause.goal) * 100), 100) : 0;
+    const urgentBadge = cause.urgent ? `<div class="cause-badge urgent"><i class="fas fa-exclamation-circle"></i> Urgente</div>` : "";
+    const pointsBadge = `<div class="cause-badge points"><i class="fas fa-star"></i> +${cause.points || 0} pts</div>`;
+    const location = cause.city && cause.country ? `${cause.city}, ${cause.country}` : "";
+    const isDonor = donatedIds.includes(cause.id);
+    const donateBtnHtml = isDonor
+      ? `<button class="btn btn-success" disabled style="background:var(--accent);color:#fff;opacity:1;cursor:not-allowed;">Ya donaste</button>`
+      : `<button class="btn btn-accent donate-cause-btn" data-cause-id="${cause.id}">Donar</button>`;
+    
+    const card = document.createElement('div');
+    card.className = 'cause-card';
+    card.innerHTML = `
+      <div class="cause-image">
+        <img src="${cause.photo_url || '/img/causa-default.jpg'}" alt="${cause.title}" 
+             onerror="if (!this._defaulted) { this._defaulted = true; this.src='/img/causa-default.jpg'; }">
+        ${urgentBadge}
+        ${pointsBadge}
+      </div>
+      <div class="cause-content">
+        <h3>${cause.title}</h3>
+        <p>${cause.short_description || ''}</p>
+        <div class="cause-meta">
+          <div class="meta-item"><i class="fas fa-map-marker-alt"></i> ${location}</div>
+          <div class="meta-item"><i class="fas fa-users"></i> ${cause.donors || 0} donantes</div>
+          <div class="beneficiaries-count">
+            <i class="fas fa-heart"></i> Beneficia a ${cause.beneficiaries || 0} personas
+          </div>
+        </div>
+        <div class="cause-progress">
+          <div class="progress-bar">
+            <div class="progress-fill" style="width: ${progress}%"></div>
+          </div>
+          <div class="progress-info">
+            <span>${progress}% completado</span>
+            <span>${cause.raised || 0} € de ${cause.goal || 0} €</span>
+          </div>
+        </div>
+        <div class="cause-actions">
+          <button class="btn btn-primary view-cause-btn" data-cause-id="${cause.id}">Ver más</button>
+          ${donateBtnHtml}
+        </div>
+      </div>
+    `;
+    causesList.appendChild(card);
+  });
+  
+  window.causes = causes;
+}
+
+// Configurar listeners para crear causa
+function setupCreateCauseListeners() {
+  document.getElementById('create-cause-btn').onclick = async function(e) {
+    e.preventDefault();
+    const { data: { session } } = await supabase.auth.getSession();
+    if (session?.user) {
+      document.getElementById('createCauseModal').classList.add('active');
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.getElementById('loginModal').classList.add('active');
+    }
+  };
+
+  document.getElementById('closeCreateCauseModal').onclick = function() {
+    document.getElementById('createCauseModal').classList.remove('active');
+    document.body.style.overflow = '';
+    document.getElementById('causeForm').reset();
+    document.getElementById('previewImg').style.display = 'none';
+    document.getElementById('causeForm').style.display = 'block';
+    document.getElementById('afterCreate').style.display = 'none';
+  };
+
+  document.getElementById('createCauseModal').onclick = function(e) {
+    if (e.target === this) {
+      this.classList.remove('active');
+      document.body.style.overflow = '';
+      document.getElementById('causeForm').style.display = 'block';
+      document.getElementById('afterCreate').style.display = 'none';
+    }
+  };
+
+  document.getElementById('cancelModal').onclick = function() {
+    document.getElementById('loginModal').classList.remove('active');
+  };
+  document.getElementById('loginModal').onclick = function(e) {
+    if (e.target === this) this.classList.remove('active');
+  };
+
+  // Vista previa de imagen
+  document.getElementById('photo').addEventListener('change', function(e) {
+    const file = e.target.files[0];
+    const preview = document.getElementById('previewImg');
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = function(evt) {
+        preview.src = evt.target.result;
+        preview.style.display = 'block';
+      };
+      reader.readAsDataURL(file);
+    } else {
+      preview.src = '';
+      preview.style.display = 'none';
+    }
+  });
+
+  // Actualizar texto de puntos
+  document.getElementById('points').addEventListener('input', function() {
+    const val = this.value || 0;
+    document.getElementById('pointsText').innerHTML = `<i class="fas fa-star"></i> Colaborar en esta causa otorgará <strong>${val} puntos</strong> a cada participante.`;
+  });
+
+  // Geocodificación
+  document.getElementById('city').addEventListener('change', geocodeCityCountry);
+  document.getElementById('country').addEventListener('change', geocodeCityCountry);
+
+  // Form submission
+  document.getElementById('causeForm').addEventListener('submit', async function(e) {
+    e.preventDefault();
+    
+    const title = document.getElementById('title').value.trim();
+    const short_description = document.getElementById('short_description').value.trim();
+    const description = document.getElementById('description').value.trim();
+    const goal = parseFloat(document.getElementById('goal').value);
+    const beneficiaries = parseInt(document.getElementById('beneficiaries').value, 10);
+    const city = document.getElementById('city').value.trim();
+    const country = document.getElementById('country').value.trim();
+    const points = parseInt(document.getElementById('points').value, 10);
+    const photoFile = document.getElementById('photo').files[0];
+    let photo_url = null;
+    const contact_email = document.getElementById('contact_email').value.trim();
+    const phone_number = document.getElementById('phone_number').value.trim();
+
+    // Sube la foto a Supabase Storage si existe
+    if (photoFile) {
+      const fileExt = photoFile.name.split('.').pop();
+      const fileName = `${Date.now()}-${Math.random().toString(36).substr(2, 9)}.${fileExt}`;
+      const filePath = `public/${fileName}`;
+      const { error: uploadError } = await supabase.storage
+        .from('causes')
+        .upload(filePath, photoFile, { upsert: true });
+      if (uploadError) {
+        alert('Error subiendo la foto: ' + uploadError.message);
+        return;
+      }
+      const { data } = supabase.storage.from('causes').getPublicUrl(filePath);
+      photo_url = data.publicUrl;
+    }
+
+    // Guarda la causa en la tabla
+    const { data: { session } } = await supabase.auth.getSession();
+    const user = session?.user;
+    if (!user) {
+      alert('Debes iniciar sesión para crear una causa.');
+      return;
+    }
+
+    const lat = document.getElementById('lat').value;
+    const lng = document.getElementById('lng').value;
+
+    const datosCausa = {
+      title,
+      short_description,
+      description,
+      goal,
+      beneficiaries,
+      city,
+      country,
+      points,
+      photo_url,
+      lat: lat || null,
+      lng: lng || null,
+      status: 'active',
+      raised: 0,
+      donors: 0,
+      contact_email,
+      phone_number
+    };
+
+    const { data: newCause, error: causeError } = await supabase
+      .from('causes')
+      .insert([{ ...datosCausa, user_id: user.id }])
+      .select()
+      .single();
+
+    if (causeError) {
+      alert('Error creando la causa: ' + causeError.message);
+      return;
+    }
+
+    if (newCause) {
+      await supabase
+        .from('causes_members')
+        .insert([{ cause_id: newCause.id, user_id: user.id, role: 'founder', status: 'active' }]);
+    }
+
+    document.getElementById('causeForm').style.display = 'none';
+    document.getElementById('afterCreate').style.display = 'block';
+    await loadCausesFromSupabase();
+  });
+}
+
+// Configurar tabs y búsqueda
+function setupTabsAndSearch() {
+  document.querySelectorAll('.tab').forEach(tab => {
+    tab.addEventListener('click', function() {
+      document.querySelector('.tab.active').classList.remove('active');
+      this.classList.add('active');
+      loadCausesFromSupabase(this.getAttribute('data-filter'));
+    });
+  });
+
+  document.getElementById('search-input').addEventListener('input', function() {
+    loadCausesFromSupabase(document.querySelector('.tab.active').getAttribute('data-filter'), this.value);
+  });
+}
+
+// Event listener para botones "Ver más"
+document.addEventListener('click', function(e) {
+  if (e.target.classList.contains('view-cause-btn')) {
+    const causeId = e.target.getAttribute('data-cause-id');
+    if (window.causesRenderer) {
+      window.causesRenderer.showModal(causeId, window.causes);
+    } else {
+      showCauseModal(causeId);
+    }
+  }
+});
+
+// Geocodificación automática
+async function geocodeCityCountry() {
+  const city = document.getElementById('city').value.trim();
+  const country = document.getElementById('country').value.trim();
+  if (!city || !country) return;
+
+  const query = encodeURIComponent(`${city}, ${country}`);
+  const url = `https://nominatim.openstreetmap.org/search?q=${query}&format=json&limit=1`;
+
+  try {
+    const res = await fetch(url, { headers: { 'Accept-Language': 'es' } });
+    const data = await res.json();
+    if (data && data.length > 0) {
+      document.getElementById('lat').value = data[0].lat;
+      document.getElementById('lng').value = data[0].lon;
+    } else {
+      document.getElementById('lat').value = '';
+      document.getElementById('lng').value = '';
+    }
+  } catch (e) {
+    document.getElementById('lat').value = '';
+    document.getElementById('lng').value = '';
+  }
+}
+
+// Función fallback para mostrar modal (solo si no hay renderer)
+function showCauseModal(causeId) {
+  const cause = window.causes?.find(c => c.id == causeId);
+  if (!cause) {
+    console.error('❌ Causa no encontrada:', causeId);
+    return;
+  }
+  
+  // Crear modal básico como fallback
+  const modal = document.getElementById('causeModal');
+  if (!modal) return;
+  
+  modal.innerHTML = `
+    <div class="modal-content" style="background:#fff; border-radius:18px; max-width:600px; width:95vw; padding:2rem; position:relative;">
+      <button onclick="this.closest('.modal').style.display='none'; document.body.style.overflow=''" style="position:absolute; top:1rem; right:1rem; background:none; border:none; font-size:1.5rem; cursor:pointer;">&times;</button>
+      <h2>${cause.title}</h2>
+      <p>${cause.description || cause.short_description}</p>
+      <div id="shareSection"></div>
+    </div>
+  `;
+  
+  modal.style.display = 'flex';
+  document.body.style.overflow = 'hidden';
+}
+
+// Nuevas funciones para obtener causas donadas por el usuario
+async function getUserDonatedCauseIds(userId) {
+  const { data, error } = await supabase
+    .from('causes_members')
+    .select('cause_id')
+    .eq('user_id', userId)
+    .eq('role', 'donor');
+  if (error) return [];
+  return data.map(row => row.cause_id);
+}
+
+// Funciones globales para los botones de acción
+window.donateToCause = function(causeId) {
+  alert('Funcionalidad de donación próximamente.');
+};
+
+window.joinCause = async function(causeId) {
+  const { data: { session } } = await supabase.auth.getSession();
+  if (!session?.user) {
+    alert('Debes iniciar sesión para participar.');
+    return;
+  }
+  
+  const { error } = await supabase
+    .from('causes_members')
+    .insert([{ cause_id: causeId, user_id: session.user.id, role: 'member', status: 'active' }]);
+    
+  if (error) {
+    console.error('Error al unirse:', error);
+    alert('Error al unirse a la causa');
+  } else {
+    alert('¡Ahora eres miembro de esta causa!');
+    if (window.causesRenderer && window.causesRenderer.closeModal) {
+      window.causesRenderer.closeModal();
+    }
+  }
+};
+
+document.addEventListener('click', async function(e) {
+  if (e.target.classList.contains('donate-cause-btn')) {
+    const btn = e.target;
+    const causeId = btn.getAttribute('data-cause-id');
+    const { data: { session } } = await supabase.auth.getSession();
+    if (!session?.user) {
+      alert('Debes iniciar sesión para donar.');
+      return;
+    }
+    // Comprobar si ya es donante
+    const { data: alreadyDonor } = await supabase
+      .from('causes_members')
+      .select('id')
+      .eq('cause_id', causeId)
+      .eq('user_id', session.user.id)
+      .eq('role', 'donor')
+      .single();
+    if (alreadyDonor) {
+      btn.textContent = 'Ya donaste';
+      btn.disabled = true;
+      btn.classList.remove('btn-accent');
+      btn.classList.add('btn-success');
+      btn.style.background = 'var(--accent)';
+      btn.style.color = '#fff';
+      btn.style.opacity = '1';
+      btn.style.cursor = 'not-allowed';
+      return;
+    }
+    // Insertar como donante en causes_members
+    const { error } = await supabase
+      .from('causes_members')
+      .insert([{ cause_id: causeId, user_id: session.user.id, role: 'donor', status: 'active' }]);
+    if (error) {
+      alert('Error al donar: ' + error.message);
+      return;
+    }
+    // Feedback visual
+    const notification = document.createElement('div');
+    notification.textContent = '¡Gracias por tu donación!';
+    notification.style.cssText = 'position:fixed;top:20px;right:20px;background:#4fc3a1;color:white;padding:1rem 2rem;border-radius:8px;z-index:99999;font-weight:600;box-shadow:0 4px 12px rgba(79,195,161,0.2);';
+    document.body.appendChild(notification);
+    setTimeout(() => notification.remove(), 2500);
+    // Recargar causas para actualizar botón y donantes
+    await loadCausesFromSupabase();
+  }
+});
+</script>
+{% endblock %}

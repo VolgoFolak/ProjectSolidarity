@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crear Tarea o Reto | Solidarity</title>
+    <link rel="stylesheet" href="/styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <style>
+        .create-task-container {
+            max-width: 600px;
+            margin: 4rem auto 0 auto;
+            background: var(--white);
+            border-radius: 16px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.07);
+            border: 1px solid var(--gray);
+            padding: 2.5rem 2rem 2rem 2rem;
+        }
+        .create-task-title {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 1.2rem;
+            text-align: center;
+        }
+        .create-task-desc {
+            color: #6b7280;
+            font-size: 1.05rem;
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+        .task-form {
+            display: flex;
+            flex-direction: column;
+            gap: 1.3rem;
+        }
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.4rem;
+        }
+        .form-group label {
+            font-weight: 500;
+            color: var(--darker);
+        }
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            padding: 0.75rem 1rem;
+            border-radius: 8px;
+            border: 1px solid var(--gray);
+            font-size: 1rem;
+            background: var(--light);
+            transition: border 0.2s;
+        }
+        .form-group input:focus,
+        .form-group textarea:focus,
+        .form-group select:focus {
+            border: 1.5px solid var(--primary);
+            outline: none;
+            background: #fff;
+        }
+        .form-group textarea {
+            min-height: 90px;
+            resize: vertical;
+        }
+        .form-group input[type="file"] {
+            padding: 0.5rem 0.2rem;
+            background: none;
+        }
+        .preview-img {
+            width: 100%;
+            max-width: 320px;
+            height: 180px;
+            object-fit: cover;
+            border-radius: 10px;
+            margin-top: 0.5rem;
+            border: 1px solid var(--gray);
+            display: none;
+        }
+        .task-form .btn {
+            margin-top: 0.5rem;
+            width: 100%;
+            font-size: 1.1rem;
+        }
+        .deadline-info {
+            background: var(--accent);
+            color: #fff;
+            border-radius: 8px;
+            padding: 0.7rem 1rem;
+            margin-bottom: 1.2rem;
+            font-size: 1.05rem;
+            display: flex;
+            align-items: center;
+            gap: 0.7rem;
+        }
+        .progress-section {
+            margin: 1.5rem 0 1rem 0;
+            display: none;
+        }
+        .progress-label {
+            font-size: 1rem;
+            color: var(--darker);
+            margin-bottom: 0.3rem;
+        }
+        .progress-bar-bg {
+            background: var(--gray);
+            border-radius: 8px;
+            height: 14px;
+            width: 100%;
+            overflow: hidden;
+        }
+        .progress-bar {
+            background: var(--primary);
+            height: 100%;
+            border-radius: 8px;
+            width: 0%;
+            transition: width 0.5s;
+        }
+        .after-create {
+            display: none;
+            margin-top: 2rem;
+            background: var(--primary-light);
+            color: #fff;
+            border-radius: 10px;
+            padding: 1.5rem 1rem;
+            text-align: center;
+        }
+        .after-create .btn {
+            margin-top: 1.2rem;
+        }
+        @media (max-width: 600px) {
+            .create-task-container {
+                margin: 2rem 0 0 0;
+                border-radius: 10px;
+                padding: 1.5rem 0.7rem 1.2rem 0.7rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav class="navbar">
+            <a href="/" class="logo">
+                <i class="fas fa-hands-helping logo-icon"></i>
+                <span class="logo-text">Solidarity</span>
+            </a>
+            <div class="nav-links">
+                <a href="/">Home</a>
+                <a href="/causes">Causas</a>
+                <a href="/tasks">Tareas</a>
+                <a href="/profile">Perfil</a>
+                <a href="/contact">Contacto</a>
+            </div>
+            <div class="auth-buttons">
+                <a href="/login" class="btn btn-outline">Iniciar Sesión</a>
+                <a href="/register" class="btn btn-primary">Registrarse</a>
+            </div>
+        </nav>
+    </header>
+
+    <main>
+        <div class="create-task-container">
+            <div class="create-task-title">
+                <i class="fas fa-tasks"></i> Crear Nueva Tarea o Reto
+            </div>
+            <div class="create-task-desc">
+                Define una tarea solidaria o un reto para la comunidad.<br>
+                ¡Motiva a otros a participar y suma impacto positivo!
+            </div>
+            <form class="task-form" id="taskForm" autocomplete="off">
+                <div class="form-group">
+                    <label for="title">Título de la tarea/reto</label>
+                    <input type="text" id="title" name="title" placeholder="Ej: Recolecta 10 abrigos" required>
+                </div>
+                <div class="form-group">
+                    <label for="photo">Foto principal</label>
+                    <input type="file" id="photo" name="photo" accept="image/*">
+                    <img id="previewImg" class="preview-img" alt="Vista previa de la foto">
+                </div>
+                <div class="form-group">
+                    <label for="description">Descripción</label>
+                    <textarea id="description" name="description" placeholder="Explica en qué consiste la tarea o reto..." required></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="type">Tipo de tarea</label>
+                    <select id="type" name="type" required>
+                        <option value="comunitaria">Comunitaria</option>
+                        <option value="reto">Reto</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="deadline">Fecha límite</label>
+                    <input type="datetime-local" id="deadline" name="deadline" required>
+                </div>
+                <div class="deadline-info" id="deadlineInfo" style="display:none;">
+                    <i class="fas fa-hourglass-half"></i>
+                    <span id="countdownText"></span>
+                </div>
+                <div class="form-group">
+                    <label for="participants">Nº de participantes objetivo</label>
+                    <input type="number" id="participants" name="participants" min="1" placeholder="Ej: 20" required>
+                </div>
+                <div class="form-group">
+                    <label for="points">Puntos por completar</label>
+                    <input type="number" id="points" name="points" min="1" max="1000" value="30" required>
+                </div>
+                <div class="progress-section" id="progressSection">
+                    <div class="progress-label">
+                        Progreso de la tarea: <span id="progressPercent">0%</span>
+                    </div>
+                    <div class="progress-bar-bg">
+                        <div class="progress-bar" id="progressBar"></div>
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-primary">
+                    <i class="fas fa-paper-plane"></i> Crear Tarea/Reto
+                </button>
+            </form>
+            <div class="after-create" id="afterCreate">
+                <h3>¡Tarea/Reto creado con éxito!</h3>
+                <div style="margin:1rem 0;">
+                    <strong>Título:</strong> <span id="summaryTitle"></span><br>
+                    <strong>Tipo:</strong> <span id="summaryType"></span><br>
+                    <strong>Participantes objetivo:</strong> <span id="summaryParticipants"></span><br>
+                    <strong>Puntos por completar:</strong> <span id="summaryPoints"></span>
+                </div>
+                <a href="/tasks" class="btn btn-accent">
+                    <i class="fas fa-arrow-left"></i> Volver a tareas
+                </a>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <div class="footer-content">
+            <div class="footer-logo">
+                <i class="fas fa-hands-helping"></i>
+                <h3>Solidarity</h3>
+            </div>
+            <div class="footer-links">
+                <a href="/about">Acerca de</a>
+                <a href="/contact">Contacto</a>
+                <a href="/privacy">Privacidad</a>
+            </div>
+            <div class="social-links">
+                <a href="#"><i class="fab fa-twitter"></i></a>
+                <a href="#"><i class="fab fa-facebook-f"></i></a>
+                <a href="#"><i class="fab fa-instagram"></i></a>
+            </div>
+            <div class="footer-bottom">
+                &copy; 2025 Solidarity. Todos los derechos reservados.
+            </div>
+        </div>
+    </footer>
+    <script>
+        // Vista previa de la imagen
+        document.getElementById('photo').addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            const preview = document.getElementById('previewImg');
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(evt) {
+                    preview.src = evt.target.result;
+                    preview.style.display = 'block';
+                };
+                reader.readAsDataURL(file);
+            } else {
+                preview.src = '';
+                preview.style.display = 'none';
+            }
+        });
+
+        // Deadline y cuenta atrás dinámica
+        const deadlineInput = document.getElementById('deadline');
+        const deadlineInfo = document.getElementById('deadlineInfo');
+        const countdownText = document.getElementById('countdownText');
+        let countdownInterval;
+
+        deadlineInput.addEventListener('change', function() {
+            updateCountdown();
+            deadlineInfo.style.display = 'flex';
+            if (countdownInterval) clearInterval(countdownInterval);
+            countdownInterval = setInterval(updateCountdown, 1000);
+        });
+
+        function updateCountdown() {
+            const deadline = new Date(deadlineInput.value);
+            const now = new Date();
+            let diff = deadline - now;
+            if (isNaN(deadline.getTime()) || diff <= 0) {
+                countdownText.textContent = "¡Deadline alcanzado!";
+                clearInterval(countdownInterval);
+                return;
+            }
+            const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+            diff -= days * (1000 * 60 * 60 * 24);
+            const hours = Math.floor(diff / (1000 * 60 * 60));
+            diff -= hours * (1000 * 60 * 60);
+            const minutes = Math.floor(diff / (1000 * 60));
+            diff -= minutes * (1000 * 60);
+            const seconds = Math.floor(diff / 1000);
+            countdownText.textContent = `Faltan ${days}d ${hours}h ${minutes}m ${seconds}s`;
+        }
+
+        // Barra de progreso dinámica (simulación)
+        const progressSection = document.getElementById('progressSection');
+        const progressBar = document.getElementById('progressBar');
+        const progressPercent = document.getElementById('progressPercent');
+        let progress = 0;
+
+        // Simulación: muestra la barra al cambiar participantes
+        document.getElementById('participants').addEventListener('input', function() {
+            progressSection.style.display = 'block';
+            progress = 0;
+            updateProgressBar();
+        });
+
+        // Simulación: clic en la barra para aumentar progreso
+        progressBar.addEventListener('click', function() {
+            if (progress < 100) {
+                progress += 10;
+                if (progress > 100) progress = 100;
+                updateProgressBar();
+            }
+        });
+
+        function updateProgressBar() {
+            progressBar.style.width = progress + '%';
+            progressPercent.textContent = progress + '%';
+        }
+
+        // Simulación de envío de formulario
+        document.getElementById('taskForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            document.getElementById('taskForm').style.display = 'none';
+            document.getElementById('afterCreate').style.display = 'block';
+            document.getElementById('summaryTitle').textContent = document.getElementById('title').value;
+            document.getElementById('summaryType').textContent = document.getElementById('type').value.charAt(0).toUpperCase() + document.getElementById('type').value.slice(1);
+            document.getElementById('summaryParticipants').textContent = document.getElementById('participants').value;
+            document.getElementById('summaryPoints').textContent = document.getElementById('points').value;
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+    </script>
+</body>
+</html>

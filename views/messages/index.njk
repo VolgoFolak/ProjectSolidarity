@@ -1,0 +1,84 @@
+{% extends "layout.njk" %}
+{% block title %}Mensajes | Solidarity{% endblock %}
+{% block head %}
+{{ super() }}
+<style>
+  .messages-container { max-width: 900px; margin: 2.5rem auto; padding: 0 1rem; }
+  .messages-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; }
+  .conversations-list { background: #fff; border-radius: 14px; box-shadow: 0 2px 12px rgba(74,111,165,0.07); min-height: 220px; }
+  .conversation-card { display: flex; align-items: center; gap: 1.2rem; padding: 1.2rem 1.5rem; border-bottom: 1px solid #e2e8f0; transition: background 0.18s; cursor: pointer; text-decoration: none; }
+  .conversation-card:last-child { border-bottom: none; }
+  .conversation-card:hover { background: #f8fafc; }
+  .conversation-avatar { width: 48px; height: 48px; border-radius: 50%; object-fit: cover; border: 2px solid #e2e8f0; background: #fff; }
+  .conversation-info { flex: 1; min-width: 0; }
+  .conversation-name { font-weight: 700; color: var(--primary); font-size: 1.13rem; margin-bottom: 0.2rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .conversation-preview { color: #6b7280; font-size: 0.97rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .conversation-time { font-size: 0.85rem; color: #9ca3af; margin-left: 1.2rem; white-space: nowrap; }
+  .no-conversations { text-align: center; color: #4a6fa5; padding: 3rem 0 2rem 0; font-size: 1.2rem; }
+  .no-conversations i { font-size: 3rem; margin-bottom: 1rem; color: #4fc3a1; }
+</style>
+{% endblock %}
+{% block content %}
+<div class="messages-container">
+  <div class="messages-header">
+    <h1 style="color:var(--primary);font-weight:800;">Bandeja de mensajes</h1>
+    <a href="/messages/new" class="btn btn-primary">
+      <i class="fas fa-plus"></i> Nuevo mensaje
+    </a>
+  </div>
+  <div class="conversations-list" id="conversationsList"></div>
+</div>
+{% endblock %}
+{% block scripts %}
+{{ super() }}
+<script>
+document.addEventListener('DOMContentLoaded', async () => {
+  const container = document.getElementById('conversationsList');
+  container.innerHTML = `<div style="text-align:center;color:#4a6fa5;padding:2.5rem 0;">
+    <i class="fas fa-spinner fa-spin"></i> Cargando conversaciones...
+  </div>`;
+  try {
+    // Solo usamos fetch a /api/conversations, nunca a Supabase REST ni supabase.js
+    const res = await fetch('/api/conversations');
+    const conversations = await res.json();
+    if (!Array.isArray(conversations) || !conversations.length) {
+      container.innerHTML = `
+        <div class="no-conversations">
+          <i class="fas fa-comments"></i>
+          <div>¡Aún no tienes conversaciones!</div>
+          <div style="color:#6b7280;font-size:1rem;margin-top:0.5rem;">Envía tu primer mensaje y conecta con la comunidad Solidarity.</div>
+        </div>
+      `;
+      return;
+    }
+    container.innerHTML = '';
+    conversations.forEach(conv => {
+      // Busca el otro participante (no el usuario actual)
+      const other = (conv.participants || []).find(p => !p.profile.is_current_user);
+      const avatar = other?.profile?.photo_url || '/img/default-user.png';
+      const name = other?.profile?.username || 'Usuario';
+      const preview = conv.last_message?.content
+        ? conv.last_message.content.length > 60
+          ? conv.last_message.content.slice(0, 60) + '...'
+          : conv.last_message.content
+        : 'Sin mensajes aún';
+      const time = conv.last_message?.created_at
+        ? new Date(conv.last_message.created_at).toLocaleString([], { dateStyle: 'short', timeStyle: 'short' })
+        : '';
+      container.innerHTML += `
+        <a href="/messages/${conv.id}" class="conversation-card">
+          <img src="${avatar}" alt="${name}" class="conversation-avatar" onerror="this.src='/img/default-user.png'">
+          <div class="conversation-info">
+            <div class="conversation-name">${name}</div>
+            <div class="conversation-preview">${preview}</div>
+          </div>
+          <div class="conversation-time">${time}</div>
+        </a>
+      `;
+    });
+  } catch (err) {
+    container.innerHTML = `<div style="color:#e53e3e;text-align:center;padding:2rem 0;">Error al cargar conversaciones.<br>Intenta recargar la página.</div>`;
+  }
+});
+</script>
+{% endblock %}

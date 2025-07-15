@@ -1,0 +1,1243 @@
+{% extends "layout.njk" %}
+
+{% block title %}Take Action | Solidarity{% endblock %}
+
+{% block head %}
+  {{ super() }}
+  <style>
+    /* ✅ VARIABLES SOLIDARITY - IGUALES A INDEX.NJK */
+    :root {
+      --primary: #4a6fa5;        /* Azul Solidarity - CAUSAS */
+      --primary-dark: #166088;
+      --yellow: #eab308;         /* Amarillo - TAREAS */
+      --gold: #f59e42;           /* Dorado/Naranja - RETOS */
+      --accent: #4fc3a1;         /* Verde - VOLUNTARIADOS */
+      --accent-dark: #3da58a;
+      --purple: #8b5cf6;         /* Púrpura - COMUNIDADES */
+      --red-soft: #e53e3e;       /* Rojo suave - RANKING */
+      --urgent: #e53e3e;
+      --warning: #f59e42;
+      --light: #f8fafc;
+      --dark: #2d3748;
+      --gray: #e2e8f0;
+    }
+
+    /* ✅ HERO SECTION - EXACTO COMO INDEX */
+    .hero {
+      background: linear-gradient(135deg, var(--primary), var(--primary-dark)) !important;
+      color: white !important;
+      padding: 4rem 2rem 6rem;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+      margin-bottom: 0;
+    }
+
+    .hero-container {
+      display: flex;
+      align-items: center;
+      max-width: 1200px;
+      margin: 0 auto;
+      position: relative;
+      z-index: 2;
+      gap: 3rem;
+      flex-direction: column;
+      text-align: center;
+    }
+
+    .hero-content {
+      flex: 1;
+      padding: 2rem 0;
+    }
+
+    .hero h1 {
+      font-size: 2.8rem;
+      margin-bottom: 1.5rem;
+      font-weight: 800;
+      line-height: 1.2;
+      text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      color: white !important;
+    }
+
+    .hero-subtitle {
+      font-size: 1.2rem;
+      margin: 0 auto 2rem;
+      font-weight: 400;
+      opacity: 0.9;
+      max-width: 700px;
+      color: rgba(255,255,255,0.95) !important;
+    }
+
+    .hero-buttons {
+      display: flex;
+      gap: 1.5rem;
+      margin-top: 2rem;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    /* ✅ STATS SECTION - EXACTO COMO INDEX */
+    .live-stats {
+      padding: 4rem 2rem;
+      background: linear-gradient(to bottom, #f8fafc, #ffffff);
+      text-align: center;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .section-header {
+      text-align: center;
+      margin-bottom: 3rem;
+    }
+
+    .section-header h2 {
+      font-size: 2rem;
+      font-weight: 800;
+      color: var(--primary);
+      margin-bottom: 1rem;
+    }
+
+    .section-header p {
+      font-size: 1.1rem;
+      color: #64748b;
+      line-height: 1.6;
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1.5rem;
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+
+    .live-stat {
+      padding: 2rem 1.5rem;
+      background: white;
+      border-radius: 16px;
+      border: 1px solid #e2e8f0;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+    }
+
+    .live-stat:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 8px 30px rgba(0,0,0,0.12);
+      border-color: var(--primary);
+    }
+
+    .live-stat-number {
+      font-size: 2.2rem;
+      font-weight: 900 !important;
+      color: var(--primary) !important;
+      display: block;
+      margin-bottom: 0.5rem;
+      text-shadow: 0 1px 3px rgba(74, 111, 165, 0.15);
+      font-variant-numeric: tabular-nums; /* ✅ EVITA EL TEMBLOR */
+      min-width: 120px; /* ✅ ANCHO MÍNIMO FIJO */
+      text-align: center; /* ✅ CENTRADO */
+    }
+
+    .live-stat-label {
+      font-size: 0.9rem;
+      color: #64748b;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    /* ✅ ACTIONS SECTION - 2x2 GRID PARA DESKTOP */
+    .actions-section {
+      padding: 5rem 2rem;
+      background: white;
+    }
+
+    .actions-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 2rem;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .action-card {
+      background: white;
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+      transition: all 0.3s ease;
+      border: 1px solid var(--gray);
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+    }
+
+    .action-card:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 15px 40px rgba(0,0,0,0.12);
+    }
+
+    .action-image {
+      height: 200px;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .action-image img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.5s ease;
+    }
+
+    .action-card:hover .action-image img {
+      transform: scale(1.1);
+    }
+
+    .action-badge {
+      position: absolute;
+      top: 1rem;
+      right: 1rem;
+      background: var(--primary);  /* CAUSAS - Azul principal */
+      color: white;
+      padding: 0.3rem 0.8rem;
+      border-radius: 50px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+
+    .action-badge.yellow {  /* TAREAS - Amarillo */
+      background: var(--yellow);
+    }
+
+    .action-badge.gold {  /* RETOS - Dorado/Naranja */
+      background: var(--gold);
+    }
+
+    .action-badge.volunteer {  /* VOLUNTARIADOS - Verde */
+      background: var(--accent);
+    }
+
+    .action-content {
+      padding: 1.5rem;
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+    }
+
+    .action-title {
+      font-size: 1.4rem;
+      margin-bottom: 0.8rem;
+      color: var(--dark);
+      display: flex;
+      align-items: center;
+      gap: 0.7rem;
+    }
+
+    .action-icon {
+      width: 40px;
+      height: 40px;
+      background: rgba(74, 111, 165, 0.1);  /* CAUSAS - Azul principal */
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--primary);
+    }
+
+    .action-icon.yellow {  /* TAREAS - Amarillo */
+      background: rgba(234, 179, 8, 0.1);
+      color: var(--yellow);
+    }
+
+    .action-icon.gold {  /* RETOS - Dorado/Naranja */
+      background: rgba(245, 158, 66, 0.1);
+      color: var(--gold);
+    }
+
+    .action-icon.volunteer {  /* VOLUNTARIADOS - Verde */
+      background: rgba(79, 195, 161, 0.1);
+      color: var(--accent);
+    }
+
+    .action-description {
+      color: #6b7280;
+      margin-bottom: 1.5rem;
+      font-size: 0.95rem;
+      line-height: 1.6;
+      flex: 1;
+    }
+
+    .action-features {
+      margin-bottom: 1.5rem;
+      margin-top: auto;
+    }
+
+    .feature-item {
+      display: flex;
+      align-items: center;
+      margin-bottom: 0.5rem;
+      font-size: 0.9rem;
+      color: #64748b;
+    }
+
+    .feature-dot {
+      width: 6px;
+      height: 6px;
+      background: var(--accent);
+      border-radius: 50%;
+      margin-right: 0.8rem;
+      flex-shrink: 0;
+    }
+
+    .action-button {
+      width: 100%;
+      text-align: center;
+      padding: 0.8rem 1rem;
+      border-radius: 8px;
+      font-weight: 600;
+      margin-top: 0;
+      transition: all 0.3s ease;
+      text-decoration: none;
+      display: inline-block;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+
+    .action-button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+      text-decoration: none;
+    }
+
+    .action-button.btn-primary {  /* CAUSAS - Azul principal */
+      background: var(--primary);
+      color: white;
+      border: 2px solid var(--primary);
+    }
+
+    .action-button.btn-primary:hover {
+      background: var(--primary-dark);
+      border-color: var(--primary-dark);
+      color: white;
+    }
+
+    .action-button.btn-yellow {  /* TAREAS - Amarillo */
+      background: var(--yellow);
+      color: white;
+      border: 2px solid var(--yellow);
+    }
+
+    .action-button.btn-yellow:hover {
+      background: #ca8a04;
+      border-color: #ca8a04;
+      color: white;
+    }
+
+    .action-button.btn-gold {  /* RETOS - Dorado/Naranja */
+      background: var(--gold);
+      color: white;
+      border: 2px solid var(--gold);
+    }
+
+    .action-button.btn-gold:hover {
+      background: #e68935;
+      border-color: #e68935;
+      color: white;
+    }
+
+    .action-button.btn-accent {  /* VOLUNTARIADOS - Verde */
+      background: var(--accent);
+      color: white;
+      border: 2px solid var(--accent);
+    }
+
+    .action-button.btn-accent:hover {
+      background: var(--accent-dark);
+      border-color: var(--accent-dark);
+      color: white;
+    }
+
+    /* ✅ GAMIFICATION SECTION */
+    .gamification-section {
+      padding: 5rem 2rem;
+      background: var(--light);
+    }
+
+    .gamification-container {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .gamification-cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 2rem;
+      margin-bottom: 3rem;
+    }
+
+    .gamification-card {
+      background: white;
+      border-radius: 16px;
+      padding: 2rem;
+      box-shadow: 0 5px 20px rgba(0,0,0,0.05);
+      text-align: center;
+      transition: all 0.3s ease;
+    }
+
+    .gamification-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+    }
+
+    .gamification-card h3 {
+      font-size: 1.4rem;
+      margin-top: 1.5rem;
+      margin-bottom: 1rem;
+      color: var(--dark);
+      font-weight: 700;
+    }
+
+    .gamification-card p {
+      color: #666;
+      margin-bottom: 1.5rem;
+      line-height: 1.6;
+    }
+
+    .example-progress {
+      background: var(--light);
+      padding: 1rem;
+      border-radius: 8px;
+      margin: 1rem 0;
+    }
+
+    /* ✅ RANKING SECTION - EXACTO COMO INDEX */
+    .ranking-section {
+      padding: 5rem 2rem;
+      background: linear-gradient(to bottom, var(--light), #ffffff);
+    }
+
+    .ranking-grid {
+      display: grid;
+      grid-template-columns: 2fr 1fr;
+      gap: 3rem;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .top-members {
+      background: white;
+      border-radius: 16px;
+      padding: 2rem;
+      box-shadow: 0 5px 20px rgba(0,0,0,0.05);
+    }
+
+    .member-item {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      padding: 1rem 0;
+      border-bottom: 1px solid #e2e8f0;
+    }
+
+    .member-item:last-child {
+      border-bottom: none;
+    }
+
+    .member-rank {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 1.1rem;
+    }
+
+    .member-rank.gold {
+      background: var(--gold);
+      color: white;
+    }
+
+    .member-rank.silver {
+      background: #c0c0c0;
+      color: white;
+    }
+
+    .member-rank.bronze {
+      background: #cd7f32;
+      color: white;
+    }
+
+    .member-rank.other {
+      background: var(--gray);
+      color: var(--dark);
+    }
+
+    .member-avatar {
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 2px solid white;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+
+    .member-info {
+      flex: 1;
+    }
+
+    .member-name {
+      font-weight: 700;
+      color: var(--dark);
+      margin-bottom: 0.25rem;
+    }
+
+    .member-level {
+      color: #64748b;
+      font-size: 0.9rem;
+    }
+
+    .member-points {
+      text-align: right;
+      color: var(--primary);
+      font-weight: 700;
+      font-size: 1.1rem;
+    }
+
+    .ranking-stats {
+      display: grid;
+      gap: 1.5rem;
+    }
+
+    .ranking-stat-card {
+      background: white;
+      padding: 1.5rem;
+      border-radius: 16px;
+      box-shadow: 0 5px 20px rgba(0,0,0,0.05);
+      text-align: center;
+    }
+
+    .ranking-stat-icon {
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      margin: 0 auto 1rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+    }
+
+    .ranking-stat-icon.points {
+      background: rgba(74, 111, 165, 0.1);
+      color: var(--primary);
+    }
+
+    .ranking-stat-icon.volunteer {
+      background: rgba(79, 195, 161, 0.1);
+      color: var(--accent);
+    }
+
+    .ranking-stat-icon.challenges {
+      background: rgba(245, 158, 66, 0.1);
+      color: var(--warning);
+    }
+
+    .ranking-stat-number {
+      font-size: 1.8rem;
+      font-weight: 900;
+      color: var(--primary);
+      margin-bottom: 0.5rem;
+    }
+
+    .ranking-stat-label {
+      color: #64748b;
+      font-size: 0.9rem;
+      font-weight: 600;
+    }
+
+    /* ✅ CTA SECTION - EXACTO COMO INDEX */
+    .cta-section {
+      background: linear-gradient(135deg, var(--primary), var(--primary-dark)) !important;
+      color: white !important;
+      padding: 4rem 2rem;
+      text-align: center;
+    }
+
+    .cta-title {
+      font-size: 2rem;
+      font-weight: 800;
+      margin-bottom: 1rem;
+      color: white !important;
+    }
+
+    .cta-description {
+      font-size: 1.1rem;
+      margin-bottom: 2rem;
+      opacity: 0.95;
+      line-height: 1.6;
+      max-width: 600px;
+      margin-left: auto;
+      margin-right: auto;
+      color: rgba(255,255,255,0.95) !important;
+    }
+
+    .cta-buttons {
+      display: flex;
+      gap: 1.5rem;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    /* ✅ RESPONSIVE OPTIMIZADO PARA MÓVILES */
+    @media (max-width: 480px) {
+      .hero {
+        padding: 3rem 1rem 4rem;
+      }
+      
+      .hero h1 {
+        font-size: 2.2rem;
+      }
+      
+      .hero-subtitle {
+        font-size: 1rem;
+      }
+      
+      .hero-buttons {
+        flex-direction: column;
+        width: 100%;
+      }
+      
+      .hero-buttons .btn {
+        width: 100%;
+        margin: 0;
+      }
+      
+      .stats-grid {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+        padding: 0 1rem;
+      }
+      
+      .live-stat {
+        padding: 1.5rem 1rem;
+      }
+      
+      .live-stat-number {
+        font-size: 1.8rem;
+      }
+      
+      .actions-grid {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+      }
+      
+      .action-card {
+        max-width: 100%;
+      }
+      
+      .action-image {
+        height: 180px;
+      }
+      
+      .gamification-cards {
+        grid-template-columns: 1fr;
+      }
+      
+      .ranking-grid {
+        grid-template-columns: 1fr;
+        gap: 2rem;
+      }
+      
+      .cta-buttons {
+        flex-direction: column;
+        width: 100%;
+      }
+      
+      .cta-buttons .btn {
+        width: 100%;
+      }
+    }
+
+    @media (min-width: 481px) and (max-width: 768px) {
+      .hero {
+        padding: 3.5rem 1.5rem 5rem;
+      }
+      
+      .hero h1 {
+        font-size: 2.5rem;
+      }
+      
+      .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1.5rem;
+      }
+      
+      .actions-grid {
+        grid-template-columns: 1fr;
+        gap: 2rem;
+      }
+      
+      .ranking-grid {
+        grid-template-columns: 1fr;
+        gap: 2rem;
+      }
+    }
+
+    @media (min-width: 769px) and (max-width: 1024px) {
+      .stats-grid {
+        grid-template-columns: repeat(3, 1fr);
+      }
+      
+      .actions-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (min-width: 1025px) {
+      .stats-grid {
+        grid-template-columns: repeat(5, 1fr);
+        gap: 2rem;
+      }
+      
+      .actions-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 2.5rem;
+      }
+    }
+
+    /* ✅ ANIMACIONES - EXACTO COMO INDEX */
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .animate-fade {
+      animation: fadeIn 0.8s ease-out forwards;
+    }
+
+    .delay-1 { animation-delay: 0.2s; }
+    .delay-2 { animation-delay: 0.4s; }
+    .delay-3 { animation-delay: 0.6s; }
+    .delay-4 { animation-delay: 0.8s; }
+  </style>
+{% endblock %}
+
+{% block content %}
+  <!-- ✅ HERO SECTION - MEJORADO -->
+  <section class="hero">
+    <div class="hero-container">
+      <div class="hero-content">
+        <h1 class="animate-fade">¡Transforma tu solidaridad en impacto real!</h1>
+        <p class="hero-subtitle animate-fade delay-1">Cada acción cuenta. Descubre las diferentes formas de contribuir y comienza a generar cambios positivos hoy mismo.</p>
+        
+        <div class="hero-buttons animate-fade delay-2">
+          <a href="/register" class="btn btn-accent">
+            <i class="fas fa-rocket"></i> Empieza ahora
+          </a>
+          <a href="#ranking" class="btn btn-outline-white">
+            <i class="fas fa-trophy"></i> Ver ranking
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ✅ STATS SECTION - CON ANIMACIÓN DE 10 SEGUNDOS -->
+  <section class="live-stats">
+    <div class="section-header">
+      <h2>Impacto Global en Números</h2>
+      <p>Así es como nuestros usuarios están cambiando el mundo</p>
+    </div>
+    
+    <div class="stats-grid">
+      <div class="live-stat">
+        <span class="live-stat-number" id="total-causes">0</span>
+        <span class="live-stat-label">Causas Activas</span>
+      </div>
+      <div class="live-stat">
+        <span class="live-stat-number" id="completed-tasks">0</span>
+        <span class="live-stat-label">Tareas Completadas</span>
+      </div>
+      <div class="live-stat">
+        <span class="live-stat-number" id="active-challenges">0</span>
+        <span class="live-stat-label">Retos Activos</span>
+      </div>
+      <div class="live-stat">
+        <span class="live-stat-number" id="volunteer-hours">0h</span>
+        <span class="live-stat-label">Horas Voluntariado</span>
+      </div>
+      <div class="live-stat">
+        <span class="live-stat-number" id="impact-points">0</span>
+        <span class="live-stat-label">Puntos de Impacto</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ✅ ACTIONS SECTION - 2x2 GRID -->
+  <section id="action-sections" class="actions-section">
+    <div class="section-header">
+      <h2>Elige tu forma de impactar</h2>
+      <p>Cuatro maneras diferentes de contribuir, todas con recompensas y reconocimiento</p>
+    </div>
+    
+    <div class="actions-grid">
+      <!-- 1. Causas - AZUL PRINCIPAL -->
+      <div class="action-card animate-fade">
+        <div class="action-image">
+          <img src="https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?auto=format&fit=crop&w=600&q=80" alt="Niños sonriendo en proyecto educativo">
+          <div class="action-badge">
+            <i class="fas fa-star"></i> +10 pts/€
+          </div>
+        </div>
+        <div class="action-content">
+          <h3 class="action-title">
+            <div class="action-icon"><i class="fas fa-hand-holding-heart"></i></div> 
+            Causas Solidarias
+          </h3>
+          <p class="action-description">Apoya proyectos verificados con objetivos claros. Cada euro cuenta y se transforma en avances medibles hacia las metas establecidas.</p>
+          <div class="action-features">
+            <div class="feature-item">
+              <div class="feature-dot"></div>
+              <span>+10 puntos por cada €1 donado</span>
+            </div>
+            <div class="feature-item">
+              <div class="feature-dot"></div>
+              <span>Progreso visible hacia objetivos</span>
+            </div>
+            <div class="feature-item">
+              <div class="feature-dot"></div>
+              <span>Impacto directo en comunidades</span>
+            </div>
+            <div class="feature-item">
+              <div class="feature-dot"></div>
+              <span>Certificados de transparencia</span>
+            </div>
+          </div>
+          <a href="/causes" class="action-button btn-primary">
+            <i class="fas fa-search"></i> Explorar causas
+          </a>
+        </div>
+      </div>
+      
+      <!-- 2. Tareas - AMARILLO -->
+      <div class="action-card animate-fade delay-1">
+        <div class="action-image">
+          <img src="https://images.unsplash.com/photo-1582213782179-e0d53f98f2ca?auto=format&fit=crop&w=800&q=80" alt="Persona trabajando en computadora">
+          <div class="action-badge yellow">
+            <i class="fas fa-star"></i> +25 pts/tarea
+          </div>
+        </div>
+        <div class="action-content">
+          <h3 class="action-title">
+            <div class="action-icon yellow"><i class="fas fa-tasks"></i></div>
+            Tareas de Impacto
+          </h3>
+          <p class="action-description">Completa micro-acciones específicas que ayudan a organizaciones reales. Tareas verificadas que puedes hacer desde casa.</p>
+          <div class="action-features">
+            <div class="feature-item">
+              <div class="feature-dot"></div>
+              <span>+25 puntos por tarea completada</span>
+            </div>
+            <div class="feature-item">
+              <div class="feature-dot"></div>
+              <span>Filtros por tiempo y dificultad</span>
+            </div>
+            <div class="feature-item">
+              <div class="feature-dot"></div>
+              <span>Verificación automática</span>
+            </div>
+            <div class="feature-item">
+              <div class="feature-dot"></div>
+              <span>Disponibles 24/7</span>
+            </div>
+          </div>
+          <a href="/tasks" class="action-button btn-yellow">
+            <i class="fas fa-play"></i> Empezar tareas
+          </a>
+        </div>
+      </div>
+      
+      <!-- 3. Retos - DORADO/NARANJA -->
+      <div class="action-card animate-fade delay-2">
+        <div class="action-image">
+          <img src="https://images.unsplash.com/photo-1552664730-d307ca884978?auto=format&fit=crop&w=600&q=80" alt="Personas celebrando logros en equipo">
+          <div class="action-badge gold">
+            <i class="fas fa-trophy"></i> +500 pts
+          </div>
+        </div>
+        <div class="action-content">
+          <h3 class="action-title">
+            <div class="action-icon gold"><i class="fas fa-trophy"></i></div> 
+            Retos Colaborativos
+          </h3>
+          <p class="action-description">Únete a desafíos colectivos con objetivos específicos. Compite sanamente y multiplica tu impacto junto a otros usuarios.</p>
+          <div class="action-features">
+            <div class="feature-item">
+              <div class="feature-dot"></div>
+              <span>+500 puntos por reto completado</span>
+            </div>
+            <div class="feature-item">
+              <div class="feature-dot"></div>
+              <span>Premios especiales para ganadores</span>
+            </div>
+            <div class="feature-item">
+              <div class="feature-dot"></div>
+              <span>Ranking en tiempo real</span>
+            </div>
+            <div class="feature-item">
+              <div class="feature-dot"></div>
+              <span>Impacto multiplicado</span>
+            </div>
+          </div>
+          <a href="/challenges" class="action-button btn-gold">
+            <i class="fas fa-flag-checkered"></i> Ver retos
+          </a>
+        </div>
+      </div>
+
+      <!-- 4. Voluntariados - VERDE -->
+      <div class="action-card animate-fade delay-3">
+        <div class="action-image">
+          <img src="https://images.unsplash.com/photo-1469571486292-0ba58a3f068b?auto=format&fit=crop&w=600&q=80" alt="Voluntarios ayudando en comunidad">
+          <div class="action-badge volunteer">
+            <i class="fas fa-heart"></i> +50 pts/h
+          </div>
+        </div>
+        <div class="action-content">
+          <h3 class="action-title">
+            <div class="action-icon volunteer"><i class="fas fa-hands-helping"></i></div> 
+            Voluntariados
+          </h3>
+          <p class="action-description">Conecta con oportunidades presenciales o remotas que necesitan tus habilidades específicas y experiencia.</p>
+          <div class="action-features">
+            <div class="feature-item">
+              <div class="feature-dot"></div>
+              <span>+50 puntos por hora</span>
+            </div>
+            <div class="feature-item">
+              <div class="feature-dot"></div>
+              <span>Certificados verificables</span>
+            </div>
+            <div class="feature-item">
+              <div class="feature-dot"></div>
+              <span>Experiencias transformadoras</span>
+            </div>
+            <div class="feature-item">
+              <div class="feature-dot"></div>
+              <span>Presencial y remoto</span>
+            </div>
+          </div>
+          <a href="/volunteering" class="action-button btn-accent">
+            <i class="fas fa-search"></i> Buscar voluntariados
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ✅ GAMIFICATION SECTION - SIMPLIFICADO Y MEJORADO -->
+  <section class="gamification-section">
+    <div class="gamification-container">
+      <div class="section-header">
+        <h2>Sistema de Puntos y Recompensas</h2>
+        <p>Convierte tu impacto en logros tangibles y reconocimiento</p>
+      </div>
+      
+      <div class="gamification-cards">
+        <!-- Puntos de Impacto -->
+        <div class="gamification-card">
+          <div class="action-icon" style="margin: 0 auto;">
+            <i class="fas fa-star" style="font-size: 2rem;"></i>
+          </div>
+          <h3>Puntos de Impacto</h3>
+          <p>Cada acción que realizas suma puntos que reflejan tu contribución real al cambio social.</p>
+          <div style="background: var(--light); padding: 1.5rem; border-radius: 12px; margin: 1.5rem 0;">
+            <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem; text-align: center;">
+              <div>
+                <div style="font-size: 1.5rem; font-weight: 700; color: var(--primary);">+10</div>
+                <div style="font-size: 0.9rem; color: #666;">pts por €1 donado</div>
+              </div>
+              <div>
+                <div style="font-size: 1.5rem; font-weight: 700; color: var(--accent);">+25</div>
+                <div style="font-size: 0.9rem; color: #666;">pts por tarea</div>
+              </div>
+              <div>
+                <div style="font-size: 1.5rem; font-weight: 700; color: var(--warning);">+500</div>
+                <div style="font-size: 0.9rem; color: #666;">pts por reto</div>
+              </div>
+              <div>
+                <div style="font-size: 1.5rem; font-weight: 700; color: var(--urgent);">+50</div>
+                <div style="font-size: 0.9rem; color: #666;">pts por hora voluntaria</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Niveles -->
+        <div class="gamification-card">
+          <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin: 2rem 0;">
+            <div style="text-align: center;">
+              <div style="width: 60px; height: 60px; border-radius: 50%; background: #cd7f32; display: flex; align-items: center; justify-content: center; color: white; margin: 0 auto 0.5rem;">
+                <i class="fas fa-award" style="font-size: 1.5rem;"></i>
+              </div>
+              <div style="font-size: 0.8rem; color: #666; font-weight: 600;">BRONCE</div>
+              <div style="font-size: 0.7rem; color: #999;">0-1,000 pts</div>
+            </div>
+            <div style="text-align: center;">
+              <div style="width: 60px; height: 60px; border-radius: 50%; background: #c0c0c0; display: flex; align-items: center; justify-content: center; color: white; margin: 0 auto 0.5rem;">
+                <i class="fas fa-medal" style="font-size: 1.5rem;"></i>
+              </div>
+              <div style="font-size: 0.8rem; color: #666; font-weight: 600;">PLATA</div>
+              <div style="font-size: 0.7rem; color: #999;">1,000-5,000 pts</div>
+            </div>
+            <div style="text-align: center;">
+              <div style="width: 60px; height: 60px; border-radius: 50%; background: var(--gold); display: flex; align-items: center; justify-content: center; color: white; margin: 0 auto 0.5rem;">
+                <i class="fas fa-trophy" style="font-size: 1.5rem;"></i>
+              </div>
+              <div style="font-size: 0.8rem; color: #666; font-weight: 600;">ORO</div>
+              <div style="font-size: 0.7rem; color: #999;">5,000+ pts</div>
+            </div>
+          </div>
+          <h3>Sistema de Niveles</h3>
+          <p>Avanza a través de diferentes niveles mientras acumulas puntos de impacto. Cada nivel desbloquea nuevos beneficios.</p>
+          <div style="text-align: center; margin-top: 1.5rem;">
+            <span style="background: var(--primary); color: white; padding: 0.5rem 1.5rem; border-radius: 25px; font-weight: 600; font-size: 0.9rem;">
+              ¡3 niveles disponibles!
+            </span>
+          </div>
+        </div>
+        
+        <!-- Beneficios -->
+        <div class="gamification-card">
+          <div class="action-icon" style="margin: 0 auto;">
+            <i class="fas fa-gift" style="font-size: 2rem;"></i>
+          </div>
+          <h3>Beneficios y Recompensas</h3>
+          <p>Gana reconocimiento y accede a beneficios exclusivos mientras generas impacto positivo.</p>
+          <div style="margin-top: 1.5rem;">
+            <div class="feature-item" style="margin-bottom: 0.8rem;">
+              <div class="feature-dot"></div>
+              <span>Certificados digitales verificables</span>
+            </div>
+            <div class="feature-item" style="margin-bottom: 0.8rem;">
+              <div class="feature-dot"></div>
+              <span>Acceso a retos exclusivos</span>
+            </div>
+            <div class="feature-item" style="margin-bottom: 0.8rem;">
+              <div class="feature-dot"></div>
+              <span>Perfil público de impacto</span>
+            </div>
+            <div class="feature-item" style="margin-bottom: 0.8rem;">
+              <div class="feature-dot"></div>
+              <span>Reconocimiento en la comunidad</span>
+            </div>
+          </div>
+          <div style="text-align: center; margin-top: 1.5rem;">
+            <span style="background: var(--accent); color: white; padding: 0.5rem 1.5rem; border-radius: 25px; font-weight: 600; font-size: 0.9rem;">
+              ¡Empieza a ganar hoy!
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ✅ RANKING SECTION - EXACTO COMO INDEX -->
+  <section id="ranking" class="ranking-section">
+    <div class="section-header">
+      <h2>Ranking de Impacto</h2>
+      <p>Conoce a los usuarios que más están marcando la diferencia</p>
+    </div>
+    
+    <div class="ranking-grid">
+      <div class="top-members">
+        <h3 style="color: var(--primary); margin-bottom: 2rem; text-align: center;">Top Usuarios del Mes</h3>
+        
+        <div class="member-item">
+          <div class="member-rank gold">1</div>
+          <img src="https://images.unsplash.com/photo-1544725176-7c40e5a71c5e?auto=format&fit=crop&w=150&q=80" alt="Sofia Martín" class="member-avatar">
+          <div class="member-info">
+            <div class="member-name">Sofia Martín</div>
+            <div class="member-level">Nivel Diamante</div>
+          </div>
+          <div class="member-points">18,450 pts</div>
+        </div>
+
+        <div class="member-item">
+          <div class="member-rank silver">2</div>
+          <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=150&q=80" alt="David López" class="member-avatar">
+          <div class="member-info">
+            <div class="member-name">David López</div>
+            <div class="member-level">Nivel Platino</div>
+          </div>
+          <div class="member-points">15,280 pts</div>
+        </div>
+
+        <div class="member-item">
+          <div class="member-rank bronze">3</div>
+          <img src="https://images.unsplash.com/photo-1489424731084-a5d8b219a5bb?auto=format&fit=crop&w=150&q=80" alt="Laura Sánchez" class="member-avatar">
+          <div class="member-info">
+            <div class="member-name">Laura Sánchez</div>
+            <div class="member-level">Nivel Oro</div>
+          </div>
+          <div class="member-points">12,940 pts</div>
+        </div>
+
+        <div class="member-item">
+          <div class="member-rank other">4</div>
+          <img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=150&q=80" alt="Pablo García" class="member-avatar">
+          <div class="member-info">
+            <div class="member-name">Pablo García</div>
+            <div class="member-level">Nivel Plata</div>
+          </div>
+          <div class="member-points">10,780 pts</div>
+        </div>
+
+        <div class="member-item">
+          <div class="member-rank other">5</div>
+          <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=150&q=80" alt="Elena Ruiz" class="member-avatar">
+          <div class="member-info">
+            <div class="member-name">Elena Ruiz</div>
+            <div class="member-level">Nivel Plata</div>
+          </div>
+          <div class="member-points">9,650 pts</div>
+        </div>
+      </div>
+
+      <div class="ranking-stats">
+        <div class="ranking-stat-card">
+          <div class="ranking-stat-icon points">
+            <i class="fas fa-star"></i>
+          </div>
+          <div class="ranking-stat-number" id="total-points">0</div>
+          <div class="ranking-stat-label">Puntos del Top 10</div>
+        </div>
+
+        <div class="ranking-stat-card">
+          <div class="ranking-stat-icon volunteer">
+            <i class="fas fa-hands-helping"></i>
+          </div>
+          <div class="ranking-stat-number" id="top-volunteer-hours">0h</div>
+          <div class="ranking-stat-label">Horas Voluntariado</div>
+        </div>
+
+        <div class="ranking-stat-card">
+          <div class="ranking-stat-icon challenges">
+            <i class="fas fa-trophy"></i>
+          </div>
+          <div class="ranking-stat-number" id="completed-challenges">0</div>
+          <div class="ranking-stat-label">Retos Completados</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ✅ CTA SECTION - EXACTO COMO INDEX -->
+  <section class="cta-section">
+    <div style="max-width: 800px; margin: 0 auto;">
+      <h2 class="cta-title">¿Listo para comenzar tu viaje de impacto?</h2>
+      <p class="cta-description">Únete a miles de personas que están transformando el mundo a través de acciones concretas. Regístrate ahora y comienza a ganar puntos.</p>
+      <div class="cta-buttons">
+        <a href="/register" class="btn btn-accent">
+          <i class="fas fa-user-plus"></i> Crear cuenta gratis
+        </a>
+        <a href="/login" class="btn btn-outline-white">
+          <i class="fas fa-sign-in-alt"></i> Iniciar sesión
+        </a>
+      </div>
+    </div>
+  </section>
+{% endblock %}
+
+{% block scripts %}
+  {{ super() }}
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      // ✅ ANIMACIÓN DE CONTADORES - 10 SEGUNDOS
+      setTimeout(() => {
+        animateCounter('total-causes', 1250);
+        animateCounter('completed-tasks', 58000);
+        animateCounter('active-challenges', 42);
+        animateCounter('volunteer-hours', 3840, 'h');
+        animateCounter('impact-points', 2840000);
+        animateCounter('total-points', 125430);
+        animateCounter('top-volunteer-hours', 1240, 'h');
+        animateCounter('completed-challenges', 89);
+      }, 500);
+
+      // ✅ SCROLL SUAVE
+      document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function(e) {
+          e.preventDefault();
+          const target = document.querySelector(this.getAttribute('href'));
+          if (target) {
+            target.scrollIntoView({
+              behavior: 'smooth',
+              block: 'start'
+            });
+          }
+        });
+      });
+
+      // ✅ EFECTOS HOVER MEJORADOS PARA MÓVIL
+      const cards = document.querySelectorAll('.action-card, .gamification-card');
+      cards.forEach(card => {
+        // Solo añadir efectos hover en desktop
+        if (window.innerWidth > 768) {
+          card.addEventListener('mouseenter', function() {
+            this.style.transform = 'translateY(-8px)';
+          });
+          card.addEventListener('mouseleave', function() {
+            this.style.transform = 'translateY(0)';
+          });
+        }
+      });
+
+      // ✅ INTERSECTION OBSERVER PARA ANIMACIONES
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.style.opacity = '1';
+            entry.target.style.transform = 'translateY(0)';
+          }
+        });
+      }, { threshold: 0.1 });
+
+      document.querySelectorAll('.action-card, .gamification-card, .live-stat').forEach(el => {
+        el.style.opacity = '0';
+        el.style.transform = 'translateY(30px)';
+        el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+        observer.observe(el);
+      });
+    });
+
+    function animateCounter(elementId, target, suffix = '') {
+      const element = document.getElementById(elementId);
+      if (!element || target === 0) {
+        if (element) element.textContent = '0' + suffix;
+        return;
+      }
+
+      let current = 0;
+      const increment = target / 500; // 500 pasos en 10 segundos
+      const timer = setInterval(() => {
+        current += increment;
+        if (current >= target) {
+          element.textContent = Math.floor(target).toLocaleString() + suffix;
+          clearInterval(timer);
+        } else {
+          element.textContent = Math.floor(current).toLocaleString() + suffix;
+        }
+      }, 20); // 20ms * 500 = 10 segundos
+    }
+  </script>
+{% endblock %}

@@ -1,0 +1,663 @@
+{% extends "layout.njk" %}
+
+{% block title %}Editar Perfil | Solidarity{% endblock %}
+
+{% block head %}
+  {{ super() }}
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <style>
+    .main-container {
+      max-width: 1200px;
+      margin: 2rem auto;
+      padding: 0 2rem;
+    }
+    .profile-settings-container {
+      background: #fff;
+      border-radius: 18px;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.07);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+    .profile-header {
+      background: #fff;
+      border-bottom: 2px solid var(--gray);
+      padding: 2.5rem 2rem 2rem 2rem;
+      text-align: center;
+      position: relative;
+    }
+    .profile-header-content {
+      max-width: 700px;
+      margin: 0 auto;
+    }
+    .profile-header h1 {
+      font-size: 2.2rem;
+      margin-bottom: 1rem;
+      font-weight: 800;
+      color: var(--primary);
+      letter-spacing: -1px;
+    }
+    .profile-header p {
+      font-size: 1.15rem;
+      color: #444;
+      opacity: 0.93;
+    }
+    .back-btn {
+      position: absolute;
+      top: 1.5rem;
+      left: 1.5rem;
+      color: var(--primary);
+      font-size: 1.2rem;
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: #f8fafc;
+      padding: 0.4rem 1rem;
+      border-radius: 30px;
+      transition: background 0.2s, color 0.2s;
+      z-index: 2;
+      border: 1px solid var(--gray);
+      font-weight: 600;
+    }
+    .back-btn:hover {
+      background: var(--primary);
+      color: #fff;
+    }
+    .profile-main {
+      display: flex;
+      gap: 2rem;
+      padding: 2.5rem 2rem;
+      flex-wrap: wrap;
+    }
+    .profile-sidebar {
+      min-width: 260px;
+      max-width: 300px;
+      border-right: 1px solid var(--gray);
+      padding-right: 1.5rem;
+    }
+    .sidebar-nav {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+    .sidebar-item {
+      padding: 0.9rem 1.2rem;
+      border-radius: 8px;
+      color: var(--dark);
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+      transition: all 0.2s;
+      font-weight: 500;
+      background: none;
+      border: none;
+      cursor: pointer;
+    }
+    .sidebar-item.active, .sidebar-item:hover {
+      background: #e6f0fa;
+      color: var(--primary);
+      font-weight: 600;
+    }
+    .profile-content {
+      flex: 1;
+      padding: 0 1rem;
+      min-width: 0;
+    }
+    .section {
+      margin-bottom: 2.5rem;
+      display: none;
+    }
+    .section.active {
+      display: block;
+    }
+    .section-header {
+      margin-bottom: 1.8rem;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      padding-bottom: 0.8rem;
+      border-bottom: 2px solid var(--gray);
+    }
+    .section-header h2 {
+      font-size: 1.3rem;
+      color: var(--primary);
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+      font-weight: 700;
+    }
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 1.5rem;
+    }
+    @media (min-width: 768px) {
+      .form-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+    .form-group {
+      margin-bottom: 1.2rem;
+    }
+    .form-group label {
+      display: block;
+      margin-bottom: 0.5rem;
+      font-weight: 600;
+      color: var(--primary);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .form-group input, 
+    .form-group select, 
+    .form-group textarea {
+      width: 100%;
+      padding: 0.9rem 1.2rem;
+      border: 1px solid var(--gray);
+      border-radius: 8px;
+      font-size: 1rem;
+      background: #f8fafc;
+      transition: all 0.2s;
+    }
+    .form-group input:focus, 
+    .form-group select:focus, 
+    .form-group textarea:focus {
+      border-color: var(--primary);
+      outline: none;
+      background: #fff;
+    }
+    .photo-section {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 1.5rem;
+      padding: 1.5rem;
+      background: #f8fafc;
+      border-radius: 12px;
+      margin-bottom: 2rem;
+    }
+    .photo-preview {
+      width: 140px;
+      height: 140px;
+      border-radius: 50%;
+      overflow: hidden;
+      border: 4px solid var(--accent);
+      position: relative;
+      background: #fff;
+    }
+    .photo-preview img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    .photo-actions {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      width: 100%;
+      max-width: 300px;
+    }
+    .photo-upload {
+      display: none;
+    }
+    .btn {
+      padding: 0.8rem 1.5rem;
+      border-radius: 30px;
+      border: none;
+      font-weight: 500;
+      font-size: 1em;
+      cursor: pointer;
+      transition: background 0.2s, color 0.2s;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.7rem;
+    }
+    .btn-primary {
+      background: var(--primary);
+      color: #fff;
+    }
+    .btn-primary:hover {
+      background: var(--primary-dark);
+    }
+    .btn-outline {
+      background: #fff;
+      color: var(--primary);
+      border: 2px solid var(--primary);
+    }
+    .btn-outline:hover {
+      background: #eaf3fa;
+    }
+    .btn-sm {
+      padding: 0.5rem 1.2rem;
+      font-size: 0.9rem;
+    }
+    .interests-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+      gap: 1rem;
+      margin-top: 1.2rem;
+    }
+    .interest-item {
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+      padding: 0.8rem;
+      background: #f8fafc;
+      border-radius: 8px;
+      border: 1px solid var(--gray);
+      cursor: pointer;
+      transition: all 0.2s;
+      font-weight: 500;
+    }
+    .interest-item:hover {
+      border-color: var(--primary);
+    }
+    .interest-item.selected {
+      background: #e6f0fa;
+      border-color: var(--primary);
+    }
+    .interest-checkbox {
+      display: none;
+    }
+    .actions-footer {
+      display: flex;
+      justify-content: flex-end;
+      gap: 1rem;
+      padding-top: 2rem;
+      margin-top: 2rem;
+      border-top: 1px solid var(--gray);
+    }
+    @media (max-width: 900px) {
+      .main-container {
+        padding: 1.2rem 0.5rem;
+      }
+      .profile-main {
+        flex-direction: column;
+        padding: 1.5rem 0.5rem;
+      }
+      .profile-sidebar {
+        border-right: none;
+        border-bottom: 1px solid var(--gray);
+        padding-right: 0;
+        margin-bottom: 2rem;
+      }
+    }
+  </style>
+{% endblock %}
+
+{% block content %}
+<div class="main-container">
+  <div class="profile-settings-container">
+    <div class="profile-header">
+      <div class="profile-header-content">
+        <h1>Configuración del Perfil</h1>
+        <p>Personaliza tu experiencia en Solidarity y gestiona tus preferencias</p>
+      </div>
+    </div>
+    <div class="profile-main">
+      <div class="profile-sidebar">
+        <nav class="sidebar-nav">
+          <a href="#" class="sidebar-item active" data-section="personal-info">
+            <i class="fas fa-user"></i> Información Personal
+          </a>
+          <a href="#" class="sidebar-item" data-section="account-security">
+            <i class="fas fa-shield-alt"></i> Seguridad de la Cuenta
+          </a>
+          <a href="#" class="sidebar-item" data-section="interests">
+            <i class="fas fa-heart"></i> Intereses
+          </a>
+          <a href="#" class="sidebar-item" data-section="notifications">
+            <i class="fas fa-bell"></i> Notificaciones
+          </a>
+          <a href="#" class="sidebar-item" data-section="social-accounts">
+            <i class="fas fa-share-alt"></i> Redes Sociales
+          </a>
+          <a href="#" class="sidebar-item" data-section="privacy">
+            <i class="fas fa-lock"></i> Privacidad
+          </a>
+          <a href="#" class="sidebar-item" data-section="delete-account">
+            <i class="fas fa-exclamation-triangle"></i> Eliminar Cuenta
+          </a>
+        </nav>
+      </div>
+      <div class="profile-content">
+        <!-- Información Personal -->
+        <div class="section active" id="personal-info">
+          <div class="section-header">
+            <h2><i class="fas fa-user"></i> Información Personal</h2>
+          </div>
+          <div class="photo-section">
+            <div class="photo-preview">
+              <img src="/img/avatar-default.jpg" alt="Foto de perfil" id="profile-photo">
+            </div>
+            <div class="photo-actions">
+              <input type="file" id="photo-upload" class="photo-upload" accept="image/*">
+              <button class="btn btn-outline" id="change-photo-btn">
+                <i class="fas fa-camera"></i> Cambiar Foto
+              </button>
+              <button class="btn btn-outline">
+                <i class="fas fa-magic"></i> Usar Avatar
+              </button>
+            </div>
+          </div>
+          <form class="form-grid">
+            <div class="form-group">
+              <label for="first-name"><i class="fas fa-signature"></i> Nombre</label>
+              <input type="text" id="first-name" value="">
+            </div>
+            <div class="form-group">
+              <label for="last-name"><i class="fas fa-signature"></i> Apellidos</label>
+              <input type="text" id="last-name" value="">
+            </div>
+            <div class="form-group">
+              <label for="username"><i class="fas fa-at"></i> Nombre de usuario</label>
+              <input type="text" id="username" value="">
+            </div>
+            <div class="form-group">
+              <label for="email"><i class="fas fa-envelope"></i> Correo electrónico</label>
+              <input type="email" id="email" value="" readonly>
+            </div>
+            <div class="form-group">
+              <label for="country"><i class="fas fa-globe-europe"></i> País</label>
+              <select id="country">
+                <option value="">Selecciona tu país</option>
+                <option value="es">España</option>
+                <option value="mx">México</option>
+                <option value="ar">Argentina</option>
+                <option value="co">Colombia</option>
+                <option value="cl">Chile</option>
+                <option value="pe">Perú</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="birthdate"><i class="fas fa-birthday-cake"></i> Fecha de nacimiento</label>
+              <input type="date" id="birthdate" value="">
+            </div>
+            <div class="form-group" style="grid-column: 1 / -1;">
+              <label for="slogan"><i class="fas fa-quote-left"></i> Tu lema personal</label>
+              <input type="text" id="slogan" value="">
+            </div>
+            <div class="form-group" style="grid-column: 1 / -1;">
+              <label for="bio"><i class="fas fa-book-open"></i> Sobre ti</label>
+              <textarea id="bio" rows="4"></textarea>
+            </div>
+          </form>
+        </div>
+        <!-- Seguridad de la Cuenta -->
+        <div class="section" id="account-security">
+          <div class="section-header">
+            <h2><i class="fas fa-shield-alt"></i> Seguridad de la Cuenta</h2>
+          </div>
+          <!-- ...contenido de seguridad... -->
+        </div>
+        <!-- Intereses -->
+        <div class="section" id="interests">
+          <div class="section-header">
+            <h2><i class="fas fa-heart"></i> Tus Intereses</h2>
+          </div>
+          <p>Selecciona los temas que más te interesan para personalizar tu experiencia en Solidarity y recibir contenido relevante.</p>
+          <div class="interests-grid">
+            <label class="interest-item">
+              <input type="checkbox" class="interest-checkbox">
+              <i class="fas fa-leaf" style="color: #2ecc71;"></i> Medio Ambiente
+            </label>
+            <label class="interest-item">
+              <input type="checkbox" class="interest-checkbox">
+              <i class="fas fa-book" style="color: #3498db;"></i> Educación
+            </label>
+            <label class="interest-item">
+              <input type="checkbox" class="interest-checkbox">
+              <i class="fas fa-heartbeat" style="color: #e74c3c;"></i> Salud
+            </label>
+            <label class="interest-item">
+              <input type="checkbox" class="interest-checkbox">
+              <i class="fas fa-paw" style="color: #f39c12;"></i> Animales
+            </label>
+            <label class="interest-item">
+              <input type="checkbox" class="interest-checkbox">
+              <i class="fas fa-utensils" style="color: #9b59b6;"></i> Alimentación
+            </label>
+            <label class="interest-item">
+              <input type="checkbox" class="interest-checkbox">
+              <i class="fas fa-female" style="color: #e84393;"></i> Igualdad de Género
+            </label>
+            <label class="interest-item">
+              <input type="checkbox" class="interest-checkbox">
+              <i class="fas fa-hand-holding-heart" style="color: #d63031;"></i> Pobreza
+            </label>
+            <label class="interest-item">
+              <input type="checkbox" class="interest-checkbox">
+              <i class="fas fa-hands-helping" style="color: #00b894;"></i> Voluntariado
+            </label>
+          </div>
+        </div>
+        <!-- Notificaciones -->
+        <div class="section" id="notifications">
+          <div class="section-header">
+            <h2><i class="fas fa-bell"></i> Configuración de Notificaciones</h2>
+          </div>
+          <!-- ...contenido de notificaciones... -->
+        </div>
+        <!-- Redes Sociales -->
+        <div class="section" id="social-accounts">
+          <div class="section-header">
+            <h2><i class="fas fa-share-alt"></i> Cuentas Sociales Conectadas</h2>
+          </div>
+          <!-- ...contenido de redes sociales... -->
+        </div>
+        <!-- Privacidad -->
+        <div class="section" id="privacy">
+          <div class="section-header">
+            <h2><i class="fas fa-lock"></i> Configuración de Privacidad</h2>
+          </div>
+          <!-- ...contenido de privacidad... -->
+        </div>
+        <!-- Eliminar Cuenta -->
+        <div class="section" id="delete-account">
+          <div class="section-header">
+            <h2><i class="fas fa-exclamation-triangle"></i> Eliminar Cuenta</h2>
+          </div>
+          <!-- ...contenido de eliminar cuenta... -->
+        </div>
+        <div class="actions-footer">
+          <button class="btn btn-outline" type="button">
+            <i class="fas fa-times"></i> Cancelar
+          </button>
+          <button class="btn btn-primary" type="button">
+            <i class="fas fa-save"></i> Guardar Cambios
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+{{ super() }}
+<script type="module">
+import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm'
+
+const supabase = createClient(
+  'https://cyftasxlrzuynzbrfgkd.supabase.co',
+  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImN5ZnRhc3hscnp1eW56YnJmZ2tkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDgwMzUzMTksImV4cCI6MjA2MzYxMTMxOX0.I56ZqFTfLgdwWlcozMVncGNGBZ4A2_5VpAbHeNmtDhA'
+);
+
+// Toast visual
+function showToast(msg, type = "success") {
+  let toast = document.createElement('div');
+  toast.textContent = msg;
+  toast.style.position = 'fixed';
+  toast.style.bottom = '2rem';
+  toast.style.left = '50%';
+  toast.style.transform = 'translateX(-50%)';
+  toast.style.background = type === "success" ? "#4fc3a1" : "#e53e3e";
+  toast.style.color = "#fff";
+  toast.style.padding = "1rem 2rem";
+  toast.style.borderRadius = "8px";
+  toast.style.fontWeight = "600";
+  toast.style.zIndex = "9999";
+  document.body.appendChild(toast);
+  setTimeout(() => toast.remove(), 2500);
+}
+
+document.addEventListener('DOMContentLoaded', async function() {
+  // Navegación entre secciones
+  const sidebarItems = document.querySelectorAll('.sidebar-item');
+  const sections = document.querySelectorAll('.section');
+  sidebarItems.forEach(item => {
+    item.addEventListener('click', function(e) {
+      e.preventDefault();
+      sidebarItems.forEach(i => i.classList.remove('active'));
+      this.classList.add('active');
+      const sectionId = this.getAttribute('data-section');
+      sections.forEach(section => {
+        section.classList.remove('active');
+        if (section.id === sectionId) {
+          section.classList.add('active');
+        }
+      });
+    });
+  });
+
+  // 1. Obtener usuario logueado
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) {
+    window.location.href = '/login?return=/perfil/editprofile';
+    return;
+  }
+
+  // 2. Obtener perfil desde Supabase
+  const { data: profile, error } = await supabase
+    .from('profiles')
+    .select('*')
+    .eq('id', user.id)
+    .single();
+
+  if (error || !profile) {
+    showToast('No se pudo cargar tu perfil.', 'error');
+    return;
+  }
+
+  // 3. Rellenar los campos del formulario
+  function setValue(id, value) {
+    const el = document.getElementById(id);
+    if (el) el.value = value || '';
+  }
+
+  // Foto de perfil
+  const photoElement = document.getElementById('profile-photo');
+  if (photoElement) {
+    photoElement.src = profile.photo_url || '/img/avatar-default.jpg';
+  }
+
+  setValue('first-name', profile.first_name);
+  setValue('last-name', profile.last_name);
+  setValue('username', profile.username);
+  setValue('email', profile.email || user.email);
+  setValue('country', profile.country);
+  setValue('birthdate', profile.birthdate);
+  setValue('slogan', profile.slogan);
+  setValue('bio', profile.bio);
+
+  // Intereses
+  if (profile.interests) {
+    const interests = Array.isArray(profile.interests) ? profile.interests : profile.interests.split(',');
+    document.querySelectorAll('.interest-item').forEach(item => {
+      const label = item.textContent.trim();
+      if (interests.includes(label)) {
+        item.classList.add('selected');
+        item.querySelector('.interest-checkbox').checked = true;
+      } else {
+        item.classList.remove('selected');
+        item.querySelector('.interest-checkbox').checked = false;
+      }
+    });
+  }
+
+  // Preview de foto antes de guardar
+  const photoUpload = document.getElementById('photo-upload');
+  const changePhotoBtn = document.getElementById('change-photo-btn');
+  if (changePhotoBtn && photoUpload && photoElement) {
+    changePhotoBtn.addEventListener('click', function() {
+      photoUpload.click();
+    });
+    photoUpload.addEventListener('change', function(e) {
+      if (e.target.files && e.target.files[0]) {
+        const reader = new FileReader();
+        reader.onload = function(event) {
+          photoElement.src = event.target.result;
+        }
+        reader.readAsDataURL(e.target.files[0]);
+      }
+    });
+  }
+
+  // Intereses visuales
+  document.querySelectorAll('.interest-item').forEach(item => {
+    item.addEventListener('click', function() {
+      this.classList.toggle('selected');
+      const checkbox = this.querySelector('.interest-checkbox');
+      checkbox.checked = !checkbox.checked;
+    });
+  });
+
+  // Guardar cambios
+  const saveBtn = document.querySelector('.actions-footer .btn-primary');
+  if (saveBtn) {
+    saveBtn.onclick = async function(e) {
+      e.preventDefault();
+      this.disabled = true;
+      this.textContent = "Guardando...";
+
+      const updatedProfile = {
+        first_name: document.getElementById('first-name')?.value,
+        last_name: document.getElementById('last-name')?.value,
+        username: document.getElementById('username')?.value,
+        country: document.getElementById('country')?.value,
+        birthdate: document.getElementById('birthdate')?.value,
+        slogan: document.getElementById('slogan')?.value,
+        bio: document.getElementById('bio')?.value,
+        interests: Array.from(document.querySelectorAll('.interest-item.selected')).map(i => i.textContent.trim())
+      };
+
+      // Foto de perfil (opcional)
+      if (photoUpload && photoUpload.files && photoUpload.files[0]) {
+        const file = photoUpload.files[0];
+        const fileExt = file.name.split('.').pop();
+        const fileName = `${user.id}_${Date.now()}.${fileExt}`;
+        const filePath = `avatars/${fileName}`;
+        const { error: uploadError } = await supabase.storage
+          .from('avatars')
+          .upload(filePath, file, { upsert: true });
+        if (!uploadError) {
+          const { data: urlData } = supabase.storage.from('avatars').getPublicUrl(filePath);
+          updatedProfile.photo_url = urlData.publicUrl;
+        } else {
+          showToast('Error subiendo la foto de perfil', 'error');
+        }
+      }
+
+      const { error: updateError } = await supabase
+        .from('profiles')
+        .update(updatedProfile)
+        .eq('id', user.id);
+
+      this.disabled = false;
+      this.textContent = "Guardar Cambios";
+
+      if (updateError) {
+        showToast('Error al guardar cambios: ' + updateError.message, 'error');
+      } else {
+        showToast('¡Perfil actualizado!');
+        setTimeout(() => window.location.reload(), 1200);
+      }
+    };
+  }
+});
+</script>
+{% endblock %}

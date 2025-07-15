@@ -1,0 +1,2230 @@
+{% extends "layout.njk" %}
+
+{% block title %}Solidarity - Plataforma de Impacto Social{% endblock %}
+
+{% block head %}
+  {{ super() }}
+  <style>
+    :root {
+      --primary: #4a6fa5;        /* Azul Solidarity - CAUSAS (mantener) */
+      --primary-dark: #166088;
+      --teal: #0891b2;           /* Azul verdoso/teal - TAREAS (más diferenciado) */
+      --accent: #4fc3a1;         /* Verde - VOLUNTARIADOS (mantener) */
+      --accent-dark: #3da58a;
+      --warning: #f59e42;        /* Naranja - RETOS (mantener) */
+      --purple: #8b5cf6;         /* Púrpura - COMUNIDADES (mantener) */
+      --gold: #eab308;           /* Dorado - RANKING (mantener) */
+      --urgent: #e53e3e;
+      --light: #f8fafc;
+      --dark: #2d3748;
+      --gray: #e2e8f0;
+    }
+
+    /* ✅ HERO - Fondo azul Solidarity correcto */
+    .hero {
+      background: linear-gradient(135deg, var(--primary), var(--primary-dark)) !important;
+      color: white !important;
+      padding: 4rem 2rem 6rem;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+      margin-bottom: 0;
+    }
+
+    .hero-container {
+      display: flex;
+      align-items: center;
+      max-width: 1200px;
+      margin: 0 auto;
+      position: relative;
+      z-index: 2;
+      gap: 3rem;
+    }
+
+    .hero-content {
+      flex: 1;
+      text-align: left;
+      padding: 2rem 0;
+    }
+
+    .hero-image {
+      flex: 1;
+      position: relative;
+      display: none; /* Oculto en móvil */
+    }
+
+    .hero-image img {
+      width: 100%;
+      max-width: 500px;
+      border-radius: 16px;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+      transform: rotate(-3deg);
+      transition: transform 0.3s ease;
+    }
+
+    .hero-image:hover img {
+      transform: rotate(0) scale(1.02);
+    }
+
+    .hero h1 {
+      font-size: 2.8rem;
+      margin-bottom: 1.5rem;
+      font-weight: 800;
+      line-height: 1.2;
+      text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      color: white !important;
+    }
+
+    .hero-subtitle {
+      font-size: 1.2rem;
+      margin: 0 auto 2rem;
+      font-weight: 400;
+      opacity: 0.9;
+      max-width: 600px;
+      color: rgba(255,255,255,0.95) !important;
+    }
+
+    .hero-buttons {
+      display: flex;
+      gap: 1.5rem;
+      margin-top: 2rem;
+      flex-wrap: wrap;
+    }
+
+/* ✅ STATS SECTION - EXACTO COMO ACTIONS */
+.live-stats {
+  padding: 4rem 2rem;
+  background: linear-gradient(to bottom, #f8fafc, #ffffff);
+  text-align: center;
+  max-width: 1200px; /* ✅ EXACTAMENTE IGUAL QUE ACTIONS */
+  margin: 0 auto; /* ✅ CENTRADO PERFECTO */
+}
+
+.section-header {
+  text-align: center;
+  margin-bottom: 3rem;
+}
+
+.section-header h2 {
+  font-size: 2rem;
+  font-weight: 800;
+  color: var(--primary);
+  margin-bottom: 1rem;
+}
+
+.section-header p {
+  font-size: 1.1rem;
+  color: #64748b;
+  line-height: 1.6;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr); /* ✅ 2 columnas base */
+  gap: 1.5rem;
+  max-width: 1200px; /* ✅ MISMO QUE ACTIONS */
+  margin: 0 auto;
+  padding: 0 2rem; /* ✅ MISMO PADDING QUE ACTIONS */
+}
+
+.live-stat {
+  padding: 2rem 1.5rem;
+  background: white;
+  border-radius: 16px;
+  border: 1px solid #e2e8f0;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+}
+
+.live-stat:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 8px 30px rgba(0,0,0,0.12);
+  border-color: var(--primary);
+}
+
+.live-stat-number {
+  font-size: 2.2rem;
+  font-weight: 900 !important;
+  color: var(--primary) !important;
+  display: block;
+  margin-bottom: 0.5rem;
+  text-shadow: 0 1px 3px rgba(74, 111, 165, 0.15);
+}
+
+.live-stat-label {
+  font-size: 0.9rem;
+  color: #64748b;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* ✅ RESPONSIVE STATS - SIN DUPLICACIONES */
+@media (max-width: 480px) {
+  .stats-grid {
+    grid-template-columns: repeat(1, 1fr); /* ✅ 1 columna en móvil */
+    gap: 1rem;
+    padding: 0 1rem;
+  }
+  
+  .live-stat {
+    padding: 1.5rem 1rem;
+  }
+  
+  .live-stat-number {
+    font-size: 1.8rem;
+  }
+}
+
+@media (min-width: 481px) and (max-width: 768px) {
+  .stats-grid {
+    grid-template-columns: repeat(2, 1fr); /* ✅ 2 columnas en tablet */
+    gap: 1.5rem;
+  }
+}
+
+@media (min-width: 769px) {
+  .stats-grid {
+    grid-template-columns: repeat(3, 1fr); /* ✅ 3 columnas en tablet grande */
+  }
+}
+
+@media (min-width: 1024px) {
+  .stats-grid {
+    grid-template-columns: repeat(5, 1fr); /* ✅ 5 COLUMNAS EN DESKTOP */
+    gap: 2rem;
+  }
+}
+
+    /* ✅ ACTIONS SECTION */
+    .actions-section {
+      padding: 5rem 2rem;
+      background: white;
+    }
+
+    /* ✅ ACTIONS SECTION - Tarjetas con altura uniforme */
+    .actions-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 2rem;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .action-card {
+      background: white;
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+      transition: all 0.3s ease;
+      border: 1px solid var(--gray);
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      height: 100%; /* ✅ Altura uniforme */
+    }
+
+    .action-image {
+      height: 200px;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .action-image img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.5s ease;
+    }
+
+    .action-card:hover .action-image img {
+      transform: scale(1.1);
+    }
+
+    .action-badge {
+      position: absolute;
+      top: 1rem;
+      right: 1rem;
+      background: var(--primary);  /* CAUSAS - Azul principal (mantener) */
+      color: white;
+      padding: 0.3rem 0.8rem;
+      border-radius: 50px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+
+    .action-badge.secondary {  /* TAREAS - Azul secundario (myactivities) */
+      background: var(--secondary);
+    }
+
+    .action-badge.challenge {  /* RETOS - Naranja (mantener) */
+      background: var(--warning);
+    }
+
+    .action-badge.volunteer {  /* VOLUNTARIADOS - Verde (mantener) */
+      background: var(--accent);
+    }
+
+    .action-badge.purple {  /* COMUNIDADES - Púrpura (mantener) */
+      background: var(--purple);
+    }
+
+    .action-badge.ranking {  /* RANKING - Dorado (mantener) */
+      background: var(--gold);
+    }
+
+    .action-badge.teal {  /* TAREAS - Azul verdoso/teal */
+      background: var(--teal);
+    }
+
+    .action-content {
+      padding: 1.5rem;
+      display: flex;
+      flex-direction: column;
+      flex: 1; /* ✅ Ocupa espacio disponible */
+    }
+
+    .action-title {
+      font-size: 1.4rem;
+      margin-bottom: 0.8rem;
+      color: var(--dark);
+      display: flex;
+      align-items: center;
+      gap: 0.7rem;
+    }
+
+    .action-icon {
+      width: 40px;
+      height: 40px;
+      background: rgba(74, 111, 165, 0.1);  /* CAUSAS - Azul principal (mantener) */
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--primary);
+    }
+
+    .action-icon.teal {  /* TAREAS - Azul verdoso/teal (más diferenciado) */
+      background: rgba(8, 145, 178, 0.1);
+      color: var(--teal);
+    }
+
+    .action-icon.challenge {  /* RETOS - Naranja (mantener) */
+      background: rgba(245, 158, 66, 0.1);
+      color: var(--warning);
+    }
+
+    .action-icon.volunteer {  /* VOLUNTARIADOS - Verde (mantener) */
+      background: rgba(79, 195, 161, 0.1);
+      color: var(--accent);
+    }
+
+    .action-icon.purple {  /* COMUNIDADES - Púrpura (mantener) */
+      background: rgba(139, 92, 246, 0.1);
+      color: var(--purple);
+    }
+
+    .action-icon.ranking {  /* RANKING - Dorado (mantener) */
+      background: rgba(234, 179, 8, 0.1);
+      color: var(--gold);
+    }
+
+    .action-description {
+      color: #6b7280;
+      margin-bottom: 1.5rem;
+      font-size: 0.95rem;
+      line-height: 1.6;
+      flex: 1; /* ✅ Se expande para empujar contenido hacia abajo */
+    }
+
+    .action-stats {
+      display: flex;
+      gap: 1rem;
+      margin-bottom: 1.5rem; /* ✅ Separación fija del botón */
+      font-size: 0.85rem;
+      flex-wrap: wrap;
+      margin-top: auto; /* ✅ Se empuja hacia abajo */
+      justify-content: space-between; /* ✅ Solo distribuir de izquierda a derecha */
+    }
+
+    /* ✅ CAMBIO MUY ESPECÍFICO - Solo para metadatos de tarjetas de acción */
+    .action-stats .stat-item-action i {
+      color: var(--primary); /* ✅ Solo íconos azules en metadatos de acción */
+    }
+
+    .action-stats .stat-item-action {
+      color: #64748b; /* ✅ Solo texto grisáceo en metadatos de acción */
+    }
+
+    /* ✅ BOTONES MEJORADOS PARA TODAS LAS TARJETAS */
+    .action-button {
+      width: 100%;
+      text-align: center;
+      padding: 0.8rem 1rem;
+      border-radius: 8px;
+      font-weight: 600;
+      margin-top: 0; /* ✅ Sin margen superior */
+      transition: all 0.3s ease;
+      text-decoration: none;
+      display: inline-block;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+
+    .action-button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+      text-decoration: none;
+    }
+
+    .action-button.btn-primary {  /* CAUSAS - Azul principal (mantener) */
+      background: var(--primary);
+      color: white;
+      border: 2px solid var(--primary);
+    }
+
+    .action-button.btn-primary:hover {
+      background: var(--primary-dark);
+      border-color: var(--primary-dark);
+      color: white;
+    }
+
+    .action-button.btn-secondary {  /* TAREAS - Azul secundario (myactivities) */
+      background: var(--secondary);
+      color: white;
+      border: 2px solid var(--secondary);
+    }
+
+    .action-button.btn-secondary:hover {
+      background: #4a6b85;
+      border-color: #4a6b85;
+      color: white;
+    }
+
+    .action-button.btn-warning {  /* RETOS - Naranja (mantener) */
+      background: var(--warning);
+      color: white;
+      border: 2px solid var(--warning);
+    }
+
+    .action-button.btn-warning:hover {
+      background: #e68935;
+      border-color: #e68935;
+      color: white;
+    }
+
+    .action-button.btn-accent {  /* VOLUNTARIADOS - Verde (mantener) */
+      background: var(--accent);
+      color: white;
+      border: 2px solid var(--accent);
+    }
+
+    .action-button.btn-accent:hover {
+      background: var(--accent-dark);
+      border-color: var(--accent-dark);
+      color: white;
+    }
+
+    .action-button.btn-purple {  /* COMUNIDADES - Púrpura (mantener) */
+      background: var(--purple);
+      color: white;
+      border: 2px solid var(--purple);
+    }
+
+    .action-button.btn-purple:hover {
+      background: #7c3aed;
+      border-color: #7c3aed;
+      color: white;
+    }
+
+    .action-button.btn-gold {  /* RANKING - Dorado (mantener) */
+      background: var(--gold);
+      color: white;
+      border: 2px solid var(--gold);
+    }
+
+    .action-button.btn-gold:hover {
+      background: #ca8a04;
+      border-color: #ca8a04;
+      color: white;
+    }
+
+    .action-button.btn-teal {  /* TAREAS - Azul verdoso/teal */
+      background: var(--teal);
+      color: white;
+      border: 2px solid var(--teal);
+    }
+
+    .action-button.btn-teal:hover {
+      background: #0e7490;
+      border-color: #0e7490;
+      color: white;
+    }
+
+    /* ✅ PREVIEW SECTION - Separación añadida */
+    .preview-section {
+      padding: 5rem 2rem;
+      background: var(--light);
+      margin-top: 2rem; /* ✅ Separación añadida */
+    }
+
+    .preview-tabs {
+      display: flex;
+      gap: 0.5rem;
+      margin-bottom: 3rem; /* ✅ Aumentado para más separación */
+      overflow-x: auto;
+      padding: 0 0.5rem 1rem;
+      justify-content: center;
+    }
+
+    .tab-btn {
+      background: white;
+      border: 2px solid #e2e8f0;
+      color: var(--primary);
+      padding: 0.75rem 1.5rem;
+      border-radius: 25px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      font-weight: 600;
+      font-size: 0.9rem;
+      white-space: nowrap;
+      flex-shrink: 0;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+    }
+
+    .tab-btn:hover {
+      border-color: var(--primary);
+      transform: translateY(-2px);
+    }
+
+    .tab-btn.active {
+      background: var(--primary);
+      color: white;
+      border-color: var(--primary);
+    }
+
+    .tab-content {
+      margin-top: 2rem;
+    }
+
+    .tab-pane {
+      display: none;
+    }
+
+    .tab-pane.active {
+      display: block;
+    }
+
+    /* ✅ PREVIEW CARDS SIN BADGES + BOTÓN VER MÁS */
+    .preview-card {
+      background: white;
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: 0 5px 20px rgba(0,0,0,0.05);
+      transition: all 0.3s ease;
+      border: 1px solid #e2e8f0;
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+    }
+
+    .preview-image {
+      height: 150px;
+      background-size: cover;
+      background-position: center;
+      position: relative;
+    }
+
+    .preview-content {
+      padding: 1.5rem;
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+    }
+
+    .preview-title {
+      font-size: 1.1rem;
+      font-weight: 700;
+      margin-bottom: 0.75rem;
+      color: var(--primary);
+      line-height: 1.3;
+    }
+
+    .preview-description {
+      color: #64748b;
+      font-size: 0.9rem;
+      margin-bottom: 1rem;
+      line-height: 1.5;
+      flex: 1;
+    }
+
+    .preview-meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.8rem;
+      color: #64748b;
+      font-weight: 500;
+      margin-bottom: 1rem;
+    }
+
+    .preview-btn {
+      background: var(--primary);
+      color: white;
+      border: none;
+      padding: 0.5rem 1rem;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      text-decoration: none;
+      display: inline-block;
+      text-align: center;
+      margin-top: auto;
+    }
+
+    .preview-btn:hover {
+      background: var(--primary-dark);
+      transform: translateY(-1px);
+      color: white;
+      text-decoration: none;
+    }
+
+    /* ✅ TESTIMONIALS SECTION - Avatars más grandes y altura uniforme */
+    .testimonials-section {
+      padding: 5rem 2rem;
+      background: white;
+    }
+
+    .testimonials-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+      gap: 2rem;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .testimonial-card {
+      background: var(--light);
+      padding: 2.5rem;
+      border-radius: 20px;
+      box-shadow: 0 8px 25px rgba(0,0,0,0.08);
+      position: relative;
+      transition: all 0.3s ease;
+      display: flex;
+      flex-direction: column;
+      height: 100%; /* ✅ Altura uniforme */
+    }
+
+    .testimonial-quote {
+      font-size: 1.2rem;
+      line-height: 1.7;
+      color: var(--dark);
+      margin-bottom: 2rem;
+      font-style: italic;
+      position: relative;
+      flex: 1; /* ✅ Se expande para empujar autor hacia abajo */
+    }
+
+    .testimonial-author {
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
+      margin-top: auto; /* ✅ Se empuja hacia abajo */
+    }
+
+    .testimonial-avatar {
+      width: 90px; /* ✅ Aumentado de 80px a 90px */
+      height: 90px; /* ✅ Aumentado de 80px a 90px */
+      border-radius: 50%;
+      object-fit: cover;
+      border: 4px solid white;
+      box-shadow: 0 6px 15px rgba(0,0,0,0.15);
+      flex-shrink: 0; /* ✅ No se reduce */
+    }
+
+    /* ✅ RANKING SECTION - Con avatars reales */
+    .ranking-section {
+      padding: 5rem 2rem;
+      background: linear-gradient(to bottom, var(--light), #ffffff);
+    }
+
+    .ranking-grid {
+      display: grid;
+      grid-template-columns: 2fr 1fr;
+      gap: 3rem;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .top-members {
+      background: white;
+      border-radius: 16px;
+      padding: 2rem;
+      box-shadow: 0 5px 20px rgba(0,0,0,0.05);
+    }
+
+    .member-item {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      padding: 1rem 0;
+      border-bottom: 1px solid #e2e8f0;
+    }
+
+    .member-item:last-child {
+      border-bottom: none;
+    }
+
+    .member-rank {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 1.1rem;
+    }
+
+    .member-rank.gold {
+      background: var(--gold);
+      color: white;
+    }
+
+    .member-rank.silver {
+      background: #c0c0c0;
+      color: white;
+    }
+
+    .member-rank.bronze {
+      background: #cd7f32;
+      color: white;
+    }
+
+    .member-rank.other {
+      background: var(--gray);
+      color: var(--dark);
+    }
+
+    .member-avatar {
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 2px solid white;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+
+    .member-info {
+      flex: 1;
+    }
+
+    .member-name {
+      font-weight: 700;
+      color: var(--dark);
+      margin-bottom: 0.25rem;
+    }
+
+    .member-level {
+      color: #64748b;
+      font-size: 0.9rem;
+    }
+
+    .member-points {
+      text-align: right;
+      color: var(--primary);
+      font-weight: 700;
+      font-size: 1.1rem;
+    }
+
+    .ranking-stats {
+      display: grid;
+      gap: 1.5rem;
+    }
+
+    .ranking-stat-card {
+      background: white;
+      padding: 1.5rem;
+      border-radius: 16px;
+      box-shadow: 0 5px 20px rgba(0,0,0,0.05);
+      text-align: center;
+    }
+
+    .ranking-stat-icon {
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      margin: 0 auto 1rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+    }
+
+    .ranking-stat-icon.donations {
+      background: rgba(74, 111, 165, 0.1);
+      color: var(--primary);
+    }
+
+    .ranking-stat-icon.volunteer {
+      background: rgba(79, 195, 161, 0.1);
+      color: var(--accent);
+    }
+
+    .ranking-stat-icon.challenges {
+      background: rgba(245, 158, 66, 0.1);
+      color: var(--warning);
+    }
+
+    .ranking-stat-number {
+      font-size: 1.8rem;
+      font-weight: 900;
+      color: var(--primary);
+      margin-bottom: 0.5rem;
+    }
+
+    .ranking-stat-label {
+      color: #64748b;
+      font-size: 0.9rem;
+      font-weight: 600;
+    }
+
+    /* ✅ CTA SECTION - Fondo azul Solidarity */
+    .cta-section {
+      background: linear-gradient(135deg, var(--primary), var(--primary-dark)) !important;
+      color: white !important;
+      padding: 4rem 2rem;
+      text-align: center;
+    }
+
+    .cta-title {
+      font-size: 2rem;
+      font-weight: 800;
+      margin-bottom: 1rem;
+      color: white !important;
+    }
+
+    .cta-description {
+      font-size: 1.1rem;
+      margin-bottom: 2rem;
+      opacity: 0.95;
+      line-height: 1.6;
+      max-width: 600px;
+      margin-left: auto;
+      margin-right: auto;
+      color: rgba(255,255,255,0.95) !important;
+    }
+
+    .cta-buttons {
+      display: flex;
+      gap: 1.5rem;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    /* ✅ RESPONSIVE CORREGIDO */
+    @media (min-width: 768px) {
+      .hero {
+        padding: 6rem 2rem;
+      }
+      .hero-container {
+        text-align: left;
+      }
+      .hero-content {
+        padding: 3rem 0;
+      }
+      .hero-image {
+        display: block;
+      }
+      .hero h1 {
+        font-size: 3.2rem;
+      }
+      .hero-subtitle {
+        font-size: 1.3rem;
+        margin: 0 0 2rem;
+      }
+      
+      /* ✅ TESTIMONIALS Y PREVIEW RESPONSIVE */
+      .testimonials-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+      
+      .preview-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (min-width: 1024px) {
+      .testimonials-grid {
+        grid-template-columns: repeat(3, 1fr);
+      }
+      
+      .preview-grid {
+        grid-template-columns: repeat(3, 1fr);
+      }
+    }
+
+    @media (max-width: 768px) {
+      .hero-buttons {
+        justify-content: center;
+      }
+
+      .ranking-grid {
+        grid-template-columns: 1fr;
+        gap: 2rem;
+      }
+      
+      /* ✅ ACTIONS RESPONSIVE */
+      .actions-grid {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+      }
+      
+      .action-card {
+        margin: 0 auto;
+        max-width: 400px;
+      }
+      
+      /* ✅ TESTIMONIALS RESPONSIVE */
+      .testimonials-grid {
+        grid-template-columns: 1fr;
+      }
+      
+      .testimonial-card {
+        max-width: 400px;
+        margin: 0 auto;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .hero h1 {
+        font-size: 2.2rem !important;
+      }
+      
+      .hero-subtitle {
+        font-size: 1rem !important;
+      }
+      
+      .section-header h2 {
+        font-size: 1.8rem;
+      }
+      
+      .preview-tabs {
+        flex-wrap: wrap;
+        gap: 0.5rem;
+      }
+      
+      .tab-btn {
+        font-size: 0.8rem;
+        padding: 0.5rem 1rem;
+      }
+    }
+
+    /* ✅ ANIMACIONES */
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-10px); }
+    }
+
+    .floating {
+      animation: float 4s ease-in-out infinite;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .animate-fade {
+      animation: fadeIn 0.8s ease-out forwards;
+    }
+
+    .delay-1 { animation-delay: 0.2s; }
+    .delay-2 { animation-delay: 0.4s; }
+    .delay-3 { animation-delay: 0.6s; }
+    .delay-4 { animation-delay: 0.8s; }
+    .delay-5 { animation-delay: 1s; }
+
+    .loading-skeleton {
+      background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+      background-size: 200% 100%;
+      animation: loading 1.5s infinite;
+      border-radius: 16px;
+      height: 200px;
+    }
+
+    @keyframes loading {
+      0% { background-position: 200% 0; }
+      100% { background-position: -200% 0; }
+    }
+
+    /* ✅ PREVIEW GRID - 3 columnas en desktop CORREGIDO */
+    .preview-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.5rem;
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+
+    @media (min-width: 768px) {
+      .preview-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (min-width: 1024px) {
+      .preview-grid {
+        grid-template-columns: repeat(3, 1fr); /* ✅ 3 columnas en desktop */
+      }
+    }
+
+    /* ✅ MENÚ HAMBURGUESA - COMPLETAMENTE OCULTO POR DEFECTO */
+.mobile-menu {
+  display: none !important;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateX(-100%);
+  transition: all 0.3s ease;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100vh;
+  background: white;
+  z-index: 9999;
+  padding: 2rem;
+  box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+}
+
+.mobile-menu.active {
+  display: block !important;
+  opacity: 1;
+  visibility: visible;
+  transform: translateX(0);
+}
+
+.hamburger-btn {
+  display: none;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0.5rem;
+  color: var(--primary);
+  font-size: 1.2rem;
+}
+
+/* ✅ RESPONSIVE CORREGIDO - Solo mostrar hamburguesa cuando sea necesario */
+@media (max-width: 768px) {
+  .hamburger-btn {
+    display: block !important;
+  }
+  
+  .nav-links {
+    display: none !important;
+  }
+  
+  /* ✅ ASEGURAR que el menú NO se vea hasta activarse */
+  .mobile-menu {
+    left: -100% !important; /* ✅ Fuera de pantalla */
+  }
+  
+  .mobile-menu.active {
+    left: 0 !important; /* ✅ Solo aparece cuando está activo */
+  }
+}
+
+@media (max-width: 480px) {
+  /* ✅ FORZAR ocultación en móviles muy pequeños */
+  .mobile-menu:not(.active) {
+    display: none !important;
+    opacity: 0 !important;
+    visibility: hidden !important;
+    left: -100% !important;
+  }
+}
+  </style>
+{% endblock %}
+
+{% block content %}
+  <!-- ✅ Hero Section sin "Ver acciones" -->
+  <section class="hero">
+    <div class="hero-container">
+      <div class="hero-content">
+        <h1 class="animate-fade">¡Transforma tu solidaridad en impacto real!</h1>
+        <p class="hero-subtitle animate-fade delay-1">Únete a miles de personas que están cambiando el mundo a través de acciones concretas. Gana puntos, supera retos y forma parte de comunidades que marcan la diferencia.</p>
+        
+        <div class="hero-buttons animate-fade delay-2">
+          <a href="/register" class="btn btn-accent">
+            <i class="fas fa-rocket"></i> Empieza ahora
+          </a>
+        </div>
+      </div>
+      
+      <div class="hero-image floating">
+        <img src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&w=600&h=400&q=80" alt="Equipo colaborando en proyecto solidario" class="animate-fade delay-2">
+      </div>
+    </div>
+  </section>
+
+  <!-- ✅ Live Stats Section - 5 estadísticas como takeaction.njk -->
+  <section class="live-stats">
+    <div class="section-header">
+      <h2>Impacto en Tiempo Real</h2>
+      <p>Estos números crecen cada día gracias a nuestra comunidad</p>
+    </div>
+    
+    <div class="stats-grid">
+      <div class="live-stat">
+        <span class="live-stat-number" id="total-donations">0€</span>
+        <span class="live-stat-label">Donaciones Totales</span>
+      </div>
+      <div class="live-stat">
+        <span class="live-stat-number" id="active-challenges">0</span>
+        <span class="live-stat-label">Retos Activos</span>
+      </div>
+      <div class="live-stat">
+        <span class="live-stat-number" id="volunteer-hours">0h</span>
+        <span class="live-stat-label">Horas Voluntariado</span>
+      </div>
+      <div class="live-stat">
+        <span class="live-stat-number" id="active-teams">0</span>
+        <span class="live-stat-label">Comunidades</span>
+      </div>
+      <div class="live-stat">
+        <span class="live-stat-number" id="completed-tasks">0</span>
+        <span class="live-stat-label">Tareas Completadas</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ✅ Actions Section -->
+  <section class="actions-section" id="actions">
+    <div class="section-header">
+      <h2>Elige cómo quieres impactar</h2>
+      <p>Diferentes formas de contribuir, todas generan cambios positivos</p>
+    </div>
+    
+    <div class="actions-grid">
+      <!-- 1. Causas - AZUL PRINCIPAL -->
+      <div class="action-card animate-fade">
+        <div class="action-image">
+          <img src="https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?auto=format&fit=crop&w=600&q=80" alt="Niños sonriendo en proyecto educativo">
+          <div class="action-badge">
+            <i class="fas fa-star"></i> +10 pts/€
+          </div>
+        </div>
+        <div class="action-content">
+          <h3 class="action-title">
+            <div class="action-icon"><i class="fas fa-hand-holding-heart"></i></div> 
+            Causas Solidarias
+          </h3>
+          <p class="action-description">Apoya proyectos verificados con objetivos claros. Cada donación suma puntos y avances medibles hacia la meta.</p>
+          <div class="action-stats">
+            <div class="stat-item-action">
+              <i class="fas fa-map-marker-alt"></i> 58 países
+            </div>
+            <div class="stat-item-action">
+              <i class="fas fa-heart"></i> 1,250+ activas
+            </div>
+          </div>
+          <a href="/causes" class="action-button btn-primary">
+            <i class="fas fa-search"></i> Explorar causas
+          </a>
+        </div>
+      </div>
+      
+      <!-- 2. Tareas - AZUL VERDOSO/TEAL -->
+      <div class="action-card animate-fade delay-1">
+        <div class="action-image">
+          <img src="https://images.unsplash.com/photo-1582213782179-e0d53f98f2ca?auto=format&fit=crop&w=800&q=80" alt="Equipo trabajando en proyecto solidario">
+          <div class="action-badge teal">
+            <i class="fas fa-star"></i> +25 pts/tarea
+          </div>
+        </div>
+        <div class="action-content">
+          <h3 class="action-title">
+            <div class="action-icon teal"><i class="fas fa-tasks"></i></div>
+            Tareas de Impacto
+          </h3>
+          <p class="action-description">Completa micro-acciones específicas que ayudan a organizaciones reales. Tareas verificadas y medibles.</p>
+          <div class="action-stats">
+            <div class="stat-item-action">
+              <i class="fas fa-check-circle"></i> 2,340 completadas
+            </div>
+            <div class="stat-item-action">
+              <i class="fas fa-clock"></i> 5 min promedio
+            </div>
+          </div>
+          <a href="/tasks" class="action-button btn-teal">
+            <i class="fas fa-play"></i> Empezar tareas
+          </a>
+        </div>
+      </div>
+      
+      <!-- 3. Retos - NARANJA -->
+      <div class="action-card animate-fade delay-2">
+        <div class="action-image">
+          <img src="https://images.unsplash.com/photo-1552664730-d307ca884978?auto=format&fit=crop&w=600&q=80" alt="Personas celebrando logros en equipo">
+          <div class="action-badge challenge">
+            <i class="fas fa-trophy"></i> +500 pts
+          </div>
+        </div>
+        <div class="action-content">
+          <h3 class="action-title">
+            <div class="action-icon challenge"><i class="fas fa-trophy"></i></div> 
+            Retos Colaborativos
+          </h3>
+          <p class="action-description">Únete a desafíos colectivos con objetivos específicos. Compite sanamente y multiplica tu impacto.</p>
+          <div class="action-stats">
+            <div class="stat-item-action">
+              <i class="fas fa-users"></i> 1,892 participantes
+            </div>
+            <div class="stat-item-action">
+              <i class="fas fa-trophy"></i> Premios especiales
+            </div>
+          </div>
+          <a href="/challenges" class="action-button btn-warning">
+            <i class="fas fa-flag-checkered"></i> Ver retos
+          </a>
+        </div>
+      </div>
+
+      <!-- 4. Voluntariados - VERDE -->
+      <div class="action-card animate-fade delay-3">
+        <div class="action-image">
+          <img src="https://images.unsplash.com/photo-1469571486292-0ba58a3f068b?auto=format&fit=crop&w=600&q=80" alt="Voluntarios ayudando en comunidad">
+          <div class="action-badge volunteer">
+            <i class="fas fa-heart"></i> +50 pts/h
+          </div>
+        </div>
+        <div class="action-content">
+          <h3 class="action-title">
+            <div class="action-icon volunteer"><i class="fas fa-hands-helping"></i></div> 
+            Voluntariados
+          </h3>
+          <p class="action-description">Conecta con oportunidades presenciales o remotas que necesitan tus habilidades específicas.</p>
+          <div class="action-stats">
+            <div class="stat-item-action">
+              <i class="fas fa-clock"></i> 2,840 horas
+            </div>
+            <div class="stat-item-action">
+              <i class="fas fa-certificate"></i> Certificados
+            </div>
+          </div>
+          <a href="/volunteering" class="action-button btn-accent">
+            <i class="fas fa-search"></i> Buscar voluntariados
+          </a>
+        </div>
+      </div>
+
+      <!-- 5. Comunidades - PÚRPURA -->
+      <div class="action-card animate-fade delay-4">
+        <div class="action-image">
+          <img src="https://images.unsplash.com/photo-1517486808906-6ca8b3f04846?auto=format&fit=crop&w=800&q=80" alt="Comunidad diversa colaborando">
+          <div class="action-badge purple">
+            <i class="fas fa-users"></i> 3,240 miembros
+          </div>
+        </div>
+        <div class="action-content">
+          <h3 class="action-title">
+            <div class="action-icon purple"><i class="fas fa-users"></i></div>
+            Comunidades
+          </h3>
+          <p class="action-description">Únete a equipos que comparten tus intereses y multiplica tu impacto colaborando.</p>
+          <div class="action-stats">
+            <div class="stat-item-action">
+              <i class="fas fa-users"></i> 34 equipos
+            </div>
+            <div class="stat-item-action">
+              <i class="fas fa-chart-line"></i> Multiplica impacto
+            </div>
+          </div>
+          <a href="/teams" class="action-button btn-purple">
+            <i class="fas fa-search"></i> Explorar comunidades
+          </a>
+        </div>
+      </div>
+
+      <!-- 6. Ranking - DORADO -->
+      <div class="action-card animate-fade delay-5">
+        <div class="action-image">
+          <img src="https://images.unsplash.com/photo-1521737604893-d14cc237f11d?auto=format&fit=crop&w=800&q=80" alt="Personas celebrando éxitos">
+          <div class="action-badge ranking">
+            <i class="fas fa-crown"></i> Top 100
+          </div>
+        </div>
+        <div class="action-content">
+          <h3 class="action-title">
+            <div class="action-icon ranking"><i class="fas fa-chart-line"></i></div>
+            Ranking Global
+          </h3>
+          <p class="action-description">Compite con usuarios de todo el mundo. Sube de nivel y gana badges únicos.</p>
+          <div class="action-stats">
+            <div class="stat-item-action">
+              <i class="fas fa-medal"></i> 1,247 usuarios
+            </div>
+            <div class="stat-item-action">
+              <i class="fas fa-star"></i> Badges únicos
+            </div>
+          </div>
+          <a href="/ranking" class="action-button btn-gold">
+            <i class="fas fa-chart-bar"></i> Ver ranking
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ✅ Preview Section -->
+  <section class="preview-section">
+    <div class="section-header">
+      <h2>Actividad Reciente</h2>
+      <p>Descubre qué está pasando en la comunidad de Solidarity</p>
+    </div>
+    
+    <div class="preview-tabs">
+      <button class="tab-btn active" onclick="showTab('causes')">Causas Recientes</button>
+      <button class="tab-btn" onclick="showTab('tasks')">Tareas Recientes</button>
+      <button class="tab-btn" onclick="showTab('challenges')">Retos Activos</button>
+      <button class="tab-btn" onclick="showTab('volunteering')">Voluntariados</button>
+      <button class="tab-btn" onclick="showTab('teams')">Comunidades</button>
+    </div>
+
+    <div class="tab-content">
+      <div id="causes-tab" class="tab-pane active">
+        <div class="preview-grid" id="recent-causes">
+          <div class="loading-skeleton"></div>
+          <div class="loading-skeleton"></div>
+          <div class="loading-skeleton"></div>
+        </div>
+      </div>
+      
+      <div id="tasks-tab" class="tab-pane">
+        <div class="preview-grid" id="recent-tasks">
+          <div class="loading-skeleton"></div>
+          <div class="loading-skeleton"></div>
+          <div class="loading-skeleton"></div>
+        </div>
+      </div>
+      
+      <div id="challenges-tab" class="tab-pane">
+        <div class="preview-grid" id="recent-challenges">
+          <div class="loading-skeleton"></div>
+          <div class="loading-skeleton"></div>
+          <div class="loading-skeleton"></div>
+        </div>
+      </div>
+      
+      <div id="volunteering-tab" class="tab-pane">
+        <div class="preview-grid" id="recent-volunteering">
+          <div class="loading-skeleton"></div>
+          <div class="loading-skeleton"></div>
+          <div class="loading-skeleton"></div>
+        </div>
+      </div>
+      
+      <div id="teams-tab" class="tab-pane">
+        <div class="preview-grid" id="recent-teams">
+          <div class="loading-skeleton"></div>
+          <div class="loading-skeleton"></div>
+          <div class="loading-skeleton"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ✅ TESTIMONIALS - Avatars más grandes y altura uniforme -->
+  <section class="testimonials-section">
+    <div class="section-header">
+      <h2>Voces de nuestra Comunidad</h2>
+      <p>Descubre cómo Solidarity ha transformado la vida de nuestros usuarios</p>
+    </div>
+    
+    <div class="testimonials-grid">
+      <div class="testimonial-card animate-fade">
+        <div class="testimonial-quote">
+          "Solidarity me ha permitido ver el impacto real de mis donaciones. Cada euro cuenta y puedo seguir exactamente cómo ayuda a las causas que me importan."
+        </div>
+        <div class="testimonial-author">
+          <img src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?auto=format&fit=crop&w=200&q=80" alt="María González" class="testimonial-avatar">
+          <div class="testimonial-info">
+            <h4>María González</h4>
+            <p>Donante nivel Oro • 12,450 pts</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="testimonial-card animate-fade delay-1">
+        <div class="testimonial-quote">
+          "Los retos colaborativos son increíbles. He conocido personas fantásticas y juntos hemos logrado objetivos que parecían imposibles."
+        </div>
+        <div class="testimonial-author">
+          <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=200&q=80" alt="Carlos Mendoza" class="testimonial-avatar">
+          <div class="testimonial-info">
+            <h4>Carlos Mendoza</h4>
+            <p>Voluntario activo • 8,920 pts</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="testimonial-card animate-fade delay-2">
+        <div class="testimonial-quote">
+          "Formar parte de esta plataforma ha sido transformador. El sistema de puntos me motiva a seguir ayudando y veo cómo mi esfuerzo realmente cuenta."
+        </div>
+        <div class="testimonial-author">
+          <img src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=200&q=80" alt="Ana Rodríguez" class="testimonial-avatar">
+          <div class="testimonial-info">
+            <h4>Ana Rodríguez</h4>
+            <p>Líder de comunidad • 15,280 pts</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ✅ RANKING - Con avatars reales -->
+  <section class="ranking-section">
+    <div class="section-header">
+      <h2>Ranking de Impacto</h2>
+      <p>Conoce a los usuarios que más están marcando la diferencia</p>
+    </div>
+    
+    <div class="ranking-grid">
+      <div class="top-members">
+        <h3 style="color: var(--primary); margin-bottom: 2rem; text-align: center;">Top Usuarios del Mes</h3>
+        
+        <div class="member-item">
+          <div class="member-rank gold">1</div>
+          <img src="https://images.unsplash.com/photo-1544725176-7c40e5a71c5e?auto=format&fit=crop&w=150&q=80" alt="Sofia Martín" class="member-avatar">
+          <div class="member-info">
+            <div class="member-name">Sofia Martín</div>
+            <div class="member-level">Nivel Diamante</div>
+          </div>
+          <div class="member-points">18,450 pts</div>
+        </div>
+
+        <div class="member-item">
+          <div class="member-rank silver">2</div>
+          <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=150&q=80" alt="David López" class="member-avatar">
+          <div class="member-info">
+            <div class="member-name">David López</div>
+            <div class="member-level">Nivel Platino</div>
+          </div>
+          <div class="member-points">15,280 pts</div>
+        </div>
+
+        <div class="member-item">
+          <div class="member-rank bronze">3</div>
+          <img src="https://images.unsplash.com/photo-1489424731084-a5d8b219a5bb?auto=format&fit=crop&w=150&q=80" alt="Laura Sánchez" class="member-avatar">
+          <div class="member-info">
+            <div class="member-name">Laura Sánchez</div>
+            <div class="member-level">Nivel Oro</div>
+          </div>
+          <div class="member-points">12,940 pts</div>
+        </div>
+
+        <div class="member-item">
+          <div class="member-rank other">4</div>
+          <img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=150&q=80" alt="Pablo García" class="member-avatar">
+          <div class="member-info">
+            <div class="member-name">Pablo García</div>
+            <div class="member-level">Nivel Plata</div>
+          </div>
+          <div class="member-points">10,780 pts</div>
+        </div>
+
+        <div class="member-item">
+          <div class="member-rank other">5</div>
+          <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=150&q=80" alt="Elena Ruiz" class="member-avatar">
+          <div class="member-info">
+            <div class="member-name">Elena Ruiz</div>
+            <div class="member-level">Nivel Plata</div>
+          </div>
+          <div class="member-points">9,650 pts</div>
+        </div>
+      </div>
+
+      <div class="ranking-stats">
+        <div class="ranking-stat-card">
+          <div class="ranking-stat-icon donations">
+            <i class="fas fa-heart"></i>
+          </div>
+          <div class="ranking-stat-number">€48,290</div>
+          <div class="ranking-stat-label">Donaciones del Top 10</div>
+        </div>
+
+        <div class="ranking-stat-card">
+          <div class="ranking-stat-icon volunteer">
+            <i class="fas fa-hands-helping"></i>
+          </div>
+          <div class="ranking-stat-number">1,240h</div>
+          <div class="ranking-stat-label">Horas de Voluntariado</div>
+        </div>
+
+        <div class="ranking-stat-card">
+          <div class="ranking-stat-icon challenges">
+            <i class="fas fa-trophy"></i>
+          </div>
+          <div class="ranking-stat-number">89</div>
+          <div class="ranking-stat-label">Retos Completados</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ✅ CTA Section -->
+  <section class="cta-section">
+    <div style="max-width: 800px; margin: 0 auto;">
+      <h2 class="cta-title">¿Listo para unirte al movimiento?</h2>
+      <p class="cta-description">Regístrate ahora y comienza a ganar puntos, completar retos y conectar con una comunidad global de agentes de cambio.</p>
+      <div class="cta-buttons">
+        <a href="/register" class="btn btn-accent">
+          <i class="fas fa-user-plus"></i> Crear cuenta gratis
+        </a>
+        <a href="/login" class="btn btn-outline-white">
+          <i class="fas fa-sign-in-alt"></i> Iniciar sesión
+        </a>
+      </div>
+    </div>
+  </section>
+{% endblock %}
+
+{% block scripts %}
+  {{ super() }}
+  <script>
+    document.addEventListener('DOMContentLoaded', async function() {
+      // ✅ NO cargar estadísticas al inicio, se cargan cuando son visibles
+      await loadRecentActivity();
+      setupIntersectionObserver();
+      setupResponsiveBehavior();
+    });
+
+    function showTab(tabName) {
+      document.querySelectorAll('.tab-pane').forEach(pane => {
+        pane.classList.remove('active');
+      });
+      
+      document.querySelectorAll('.tab-btn').forEach(btn => {
+        btn.classList.remove('active');
+      });
+      
+      const targetTab = document.getElementById(tabName + '-tab');
+      if (targetTab) {
+        targetTab.classList.add('active');
+      }
+      
+      event.target.classList.add('active');
+      
+      if (tabName === 'tasks' && !document.getElementById('recent-tasks').hasAttribute('data-loaded')) {
+        document.getElementById('recent-tasks').setAttribute('data-loaded', 'true');
+        loadRecentTasks();
+      } else if (tabName === 'challenges' && !document.getElementById('recent-challenges').hasAttribute('data-loaded')) {
+        document.getElementById('recent-challenges').setAttribute('data-loaded', 'true');
+        loadRecentChallenges();
+      } else if (tabName === 'volunteering' && !document.getElementById('recent-volunteering').hasAttribute('data-loaded')) {
+        document.getElementById('recent-volunteering').setAttribute('data-loaded', 'true');
+        loadRecentVolunteering();
+      } else if (tabName === 'teams' && !document.getElementById('recent-teams').hasAttribute('data-loaded')) {
+        document.getElementById('recent-teams').setAttribute('data-loaded', 'true');
+        loadRecentTeams();
+      }
+    }
+
+    async function loadPlatformStats() {
+      try {
+        const stats = {
+          totalDonations: 48290,
+          activeChallenges: 12,
+          volunteerHours: 2840,
+          activeTeams: 34,
+          completedTasks: 5680,
+          activeVolunteers: 420
+        };
+
+        // ✅ ANIMACIÓN MEJORADA - 10 segundos de duración
+        animateCounter('total-donations', stats.totalDonations, '€');
+        animateCounter('active-challenges', stats.activeChallenges);
+        animateCounter('volunteer-hours', stats.volunteerHours, 'h');
+        animateCounter('active-teams', stats.activeTeams);
+        animateCounter('completed-tasks', stats.completedTasks);
+        animateCounter('active-volunteers', stats.activeVolunteers);
+        
+      } catch (error) {
+        console.error('Error cargando estadísticas:', error);
+        showFallbackStats();
+      }
+    }
+
+    async function loadRecentActivity() {
+      await loadRecentCauses();
+    }
+
+    async function loadRecentCauses() {
+      try {
+        if (typeof supabase === 'undefined') {
+          throw new Error('Supabase no disponible');
+        }
+
+        const { data: causes, error } = await supabase
+          .from('causes')
+          .select('id, title, description, photo_url, category, goal, raised, created_at')
+          .order('created_at', { ascending: false })
+          .limit(6);
+
+        if (error) throw error;
+
+        const container = document.getElementById('recent-causes');
+        if (causes && causes.length > 0) {
+          container.innerHTML = causes.map(cause => createPreviewCard(cause, 'cause')).join('');
+        } else {
+          container.innerHTML = '<p style="text-align: center; color: #666; padding: 2rem;">No hay causas disponibles en este momento.</p>';
+        }
+      } catch (error) {
+        console.error('Error cargando causas recientes:', error);
+        showSampleContent('recent-causes', 'cause');
+      }
+    }
+
+    async function loadRecentTasks() {
+      try {
+        if (typeof supabase === 'undefined') {
+          throw new Error('Supabase no disponible');
+        }
+
+        const { data: tasks, error } = await supabase
+          .from('tasks')
+          .select('*')
+          .order('created_at', { ascending: false })
+          .limit(6);
+
+        if (error) throw error;
+
+        const container = document.getElementById('recent-tasks');
+        if (tasks && tasks.length > 0) {
+          container.innerHTML = tasks.map(task => createPreviewCard(task, 'task')).join('');
+        } else {
+          container.innerHTML = '<p style="text-align: center; color: #666; padding: 2rem;">No hay tareas disponibles en este momento.</p>';
+        }
+      } catch (error) {
+        console.error('Error cargando tareas recientes:', error);
+        showSampleContent('recent-tasks', 'task');
+      }
+    }
+
+    async function loadRecentChallenges() {
+      try {
+        if (typeof supabase === 'undefined') {
+          throw new Error('Supabase no disponible');
+        }
+
+        const { data: challenges, error } = await supabase
+          .from('challenges')
+          .select('*')
+          .order('created_at', { ascending: false })
+          .limit(6);
+
+        if (error) throw error;
+
+        const container = document.getElementById('recent-challenges');
+        if (challenges && challenges.length > 0) {
+          container.innerHTML = challenges.map(challenge => createPreviewCard(challenge, 'challenge')).join('');
+        } else {
+          container.innerHTML = '<p style="text-align: center; color: #666; padding: 2rem;">No hay retos disponibles en este momento.</p>';
+        }
+      } catch (error) {
+        console.error('Error cargando retos:', error);
+        showSampleContent('recent-challenges', 'challenge');
+      }
+    }
+
+    async function loadRecentVolunteering() {
+      try {
+        if (typeof supabase === 'undefined') {
+          throw new Error('Supabase no disponible');
+        }
+
+        const { data: volunteering, error } = await supabase
+          .from('volunteering')
+          .select('id, title, description, photo_url, volunteers, created_at')
+          .order('created_at', { ascending: false })
+          .limit(6);
+
+        if (error) throw error;
+
+        const container = document.getElementById('recent-volunteering');
+        if (volunteering && volunteering.length > 0) {
+          container.innerHTML = volunteering.map(vol => createPreviewCard(vol, 'volunteering')).join('');
+        } else {
+          container.innerHTML = '<p style="text-align: center; color: #666; padding: 2rem;">No hay voluntariados disponibles en este momento.</p>';
+        }
+      } catch (error) {
+        console.error('Error cargando voluntariados:', error);
+        showSampleContent('recent-volunteering', 'volunteering');
+      }
+    }
+
+    async function loadRecentTeams() {
+      try {
+        if (typeof supabase === 'undefined') {
+          throw new Error('Supabase no disponible');
+        }
+
+        const { data: teams, error } = await supabase
+          .from('teams')
+          .select('*')
+          .order('created_at', { ascending: false })
+          .limit(6);
+
+        if (error) throw error;
+
+        const container = document.getElementById('recent-teams');
+        if (teams && teams.length > 0) {
+          container.innerHTML = teams.map(team => createPreviewCard(team, 'team')).join('');
+        } else {
+          container.innerHTML = '<p style="text-align: center; color: #666; padding: 2rem;">No hay comunidades disponibles en este momento.</p>';
+        }
+      } catch (error) {
+        console.error('Error cargando comunidades:', error);
+        showSampleContent('recent-teams', 'team');
+      }
+    }
+
+    function showSampleContent(containerId, type) {
+      const sampleData = {
+        'cause': {
+          image: 'https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?auto=format&fit=crop&w=400&q=80',
+          title: 'Educación para Todos',
+          description: 'Proyecto educativo para comunidades rurales que busca proporcionar acceso a educación de calidad',
+          meta: '<span>75% completado</span><span>12,450€ recaudados</span>'
+        },
+        'task': {
+          image: 'https://images.unsplash.com/photo-1517048676732-d65bc937f952?auto=format&fit=crop&w=400&q=80',
+          title: 'Revisar Contenido Web',
+          description: 'Ayuda a moderar contenido de sitios benéficos y verificar información de organizaciones',
+          meta: '<span>25 puntos</span><span>5 min aprox</span>'
+        },
+        'challenge': {
+          image: 'https://images.unsplash.com/photo-1552664730-d307ca884978?auto=format&fit=crop&w=400&q=80',
+          title: 'Desafío Ambiental',
+          description: 'Reducir huella de carbono en comunidades a través de acciones colaborativas',
+          meta: '<span>89 participantes</span><span>7 días restantes</span>'
+        },
+        'volunteering': {
+          image: 'https://images.unsplash.com/photo-1559027615-cd4628902d4a?auto=format&fit=crop&w=400&q=80',
+          title: 'Apoyo Comunitario',
+          description: 'Ayuda a familias en situación vulnerable proporcionando apoyo directo',
+          meta: '<span>25 voluntarios</span><span>Madrid</span>'
+        },
+        'team': {
+          image: 'https://images.unsplash.com/photo-1517486808906-6ca8b3f04846?auto=format&fit=crop&w=400&q=80',
+          title: 'Amigos del Ambiente',
+          description: 'Comunidad enfocada en sostenibilidad y protección del medio ambiente',
+          meta: '<span>48 miembros</span><span>Activa</span>'
+        }
+      };
+
+      const sample = sampleData[type];
+      const container = document.getElementById(containerId);
+      
+      container.innerHTML = Array(3).fill().map((_, index) => `
+        <div class="preview-card">
+          <div class="preview-image" style="background-image: url('${sample.image}')"></div>
+          <div class="preview-content">
+            <h3 class="preview-title">${sample.title}</h3>
+            <p class="preview-description">${sample.description}</p>
+            <div class="preview-meta">${sample.meta}</div>
+            <button class="preview-btn" onclick="openModal('${type}', ${index})">Ver más</button>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function createPreviewCard(item, type) {
+      const getImageUrl = () => {
+        const imageField = item.photo_url || item.image_url || item.avatar_url || item.image;
+        const defaultImages = {
+          'cause': 'https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?auto=format&fit=crop&w=400&q=80',
+          'task': 'https://images.unsplash.com/photo-1517048676732-d65bc937f952?auto=format&fit=crop&w=400&q=80',
+          'challenge': 'https://images.unsplash.com/photo-1552664730-d307ca884978?auto=format&fit=crop&w=400&q=80',
+          'volunteering': 'https://images.unsplash.com/photo-1559027615-cd4628902d4a?auto=format&fit=crop&w=400&q=80',
+          'team': 'https://images.unsplash.com/photo-1517486808906-6ca8b3f04846?auto=format&fit=crop&w=400&q=80'
+        };
+        return imageField || defaultImages[type];
+      };
+
+      const getMeta = () => {
+        if (type === 'cause') {
+          const progress = item.goal ? Math.round((item.raised || 0) / item.goal * 100) : 0;
+          return `<span>${progress}% completado</span><span>${(item.raised || 0).toLocaleString()}€ recaudados</span>`;
+        }
+        if (type === 'task') {
+          return `<span>${item.points || 25} puntos</span><span>${item.duration || '5 min'} aprox</span>`;
+        }
+        if (type === 'challenge') {
+          return `<span>${item.participants || 0} participantes</span><span>${item.days_left || 7} días restantes</span>`;
+        }
+        if (type === 'volunteering') {
+          return `<span>${item.volunteers || 0} voluntarios</span><span>${item.location || 'Remoto'}</span>`;
+        }
+        if (type === 'team') {
+          return `<span>${item.members_count || item.members || 0} miembros</span><span>Activa</span>`;
+        }
+        return '';
+      };
+
+      return `
+        <div class="preview-card">
+          <div class="preview-image" style="background-image: url('${getImageUrl()}')"></div>
+          <div class="preview-content">
+            <h3 class="preview-title">${item.title || item.name || 'Sin título'}</h3>
+            <p class="preview-description">${(item.description || '').substring(0, 100)}...</p>
+            <div class="preview-meta">${getMeta()}</div>
+            <button class="preview-btn" onclick="openModal('${type}', '${item.id}')">Ver más</button>
+          </div>
+        </div>
+      `;
+    }
+
+    function openModal(type, id) {
+      console.log(`Abriendo modal de ${type} con ID: ${id}`);
+      
+      // ✅ Si es un ID de muestra, crear un modal simple con datos de muestra
+      if (id && id.startsWith('sample-')) {
+        showSampleModal(type, id);
+        return;
+      }
+      
+      if (!id || id === 'undefined' || id === 'null') {
+        console.warn(`ID inválido para ${type}, redirigiendo a lista`);
+        const routes = {
+          'cause': '/causes',
+          'task': '/tasks', 
+          'challenge': '/challenges',
+          'volunteering': '/volunteering',
+          'team': '/teams'
+        };
+        window.location.href = routes[type] || '/';
+        return;
+      }
+
+      // ✅ Para IDs reales, usar las INSTANCIAS GLOBALES correctas
+      switch(type) {
+        case 'cause':
+          // ✅ CORREGIDO - Usar instancia global primero
+          if (window.causesRenderer && typeof window.causesRenderer.showModal === 'function') {
+            console.log('✅ Usando causesRenderer.showModal');
+            window.causesRenderer.showModal(id);
+          } else if (window.CausesRenderer) {
+            console.log('✅ Creando nueva instancia de CausesRenderer');
+            const renderer = new window.CausesRenderer();
+            renderer.showModal(id);
+          } else if (window.showCauseModal && typeof window.showCauseModal === 'function') {
+            console.log('✅ Usando showCauseModal global');
+            window.showCauseModal(id);
+          } else {
+            console.warn('Renderer de causas no disponible, redirigiendo...');
+            console.log('Disponible causesRenderer:', !!window.causesRenderer);
+            console.log('Disponible CausesRenderer:', !!window.CausesRenderer);
+            console.log('Disponible showCauseModal:', !!window.showCauseModal);
+            window.location.href = `/causes/${id}`;
+          }
+          break;
+          
+        case 'task':
+          if (window.TasksRenderer && typeof window.TasksRenderer.showTaskModal === 'function') {
+            window.TasksRenderer.showTaskModal(id);
+          } else {
+            console.warn('Renderer de tareas no disponible, redirigiendo...');
+            window.location.href = `/tasks/${id}`;
+          }
+          break;
+          
+        case 'challenge':
+          if (window.challengesRenderer && typeof window.challengesRenderer.showModal === 'function') {
+            console.log('✅ Usando challengesRenderer.showModal');
+            window.challengesRenderer.showModal(id);
+          } else if (window.showChallengeModal && typeof window.showChallengeModal === 'function') {
+            console.log('✅ Usando showChallengeModal global');
+            window.showChallengeModal(id);
+          } else {
+            console.warn('Renderer de retos no disponible, redirigiendo...');
+            window.location.href = `/challenges/${id}`;
+          }
+          break;
+          
+        case 'volunteering':
+          if (window.VolunteeringRenderer && typeof window.VolunteeringRenderer.showVolunteeringModal === 'function') {
+            window.VolunteeringRenderer.showVolunteeringModal(id);
+          } else {
+            console.warn('Renderer de voluntariado no disponible, redirigiendo...');
+            window.location.href = `/volunteering/${id}`;
+          }
+          break;
+          
+        case 'team':
+          if (window.TeamsRenderer && typeof window.TeamsRenderer.showTeamModal === 'function') {
+            window.TeamsRenderer.showTeamModal(id);
+          } else {
+            console.warn('Renderer de equipos no disponible, redirigiendo...');
+            window.location.href = `/teams/${id}`;
+          }
+          break;
+          
+        default:
+          console.error(`Tipo de modal no reconocido: ${type}`);
+          window.location.href = '/';
+      }
+    }
+
+    async function loadModalContent(type, id, modalId) {
+      const contentDiv = document.getElementById(`${modalId}-content`);
+      
+      try {
+        // ✅ Intentar cargar datos reales de Supabase
+        if (typeof supabase !== 'undefined') {
+          const tableMappings = {
+            'cause': 'causes',
+            'task': 'tasks',
+            'challenge': 'challenges',
+            'volunteering': 'volunteering',
+            'team': 'teams'
+          };
+          
+          const table = tableMappings[type];
+          if (table) {
+            const { data, error } = await supabase
+              .from(table)
+              .select('*')
+              .eq('id', id)
+              .single();
+
+            if (data && !error) {
+              contentDiv.innerHTML = createModalContentHTML(type, data);
+              return;
+            }
+          }
+        }
+        
+        // ✅ Fallback con datos de muestra
+        const sampleData = getSampleModalData(type, id);
+        contentDiv.innerHTML = createModalContentHTML(type, sampleData);
+        
+      } catch (error) {
+        console.error('Error cargando contenido del modal:', error);
+        contentDiv.innerHTML = `
+          <p style="color: #e53e3e;">Error al cargar la información.</p>
+          <p style="color: #666; font-size: 0.9rem;">Por favor, intenta de nuevo más tarde.</p>
+        `;
+      }
+    }
+
+    function getSampleModalData(type, id) {
+      const sampleData = {
+        'cause': {
+          title: 'Educación para Todos',
+          description: 'Proyecto educativo integral para comunidades rurales que busca proporcionar acceso a educación de calidad, materiales escolares y apoyo nutricional a niños en situación de vulnerabilidad.',
+          goal: 15000,
+          raised: 11250,
+          category: 'Educación',
+          location: 'Guatemala',
+          image_url: 'https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?auto=format&fit=crop&w=600&q=80'
+        },
+        'task': {
+          title: 'Revisar Contenido Web',
+          description: 'Ayuda a moderar contenido de sitios web benéficos y verificar información de organizaciones para mantener la calidad y veracidad de los datos.',
+          points: 25,
+          duration: '5-10 minutos',
+          difficulty: 'Fácil',
+          category: 'Moderación'
+        },
+        'challenge': {
+          title: 'Desafío Ambiental',
+          description: 'Únete a este reto colaborativo para reducir la huella de carbono en comunidades locales a través de acciones sostenibles y educación ambiental.',
+          participants: 89,
+          days_left: 7,
+          goal: 'Plantar 500 árboles',
+          reward: '500 puntos + badge especial'
+        },
+        'volunteering': {
+          title: 'Apoyo Comunitario',
+          description: 'Oportunidad de voluntariado para ayudar a familias en situación vulnerable proporcionando apoyo directo, asesoramiento y acompañamiento.',
+          volunteers: 25,
+          location: 'Madrid, España',
+          schedule: 'Fines de semana',
+          requirements: 'Mayor de edad, disponibilidad de 4h/semana'
+        },
+
+
+        'team': {
+          title: 'Amigos del Ambiente',
+          description: 'Comunidad enfocada en sostenibilidad y protección del medio ambiente. Organizamos actividades, campañas de concienciación y proyectos ecológicos.',
+          members: 48,
+          category: 'Medio Ambiente',
+          activities: 'Limpiezas, plantaciones, talleres',
+          level: 'Todos los niveles'
+        }
+      };
+      
+      return sampleData[type] || {};
+    }
+
+    function createModalContentHTML(type, data) {
+      const contentTemplates = {
+        'cause': `
+          <div style="margin-bottom: 1.5rem;">
+            ${data.image_url ? `<img src="${data.image_url}" alt="${data.title}" style="width: 100%; height: 200px; object-fit: cover; border-radius: 8px; margin-bottom: 1rem;">` : ''}
+            <h4 style="color: var(--primary); margin-bottom: 0.5rem;">${data.title}</h4>
+            <p style="color: #666; line-height: 1.6; margin-bottom: 1rem;">${data.description}</p>
+            
+            <div style="background: #f8fafc; padding: 1rem; border-radius: 8px; margin-bottom: 1rem;">
+              <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                <span>Progreso:</span>
+                <span style="font-weight: 600;">${Math.round((data.raised || 0) / (data.goal || 1) * 100)}%</span>
+              </div>
+              <div style="background: #e2e8f0; height: 8px; border-radius: 4px; overflow: hidden;">
+                <div style="background: var(--accent); height: 100%; width: ${Math.round((data.raised || 0) / (data.goal || 1) * 100)}%; transition: width 0.3s ease;"></div>
+              </div>
+              <div style="display: flex; justify-content: space-between; margin-top: 0.5rem; font-size: 0.9rem; color: #666;">
+                <span>${(data.raised || 0).toLocaleString()}€ recaudados</span>
+                <span>Meta: ${(data.goal || 0).toLocaleString()}€</span>
+              </div>
+            </div>
+            
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; font-size: 0.9rem;">
+              <div><strong>Categoría:</strong> ${data.category || 'Sin categoría'}</div>
+              <div><strong>Ubicación:</strong> ${data.location || 'Global'}</div>
+            </div>
+          </div>
+        `,
+        'task': `
+          <div style="margin-bottom: 1.5rem;">
+            <h4 style="color: var(--primary); margin-bottom: 0.5rem;">${data.title}</h4>
+            <p style="color: #666; line-height: 1.6; margin-bottom: 1rem;">${data.description}</p>
+            
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; font-size: 0.9rem; background: #f8fafc; padding: 1rem; border-radius: 8px;">
+              <div><strong>Puntos:</strong> ${data.points || 25}</div>
+              <div><strong>Duración:</strong> ${data.duration || '5 min'}</div>
+              <div><strong>Dificultad:</strong> ${data.difficulty || 'Fácil'}</div>
+              <div><strong>Categoría:</strong> ${data.category || 'General'}</div>
+            </div>
+          </div>
+        `,
+        'challenge': `
+          <div style="margin-bottom: 1.5rem;">
+            <h4 style="color: var(--primary); margin-bottom: 0.5rem;">${data.title}</h4>
+            <p style="color: #666; line-height: 1.6; margin-bottom: 1rem;">${data.description}</p>
+            
+            <div style="background: #f8fafc; padding: 1rem; border-radius: 8px; margin-bottom: 1rem;">
+              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; font-size: 0.9rem;">
+                <div><strong>Participantes:</strong> ${data.participants || 0}</div>
+                <div><strong>Días restantes:</strong> ${data.days_left || 'N/A'}</div>
+                <div><strong>Objetivo:</strong> ${data.goal || 'Sin especificar'}</div>
+                <div><strong>Recompensa:</strong> ${data.reward || 'Puntos'}</div>
+              </div>
+            </div>
+          </div>
+        `,
+        'volunteering': `
+          <div style="margin-bottom: 1.5rem;">
+            <h4 style="color: var(--primary); margin-bottom: 0.5rem;">${data.title}</h4>
+            <p style="color: #666; line-height: 1.6; margin-bottom: 1rem;">${data.description}</p>
+            
+            <div style="background: #f8fafc; padding: 1rem; border-radius: 8px;">
+              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; font-size: 0.9rem;">
+                <div><strong>Voluntarios:</strong> ${data.volunteers || 0} voluntarios</div>
+                <div><strong>Ubicación:</strong> ${data.location || 'Remoto'}</div>
+                <div><strong>Horario:</strong> ${data.schedule || 'Flexible'}</div>
+                <div><strong>Requisitos:</strong> ${data.requirements || 'Ninguno específico'}</div>
+              </div>
+            </div>
+          </div>
+        `,
+        'team': `
+          <div style="margin-bottom: 1.5rem;">
+            <h4 style="color: var(--primary); margin-bottom: 0.5rem;">${data.title}</h4>
+            <p style="color: #666; line-height: 1.6; margin-bottom: 1rem;">${data.description}</p>
+            
+            <div style="background: #f8fafc; padding: 1rem; border-radius: 8px;">
+              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; font-size: 0.9rem;">
+                <div><strong>Miembros:</strong> ${data.members || 0}</div>
+                <div><strong>Categoría:</strong> ${data.category || 'General'}</div>
+                <div><strong>Actividades:</strong> ${data.activities || 'Variadas'}</div>
+                <div><strong>Nivel:</strong> ${data.level || 'Todos'}</div>
+              </div>
+            </div>
+          </div>
+        `
+      };
+      
+      return contentTemplates[type] || '<p>Información no disponible</p>';
+    }
+
+    // Reemplazar la función animateCounter en views/index.njk
+
+    function animateCounter(elementId, target, suffix = '') {
+      const element = document.getElementById(elementId);
+      if (!element || target === 0) {
+        if (element) element.textContent = '0' + suffix;
+        return;
+      }
+
+      let current = 0;
+      const increment = target / 500; // ✅ 500 pasos en 10 segundos = 20ms cada paso
+      const timer = setInterval(() => {
+        current += increment;
+        if (current >= target) {
+          element.textContent = Math.floor(target).toLocaleString() + suffix;
+          clearInterval(timer);
+        } else {
+          element.textContent = Math.floor(current).toLocaleString() + suffix;
+        }
+      }, 20); // ✅ 20ms * 500 = 10 segundos
+    }
+
+    function setupIntersectionObserver() {
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.style.opacity = '1';
+            entry.target.style.transform = 'translateY(0)';
+            
+            // ✅ Animar contadores solo cuando son visibles
+            if (entry.target.classList.contains('live-stats') && !entry.target.hasAttribute('data-animated')) {
+              entry.target.setAttribute('data-animated', 'true');
+              loadPlatformStats();
+            }
+          }
+        });
+      }, { threshold: 0.1 });
+
+      document.querySelectorAll('.action-card, .preview-card, .live-stat, .live-stats').forEach(el => {
+        el.style.opacity = '0';
+        el.style.transform = 'translateY(30px)';
+        el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+        observer.observe(el);
+      });
+    }
+
+    function setupResponsiveBehavior() {
+      // Mostrar imagen hero en desktop
+      if (window.innerWidth >= 768) {
+        const heroImage = document.querySelector('.hero-image');
+        if (heroImage) heroImage.style.display = 'block';
+      }
+
+      // Scroll suave para enlaces de anclaje
+      document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function (e) {
+          e.preventDefault();
+          const target = document.querySelector(this.getAttribute('href'));
+          if (target) {
+            target.scrollIntoView({
+              behavior: 'smooth',
+              block: 'start'
+            });
+          }
+        });
+      });
+    }
+
+    function showFallbackStats() {
+      document.getElementById('total-donations').textContent = '48,290€';
+      document.getElementById('active-challenges').textContent = '12';
+      document.getElementById('volunteer-hours').textContent = '2,840h';
+      document.getElementById('active-teams').textContent = '34';
+      document.getElementById('completed-tasks').textContent = '5,680';
+      document.getElementById('active-volunteers').textContent = '420';
+    }
+
+    // ✅ Función para inicializar todos los renderers - CORREGIDA PARA CAUSAS
+    function initializeRenderers() {
+      // ✅ Verificar CausesRenderer - MÉTODO CORREGIDO
+      if (window.causesRenderer && typeof window.causesRenderer.showModal === 'function') {
+        renderersLoaded.causes = true;
+        console.log('✅ causesRenderer disponible con showModal');
+      } else if (window.CausesRenderer) {
+        // ✅ CREAR INSTANCIA si la clase existe pero no la instancia
+        if (!window.causesRenderer) {
+          window.causesRenderer = new window.CausesRenderer();
+          console.log('✅ Instancia causesRenderer creada');
+        }
+        renderersLoaded.causes = true;
+        console.log('✅ CausesRenderer disponible (clase)');
+      } else {
+        console.warn('❌ CausesRenderer no disponible');
+      }
+      
+      // ✅ Verificar TasksRenderer
+      if (window.TasksRenderer) {
+        renderersLoaded.tasks = true;
+        console.log('✅ TasksRenderer disponible');
+      }
+      
+      // ✅ Verificar ChallengesRenderer - MISMO PATRÓN QUE CAUSAS
+      if (window.challengesRenderer && typeof window.challengesRenderer.showModal === 'function') {
+        renderersLoaded.challenges = true;
+        console.log('✅ challengesRenderer disponible con showModal');
+      } else if (window.ChallengesRenderer) {
+        if (!window.challengesRenderer) {
+          window.challengesRenderer = new window.ChallengesRenderer();
+          console.log('✅ Instancia challengesRenderer creada');
+        }
+        renderersLoaded.challenges = true;
+        console.log('✅ ChallengesRenderer disponible (clase)');
+      } else {
+        console.warn('❌ ChallengesRenderer no disponible');
+      }
+      
+      // ✅ Verificar VolunteeringRenderer
+      if (window.VolunteeringRenderer) {
+        renderersLoaded.volunteering = true;
+        console.log('✅ VolunteeringRenderer disponible');
+      }
+      
+      // ✅ Verificar TeamsRenderer
+      if (window.TeamsRenderer) {
+        renderersLoaded.teams = true;
+        console.log('✅ TeamsRenderer disponible');
+      }
+      
+      console.log('Estado final de renderers:', renderersLoaded);
+    }
+
+    // ✅ VERIFICACIÓN FINAL - Crear instancias si las clases existen
+    if (window.CausesRenderer && !window.causesRenderer) {
+      window.causesRenderer = new window.CausesRenderer();
+      console.log('✅ Instancia global causesRenderer creada');
+    }
+
+    if (window.ChallengesRenderer && !window.challengesRenderer) {
+      window.challengesRenderer = new window.ChallengesRenderer();
+      console.log('✅ Instancia global challengesRenderer creada');
+    }
+
+    // ✅ ASEGURAR COMPATIBILIDAD CON CAUSAS - Crear funciones globales si no existen
+    setTimeout(() => {
+      // Verificar si las funciones globales de causas existen
+      if (!window.showCauseModal && window.causesRenderer && typeof window.causesRenderer.showModal === 'function') {
+        window.showCauseModal = (causeId) => window.causesRenderer.showModal(causeId);
+        console.log('✅ showCauseModal creado como alias');
+      }
+      
+      if (!window.showChallengeModal && window.challengesRenderer && typeof window.challengesRenderer.showModal === 'function') {
+        window.showChallengeModal = (challengeId) => window.challengesRenderer.showModal(challengeId);
+        console.log('✅ showChallengeModal creado como alias');
+      }
+      
+      // Re-verificar renderers después de un segundo
+      initializeRenderers();
+    }, 1500);
+  </script>
+{% endblock %}

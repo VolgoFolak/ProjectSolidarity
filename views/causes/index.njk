@@ -1,0 +1,1460 @@
+{% extends "layout.njk" %}
+
+{% block title %}Causas - Solidarity{% endblock %}
+
+{% block head %}
+  {{ super() }}
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <style>
+    :root {
+      --primary: #4a6fa5;
+      --primary-dark: #166088;
+      --gray: #e2e8f0;
+      --white: #fff;
+      --accent: #4fc3a1;
+      --accent-dark: #3da58a;
+      --urgent: #e53e3e;
+    }
+    body {
+      background: #f8fafc;
+      font-family: 'Inter', Arial, sans-serif;
+      color: #2d3748;
+      font-size: 1rem;
+    }
+    .modal-bg {
+      display: none;
+      position: fixed;
+      top: 0; left: 0; width: 100vw; height: 100vh;
+      background: rgba(0,0,0,0.35);
+      z-index: 9999;
+      align-items: center;
+      justify-content: center;
+    }
+    .modal-bg.active { display: flex; }
+    .modal-content {
+      background: #fff;
+      border-radius: 18px;
+      max-width: 540px;
+      width: 95vw;
+      padding: 2.5rem 1.5rem 2rem 1.5rem;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.13);
+      position: relative;
+      animation: fadeIn 0.3s;
+      max-height: 90vh;
+      overflow-y: auto;
+    }
+    .close-modal {
+      position: absolute;
+      top: 1.1rem; right: 1.3rem;
+      background: none;
+      border: none;
+      font-size: 2rem;
+      color: #aaa;
+      cursor: pointer;
+      transition: color 0.2s;
+    }
+    .close-modal:hover { color: var(--primary, #4a6fa5); }
+    .create-cause-title {
+      font-size: 1.5rem;
+      font-weight: 800;
+      color: var(--primary, #4a6fa5);
+      margin-bottom: 1.2rem;
+      text-align: center;
+    }
+    .cause-form .form-group label { font-weight: 600; color: var(--primary, #4a6fa5); }
+    .cause-form .form-group input,
+    .cause-form .form-group textarea {
+      width: 100%;
+      padding: 0.7rem 1rem;
+      border-radius: 8px;
+      border: 1px solid #e5e7eb;
+      margin-bottom: 0.2rem;
+      font-size: 1rem;
+      background: #f8fafc;
+      transition: border 0.2s;
+    }
+    .cause-form .form-group input:focus,
+    .cause-form .form-group textarea:focus {
+      border: 1.5px solid var(--accent, #4fc3a1);
+      outline: none;
+      background: #fff;
+    }
+    .cause-form .form-group textarea {
+      min-height: 90px;
+      resize: vertical;
+    }
+    .form-inline-group {
+      display: flex;
+      gap: 1rem;
+    }
+    .form-inline-group .form-group { flex: 1; }
+    .preview-img {
+      width: 100%;
+      max-width: 320px;
+      height: 180px;
+      object-fit: cover;
+      border-radius: 10px;
+      margin-top: 0.5rem;
+      border: 1px solid #e5e7eb;
+      display: none;
+    }
+    .points-info {
+      background: var(--accent, #4fc3a1);
+      color: #fff;
+      border-radius: 8px;
+      padding: 0.7rem 1rem;
+      margin-top: 0.5rem;
+      font-size: 1.05rem;
+      display: flex;
+      align-items: center;
+      gap: 0.7rem;
+    }
+    .after-create {
+      margin-top: 2rem;
+      background: var(--primary-light, #e6f0fa);
+      color: #444;
+      border-radius: 10px;
+      padding: 1.5rem 1rem;
+      text-align: center;
+    }
+    @media (max-width: 600px) {
+      .modal-content { padding: 1.2rem 0.5rem 1.2rem 0.5rem; }
+      .create-cause-title { font-size: 1.1rem; }
+      .form-inline-group { flex-direction: column; }
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(-30px);}
+      to { opacity: 1; transform: translateY(0);}
+    }
+    /* SOLO estilos de la página de causas, NO navbar, logo, nav-links, auth-buttons, user-info, footer */
+    .modal {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0,0,0,0.5);
+        z-index: 1000;
+        justify-content: center;
+        align-items: center;
+    }
+    .modal-content {
+        background: #fff;
+        padding: 2rem;
+        border-radius: 10px;
+        max-width: 500px;
+        width: 90%;
+        text-align: center;
+    }
+    .modal-buttons {
+        display: flex;
+        gap: 1rem;
+        justify-content: center;
+        margin-top: 1.5rem;
+    }
+    .main-container {
+        max-width: 1200px;
+        margin: 2rem auto;
+        padding: 0 2rem;
+    }
+    .causes-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 2rem;
+    }
+    .causes-header h1 {
+        font-size: 2rem;
+        color: var(--primary);
+        font-weight: 700;
+    }
+    .causes-search {
+        margin-bottom: 2rem;
+        display: flex;
+        align-items: center;
+        gap: 0.7rem;
+    }
+    .causes-search input {
+        flex: 1;
+        padding: 0.6rem 1.2rem;
+        border-radius: 7px;
+        border: 1.5px solid var(--gray);
+        font-size: 1.05rem;
+        outline: none;
+        transition: border 0.2s;
+        background: #fff;
+    }
+    // Animación para notificaciones
+    @keyframes fadeInOut {
+      0% { opacity: 0; transform: translateX(-50%) translateY(20px); }
+      15% { opacity: 1; transform: translateX(-50%) translateY(0); }
+      85% { opacity: 1; transform: translateX(-50%) translateY(0); }
+      100% { opacity: 0; transform: translateX(-50%) translateY(-20px); }
+    }
+    .causes-search input:focus {
+        border-color: var(--primary);
+    }
+    .tabs {
+        display: flex;
+        border-bottom: 1px solid var(--gray);
+        margin-bottom: 2rem;
+    }
+    .tab {
+        padding: 0.75rem 1.5rem;
+        cursor: pointer;
+        position: relative;
+        font-weight: 500;
+        color: #6b7280;
+        background: none;
+        border: none;
+        outline: none;
+    }
+    .tab.active {
+        color: var(--primary);
+        font-weight: 600;
+    }
+    .tab.active::after {
+        content: '';
+        position: absolute;
+        bottom: -1px;
+        left: 0;
+        width: 100%;
+        height: 3px;
+        background: var(--primary);
+    }
+    .causes-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+        gap: 2rem;
+    }
+    .cause-card {
+        background: white;
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        transition: all 0.3s ease;
+        border: 1px solid var(--gray);
+        display: flex;
+        flex-direction: column;
+    }
+    .cause-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+    }
+    .cause-image {
+        height: 180px;
+        overflow: hidden;
+        position: relative;
+    }
+    .cause-image img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.3s ease;
+    }
+    .cause-card:hover .cause-image img {
+        transform: scale(1.05);
+    }
+    .cause-badge {
+        position: absolute;
+        top: 1rem;
+        right: 1rem;
+        background: rgba(255, 255, 255, 0.9);
+        padding: 0.3rem 0.8rem;
+        border-radius: 50px;
+        font-size: 0.8rem;
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
+    .cause-badge.urgent {
+        background: var(--urgent);
+        color: white;
+    }
+    .cause-badge.points {
+        background: var(--primary);
+        color: white;
+        left: 1rem;
+        right: auto;
+    }
+    .cause-content {
+        padding: 1.5rem;
+        display: flex;
+        flex-direction: column;
+        flex: 1;
+    }
+    .cause-content h3 {
+        font-size: 1.3rem;
+        margin-bottom: 0.8rem;
+        color: #2d3748;
+    }
+    .cause-content p {
+        color: #6b7280;
+        margin-bottom: 1.5rem;
+        font-size: 0.95rem;
+        line-height: 1.6;
+        flex-grow: 1;
+    }
+    .cause-meta {
+        display: flex;
+        gap: 1rem;
+        margin-bottom: 1.5rem;
+        font-size: 0.85rem;
+        flex-wrap: wrap;
+    }
+    .meta-item {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        color: #6b7280;
+    }
+    .meta-item i {
+        color: var(--primary);
+    }
+    .beneficiaries-count {
+        display: inline-flex;
+        align-items: center;
+        background: #f0f9ff;
+        color: var(--primary);
+        padding: 0.3rem 0.8rem;
+        border-radius: 50px;
+        font-size: 0.85rem;
+        font-weight: 600;
+    }
+    .beneficiaries-count i {
+        margin-right: 0.3rem;
+    }
+    .cause-progress {
+        margin-bottom: 1.5rem;
+    }
+    .progress-bar {
+        height: 8px;
+        background: var(--gray);
+        border-radius: 4px;
+        overflow: hidden;
+        margin-bottom: 0.5rem;
+    }
+    .progress-fill {
+        height: 100%;
+        background: var(--primary);
+        border-radius: 4px;
+    }
+    .progress-info {
+        display: flex;
+        justify-content: space-between;
+        font-size: 0.9rem;
+        color: #6b7280;
+    }
+    .cause-actions {
+        display: flex;
+        gap: 0.8rem;
+    }
+    .cause-actions .btn {
+        flex: 1;
+        text-align: center;
+        justify-content: center;
+    }
+    .btn-accent {
+        background: var(--accent);
+        color: white;
+    }
+    .btn-accent:hover {
+        background: var(--accent-dark);
+        transform: translateY(-2px);
+    }
+    .btn-sm {
+        padding: 0.4rem 0.8rem;
+        font-size: 0.85rem;
+    }
+    @media (max-width: 900px) {
+        .main-container {
+            padding: 1.2rem 0.5rem;
+        }
+    }
+    @media (max-width: 768px) {
+        .causes-header {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 1rem;
+        }
+        .causes-grid {
+            grid-template-columns: 1fr;
+        }
+        .cause-actions {
+            flex-direction: column;
+        }
+    }
+
+    /* Modal de Causa */
+    .modal-cause-container {
+      font-family: 'Poppins', sans-serif;
+      color: #2d3748;
+    }
+    .modal-cause-header {
+      display: flex;
+      gap: 2rem;
+      margin-bottom: 2rem;
+    }
+    @media (max-width: 768px) {
+      .modal-cause-header { flex-direction: column; }
+    }
+    .modal-cause-image-wrapper {
+      flex: 1;
+      min-width: 300px;
+      height: 280px;
+      border-radius: 12px;
+      overflow: hidden;
+      position: relative;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    }
+    .modal-cause-image {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.3s ease;
+    }
+    .modal-cause-badge {
+      position: absolute;
+      top: 1.5rem;
+      right: 1.5rem;
+      background: rgba(255,255,255,0.95);
+      padding: 0.5rem 1rem;
+      border-radius: 50px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      z-index: 2;
+    }
+    .modal-cause-badge.urgent {
+      background: var(--urgent);
+      color: white;
+    }
+    .modal-cause-info {
+      flex: 1.5;
+      display: flex;
+      flex-direction: column;
+    }
+    .modal-cause-title {
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: var(--primary);
+      margin-bottom: 1rem;
+      line-height: 1.3;
+    }
+    .modal-cause-progress-container {
+      background: #f8fafc;
+      padding: 1.5rem;
+      border-radius: 12px;
+      margin-bottom: 1.5rem;
+      border: 1px solid #e5e7eb;
+    }
+    .progress-info {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 0.8rem;
+      font-size: 0.95rem;
+      color: #6b7280;
+    }
+    .modal-cause-meta-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+      gap: 1.2rem;
+      margin-bottom: 1.5rem;
+    }
+    .meta-item {
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+      font-size: 0.95rem;
+    }
+    .meta-icon {
+      color: var(--primary);
+      font-size: 1.1rem;
+      width: 1.5rem;
+      text-align: center;
+    }
+    .points-notice {
+      background: #f0f9ff;
+      border-left: 4px solid var(--accent);
+      padding: 1rem;
+      border-radius: 0 8px 8px 0;
+      margin: 1rem 0;
+      font-size: 0.95rem;
+      display: flex;
+      align-items: center;
+      gap: 0.7rem;
+    }
+    .modal-cause-content { margin-top: 1.5rem; }
+    .content-section { margin-bottom: 2rem; }
+    .content-title {
+      font-size: 1.3rem;
+      font-weight: 600;
+      color: var(--primary);
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.7rem;
+    }
+    .content-text {
+      line-height: 1.7;
+      color: #4b5563;
+      font-size: 1.05rem;
+    }
+    .modal-cause-actions {
+      display: flex;
+      gap: 1rem;
+      margin-top: 1.5rem;
+      flex-wrap: wrap;
+    }
+    .action-btn {
+      flex: 1;
+      min-width: 180px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.7rem;
+      padding: 1rem;
+      border-radius: 8px;
+      font-weight: 600;
+      font-size: 1.05rem;
+      transition: all 0.2s ease;
+      border: none;
+      cursor: pointer;
+    }
+    .action-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+    .action-btn-primary {
+      background: var(--primary);
+      color: white;
+    }
+    .action-btn-accent {
+      background: var(--accent);
+      color: white;
+    }
+    .action-btn-secondary {
+      background: #f8fafc;
+      color: var(--primary);
+      border: 1px solid var(--primary-light);
+    }
+    .share-section {
+      margin-top: 2rem;
+      padding-top: 2rem;
+      border-top: 1px solid #e5e7eb;
+    }
+    .share-title {
+      font-size: 1.3rem;
+      font-weight: 600;
+      color: var(--primary);
+      margin-bottom: 1.5rem;
+      text-align: center;
+    }
+    .share-content {
+      background: #f8fafc;
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+      position: relative;
+    }
+    .share-text {
+      font-size: 1rem;
+      line-height: 1.6;
+      color: #4b5563;
+      margin-bottom: 1rem;
+    }
+    .share-highlight {
+      color: var(--primary);
+      font-weight: 600;
+    }
+    .share-buttons {
+      display: flex;
+      justify-content: center;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+    .share-btn {
+      display: flex;
+      align-items: center;
+      gap: 0.7rem;
+      padding: 0.8rem 1.5rem;
+      border-radius: 8px;
+      font-weight: 600;
+      color: white;
+      transition: all 0.2s;
+      text-decoration: none;
+    }
+    .share-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    }
+    .share-btn-facebook { background: #3b5998; }
+    .share-btn-twitter { background: #1da1f2; }
+    .share-btn-whatsapp { background: #25d366; }
+    .share-btn-link { background: var(--primary); }
+
+    /* Estilos para la sección de introducción de causas */
+    .causes-intro {
+      background: linear-gradient(135deg, #f0f9ff 0%, #e6f0fa 100%);
+      border-radius: 12px;
+      padding: 2rem;
+      margin-bottom: 2rem;
+      border: 1px solid #e2e8f0;
+    }
+    .causes-intro h2 {
+      font-size: 1.8rem;
+      color: #166088;
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+    }
+    .causes-intro h2 i {
+      color: #4fc3a1;
+    }
+    .causes-intro p {
+      color: #4a6fa5;
+      font-size: 1.1rem;
+      line-height: 1.6;
+    }
+
+    /* Estilos específicos para el modal de creación de causas */
+    #createCauseModal .modal-content form,
+    #createCauseModal .modal-content .cause-form,
+    #createCauseModal .modal-content .form-group,
+    #createCauseModal .modal-content .form-inline-group,
+    #createCauseModal .modal-content label,
+    #createCauseModal .modal-content input,
+    #createCauseModal .modal-content textarea,
+    #createCauseModal .modal-content select,
+    #createCauseModal .modal-content .points-info,
+    #createCauseModal .modal-content .after-create {
+      text-align: left !important;
+      align-items: flex-start !important;
+      justify-content: flex-start !important;
+    }
+
+    #createCauseModal .modal-content .create-cause-title {
+      text-align: center !important;
+    }
+
+    /* Modal de estado de Stripe */
+    .stripe-status-modal {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.7);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 10000;
+    }
+    .stripe-status-modal .modal-content {
+      background: white;
+      border-radius: 12px;
+      padding: 2rem;
+      max-width: 500px;
+      width: 90%;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+    }
+    .stripe-status-modal h3 {
+      color: #635bff;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin-bottom: 1.5rem;
+    }
+    .status-message {
+      padding: 1.5rem;
+      border-radius: 10px;
+      margin-bottom: 1.5rem;
+      text-align: center;
+    }
+    .status-message.pending {
+      background: #dbeafe;
+      border: 1px solid #bfdbfe;
+      color: #3b82f6;
+    }
+    .status-message.warning {
+      background: #fef3c7;
+      border: 1px solid #fde68a;
+      color: #d97706;
+    }
+    .status-message i {
+      font-size: 2.5rem;
+      margin-bottom: 1rem;
+      display: block;
+    }
+    .modal-actions {
+      display: flex;
+      gap: 1rem;
+      justify-content: flex-end;
+    }
+
+    /* Notificaciones globales */
+    .global-notification {
+      position: fixed;
+      top: 20px;
+      left: 50%;
+      transform: translateX(-50%) translateY(-20px);
+      padding: 1rem 1.5rem;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+      z-index: 10000;
+      opacity: 0;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+    .global-notification.info {
+      background: #dbeafe;
+      color: #3b82f6;
+      border: 1px solid #bfdbfe;
+    }
+    .global-notification.success {
+      background: #dcfce7;
+      color: #16a34a;
+      border: 1px solid #bbf7d0;
+    }
+    .global-notification.warning {
+      background: #fef3c7;
+      color: #d97706;
+      border: 1px solid #fde68a;
+    }
+    .global-notification.error {
+      background: #fee2e2;
+      color: #ef4444;
+      border: 1px solid #fecaca;
+    }
+    .notification-content {
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+    }
+    .stripe-setup-modal {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.7);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 10000;
+    }
+    .stripe-setup-modal .modal-content {
+      background: white;
+      border-radius: 12px;
+      padding: 2rem;
+      max-width: 500px;
+      width: 90%;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+    }
+    .stripe-setup-modal h3 {
+      color: #635bff;
+      margin-bottom: 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .stripe-setup-modal p {
+      margin-bottom: 2rem;
+      line-height: 1.6;
+    }
+    .draft-recovery-notification {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background: white;
+      border-radius: 8px;
+      padding: 1.5rem;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+      z-index: 9999;
+      max-width: 350px;
+      border-left: 4px solid #635bff;
+    }
+    .draft-recovery-notification p {
+      margin-bottom: 1rem;
+    }
+    .draft-recovery-notification button {
+      padding: 0.5rem 1rem;
+      border-radius: 6px;
+      cursor: pointer;
+      margin-right: 0.5rem;
+    }
+    .draft-recovery-notification button#recoverDraftBtn {
+      background: #635bff;
+      color: white;
+      border: none;
+    }
+    .draft-recovery-notification button#discardDraftBtn {
+      background: none;
+      border: 1px solid #ddd;
+    }
+
+    /* Nueva sección para el modal de éxito de Stripe */
+    {% if request.query.stripe == 'success' %}
+    #modal-success {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(0,0,0,0.5);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 9999;
+    }
+    .modal-solidarity {
+      position: fixed; top:0; left:0; width:100vw; height:100vh;
+      background: rgba(0,0,0,0.5); display:flex; align-items:center; justify-content:center; z-index:9999;
+    }
+    .modal-content {
+      background: #fff; border-radius: 12px; padding: 32px; text-align: center; box-shadow: 0 4px 24px rgba(0,0,0,0.15);
+    }
+    .btn-solidarity {
+      background: #1abc9c; color: #fff; border:none; padding:10px 24px; border-radius:6px; margin:16px 0 8px 0; font-weight:bold; cursor:pointer;
+    }
+    .btn-outline {
+      background: none; border: 1px solid #1abc9c; color: #1abc9c; padding:8px 20px; border-radius:6px; cursor:pointer;
+    }
+    .stripe-success-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10000;
+}
+
+.stripe-success-modal .modal-content {
+  background: white;
+  border-radius: 12px;
+  max-width: 500px;
+  width: 90%;
+  animation: fadeIn 0.3s ease-out;
+}
+
+.global-notification {
+  position: fixed;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 1rem 1.5rem;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  z-index: 10000;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  animation: slideInDown 0.3s ease-out;
+}
+
+.global-notification.info {
+  background: #dbeafe;
+  color: #3b82f6;
+  border: 1px solid #bfdbfe;
+}
+
+.global-notification.success {
+  background: #dcfce7;
+  color: #16a34a;
+  border: 1px solid #bbf7d0;
+}
+
+.global-notification.error {
+  background: #fee2e2;
+  color: #ef4444;
+  border: 1px solid #fecaca;
+}
+
+.global-notification.fade-out {
+  animation: slideOutUp 0.3s ease-in;
+  opacity: 0;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes slideInDown {
+  from { opacity: 0; transform: translateX(-50%) translateY(-20px); }
+  to { opacity: 1; transform: translateX(-50%) translateY(0); }
+}
+
+@keyframes slideOutUp {
+  from { opacity: 1; transform: translateX(-50%) translateY(0); }
+  to { opacity: 0; transform: translateX(-50%) translateY(-20px); }
+}
+    {% endif %}
+  </style>
+{% endblock %}
+
+{% block content %}
+  <!-- Modal para usuarios no logueados -->
+  <div class="modal-bg" id="loginModal">
+    <div class="modal-content">
+      <h3>Para crear una causa</h3>
+      <p>Debes ser un usuario registrado. ¿Deseas iniciar sesión o registrarte ahora?</p>
+      <div class="modal-buttons">
+        <a href="/login?return=/causes" class="btn btn-primary">Iniciar Sesión</a>
+        <a href="/register?return=/causes" class="btn btn-outline">Registrarse</a>
+        <button id="cancelModal" class="btn">Cancelar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal emergente para crear causa -->
+  <div id="createCauseModal" class="modal-bg">
+    <div class="modal-content">
+      <button class="close-modal" id="closeCreateCauseModal" title="Cerrar">&times;</button>
+      <div class="create-cause-title">
+        <i class="fas fa-plus-circle"></i> Crear Nueva Causa Solidaria
+      </div>
+      <form class="cause-form" id="causeForm" autocomplete="off">
+        <!-- Título de la causa -->
+        <div class="form-group">
+          <label for="title">Título de la causa</label>
+          <input type="text" id="title" name="title" placeholder="Ej: Agua limpia para todos" required>
+        </div>
+        <!-- Foto principal (ahora justo después del título) -->
+        <div class="form-group">
+          <label for="photo">Foto principal</label>
+          <input type="file" id="photo" name="photo" accept="image/*">
+          <img id="previewImg" class="preview-img" alt="Vista previa de la foto" style="display:none;">
+        </div>
+        <!-- Resumen corto -->
+        <div class="form-group">
+          <label for="short_description">Descripción corta (máx. 3 líneas)</label>
+          <textarea id="short_description" name="short_description" maxlength="180" placeholder="Resumen breve para mostrar en la tarjeta..." required></textarea>
+        </div>
+        <!-- Descripción larga -->
+        <div class="form-group">
+          <label for="description">Descripción exhaustiva</label>
+          <textarea id="description" name="description" placeholder="Describe la causa, el objetivo, contexto, cómo se usará la ayuda..." required></textarea>
+        </div>
+        <!-- Meta y beneficiarios -->
+        <div class="form-inline-group">
+          <div class="form-group">
+            <label for="goal">Meta de recaudación (€)</label>
+            <input type="number" id="goal" name="goal" min="1" step="0.01" placeholder="Ej: 5000" required>
+          </div>
+          <div class="form-group">
+            <label for="beneficiaries">Nº de beneficiarios</label>
+            <input type="number" id="beneficiaries" name="beneficiaries" min="1" placeholder="Ej: 100" required>
+          </div>
+        </div>
+        <!-- Ciudad y país -->
+        <div class="form-inline-group">
+          <div class="form-group">
+            <label for="city">Ciudad</label>
+            <input type="text" id="city" name="city" placeholder="Ej: Madrid" required>
+          </div>
+          <div class="form-group">
+            <label for="country">País</label>
+            <input type="text" id="country" name="country" placeholder="Ej: España" required>
+          </div>
+        </div>
+        <!-- Puntos -->
+        <div class="form-group">
+          <label for="points">Puntos por colaborar</label>
+          <input type="number" id="points" name="points" min="1" max="1000" value="50" required>
+          <div class="points-info" id="pointsText">
+            <i class="fas fa-star"></i>
+            Colaborar en esta causa otorgará <strong>50 puntos</strong> a cada participante.
+          </div>
+        </div>
+        <!-- Email de contacto -->
+        <div class="form-group">
+          <label for="contact_email">Email de contacto</label>
+          <input type="email" id="contact_email" name="contact_email" placeholder="ejemplo@email.com">
+        </div>
+        <!-- Teléfono de contacto -->
+        <div class="form-group">
+          <label for="phone_number">Teléfono de contacto</label>
+          <input type="tel" id="phone_number" name="phone_number" placeholder="+34 600 123 456">
+        </div>
+        <input type="hidden" id="lat" name="lat">
+        <input type="hidden" id="lng" name="lng">
+        <button type="submit" class="btn btn-primary" style="margin-top:1rem;">
+          <i class="fas fa-paper-plane"></i> Crear Causa
+        </button>
+      </form>
+      <div class="after-create" id="afterCreate" style="display:none;">
+        <h3>¡Causa creada con éxito!</h3>
+        <p>¿Quieres agregar tareas o retos específicos vinculados a esta causa?</p>
+        <a href="/tasks/create" class="btn btn-accent">
+          <i class="fas fa-tasks"></i> Agregar tareas/retos
+        </a>
+        <br>
+        <a href="/causes" class="btn btn-outline" style="margin-top:1rem;">
+          <i class="fas fa-arrow-left"></i> Volver a causas
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal de Causa (compatible con causes-renderer.js) -->
+  <div id="causeModal" class="modal" style="display:none; position:fixed; z-index:9999; left:0; top:0; width:100vw; height:100vh; background:rgba(0,0,0,0.35); align-items:center; justify-content:center;">
+    <div class="modal-content" style="background:#fff; border-radius:18px; max-width:900px; width:95vw; padding:0; position:relative; max-height:90vh; overflow-y:auto;">
+      <button onclick="window.causesRenderer ? window.causesRenderer.closeModal() : (this.closest('.modal').style.display='none', document.body.style.overflow='')" 
+              style="position:absolute; top:1rem; right:1rem; background:none; border:none; font-size:1.5rem; cursor:pointer; z-index:10; color:#666; width:2rem; height:2rem; display:flex; align-items:center; justify-content:center; border-radius:50%; transition:all 0.2s;" 
+              onmouseover="this.style.background='#f3f4f6'" 
+              onmouseout="this.style.background='none'">&times;</button>
+      <div id="modalBody" style="padding:2rem;">
+        <!-- El contenido se genera dinámicamente por causes-renderer.js -->
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal de Administración de Actividad estilo Solidarity -->
+  <div id="activityAdminModal" class="modal-bg">
+    <div class="modal-content" style="max-width:700px; width:95vw; border-radius:18px; padding:2.5rem 1.5rem 2rem 1.5rem; box-shadow:0 8px 32px rgba(74,111,165,0.13); position:relative; max-height:90vh; overflow-y:auto;">
+      <button class="close-modal" id="closeAdminActivityModal" title="Cerrar">&times;</button>
+      <div class="create-cause-title" id="adminActivityTitle" style="margin-bottom:2rem;">
+        <i class="fas fa-cog"></i> Administrar Actividad
+      </div>
+      <div class="tabs" style="margin-bottom:2rem;">
+        <button class="tab active" data-tab="overview">Resumen</button>
+        <button class="tab" data-tab="members">Miembros</button>
+        <button class="tab" data-tab="settings">Configurar</button>
+        <button class="tab" data-tab="activity">Actividad</button>
+      </div>
+      <div id="overviewTab" class="tab-content active">
+        <div class="modal-cause-progress-container" style="background:#f8fafc; padding:1.2rem; border-radius:12px; margin-bottom:1.2rem; border:1px solid #e5e7eb;">
+          <div class="progress-bar">
+            <div class="progress-fill" id="adminActivityProgress" style="width:0%"></div>
+          </div>
+          <div class="progress-info">
+            <span id="adminActivityProgressPercent">0% completado</span>
+            <span id="adminActivityProgressAmount"></span>
+          </div>
+        </div>
+        <div class="modal-cause-meta-grid" style="display:grid; grid-template-columns:1fr 1fr; gap:0.7rem 1.2rem; margin-bottom:1.2rem;">
+          <div class="meta-item"><span class="meta-icon"><i class="fas fa-users"></i></span> <span id="adminActivityMembers">0 miembros</span></div>
+          <div class="meta-item"><span class="meta-icon"><i class="fas fa-star"></i></span> <span id="adminActivityPoints">0 puntos</span></div>
+          <div class="meta-item"><span class="meta-icon"><i class="fas fa-calendar-alt"></i></span> <span id="adminActivityCreated">-</span></div>
+          <div class="meta-item"><span class="meta-icon"><i class="fas fa-info-circle"></i></span> <span id="adminActivityStatus">-</span></div>
+        </div>
+        <div class="points-notice" style="background:#f0f9ff; border-left:4px solid var(--accent); padding:0.8rem; border-radius:0 8px 8px 0; font-size:0.97rem; display:flex; align-items:center; gap:0.7rem;">
+          <i class="fas fa-star" style="color: var(--accent);"></i>
+          <span id="adminActivityNotice"></span>
+        </div>
+        <div class="content-section" style="margin-top:2rem;">
+          <h3 class="content-title"><i class="fas fa-align-left"></i> Descripción</h3>
+          <p class="content-text" id="adminActivityDesc" style="text-align:justify;"></p>
+        </div>
+      </div>
+      <div id="membersTab" class="tab-content">
+        <h3 class="content-title"><i class="fas fa-users"></i> Miembros</h3>
+        <div class="members-list" id="adminActivityMembersList"></div>
+      </div>
+      <div id="settingsTab" class="tab-content">
+        <form id="adminActivityForm" class="cause-form" autocomplete="off">
+          <div id="adminActivityFormFields"></div>
+          <button type="submit" class="btn btn-primary" style="margin-top:1.2rem;">
+            <i class="fas fa-save"></i> Guardar Cambios
+          </button>
+        </form>
+      </div>
+      <div id="activityTab" class="tab-content">
+        <h3 class="content-title"><i class="fas fa-history"></i> Actividad reciente</h3>
+        <div id="adminActivityLog" style="color:#4b5563; font-size:1.05rem;"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Sección de introducción a las causas solidarias (espaciado igual que retos y volunteering) -->
+  <div class="main-container">
+    <div class="causes-intro">
+      <div class="causes-intro-content">
+        <h2>
+          <i class="fas fa-seedling"></i>
+          ¡Descubre causas y suma tu impacto!
+        </h2>
+        <p>
+          Explora causas solidarias, conoce sus historias y encuentra cómo puedes ayudar. Cada causa es una oportunidad para transformar vidas y construir un mundo mejor. ¡Tu apoyo marca la diferencia!
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Contenido principal de la página de causas -->
+  <div class="main-container">
+    <div class="causes-header">
+      <h1>Causas Solidarias</h1>
+      <a href="#" id="create-cause-btn" class="btn btn-primary">
+        <i class="fas fa-plus"></i> Crear Causa
+      </a>
+    </div>
+    <div class="causes-search">
+      <input type="text" id="search-input" placeholder="Buscar por título, país, descripción...">
+      <i class="fas fa-search" style="color:#4a6fa5;"></i>
+    </div>
+    <div class="tabs">
+      <button class="tab active" data-filter="all">Todas</button>
+      <button class="tab" data-filter="education">Educación</button>
+      <button class="tab" data-filter="health">Salud</button>
+      <button class="tab" data-filter="environment">Medio Ambiente</button>
+      <button class="tab" data-filter="animals">Animales</button>
+      <button class="tab" data-filter="community">Comunidad</button>
+    </div>
+    <div class="causes-grid" id="causesList">
+      <!-- Las causas se cargarán dinámicamente desde Supabase -->
+    </div>
+  </div>
+
+  <!-- Modal de éxito de Stripe -->
+  {% if request.query.stripe == 'success' %}
+  <div id="modal-success" class="modal-solidarity" style="display:flex;">
+    <div class="modal-content">
+      <img src="/img/solidarity-success.svg" alt="Éxito" style="width:80px;margin-bottom:16px;">
+      <h2>¡Tu cuenta Stripe está conectada!</h2>
+      <p>Ya puedes empezar a recibir donaciones en tu causa.<br>
+      <strong>¡Gracias por sumar solidaridad!</strong></p>
+      <a href="/causes/create" class="btn btn-solidarity">Crear otra causa</a>
+      <button id="closeSuccessModal" class="btn btn-outline">Cerrar</button>
+    </div>
+  </div>
+  <script>
+  document.getElementById('closeSuccessModal').onclick = function() {
+    document.getElementById('modal-success').style.display = 'none';
+    // Limpia el parámetro de la URL para que no vuelva a salir el modal
+    if (window.location.search.includes('stripe=success')) {
+      const url = new URL(window.location.href);
+      url.searchParams.delete('stripe');
+      window.history.replaceState({}, '', url.pathname + url.search);
+    }
+  };
+  document.getElementById('modal-success').onclick = function(e) {
+    if (e.target === this) document.getElementById('modal-success').style.display = 'none';
+  };
+  </script>
+  {% endif %}
+{% endblock %}
+
+{% block scripts %}
+{{ super() }}
+<script src="/js/compartir.js"></script>
+<script src="/js/modules/causes-renderer.js"></script>
+<script>
+// --- CREACIÓN DE CAUSA SIMPLE (como tareas) ---
+document.getElementById('causeForm').addEventListener('submit', async function(e) {
+  e.preventDefault();
+
+  const submitBtn = this.querySelector('button[type="submit"]');
+  const originalBtnText = submitBtn.innerHTML;
+  submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Creando causa...';
+  submitBtn.disabled = true;
+
+  try {
+    // Recopilar datos del formulario
+    const formData = {
+      title: document.getElementById('title').value.trim(),
+      short_description: document.getElementById('short_description').value.trim(),
+      description: document.getElementById('description').value.trim(),
+      goal: parseFloat(document.getElementById('goal').value),
+      beneficiaries: parseInt(document.getElementById('beneficiaries').value, 10),
+      city: document.getElementById('city').value.trim(),
+      country: document.getElementById('country').value.trim(),
+      points: parseInt(document.getElementById('points').value, 10) || 50,
+      contact_email: document.getElementById('contact_email').value.trim() || null,
+      phone_number: document.getElementById('phone_number').value.trim() || null,
+      photoFile: document.getElementById('photo').files[0]
+    };
+
+    // Validar campos requeridos
+    if (!formData.title || !formData.short_description || !formData.description ||
+        !formData.goal || !formData.beneficiaries || !formData.city || !formData.country) {
+      throw new Error('Por favor completa todos los campos requeridos');
+    }
+
+    // Obtener sesión de usuario
+    const { data: { session } } = await supabase.auth.getSession();
+    if (!session?.user) {
+      throw new Error('Debes iniciar sesión para crear una causa');
+    }
+    const userId = session.user.id;
+
+    // Subir foto si existe
+    let photo_url = null;
+    if (formData.photoFile) {
+      const fileExt = formData.photoFile.name.split('.').pop();
+      const fileName = `${Date.now()}-${Math.random().toString(36).substr(2, 9)}.${fileExt}`;
+      const filePath = `public/${fileName}`;
+      const { error: uploadError } = await supabase.storage
+        .from('causes')
+        .upload(filePath, formData.photoFile, { upsert: true });
+      if (uploadError) throw new Error('Error subiendo foto: ' + uploadError.message);
+      const { data } = supabase.storage.from('causes').getPublicUrl(filePath);
+      photo_url = data.publicUrl;
+    }
+
+    // Insertar causa en Supabase
+    const { data: newCause, error: causeError } = await supabase
+      .from('causes')
+      .insert([{
+        title: formData.title,
+        short_description: formData.short_description,
+        description: formData.description,
+        goal: formData.goal,
+        beneficiaries: formData.beneficiaries,
+        city: formData.city,
+        country: formData.country,
+        points: formData.points,
+        photo_url,
+        contact_email: formData.contact_email,
+        phone_number: formData.phone_number,
+        user_id: userId,
+        status: 'active',
+        raised: 0,
+        donors: 0
+      }])
+      .select()
+      .single();
+
+    if (causeError) throw new Error('Error en Supabase: ' + causeError.message);
+
+    // Agregar al creador como miembro fundador
+    await supabase
+      .from('causes_members')
+      .insert([{
+        cause_id: newCause.id,
+        user_id: userId,
+        role: 'founder',
+        status: 'active'
+      }]);
+
+    // Mostrar mensaje de éxito y recargar causas
+    document.getElementById('causeForm').style.display = 'none';
+    document.getElementById('afterCreate').style.display = 'block';
+    showNotification('¡Causa creada con éxito!', 'success');
+    await loadCausesFromSupabase();
+
+  } catch (error) {
+    console.error('Error creando causa:', error);
+    showNotification(error.message, 'error');
+  } finally {
+    submitBtn.innerHTML = originalBtnText;
+    submitBtn.disabled = false;
+  }
+});
+
+// --- FUNCIONES AUXILIARES Y EVENTOS ---
+function showNotification(message, type = 'info', duration = 4000) {
+  const existing = document.querySelector('.global-notification');
+  if (existing) existing.remove();
+  const notification = document.createElement('div');
+  notification.className = `global-notification ${type}`;
+  notification.innerHTML = `
+    <div class="notification-content">
+      <i class="fas fa-${type === 'error' ? 'times-circle' : type === 'warning' ? 'exclamation-triangle' : type === 'success' ? 'check-circle' : 'info-circle'}"></i>
+      <span>${message}</span>
+    </div>
+  `;
+  document.body.appendChild(notification);
+  setTimeout(() => {
+    notification.style.opacity = '1';
+    notification.style.transform = 'translateY(0)';
+  }, 10);
+  setTimeout(() => {
+    notification.style.opacity = '0';
+    notification.style.transform = 'translateY(-20px)';
+    setTimeout(() => notification.remove(), 300);
+  }, duration);
+}
+
+// --- CARGA Y FILTRO DE CAUSAS ---
+async function loadCausesFromSupabase(filter = "all", searchTerm = "") {
+  if (window.causesRenderer) {
+    const { causes, error } = await window.causesRenderer.loadCausesFromSupabase(filter, searchTerm);
+    if (error) {
+      document.getElementById('causesList').innerHTML = '<div style="color:#e53e3e;text-align:center;">Error al cargar las causas.</div>';
+      return;
+    }
+    const container = document.getElementById('causesList');
+    window.causesRenderer.renderGrid(causes, container);
+    window.causes = causes;
+  }
+}
+
+// --- EVENTOS DE MODAL Y BUSQUEDA ---
+function setupCreateCauseListeners() {
+  document.getElementById('create-cause-btn').onclick = async function(e) {
+    e.preventDefault();
+    const { data: { session } } = await supabase.auth.getSession();
+    if (session?.user) {
+      document.getElementById('createCauseModal').classList.add('active');
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.getElementById('loginModal').classList.add('active');
+    }
+  };
+
+  document.getElementById('closeCreateCauseModal').onclick = function() {
+    document.getElementById('createCauseModal').classList.remove('active');
+    document.body.style.overflow = '';
+    document.getElementById('causeForm').reset();
+    document.getElementById('previewImg').style.display = 'none';
+    document.getElementById('causeForm').style.display = 'block';
+    document.getElementById('afterCreate').style.display = 'none';
+  };
+
+  document.getElementById('createCauseModal').onclick = function(e) {
+    if (e.target === this) {
+      this.classList.remove('active');
+      document.body.style.overflow = '';
+      document.getElementById('causeForm').style.display = 'block';
+      document.getElementById('afterCreate').style.display = 'none';
+    }
+  };
+
+  document.getElementById('cancelModal').onclick = function() {
+    document.getElementById('loginModal').classList.remove('active');
+  };
+  document.getElementById('loginModal').onclick = function(e) {
+    if (e.target === this) this.classList.remove('active');
+  };
+
+  // Vista previa de imagen
+  document.getElementById('photo').addEventListener('change', function(e) {
+    const file = e.target.files[0];
+    const preview = document.getElementById('previewImg');
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = function(evt) {
+        preview.src = evt.target.result;
+        preview.style.display = 'block';
+      };
+      reader.readAsDataURL(file);
+    } else {
+      preview.src = '';
+      preview.style.display = 'none';
+    }
+  });
+
+  // Actualizar texto de puntos
+  document.getElementById('points').addEventListener('input', function() {
+    const val = this.value || 0;
+    document.getElementById('pointsText').innerHTML = `<i class="fas fa-star"></i> Colaborar en esta causa otorgará <strong>${val} puntos</strong> a cada participante.`;
+  });
+
+  // Geocodificación (si tienes función)
+  if (typeof geocodeCityCountry === 'function') {
+    document.getElementById('city').addEventListener('change', geocodeCityCountry);
+    document.getElementById('country').addEventListener('change', geocodeCityCountry);
+  }
+}
+
+// --- FILTROS Y BUSQUEDA ---
+function setupTabsAndSearch() {
+  document.querySelectorAll('.tab').forEach(tab => {
+    tab.addEventListener('click', function() {
+      const filter = this.getAttribute('data-filter');
+      document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+      this.classList.add('active');
+      loadCausesFromSupabase(filter, document.getElementById('search-input').value);
+    });
+  });
+
+  document.getElementById('search-input').addEventListener('input', function() {
+    const searchTerm = this.value.trim();
+    const activeTab = document.querySelector('.tab.active');
+    const filter = activeTab ? activeTab.getAttribute('data-filter') : 'all';
+    loadCausesFromSupabase(filter, searchTerm);
+  });
+}
+
+// --- CARGA INICIAL DE CAUSAS ---
+document.addEventListener('DOMContentLoaded', async function() {
+  // Cargar causas inicialmente
+  await loadCausesFromSupabase();
+
+  // Configurar listeners para crear causa
+  setupCreateCauseListeners();
+  
+  // Event listeners para tabs y búsqueda
+  setupTabsAndSearch();
+});
+</script>
+<script>
+document.addEventListener('DOMContentLoaded', async () => {
+  // Manejar redirección de Stripe
+  const urlParams = new URLSearchParams(window.location.search);
+  const stripeError = urlParams.get('stripe_error');
+  const stripeSuccess = urlParams.get('stripe');
+  
+  if (stripeError) {
+    showStripeError(stripeError);
+    cleanUrlParams();
+  }
+  
+  if (stripeSuccess === 'success') {
+    await handleStripeSuccess();
+    cleanUrlParams();
+  }
+  
+  // Verificar si hay un borrador pendiente
+  await checkPendingDraft();
+});
+
+function showStripeError(errorCode) {
+  const messages = {
+    'invalid_draft': 'No se encontró el borrador de la causa',
+    'no_onboarding': 'No se encontró el proceso de Stripe',
+    'incomplete': 'La configuración de Stripe no está completa',
+    'refresh': 'La sesión de Stripe expiró, por favor intenta nuevamente'
+  };
+  
+  showNotification(messages[errorCode] || 'Error en el proceso de Stripe', 'error');
+}
+
+async function handleStripeSuccess() {
+  showNotification('¡Cuenta Stripe configurada correctamente!', 'success');
+  await window.causesRenderer?.loadCausesFromSupabase();
+}
+
+function cleanUrlParams() {
+  const url = new URL(window.location.href);
+  url.searchParams.delete('stripe_error');
+  url.searchParams.delete('stripe');
+  window.history.replaceState({}, '', url);
+}
+
+async function checkPendingDraft() {
+  try {
+    const { data: { session } } = await supabase.auth.getSession();
+    if (!session?.user) return;
+    
+    const response = await fetch(`/get-user-draft/${session.user.id}`, {
+      credentials: 'include'
+    });
+    
+    if (response.ok) {
+      const { draft } = await response.json();
+      if (draft) {
+        window.causesRenderer?.showDraftSavedNotification(draft.id);
+      }
+    }
+  } catch (error) {
+    console.error('Error checking draft:', error);
+  }
+}
+</script>
+{% endblock %}
