@@ -1220,7 +1220,6 @@ async function uploadPhoto(photoFile) {
   return data.publicUrl;
 }
 
-// Guardar borrador de causa
 async function saveCauseDraft(formData) {
   let photoUrl = null;
   if (formData.photoFile) {
@@ -1231,7 +1230,6 @@ async function saveCauseDraft(formData) {
   const response = await fetch('/save-cause-draft', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    credentials: 'include', // <-- SIEMPRE incluir esto
     body: JSON.stringify({ draftData })
   });
   if (!response.ok) {
@@ -1241,46 +1239,19 @@ async function saveCauseDraft(formData) {
   return await response.json();
 }
 
-// Crear causa final desde borrador
 async function createFinalCause(draftId) {
   const response = await fetch('/create-final-cause', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    credentials: 'include', // <-- SIEMPRE incluir esto
     body: JSON.stringify({ draftId })
   });
   if (!response.ok) {
     const error = await response.json();
     throw new Error(error.error || 'Error creando causa final');
   }
-  return await response.json();
-}
-
-// Iniciar onboarding de Stripe
-async function startStripeOnboarding(draftData, email) {
-  const response = await fetch('/start-stripe-onboarding', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    credentials: 'include', // <-- SIEMPRE incluir esto
-    body: JSON.stringify({ draftData, email })
-  });
-  if (!response.ok) {
-    const error = await response.json();
-    throw new Error(error.error || 'Error iniciando onboarding de Stripe');
-  }
-  return await response.json();
-}
-
-// Ejemplo para cualquier otro endpoint protegido:
-async function fetchProtectedData() {
-  const response = await fetch('/api/protected-endpoint', {
-    method: 'GET',
-    credentials: 'include', // <-- SIEMPRE incluir esto
-  });
-  if (!response.ok) {
-    throw new Error('No autorizado');
-  }
-  return await response.json();
+  const result = await response.json();
+  showSuccessMessage();
+  return result;
 }
 
 async function checkStripeAccount() {
@@ -1399,7 +1370,7 @@ function showDraftRecoveryNotification(draft) {
     notification.remove();
   });
   notification.querySelector('#discardDraftBtn').addEventListener('click', async () => {
-    await fetch(`/delete-draft/${draft.id}`, { method: 'DELETE', credentials: 'include' });
+    await fetch(`/delete-draft/${draft.id}`, { method: 'DELETE' });
     notification.remove();
   });
 }
@@ -1534,6 +1505,10 @@ async function loadCausesFromSupabaseOriginal(filter = "all", searchTerm = "") {
     card.className = 'cause-card';
     card.innerHTML = `
       <div class="cause-image">
+        <img src="${cause.photo_url || '/img/causa-default.jpg'}" alt="${cause.title}" 
+             onerror="if (!this._defaulted) { this._defaulted = true; this.src='/img/causa-default.jpg'; }">
+        ${urgentBadge}
+        ${pointsBadge}
       </div>
       <div class="cause-content">
         <h3>${cause.title}</h3>
@@ -2004,119 +1979,185 @@ async function refreshStripeStatusAndUI(userId) {
 }
 
 // Llama a esta función tras el return_url del onboarding
+</script>
+<script>
 document.addEventListener('DOMContentLoaded', async () => {
+  // Manejar redirección de Stripe
   const urlParams = new URLSearchParams(window.location.search);
-  if (urlParams.get('onboarding') === 'success') {
-    showSuccessModal({
-      title: '¡Onboarding completado!',
-      message: 'Tu cuenta de Stripe está configurada y puedes recibir donaciones.',
-      buttonText: 'Ver mi causa',
-      buttonUrl: window.location.pathname
-    });
-    window.history.replaceState({}, '', '/causes');
+  
+  if (urlParams.has('stripe') && urlParams.get('stripe') === 'success') {
+    const causeId = urlParams.get('cause_id');
+    
+    // Mostrar modal de éxito
+    const modal = document.createElement('div');
+    modal.className = 'stripe-success-modal';
+    modal.innerHTML = `
+      <div class="modal-content">
+        <div style="text-align:center; padding:2rem;">
+          <div style="background:#4fc3a1; width:80px; height:80px; border-radius:50%; display:inline-flex; align-items:center; justify-content:center; margin-bottom:1.5rem;">
+            <i class="fas fa-check" style="color:white; font-size:2rem;"></i>
+          </div>
+          <h2 style="color:var(--primary); margin-bottom:1rem;">¡Configuración completada!</h2>
+          <p style="color:#4b5563; margin-bottom:2rem; line-height:1.6;">
+            Tu cuenta de Stripe está activa y tu causa está lista para recibir donaciones.
+            ${causeId ? `<br><strong>¡Gracias por crear una causa solidaria!</strong>` : ''}
+          </p>
+          <div style="display:flex; gap:1rem; justify-content:center;">
+            ${causeId ? `
+              <a href="/causes/${causeId}" class="btn btn-primary">
+                <i class="fas fa-eye"></i> Ver mi causa
+              </a>
+            ` : ''}
+            <a href="/causes" class="btn btn-accent">
+              <i class="fas fa-list"></i> Ver todas las causas
+            </a>
+          </div>
+        </div>
+      </div>
+    `;
+    
+    document.body.appendChild(modal);
+    document.body.style.overflow = 'hidden';
+    
+    // Limpiar parámetros de URL
+    const cleanUrl = window.location.pathname;
+    window.history.replaceState({}, document.title, cleanUrl);
+  }
+  
+  // Manejar errores de Stripe
+  if (urlParams.has('stripe_error')) {
+    const error = urlParams.get('stripe_error');
+    let errorMessage = 'Ocurrió un error al configurar los pagos';
+    
+    if (error === 'not_verified') {
+      errorMessage = 'No completaste la verificación de Stripe. Inténtalo nuevamente.';
+    } else if (error === 'no_draft') {
+      errorMessage = 'No encontramos tu borrador de causa. Por favor crea una nueva.';
+    }
+    
+    showNotification(errorMessage, 'error');
+    
+    // Limpiar parámetros de URL
+    const cleanUrl = window.location.pathname;
+    window.history.replaceState({}, document.title, cleanUrl);
   }
 });
-function showSuccessModal(config) {
-  const modal = document.createElement('div');
-  modal.className = 'success-modal';
-  modal.innerHTML = `
-    <div class="modal-content">
-      <div class="success-icon">
-        <svg viewBox="0 0 24 24">
-          <path fill="currentColor" d="M12 2C6.5 2 2 6.5 2 12S6.5 22 12 22 22 17.5 22 12 17.5 2 12 2M10 17L5 12L6.41 10.59L10 14.17L17.59 6.58L19 8L10 17Z" />
-        </svg>
-      </div>
-      <h2>${config.title}</h2>
-      <p>${config.message}</p>
-      <div class="modal-actions">
-        <a href="${config.buttonUrl}" class="btn btn-primary">${config.buttonText}</a>
-        <button class="btn btn-outline close-modal">Cerrar</button>
-      </div>
+
+// Función para mostrar notificaciones
+function showNotification(message, type = 'info') {
+  const notification = document.createElement('div');
+  notification.className = `global-notification ${type}`;
+  notification.innerHTML = `
+    <div class="notification-content">
+      <i class="fas fa-${type === 'error' ? 'times-circle' : type === 'success' ? 'check-circle' : 'info-circle'}"></i>
+      <span>${message}</span>
     </div>
   `;
-  document.body.appendChild(modal);
-  modal.querySelector('.close-modal').onclick = () => modal.remove();
-  const style = document.createElement('style');
-  style.textContent = `
-    .success-modal {
-      position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-      background: rgba(0,0,0,0.7); display: flex; align-items: center; justify-content: center; z-index: 10000;
-      animation: fadeIn 0.3s;
-    }
-    .success-modal .modal-content {
-      background: white; border-radius: 16px; padding: 2rem; max-width: 500px; width: 90%; text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-    }
-    .success-icon {
-      width: 80px; height: 80px; background: #4fc3a1; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 1.5rem;
-    }
-    .success-icon svg { width: 50px; height: 50px; color: white; }
-    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-  `;
-  document.head.appendChild(style);
+  
+  document.body.appendChild(notification);
+  
+  setTimeout(() => {
+    notification.classList.add('fade-out');
+    setTimeout(() => notification.remove(), 300);
+  }, 5000);
 }
 </script>
 <script>
 document.addEventListener('DOMContentLoaded', async () => {
   // Manejar redirección de Stripe
   const urlParams = new URLSearchParams(window.location.search);
-  const stripeError = urlParams.get('stripe_error');
-  const stripeSuccess = urlParams.get('stripe');
   
-  if (stripeError) {
-    showStripeError(stripeError);
-    cleanUrlParams();
+  if (urlParams.has('stripe') && urlParams.get('stripe') === 'success') {
+    const causeId = urlParams.get('cause_id');
+    
+    // Mostrar modal de éxito
+    const modal = document.createElement('div');
+    modal.className = 'stripe-success-modal';
+    modal.innerHTML = `
+      <div class="modal-content">
+        <div style="text-align:center; padding:2rem;">
+          <div style="background:#4fc3a1; width:80px; height:80px; border-radius:50%; display:inline-flex; align-items:center; justify-content:center; margin-bottom:1.5rem;">
+            <i class="fas fa-check" style="color:white; font-size:2rem;"></i>
+          </div>
+          <h2 style="color:var(--primary); margin-bottom:1rem;">¡Configuración completada!</h2>
+          <p style="color:#4b5563; margin-bottom:2rem; line-height:1.6;">
+            Tu cuenta de Stripe está activa y tu causa está lista para recibir donaciones.
+            ${causeId ? `<br><strong>¡Gracias por crear una causa solidaria!</strong>` : ''}
+          </p>
+          <div style="display:flex; gap:1rem; justify-content:center;">
+            ${causeId ? `
+              <a href="/causes/${causeId}" class="btn btn-primary">
+                <i class="fas fa-eye"></i> Ver mi causa
+              </a>
+            ` : ''}
+            <a href="/causes" class="btn btn-accent">
+              <i class="fas fa-list"></i> Ver todas las causas
+            </a>
+          </div>
+        </div>
+      </div>
+    `;
+    
+    document.body.appendChild(modal);
+    document.body.style.overflow = 'hidden';
+    
+    // Limpiar parámetros de URL
+    const cleanUrl = window.location.pathname;
+    window.history.replaceState({}, document.title, cleanUrl);
   }
   
-  if (stripeSuccess === 'success') {
-    await handleStripeSuccess();
-    cleanUrlParams();
+  // Manejar errores de Stripe
+  if (urlParams.has('stripe_error')) {
+    const error = urlParams.get('stripe_error');
+    let errorMessage = 'Ocurrió un error al configurar los pagos';
+    
+    if (error === 'not_verified') {
+      errorMessage = 'No completaste la verificación de Stripe. Inténtalo nuevamente.';
+    } else if (error === 'no_draft') {
+      errorMessage = 'No encontramos tu borrador de causa. Por favor crea una nueva.';
+    }
+    
+    showNotification(errorMessage, 'error');
+    
+    // Limpiar parámetros de URL
+    const cleanUrl = window.location.pathname;
+    window.history.replaceState({}, document.title, cleanUrl);
   }
-  
-  // Verificar si hay un borrador pendiente
-  await checkPendingDraft();
 });
 
-function showStripeError(errorCode) {
-  const messages = {
-    'invalid_draft': 'No se encontró el borrador de la causa',
-    'no_onboarding': 'No se encontró el proceso de Stripe',
-    'incomplete': 'La configuración de Stripe no está completa',
-    'refresh': 'La sesión de Stripe expiró, por favor intenta nuevamente'
-  };
+// Función para mostrar notificaciones
+function showNotification(message, type = 'info') {
+  const notification = document.createElement('div');
+  notification.className = `global-notification ${type}`;
+  notification.innerHTML = `
+    <div class="notification-content">
+      <i class="fas fa-${type === 'error' ? 'times-circle' : type === 'success' ? 'check-circle' : 'info-circle'}"></i>
+      <span>${message}</span>
+    </div>
+  `;
   
-  showNotification(messages[errorCode] || 'Error en el proceso de Stripe', 'error');
+  document.body.appendChild(notification);
+  
+  setTimeout(() => {
+    notification.classList.add('fade-out');
+    setTimeout(() => notification.remove(), 300);
+  }, 5000);
 }
 
-async function handleStripeSuccess() {
-  showNotification('¡Cuenta Stripe configurada correctamente!', 'success');
-  await window.causesRenderer?.loadCausesFromSupabase();
-}
+document.addEventListener('DOMContentLoaded', () => {
+  const urlParams = new URLSearchParams(window.location.search);
 
-function cleanUrlParams() {
-  const url = new URL(window.location.href);
-  url.searchParams.delete('stripe_error');
-  url.searchParams.delete('stripe');
-  window.history.replaceState({}, '', url);
-}
-
-async function checkPendingDraft() {
-  try {
-    const { data: { session } } = await supabase.auth.getSession();
-    if (!session?.user) return;
-    
-    const response = await fetch(`/get-user-draft/${session.user.id}`, {
-      credentials: 'include'
-    });
-    
-    if (response.ok) {
-      const { draft } = await response.json();
-      if (draft) {
-        window.causesRenderer?.showDraftSavedNotification(draft.id);
-      }
-    }
-  } catch (error) {
-    console.error('Error checking draft:', error);
+  if (urlParams.get('stripe') === 'success') {
+    const causeId = urlParams.get('cause_id');
+    showNotification('¡Causa creada con éxito y Stripe activo!', 'success');
+    // Limpiar parámetros
+    window.history.replaceState({}, '', '/causes');
   }
-}
+
+  if (urlParams.get('stripe_error')) {
+    showNotification(`Error: ${urlParams.get('stripe_error')}`, 'error');
+    window.history.replaceState({}, '', '/causes');
+  }
+});
 </script>
 {% endblock %}

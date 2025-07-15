@@ -1399,7 +1399,7 @@ function showDraftRecoveryNotification(draft) {
     notification.remove();
   });
   notification.querySelector('#discardDraftBtn').addEventListener('click', async () => {
-    await fetch(`/delete-draft/${draft.id}`, { method: 'DELETE', credentials: 'include' });
+    await fetch(`/delete-draft/${draft.id}`, { method: 'DELETE' });
     notification.remove();
   });
 }
@@ -2053,70 +2053,6 @@ function showSuccessModal(config) {
     @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
   `;
   document.head.appendChild(style);
-}
-</script>
-<script>
-document.addEventListener('DOMContentLoaded', async () => {
-  // Manejar redirección de Stripe
-  const urlParams = new URLSearchParams(window.location.search);
-  const stripeError = urlParams.get('stripe_error');
-  const stripeSuccess = urlParams.get('stripe');
-  
-  if (stripeError) {
-    showStripeError(stripeError);
-    cleanUrlParams();
-  }
-  
-  if (stripeSuccess === 'success') {
-    await handleStripeSuccess();
-    cleanUrlParams();
-  }
-  
-  // Verificar si hay un borrador pendiente
-  await checkPendingDraft();
-});
-
-function showStripeError(errorCode) {
-  const messages = {
-    'invalid_draft': 'No se encontró el borrador de la causa',
-    'no_onboarding': 'No se encontró el proceso de Stripe',
-    'incomplete': 'La configuración de Stripe no está completa',
-    'refresh': 'La sesión de Stripe expiró, por favor intenta nuevamente'
-  };
-  
-  showNotification(messages[errorCode] || 'Error en el proceso de Stripe', 'error');
-}
-
-async function handleStripeSuccess() {
-  showNotification('¡Cuenta Stripe configurada correctamente!', 'success');
-  await window.causesRenderer?.loadCausesFromSupabase();
-}
-
-function cleanUrlParams() {
-  const url = new URL(window.location.href);
-  url.searchParams.delete('stripe_error');
-  url.searchParams.delete('stripe');
-  window.history.replaceState({}, '', url);
-}
-
-async function checkPendingDraft() {
-  try {
-    const { data: { session } } = await supabase.auth.getSession();
-    if (!session?.user) return;
-    
-    const response = await fetch(`/get-user-draft/${session.user.id}`, {
-      credentials: 'include'
-    });
-    
-    if (response.ok) {
-      const { draft } = await response.json();
-      if (draft) {
-        window.causesRenderer?.showDraftSavedNotification(draft.id);
-      }
-    }
-  } catch (error) {
-    console.error('Error checking draft:', error);
-  }
 }
 </script>
 {% endblock %}
