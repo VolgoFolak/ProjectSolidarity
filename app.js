@@ -17,6 +17,7 @@ const supabase = createClient(
 const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
 const app = express();
+app.set('trust proxy', 1); // <-- Añade esto aquí
 const PORT = 3000;
 
 const USERS_FILE = path.join(__dirname, 'users.json');
@@ -38,7 +39,7 @@ const isLocalhost = process.env.NODE_ENV !== 'production';
 const frontendUrl = isLocalhost ? 'http://localhost:3000' : 'https://www.project-solidarity.com';
 
 const corsOptions = {
-  origin: frontendUrl,
+  origin: 'https://www.project-solidarity.com',
   credentials: true,
   allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'Accept'],
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS']
@@ -50,11 +51,10 @@ app.use(require('express-session')({
   resave: false,
   saveUninitialized: false,
   cookie: {
-    secure: !isLocalhost,
-    sameSite: isLocalhost ? 'lax' : 'none',
-    httpOnly: true,
-    maxAge: 7 * 24 * 60 * 60 * 1000,
-    domain: isLocalhost ? undefined : '.project-solidarity.com'
+    secure: true,
+    sameSite: 'none',
+    domain: '.project-solidarity.com', // o tu dominio real
+    httpOnly: true
   }
 }));
 app.use(express.static(path.join(__dirname, 'public')));

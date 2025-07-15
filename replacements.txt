@@ -1,0 +1,4 @@
+regex:sk_test_[a-zA-Z0-9]{24,}==>REMOVED_SECRET
+regex:sk_live_[a-zA-Z0-9]{24,}==>REMOVED_SECRET
+regex:whsec_[a-zA-Z0-9]{24,}==>REMOVED_SECRET
+regex:[aA][pP][iI]_[kK][eE][yY][^'"\s]*['"][a-zA-Z0-9_\-]+['"]==>REMOVED_API_KEY
