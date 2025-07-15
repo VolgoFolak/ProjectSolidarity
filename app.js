@@ -10,7 +10,8 @@ const nunjucks = require('nunjucks');
 
 const { createClient } = require('@supabase/supabase-js');
 const supabase = createClient(
-  'https://cyftasxlrzuynzbrfgkd.supabase.co',
+  process.env.SUPABASE_URL,
+  process.env.SUPABASE_KEY
 );
 
 const cookieParser = require('cookie-parser');
