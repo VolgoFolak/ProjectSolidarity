@@ -990,6 +990,21 @@
           <label for="phone_number">Teléfono de contacto</label>
           <input type="tel" id="phone_number" name="phone_number" placeholder="+34 600 123 456">
         </div>
+        <!-- Campo: Cómo Donar -->
+        <div class="form-group">
+          <label for="how_to_donate">Cómo Donar <span style="color:#888;font-size:0.95em;">(explica cómo quieres recibir donaciones)</span></label>
+          <textarea id="how_to_donate" name="how_to_donate" placeholder="Ej: Puedes donar por Bizum, transferencia bancaria, PayPal, etc. Indica aquí instrucciones claras..." required></textarea>
+        </div>
+        <!-- Campo: Mobile Wallet -->
+        <div class="form-group">
+          <label for="mobile_wallet">Mobile Wallet (Bizum, PayPal, etc.) <span style="color:#888;font-size:0.95em;">(opcional)</span></label>
+          <input type="text" id="mobile_wallet" name="mobile_wallet" placeholder="Ej: Bizum al 600123456, PayPal: miemail@email.com">
+        </div>
+        <!-- Campo: Cuenta Bancaria / IBAN -->
+        <div class="form-group">
+          <label for="bank_account">Cuenta Bancaria / IBAN <span style="color:#888;font-size:0.95em;">(opcional)</span></label>
+          <input type="text" id="bank_account" name="bank_account" placeholder="Ej: ES12 3456 7890 1234 5678 9012">
+        </div>
         <input type="hidden" id="lat" name="lat">
         <input type="hidden" id="lng" name="lng">
         <button type="submit" class="btn btn-primary" style="margin-top:1rem;">
@@ -1174,6 +1189,11 @@ document.getElementById('causeForm').addEventListener('submit', async function(e
       city: document.getElementById('city').value.trim(),
       country: document.getElementById('country').value.trim(),
       points: parseInt(document.getElementById('points').value, 10) || 50,
+      // --- NUEVOS CAMPOS ---
+      how_to_donate: document.getElementById('how_to_donate').value.trim(),
+      mobile_wallet: document.getElementById('mobile_wallet').value.trim() || null,
+      bank_account: document.getElementById('bank_account').value.trim() || null,
+      // --- FIN NUEVOS CAMPOS ---
       contact_email: document.getElementById('contact_email').value.trim() || null,
       phone_number: document.getElementById('phone_number').value.trim() || null,
       photoFile: document.getElementById('photo').files[0]
@@ -1219,6 +1239,11 @@ document.getElementById('causeForm').addEventListener('submit', async function(e
         country: formData.country,
         points: formData.points,
         photo_url,
+        // --- NUEVOS CAMPOS ---
+        how_to_donate: formData.how_to_donate,
+        mobile_wallet: formData.mobile_wallet,
+        bank_account: formData.bank_account,
+        // --- FIN NUEVOS CAMPOS ---
         contact_email: formData.contact_email,
         phone_number: formData.phone_number,
         user_id: userId,
