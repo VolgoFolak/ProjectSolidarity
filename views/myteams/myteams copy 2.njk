@@ -37,12 +37,24 @@
     }
 
     .main-container {
-      padding-top: 70px; /* Ajusta según la altura del header */
-      padding-bottom: 70px; /* Ajusta según la altura del menú inferior */
       max-width: 1200px;
-      margin: 0 auto;
+      margin: 2rem auto;
+      padding: 0 1rem;
       box-sizing: border-box;
       overflow-x: hidden;
+      padding-top: 70px; /* Ajusta según la altura del header */
+      padding-bottom: 70px; /* Ajusta según la altura del menú inferior */
+    }
+
+    @media (max-width: 700px) {
+      .main-container {
+        padding: 0 0.5rem;
+        margin: 1rem 0;
+        border-radius: 0;
+      }
+      html, body {
+        overflow-x: hidden !important;
+      }
     }
 
     .section-header {
@@ -185,23 +197,8 @@
     /* Grid de comunidades */
     .teams-grid-classic {
       display: grid;
-      grid-template-columns: repeat(3, minmax(350px, 1fr));
+      grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
       gap: 2rem;
-    }
-    @media (max-width: 900px) {
-      .teams-grid-classic {
-        grid-template-columns: 1fr 1fr;
-        gap: 1.2rem;
-      }
-    }
-    @media (max-width: 600px) {
-      .teams-grid-classic {
-        grid-template-columns: 1fr !important;
-        gap: 1.2rem !important;
-        padding: 0 0.3rem !important;
-        max-width: 100vw !important;
-        box-sizing: border-box !important;
-      }
     }
 
     .team-card-classic {
@@ -488,6 +485,16 @@
       padding: 2rem;
       box-shadow: 0 5px 20px rgba(0,0,0,0.2);
       position: relative;
+      margin: 4vh 0;
+    }
+
+    @media (max-width: 600px) {
+      .admin-modal-content {
+        width: 99vw;
+        padding: 1rem;
+        border-radius: 14px;
+        margin: 8vh 0;
+      }
     }
 
     .close-admin-modal {
@@ -503,34 +510,47 @@
 
     .admin-tabs {
       display: flex;
-      border-bottom: 1px solid #e2e8f0;
+      gap: 0.5rem;
+      border-bottom: none;
       margin-bottom: 1.5rem;
+      overflow-x: auto;
+      padding-bottom: 0.5rem;
+      scrollbar-width: thin;
     }
 
     .admin-tab {
-      padding: 0.75rem 1.5rem;
+      background: #f8fafc;
+      border-radius: 999px;
+      border: 1.5px solid #e2e8f0;
+      color: #4a6fa5;
+      font-weight: 600;
+      padding: 0.7rem 1.3rem;
+      margin-right: 0.2rem;
       cursor: pointer;
-      position: relative;
-      font-weight: 500;
-      color: #6b7280;
-      background: none;
-      border: none;
+      transition: background 0.2s, color 0.2s, border 0.2s;
+      font-size: 1rem;
       outline: none;
     }
 
     .admin-tab.active {
-      color: var(--primary);
-      font-weight: 600;
+      background: var(--primary);
+      color: #fff;
+      border-color: var(--primary);
+      box-shadow: 0 2px 8px #4a6fa122;
     }
 
-    .admin-tab.active::after {
-      content: '';
-      position: absolute;
-      bottom: -1px;
-      left: 0;
-      width: 100%;
-      height: 3px;
-      background: var(--primary);
+    @media (max-width: 600px) {
+      .admin-tabs {
+        gap: 0.3rem !important;
+        padding-bottom: 0.2rem !important;
+        margin-bottom: 1rem !important;
+      }
+      .admin-tab {
+        font-size: 0.97rem !important;
+        padding: 0.6rem 1rem !important;
+        min-width: 90px !important;
+        margin-right: 0.1rem !important;
+      }
     }
 
     .admin-tab-content {
@@ -650,62 +670,65 @@
       }
     }
 
-    .teams-tabs {
-      display: flex;
-      border-bottom: 1.5px solid var(--gray);
-      margin-bottom: 2rem;
-      gap: 0.5rem;
-      flex-wrap: wrap;
+    /* GENERAL RESPONSIVE PARA LA PÁGINA */
+    @media (max-width: 700px) {
+      .main-container {
+        padding: 0 0.5rem;
+      }
+      .teams-intro {
+        flex-direction: column;
+        text-align: center;
+        padding: 1.2rem;
+        gap: 1rem;
+      }
+      .teams-highlights {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+      }
+      .activity-section-header {
+        flex-direction: column;
+        gap: 0.7rem;
+        padding: 1rem 0.7rem;
+        text-align: center;
+      }
+      .teams-grid-classic {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+      }
+      .team-card-classic {
+        margin-bottom: 1.2rem;
+      }
+      .search-container {
+        flex-direction: column;
+        gap: 0.5rem;
+      }
+      .tabs {
+        flex-wrap: wrap;
+        gap: 0.3rem;
+        font-size: 0.97rem;
+      }
     }
 
-    .teams-tab {
-      background: none;
-      border: none;
-      outline: none;
-      padding: 0.75rem 1.5rem;
-      font-size: 1rem;
-      color: #6b7280;
-      cursor: pointer;
-      font-weight: 500;
-      border-radius: 8px 8px 0 0;
-      transition: color 0.2s, background 0.2s;
-      position: relative;
+    @media (max-width: 700px) {
+      .tabs {
+        display: none !important;
+      }
     }
 
-    .teams-tab.active {
-      color: var(--primary);
-      background: #f8fafc;
-      font-weight: 700;
-    }
-
-    .teams-tab.active::after {
-      content: '';
-      position: absolute;
-      left: 0; right: 0; bottom: -1.5px;
-      height: 3px;
-      background: var(--primary);
-      border-radius: 2px 2px 0 0;
-    }
-
-    /* Modal de ver más comunidad */
-    #teamModal {
-      display: none;
+    .modal-bg, .admin-modal {
       position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(0, 0, 0, 0.7);
-      z-index: 1001;
-      justify-content: center;
+      top: 0; left: 0;
+      width: 100vw; height: 100vh;
+      background: rgba(0,0,0,0.35);
+      z-index: 1003;
+      display: none;
       align-items: center;
+      justify-content: center;
     }
-
-    #teamModal.active {
+    .modal-bg.active, .admin-modal.active {
       display: flex;
     }
-
-    #teamModal .modal-content {
+    .modal-content, .admin-modal-content {
       background: #fff;
       border-radius: 18px;
       max-width: 800px;
@@ -716,617 +739,30 @@
       max-height: 90vh;
       overflow-y: auto;
     }
-
-    #teamModal .close-admin-modal {
-      position: absolute;
-      top: 1.5rem;
-      right: 1.5rem;
-      background: none;
-      border: none;
-      font-size: 1.8rem;
-      color: #6b7280;
-      cursor: pointer;
-      transition: color 0.2s;
-    }
-
-    #teamModal .close-admin-modal:hover {
-      color: #4a6fa5;
-    }
-
-    #teamModal #teamModalBody {
-      padding: 0.5rem;
-    }
-
-    /* Nueva sección de formularios */
-    .solidarity-form {
-      padding: 1.2rem 0 0 0;
-    }
-    .form-section-title {
-      color: var(--primary);
-      font-size: 1.25rem;
-      font-weight: 700;
-      margin-bottom: 1.2rem;
-      display: flex;
-      align-items: center;
-      gap: 0.7rem;
-    }
-    .form-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 1.2rem 2.2rem;
-    }
-    .form-group {
-      display: flex;
-      flex-direction: column;
-      gap: 0.4rem;
-    }
-    .form-group-full {
-      grid-column: 1 / -1;
-    }
-    .form-group label {
-      color: var(--primary);
-      font-weight: 600;
-      font-size: 1rem;
-      margin-bottom: 0.2rem;
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-    }
-    .form-group input[type="text"],
-    .form-group input[type="number"],
-    .form-group select,
-    .form-group textarea {
-      padding: 0.7rem 1rem;
-      border-radius: 8px;
-      border: 1.5px solid var(--gray);
-      font-size: 1rem;
-      background: #f8fafc;
-      color: #2d3748;
-      transition: border 0.2s;
-    }
-    .form-group input[type="text"]:focus,
-    .form-group input[type="number"]:focus,
-    .form-group select:focus,
-    .form-group textarea:focus {
-      border: 1.5px solid var(--primary);
-      outline: none;
-    }
-    .form-actions {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 1rem;
-      margin-top: 2rem;
-      justify-content: flex-end;
-    }
-    @media (max-width: 700px) {
-      .form-grid {
-        grid-template-columns: 1fr;
-      }
-      .form-actions {
-        flex-direction: column;
-        align-items: stretch;
-      }
-    }
-
-    /* Estilos adicionales para el modal de administración */
-    .admin-modal-content h2,
-    .admin-modal-content h3,
-    .admin-modal-content h4,
-    .admin-modal-content .form-section-title,
-    .admin-modal-content label {
-      color: var(--primary);
-      font-weight: 700;
-    }
-    .admin-modal-content h2 {
-      font-size: 2rem;
-      margin-bottom: 1.2rem;
-    }
-    .admin-modal-content h3 {
-      font-size: 1.2rem;
-      margin-top: 2rem;
-      margin-bottom: 1rem;
-    }
-    .admin-modal-content h4 {
-      font-size: 1.05rem;
-      margin-bottom: 0.5rem;
-    }
-
-    .activity-cards-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 2rem 2.5rem;
-      justify-items: center;
-      margin-bottom: 1.5rem;
-    }
-    @media (max-width: 700px) {
-      .activity-cards-grid {
-        grid-template-columns: 1fr;
-        gap: 1.5rem;
-      }
-    }
-    .activity-card:hover {
-      box-shadow: 0 8px 32px #4a6fa522;
-      transform: translateY(-4px) scale(1.03);
-      transition: all 0.18s;
-    }
-
-    /* Nuevos estilos para las secciones de comunidades */
-    .activity-section {
-      margin-bottom: 3.5rem;
-    }
-
-    .activity-section-header {
-      display: flex;
-      align-items: center;
-      gap: 1.1rem;
-      margin-bottom: 2.2rem;
-      padding: 1.2rem 1.7rem;
-      border-radius: 14px;
-      box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
-    }
-
-    .activity-section-header h2 {
-      margin: 0;
-      font-size: 1.45rem;
-      font-weight: 900;
-      letter-spacing: -1px;
-    }
-
-    .admin-teams-section .activity-section-header {
-      background: linear-gradient(90deg, #e3f0ff 0%, #fff 100%);
-    }
-
-    .member-teams-section .activity-section-header {
-      background: linear-gradient(90deg, #e6fff7 0%, #fff 100%);
-    }
-
-    /* Ajustes en los grids de comunidades */
-    .teams-grid-classic {
-      display: grid;
-      grid-template-columns: repeat(3, minmax(350px, 1fr));
-      gap: 2rem;
-    }
-    @media (max-width: 900px) {
-      .teams-grid-classic {
-        grid-template-columns: 1fr 1fr;
-        gap: 1.2rem;
-      }
-    }
-    @media (max-width: 600px) {
-      .teams-grid-classic {
-        grid-template-columns: 1fr !important;
-        gap: 1.2rem !important;
-        padding: 0 0.3rem !important;
-        max-width: 100vw !important;
-        box-sizing: border-box !important;
-      }
-    }
-
-    .admin-modal-content .form-section-title {
-      color: var(--primary) !important;
-      font-size: 1.25rem !important;
-      font-weight: 700 !important;
-      margin-bottom: 1.2rem !important;
-      margin-top: 0 !important;
-      display: flex;
-      align-items: center;
-      gap: 0.7rem;
-    }
-
-    .btn, .btn-primary, .btn-accent, .btn-outline, .btn-info, .btn-warning {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 0.5rem;
-      padding: 0.7rem 1.3rem;
-      border-radius: 50px;
-      font-size: 1rem;
-      font-weight: 600;
-      border: none;
-      cursor: pointer;
-      transition: all 0.2s;
-      min-height: 44px;
-    }
-    @media (max-width: 700px) {
-      .btn, .btn-primary, .btn-accent, .btn-outline, .btn-info, .btn-warning {
-        width: 100%;
-        font-size: 1rem;
-        min-height: 44px;
-        border-radius: 50px;
-        margin-bottom: 0.5rem;
-      }
-      .team-actions-classic {
-        flex-direction: column;
-        gap: 0.5rem;
-      }
-    }
-
-    /* Estilos para modales */
-    .modal-bg, .admin-modal {
-      display: none;
-      position: fixed;
-      top: 0; left: 0;
-      width: 100vw; height: 100vh;
-      background: rgba(0,0,0,0.35);
-      z-index: 9999;
-      align-items: center;
-      justify-content: center;
-    }
-    .modal-bg.active, .admin-modal.active {
-      display: flex;
-    }
-    .modal-content, .admin-modal-content {
-      background: #fff;
-      border-radius: 18px;
-      max-width: 700px;
-      width: 95vw;
-      padding: 2.5rem 1.5rem 2rem 1.5rem;
-      box-shadow: 0 8px 32px rgba(0,0,0,0.13);
-      position: relative;
-      animation: fadeIn 0.3s;
-      max-height: 90vh;
-      overflow-y: auto;
-      margin: 0 auto;
-    }
-    .close-modal, .close-admin-modal {
-      position: absolute;
-      top: 1.1rem; right: 1.3rem;
-      background: none;
-      border: none;
-      font-size: 2rem;
-      color: #aaa;
-      cursor: pointer;
-      transition: color 0.2s;
-      z-index: 10;
-    }
-    .close-modal:hover, .close-admin-modal:hover { color: var(--primary, #4a6fa5); }
-
     @media (max-width: 600px) {
       .modal-content, .admin-modal-content {
-        margin-top: 100px !important;
-        margin-bottom: 90px !important;
-        margin-left: 2vw !important;
-        margin-right: 2vw !important;
-        width: 96vw !important;
-        max-width: 96vw !important;
-        min-width: 0 !important;
-        border-radius: 14px !important;
-        box-sizing: border-box !important;
-        left: 0 !important;
-        right: 0 !important;
-        max-height: calc(100vh - 190px) !important;
-        overflow-y: auto !important;
-        padding-left: 5vw !important;
-        padding-right: 5vw !important;
+        padding: 1rem;
+        border-radius: 14px;
+        margin: 8vh 0;
+        max-width: 99vw;
       }
-      .btn, .btn-primary, .btn-outline {
-        border-radius: 999px !important;
-        font-weight: 600 !important;
-        font-size: 1rem !important;
-        padding: 0.7rem 1.2rem !important;
-        width: 100% !important;
-        min-width: 0 !important;
-        max-width: 100vw !important;
-        display: flex !important;
-        justify-content: center !important;
-        align-items: center !important;
-        margin: 0.3rem 0 !important;
-        box-sizing: border-box !important;
-        gap: 0.7rem !important;
-      }
-      /* MODAL VER MÁS: imagen arriba, info debajo */
-      #teamModal .team-modal-main {
-        flex-direction: column !important;
-        display: flex !important;
-        gap: 1.2rem !important;
-        align-items: stretch !important;
-        width: 100% !important;
-        margin-bottom: 1.2rem !important;
-      }
-      #teamModal .team-modal-main > div {
-        width: 100% !important;
-        min-width: 0 !important;
-        max-width: 100% !important;
-      }
-      #teamModal .team-modal-main img {
-        width: 100% !important;
-        max-width: 100vw !important;
-        height: auto !important;
-        display: block !important;
-        object-fit: cover !important;
-        margin: 0 auto !important;
-      }
-    }
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(-30px);}
-      to { opacity: 1; transform: translateY(0);}
     }
   </style>
 {% endblock %}
 
 {% block content %}
-  <!-- Modal de ver más comunidad -->
+  <!-- Título principal -->
+  <div class="main-container">
+    <div class="section-header">
+      <h1>Tus Comunidades</h1>
+    </div>
+    <!-- ...resto del contenido... -->
+  </div>
+
   <div id="teamModal" class="modal-bg">
     <div class="modal-content">
       <button id="closeTeamModal" class="close-admin-modal" aria-label="Cerrar">&times;</button>
       <div id="teamModalBody"></div>
-    </div>
-  </div>
-
-  <!-- Modal de administración -->
-  <div class="admin-modal" id="adminModal">
-    <div class="admin-modal-content">
-      <button class="close-admin-modal" id="closeAdminModal">&times;</button>
-      <h2 id="adminModalTitle">Administrar Comunidad</h2>
-      
-      <div class="admin-tabs">
-        <button class="admin-tab active" data-tab="overview">Resumen</button>
-        <button class="admin-tab" data-tab="crearactividad">Crear actividad</button>
-        <button class="admin-tab" data-tab="members">Miembros</button>
-        <button class="admin-tab" data-tab="settings">Configuración</button>
-        <button class="admin-tab" data-tab="content">Contenido</button>
-      </div>
-      
-      <div class="admin-tab-content active" id="overviewTab">
-        <div class="stats-grid">
-          <div class="stat-card">
-            <div class="stat-value" id="membersCount">0</div>
-            <div class="stat-label">Miembros</div>
-          </div>
-          <div class="stat-card">
-            <div class="stat-value" id="activitiesCount">0</div>
-            <div class="stat-label">Actividades</div>
-          </div>
-          <div class="stat-card">
-            <div class="stat-value" id="impactPoints">0</div>
-            <div class="stat-label">Puntos de Impacto</div>
-          </div>
-          <div class="stat-card">
-            <div class="stat-value" id="beneficiariesCount">0</div>
-            <div class="stat-label">Beneficiarios</div>
-          </div>
-        </div>
-        
-        <h3>Progreso de la comunidad</h3>
-        <div class="progress-bar">
-          <div class="progress-fill" id="communityProgress" style="width: 0%"></div>
-        </div>
-        <div class="progress-info">
-          <span id="progressPercent">0% completado</span>
-          <span id="progressAmount">0 € de 0 €</span>
-        </div>
-      </div>
-      
-      <div class="admin-tab-content" id="crearactividadTab">
-        <h3 style="margin-bottom:1.5rem;">Crear nueva actividad</h3>
-        <div class="activity-cards-grid">
-          <div class="activity-card" style="background:linear-gradient(135deg,#e3f0ff 0%,#f8fafc 100%);border-radius:14px;padding:1.7rem 1.5rem;display:flex;flex-direction:column;align-items:center;box-shadow:0 4px 16px #4a6fa511;min-width:170px;max-width:320px;">
-            <div style="background:#4a6fa5;padding:1rem;border-radius:50%;margin-bottom:1rem;box-shadow:0 2px 8px #4a6fa522;">
-              <img src="https://cdn-icons-png.flaticon.com/512/833/833472.png" alt="Causa" style="width:44px;height:44px;">
-            </div>
-            <button class="btn btn-primary btn-lg" id="createCauseBtnTab" style="width:100%;margin-bottom:0.7rem;">
-              <i class="fas fa-heart"></i> Crear Causa
-            </button>
-            <span style="color:#4a6fa5;font-size:1em;text-align:center;">Apoya una causa solidaria</span>
-          </div>
-          <div class="activity-card" style="background:linear-gradient(135deg,#e6fff7 0%,#f8fafc 100%);border-radius:14px;padding:1.7rem 1.5rem;display:flex;flex-direction:column;align-items:center;box-shadow:0 4px 16px #4fc3a122;min-width:170px;max-width:320px;">
-            <div style="background:#4fc3a1;padding:1rem;border-radius:50%;margin-bottom:1rem;box-shadow:0 2px 8px #4fc3a122;">
-              <img src="https://cdn-icons-png.flaticon.com/512/3079/3079165.png" alt="Tarea" style="width:44px;height:44px;">
-            </div>
-            <button class="btn btn-accent btn-lg" id="createTaskBtnTab" style="width:100%;margin-bottom:0.7rem;background:#4fc3a1;color:#fff;">
-              <i class="fas fa-tasks"></i> Crear Tarea
-            </button>
-            </button>
-            <span style="color:#a67c00;font-size:1em;text-align:center;">Lanza un reto divertido</span>
-          </div>
-          <div class="activity-card" style="background:linear-gradient(135deg,#e6faff 0%,#f8fafc 100%);border-radius:14px;padding:1.7rem 1.5rem;display:flex;flex-direction:column;align-items:center;box-shadow:0 4px 16px #4fc3a122;min-width:170px;max-width:320px;">
-            <div style="background:#00bcd4;padding:1rem;border-radius:50%;margin-bottom:1rem;box-shadow:0 2px 8px #00bcd422;">
-              <img src="https://cdn-icons-png.flaticon.com/512/616/616494.png" alt="Voluntariado" style="width:44px;height:44px;">
-            </div>
-            <button class="btn btn-info btn-lg" id="createVolunteeringBtnTab" style="width:100%;margin-bottom:0.7rem;background:#00bcd4;color:#fff;border:none;">
-              <i class="fas fa-hands-helping"></i> Crear Voluntariado
-            </button>
-            <span style="color:#249e7a;font-size:1em;text-align:center;">Convoca voluntariado</span>
-          </div>
-        </div>
-      </div>
-      
-      <div class="admin-tab-content" id="membersTab">
-        <h3 class="form-section-title"><i class="fas fa-users"></i> Miembros actuales</h3>
-        <div class="members-list" id="membersList">
-          <!-- Los miembros se cargarán aquí dinámicamente -->
-        </div>
-        
-        <h3 class="form-section-title"><i class="fas fa-user-plus"></i> Invitar nuevos miembros</h3>
-        <div class="invite-form">
-          <input type="email" id="inviteEmail" placeholder="Correo electrónico del usuario a invitar">
-          <select id="inviteRole" class="form-control">
-            <option value="member">Miembro</option>
-            <option value="coordinator">Coordinador</option>
-            <option value="founder">Fundador</option>
-          </select>
-          <button class="btn btn-primary" id="sendInviteBtn" style="margin-top: 1rem;">
-            <i class="fas fa-paper-plane"></i> Enviar Invitación
-          </button>
-        </div>
-      </div>
-      
-      <div class="admin-tab-content" id="settingsTab">
-        <form id="activitySettingsForm" class="solidarity-form">
-          <h3 class="form-section-title"><i class="fas fa-cog"></i> Configuración de la actividad</h3>
-          <div class="form-grid">
-            <div class="form-group">
-              <label for="editTeamName"><i class="fas fa-users"></i> Nombre de la comunidad</label>
-              <input type="text" id="editTeamName" name="editTeamName" required>
-            </div>
-            <div class="form-group">
-              <label for="editTeamCategory"><i class="fas fa-layer-group"></i> Categoría</label>
-              <select id="editTeamCategory" name="editTeamCategory" required>
-                <option value="medio_ambiente">Medio Ambiente</option>
-                <option value="educacion">Educación</option>
-                <option value="salud">Salud</option>
-                <option value="animales">Animales</option>
-                <option value="comunidad">Comunidad</option>
-                <option value="otros">Otros</option>
-              </select>
-            </div>
-            <div class="form-group">
-              <label for="editTeamPrivacy"><i class="fas fa-lock"></i> Privacidad</label>
-              <select id="editTeamPrivacy" name="editTeamPrivacy" required>
-                <option value="public">Pública</option>
-                <option value="private">Privada</option>
-              </select>
-            </div>
-            <div class="form-group">
-              <label for="editTeamGoal"><i class="fas fa-euro-sign"></i> Meta de recaudación (€)</label>
-              <input type="number" id="editTeamGoal" name="editTeamGoal" min="0">
-            </div>
-            <div class="form-group">
-              <label for="editTeamTags"><i class="fas fa-tags"></i> Etiquetas (separadas por comas)</label>
-              <input type="text" id="editTeamTags" name="editTeamTags">
-            </div>
-            <div class="form-group form-group-full">
-              <label for="editTeamDesc"><i class="fas fa-align-left"></i> Descripción</label>
-              <textarea id="editTeamDesc" name="editTeamDesc" rows="4" required></textarea>
-            </div>
-            <div class="form-group form-group-full">
-              <label for="editTeamPhoto"><i class="fas fa-image"></i> Foto/logo de la comunidad</label>
-              <input type="file" id="editTeamPhoto" name="editTeamPhoto" accept="image/*">
-              <img id="editTeamPhotoPreview" style="max-width: 200px; margin-top: 1rem; display: none; border-radius: 12px;">
-            </div>
-          </div>
-          <div class="form-actions">
-            <button type="submit" class="btn btn-primary">
-              <i class="fas fa-save"></i> Guardar Cambios
-            </button>
-          </div>
-        </form>
-      </div>
-      
-      <div class="admin-tab-content" id="contentTab">
-        <h3 class="form-section-title"><i class="fas fa-bullhorn"></i> Mensaje para los participantes</h3>
-        <textarea id="teamMessage" rows="5" style="width: 100%; margin-bottom: 1rem;"></textarea>
-        <button class="btn btn-primary" id="saveMessageBtn">
-          <i class="fas fa-bullhorn"></i> Publicar Mensaje
-        </button>
-        
-        <h3 class="form-section-title"><i class="fas fa-history"></i> Actividades recientes</h3>
-        <div id="recentActivities">
-          <!-- Las actividades se cargarán aquí dinámicamente -->
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Modal de ver más comunidad -->
-  <div id="teamModal" class="modal-bg">
-    <div class="modal-content" style="background:#fff; border-radius:18px; max-width:800px; width:95vw; padding:2rem; box-shadow:0 8px 32px rgba(74,111,165,0.13); position:relative; max-height:90vh; overflow-y:auto;">
-      <button id="closeTeamModal" style="position:absolute; top:1.5rem; right:1.5rem; background:none; border:none; font-size:1.8rem; color:#6b7280; cursor:pointer; transition:color 0.2s;" onmouseover="this.style.color='#4a6fa5'" onmouseout="this.style.color='#6b7280'">&times;</button>
-      <div id="teamModalBody" style="padding:0.5rem;">
-        <!-- Contenido dinámico -->
-      </div>
-    </div>
-  </div>
-
-  <!-- Contenido principal de la página Mis Comunidades -->
-  <div class="main-container">
-    <!-- Sección introductoria -->
-    <div class="teams-intro">
-      <div class="teams-intro-icon">
-        <i class="fas fa-user-group"></i>
-      </div>
-      <div class="teams-intro-content">
-        <h2>Mis Comunidades</h2>
-        <p>Aquí puedes gestionar todas las comunidades de las que formas parte. Como administrador, podrás modificar la configuración, invitar miembros, crear actividades y mucho más.</p>
-      </div>
-    </div>
-    
-    <!-- Destacados -->
-    <div class="teams-highlights">
-      <div class="highlight-card">
-        <div class="highlight-icon"><i class="fas fa-crown"></i></div>
-        <div class="highlight-title">Tus comunidades</div>
-        <div class="highlight-desc">Gestiona las comunidades que has creado o donde tienes permisos de administración.</div>
-      </div>
-      <div class="highlight-card">
-        <div class="highlight-icon"><i class="fas fa-users"></i></div>
-        <div class="highlight-title">Miembro activo</div>
-        <div class="highlight-desc">Tus comunidades donde participas como miembro regular.</div>
-      </div>
-      <div class="highlight-card">
-        <div class="highlight-icon"><i class="fas fa-bell"></i></div>
-        <div class="highlight-title">Solicitudes</div>
-        <div class="highlight-desc">Gestiona las solicitudes pendientes para unirse a tus comunidades.</div>
-      </div>
-      <div class="highlight-card">
-        <div class="highlight-icon"><i class="fas fa-chart-line"></i></div>
-        <div class="highlight-title">Tu impacto</div>
-        <div class="highlight-desc">Revisa el impacto colectivo de todas tus comunidades.</div>
-      </div>
-    </div>
-    
-    <!-- Cabecera con búsqueda -->
-    <div class="section-header">
-      <h1>Tus Comunidades</h1>
-    </div>
-    
-    <div class="search-container">
-      <input type="text" id="search-input" placeholder="Buscar entre tus comunidades...">
-      <i class="fas fa-search" style="color:#4a6fa5;"></i>
-    </div>
-    
-    <!-- Tabs para filtrar -->
-    <div class="tabs">
-      <button class="tab active" data-filter="all">Todas</button>
-      <button class="tab" data-filter="founder">Founder</button>
-      <button class="tab" data-filter="coordinator">Coordinator</button>
-      <button class="tab" data-filter="member">Miembro</button>
-      <button class="tab" data-filter="pending">Requests</button>
-    </div>
-    
-    <!-- Sección: Comunidades que administro -->
-    <section class="activity-section admin-teams-section" style="margin-bottom: 3.5rem;">
-      <div class="activity-section-header"
-           style="display:flex;align-items:center;gap:1.1rem;margin-bottom:2.2rem;
-                  background:linear-gradient(90deg,#e3f0ff 0%,#fff 100%);
-                  border-radius:14px;padding:1.2rem 1.7rem;box-shadow:0 2px 12px #e3eefd55;">
-        <div style="background:var(--accent);color:#fff;border-radius:50%;width:48px;height:48px;display:flex;align-items:center;justify-content:center;font-size:2rem;box-shadow:0 2px 8px #4fc3a133;">
-          <i class="fas fa-crown"></i>
-        </div>
-        <div>
-          <h2 style="color:var(--primary);font-weight:900;font-size:1.45rem;margin:0;letter-spacing:-1px;">Comunidades que administras</h2>
-          <div style="color:#249e7a;font-size:1rem;font-weight:500;">Gestionas como fundador o coordinador</div>
-        </div>
-      </div>
-      <div class="teams-grid-classic" id="adminTeamsGrid"></div>
-    </section>
-
-    <!-- Sección: Comunidades donde soy miembro -->
-    <section class="activity-section member-teams-section" style="margin-bottom: 3.5rem;">
-      <div class="activity-section-header"
-           style="display:flex;align-items:center;gap:1.1rem;margin-bottom:2.2rem;
-                  background:linear-gradient(90deg,#e6fff7 0%,#fff 100%);
-                  border-radius:14px;padding:1.2rem 1.7rem;box-shadow:0 2px 12px #4fc3a122;">
-        <div style="background:var(--accent);color:#fff;border-radius:50%;width:48px;height:48px;display:flex;align-items:center;justify-content:center;font-size:2rem;box-shadow:0 2px 8px #4fc3a133;">
-          <i class="fas fa-users"></i>
-        </div>
-        <div>
-          <h2 style="color:var(--primary);font-weight:900;font-size:1.45rem;margin:0;letter-spacing:-1px;">Comunidades donde eres miembro</h2>
-          <div style="color:#249e7a;font-size:1rem;font-weight:500;">Participas como miembro regular</div>
-        </div>
-      </div>
-      <div class="teams-grid-classic" id="memberTeamsGrid"></div>
-    </section>
-    
-    <!-- Paginación -->
-    <div class="pagination" id="pagination">
-      <button id="prevPage" class="btn btn-outline" disabled>
-        <i class="fas fa-chevron-left"></i>
-      </button>
-      <span id="pageInfo">1</span>
-      <button id="nextPage" class="btn btn-outline" disabled>
-        <i class="fas fa-chevron-right"></i>
-      </button>
     </div>
   </div>
 {% endblock %}
@@ -1459,6 +895,45 @@
         }
       }
     }
+
+    // Modal "Ver más" comunidad
+    function showTeamModal(teamId) {
+      const team = window.allTeams?.find(t => t.id == teamId);
+      const modal = document.getElementById('teamModal');
+      const modalBody = modal.querySelector('#teamModalBody');
+      if (!modal || !modalBody || !team) return;
+      modal.classList.add('active');
+      document.body.style.overflow = 'hidden';
+      modalBody.innerHTML = `
+        <img src="${team.photo_url || 'https://via.placeholder.com/350x180?text=Comunidad'}" alt="${team.name}" />
+        <div>
+          <h2 style="color:#4a6fa5;font-weight:700;margin-bottom:0.7rem;">${team.name}</h2>
+          <div style="margin-bottom:1rem;color:#4a5568;">${team.description || 'Sin descripción.'}</div>
+          <!-- ...resto del contenido... -->
+        </div>
+      `;
+    }
+    document.getElementById('closeTeamModal').onclick = function() {
+      document.getElementById('teamModal').classList.remove('active');
+      document.body.style.overflow = '';
+    };
+    document.getElementById('teamModal').onclick = function(e) {
+      if (e.target === this) {
+        document.getElementById('teamModal').classList.remove('active');
+        document.body.style.overflow = '';
+      }
+    };
+    // Modal "Administrar" comunidad
+    document.getElementById('closeAdminModal').onclick = function() {
+      document.getElementById('adminModal').classList.remove('active');
+      document.body.style.overflow = '';
+    };
+    document.getElementById('adminModal').onclick = function(e) {
+      if (e.target === this) {
+        document.getElementById('adminModal').classList.remove('active');
+        document.body.style.overflow = '';
+      }
+    };
 
     window.getCategoryName = function(category) {
       const categories = {
@@ -2000,7 +1475,7 @@
               role,
               profiles:user_id (
                 username,
-                               photo_url
+                photo_url
               )
             `)
             .eq('team_id', teamId)
@@ -2140,7 +1615,7 @@
                 <div style="font-size: 0.9rem; color:#4a5568;">${activity.description}</div>
               </div>
               <div style="white-space: nowrap;">
-                <span class="badge" style="background:#4a6fa5; color:white; padding:0.4rem 0.8rem; border-radius:10px; font-size:0.85rem;">${activity.type}</span>
+                <span class="badge" style="background:#4a6fa5; color:white; padding:0.4rem  0.8rem; border-radius:10px; font-size:0.85rem;">${activity.type}</span>
               </div>
             `;
             container.appendChild(activityItem);
@@ -2274,28 +1749,20 @@
         const closeTeamModal = document.getElementById('closeTeamModal');
         if (closeTeamModal) {
           closeTeamModal.onclick = function() {
-            document.getElementById('teamModal').classList.remove('active');
+            teamModal.classList.remove('active');
             document.body.style.overflow = '';
           };
         }
-        document.getElementById('teamModal').onclick = function(e) {
-          if (e.target === this) {
-            document.getElementById('teamModal').classList.remove('active');
-            document.body.style.overflow = '';
-          }
-        };
-      });
-
-      document.getElementById('closeAdminModal').onclick = function() {
-        document.getElementById('adminModal').classList.remove('active');
-        document.body.style.overflow = '';
-      };
-      document.getElementById('adminModal').onclick = function(e) {
-        if (e.target === this) {
-          document.getElementById('adminModal').classList.remove('active');
-          document.body.style.overflow = '';
+       
+        if (teamModal) {
+          teamModal.onclick = function(e) {
+            if (e.target === teamModal) {
+              teamModal.classList.remove('active');
+              document.body.style.overflow = '';
+            }
+          };
         }
-      };
+      });
 
       window.getCategoryName = function(category) {
         const categories = {

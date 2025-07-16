@@ -1,0 +1,44 @@
+<!-- views/stripe/return.njk -->
+{% extends "layout.njk" %}
+
+{% block title %}Configuración de Stripe - Solidarity{% endblock %}
+
+{% block content %}
+<div class="stripe-return-container">
+  <div class="status-card success">
+    <i class="fas fa-check-circle"></i>
+    <h2>¡Cuenta de Stripe configurada con éxito!</h2>
+    <p>Tu cuenta de Stripe ha sido vinculada correctamente a tu perfil.</p>
+    <p>Ahora puedes recibir donaciones en tus causas solidarias.</p>
+    <a href="/causes/create" class="btn btn-primary">
+      <i class="fas fa-plus"></i> Crear una causa
+    </a>
+    <a href="/profile" class="btn btn-outline">
+      <i class="fas fa-user"></i> Ver mi perfil
+    </a>
+  </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+// Verificar el estado de la cuenta
+setTimeout(async () => {
+  const { data: { session } } = await supabase.auth.getSession();
+  if (session?.user) {
+    const { status } = await checkStripeAccount(session.user.id);
+    
+    if (status === 'active') {
+      document.querySelector('.status-card').className = 'status-card success';
+    } else {
+      document.querySelector('.status-card').className = 'status-card warning';
+      document.querySelector('h2').textContent = 'Verificación pendiente';
+      document.querySelector('p').innerHTML = `
+        Tu cuenta de Stripe necesita verificación adicional.
+        <br>Por favor completa el proceso en el enlace que te hemos enviado por email.
+      `;
+    }
+  }
+}, 2000);
+</script>
+{% endblock %}

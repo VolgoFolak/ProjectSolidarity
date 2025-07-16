@@ -122,111 +122,25 @@
         max-width: 100vw !important;
         box-sizing: border-box;
       }
-      .challenges-header {
-        flex-direction: column !important;
-        align-items: center !important;
-        gap: 0.7rem !important;
-        margin-bottom: 1.2rem !important;
-      }
-      .challenges-header h1 {
-        font-size: 1.45rem !important; /* Más grande que tasks, igual que volunteering */
-        text-align: center !important;
-        width: 100%;
-        margin: 0 auto 0.5rem auto !important;
-        font-weight: 800 !important;
-        letter-spacing: -0.5px;
-      }
-      .challenges-actions {
-        width: 100%;
-        display: flex;
-        justify-content: center !important;
-      }
-      .challenges-actions .btn {
-        font-size: 1.07rem !important;
-        padding: 0.7rem 0 !important;
-        margin: 0 auto !important;
-        display: block !important;
-        width: 90vw !important;
-        max-width: 350px !important;
-        min-width: 180px !important;
-        border-radius: 9px !important;
-        text-align: center !important;
-      }
-      .challenges-intro {
-        padding: 1rem !important;
-        margin-bottom: 1.5rem !important;
-        border-radius: 10px !important;
-      }
-      .challenges-intro-content {
-        margin-top: 1.2rem !important;
-      }
-      .challenges-intro h2 {
-        font-size: 1.2rem !important;
-        gap: 0.5rem !important;
-        font-weight: 700 !important;
-        margin-bottom: 0.7rem !important;
-        text-align: center !important;
-        line-height: 1.25 !important;
-        letter-spacing: -0.5px;
-      }
-      .challenges-intro h2 i {
-        font-size: 1.1em !important;
-      }
-      .challenges-intro p {
-        font-size: 0.97rem !important;
-        text-align: center !important;
-      }
-      .challenges-search {
-        margin-bottom: 1.2rem !important;
-        width: 100% !important;
-        max-width: 100vw !important;
-        flex-direction: column !important;
-        gap: 0.5rem !important;
-      }
-      .challenges-search input {
-        font-size: 0.97rem !important;
-        padding: 0.5rem 0.7rem !important;
-        height: 40px !important;
-        width: 100% !important;
-      }
-      .tabs {
-        display: none !important;
-      }
-      .challenges-grid {
-        grid-template-columns: 1fr !important;
-        gap: 1.2rem !important;
-      }
-      .challenge-card {
-        border-radius: 9px !important;
-        min-width: 0 !important;
-      }
-      .challenge-image {
-        height: 120px !important;
-      }
-      .challenge-content {
-        padding: 0.7rem !important;
-      }
-      .challenge-content h3 {
-        font-size: 1.05rem !important;
-      }
-      .challenge-content p {
-        font-size: 0.93rem !important;
-      }
-      .challenge-meta {
-        gap: 0.5rem !important;
-        font-size: 0.82rem !important;
-      }
-      .beneficiaries-count {
-        font-size: 0.82rem !important;
-      }
-      .challenge-actions {
-        flex-direction: column !important;
-        gap: 0.5rem !important;
-      }
-      .btn, .btn-accent, .btn-primary, .btn-outline {
-        font-size: 0.97rem !important;
-        padding: 0.6rem 0.7rem !important;
-      }
+      .challenges-header h1 { font-size: 1.25rem; }
+      .challenges-header { flex-direction: column; align-items: flex-start; gap: 0.7rem; }
+      .tabs { flex-direction: column; gap: 0.2rem; }
+      .tab { padding: 0.6rem 0.7rem; font-size: 0.97rem; }
+      .challenges-intro { padding: 1.1rem; }
+      .challenges-intro h2 { font-size: 1.1rem; }
+      .challenges-intro p { font-size: 0.97rem; }
+      .challenges-search { flex-direction: column; gap: 0.5rem; width: 100%; }
+      .challenges-search input { font-size: 0.97rem; width: 100%; height: 40px; }
+      .challenges-grid { grid-template-columns: 1fr; gap: 1rem; }
+      .challenge-card { border-radius: 9px; }
+      .challenge-image { height: 120px; }
+      .challenge-content { padding: 0.7rem; }
+      .challenge-content h3 { font-size: 1.05rem; }
+      .challenge-content p { font-size: 0.93rem; }
+      .challenge-meta { gap: 0.5rem; font-size: 0.82rem; }
+      .beneficiaries-count { font-size: 0.82rem; }
+      .challenge-actions { flex-direction: column; gap: 0.5rem; }
+      .btn, .btn-accent, .btn-primary, .btn-outline { font-size: 0.97rem; padding: 0.6rem 0.7rem; }
       .modal-content {
         max-width: 99vw !important;
         width: 99vw !important;
@@ -242,23 +156,25 @@
         right: 0.9rem !important;
         font-size: 1.7rem !important;
       }
-      .create-task-title { font-size: 1.1rem !important; }
-      .form-inline-group { flex-direction: column !important; gap: 0.5rem !important; }
-      .preview-img { max-width: 100% !important; height: auto !important; }
-      .points-info { font-size: 0.93rem !important; padding: 0.7rem !important; }
-      .after-create { padding: 1rem 0.5rem !important; }
-      .content-title { font-size: 1.05rem !important; }
-      .content-text { font-size: 0.97rem !important; }
-      .modal-cause-actions { flex-direction: column !important; gap: 0.7rem !important; }
-      .action-btn { min-width: 0 !important; font-size: 0.97rem !important; padding: 0.7rem !important; }
-      .share-section { padding-top: 1rem !important; margin-top: 1rem !important; }
-      .share-title { font-size: 1.05rem !important; }
-      .share-content { padding: 1rem !important; }
-      .share-btn { font-size: 0.97rem !important; padding: 0.7rem 1rem !important; }
-      .draft-recovery-notification { padding: 1rem !important; max-width: 98vw !important; right: 0.5rem !important; }
+      .create-task-title { font-size: 1.1rem; }
+      .form-inline-group { flex-direction: column; gap: 0.5rem; }
+      .preview-img { max-width: 100%; height: auto; }
+      .points-info { font-size: 0.93rem; padding: 0.7rem; }
+      .after-create { padding: 1rem 0.5rem; }
+      .content-title { font-size: 1.05rem; }
+      .content-text { font-size: 0.97rem; }
+      .modal-cause-actions { flex-direction: column; gap: 0.7rem; }
+      .action-btn { min-width: 0; font-size: 0.97rem; padding: 0.7rem; }
+      .share-section { padding-top: 1rem; margin-top: 1rem; }
+      .share-title { font-size: 1.05rem; }
+      .share-content { padding: 1rem; }
+      .share-btn { font-size: 0.97rem; padding: 0.7rem 1rem; }
+      .draft-recovery-notification { padding: 1rem; max-width: 98vw; right: 0.5rem; }
+      /* Hamburger menu: oculto en móvil si no lo usas */
       .navbar .hamburger {
         display: none !important;
       }
+      /* Menú inferior fijo: ocupa todo el ancho y sin scroll lateral */
       .bottom-nav, .mobile-bottom-nav {
         position: fixed !important;
         left: 0 !important;
@@ -285,98 +201,7 @@
         max-width: 100vw;
         word-break: break-word;
       }
-      #createChallengeModal .modal-content,
-  #challengeModal .modal-content,
-  .modal-content {
-    margin-top: 100px !important;
-    margin-bottom: 90px !important;
-    margin-left: 2vw !important;
-    margin-right: 2vw !important;
-    width: 96vw !important;
-    max-width: 96vw !important;
-    min-width: 0 !important;
-    border-radius: 14px !important;
-    box-sizing: border-box !important;
-    left: 0 !important;
-    right: 0 !important;
-    max-height: calc(100vh - 190px) !important;
-    overflow-y: auto !important;
-    padding-left: 5vw !important;
-    padding-right: 5vw !important;
-  }
-  .btn, .btn-accent, .btn-primary, .btn-outline,
-  .challenge-actions .btn, .modal-cause-actions .action-btn, .modal-cause-actions .btn,
-  .after-create .btn, .modal-buttons .btn {
-    border-radius: 999px !important;
-    font-weight: 600 !important;
-    font-size: 1rem !important;
-    padding: 0.7rem 1.2rem !important;
-    width: 100% !important;
-    min-width: 0 !important;
-    max-width: 100vw !important;
-    display: flex !important;
-    justify-content: center !important;
-    align-items: center !important;
-    margin: 0.3rem 0 !important;
-    box-sizing: border-box !important;
-    gap: 0.7rem !important;
-  }
-  .challenge-actions .btn i,
-  .modal-cause-actions .action-btn i,
-  .modal-cause-actions .btn i,
-  .after-create .btn i,
-  .modal-buttons .btn i,
-  .btn i,
-  .btn-primary i,
-  .btn-accent i,
-  .btn-outline i {
-    display: inline-block !important;
-  }
-  #challengeModal .modal-header,
-  #challengeModal .modal-title {
-    text-align: center !important;
-    font-size: 1.1rem !important;
-    font-weight: 700 !important;
-    margin-bottom: 0.7rem !important;
-    word-break: break-word !important;
-  }
-  #challengeModal .modal-body {
-    padding: 0.7rem 0.2rem !important;
-    font-size: 0.97rem !important;
-  }
-  #challengeModal .modal-close,
-  #createChallengeModal .close-modal {
-    top: 0.7rem !important;
-    right: 0.9rem !important;
-    font-size: 1.7rem !important;
-  }
-  /* MODAL VER MÁS: imagen arriba, info debajo */
-  #challengeModal .challenge-modal-main {
-    flex-direction: column !important;
-    display: flex !important;
-    gap: 1.2rem !important;
-    align-items: stretch !important;
-    width: 100% !important;
-    margin-bottom: 1.2rem !important;
-  }
-  #challengeModal .challenge-modal-main > div {
-    width: 100% !important;
-    min-width: 0 !important;
-    max-width: 100% !important;
-  }
-  #challengeModal .challenge-modal-main img {
-    width: 100% !important;
-    max-width: 100vw !important;
-    height: auto !important;
-    display: block !important;
-    object-fit: cover !important;
-    margin: 0 auto !important;
-  }
-}
-html, body, #challengeModal .modal-content, #createChallengeModal .modal-content {
-  overflow-x: hidden !important;
-  max-width: 100vw !important;
-}
+    }
     /* --- FIN MOBILE ONLY --- */
   </style>
 {% endblock %}

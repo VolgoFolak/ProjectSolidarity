@@ -484,9 +484,7 @@
       font-weight: 600;
     }
 
-    /* --- RESPONSIVE MEJORADO PARA MÓVIL EN COMUNIDADES (TEAMS) --- */
-
-    /* Ajuste general de paddings en móvil */
+    /* --- Responsive SOLO para móvil: Modales y layout --- */
     @media (max-width: 900px) {
       .main-container {
         padding-left: 0.5rem !important;
@@ -535,7 +533,6 @@
       }
     }
 
-    /* Modales: SOLO se expanden en móvil */
     @media (max-width: 600px) {
       .modal-content {
         max-width: 99vw !important;
@@ -699,119 +696,6 @@
       overflow-x: hidden !important;
       max-width: 100vw !important;
     }
-
-    /* --- MOBILE: Modales y botones igual que causas, tareas, voluntariado y retos --- */
-    @media (max-width: 600px) {
-      #createTeamModal .modal-content,
-      #teamModal .modal-content,
-      .modal-content {
-        margin-top: 100px !important;
-        margin-bottom: 90px !important;
-        margin-left: 2vw !important;
-        margin-right: 2vw !important;
-        width: 96vw !important;
-        max-width: 96vw !important;
-        min-width: 0 !important;
-        border-radius: 14px !important;
-        box-sizing: border-box !important;
-        left: 0 !important;
-        right: 0 !important;
-        max-height: calc(100vh - 190px) !important;
-        overflow-y: auto !important;
-        padding-left: 5vw !important;
-        padding-right: 5vw !important;
-      }
-      .btn, .btn-accent, .btn-primary, .btn-outline,
-      .team-actions-classic .btn, .modal-cause-actions .action-btn, .modal-cause-actions .btn,
-      .after-create .btn, .modal-buttons .btn {
-        border-radius: 999px !important;
-        font-weight: 600 !important;
-        font-size: 1rem !important;
-        padding: 0.7rem 1.2rem !important;
-        width: 100% !important;
-        min-width: 0 !important;
-        max-width: 100vw !important;
-        display: flex !important;
-        justify-content: center !important;
-        align-items: center !important;
-        margin: 0.3rem 0 !important;
-        box-sizing: border-box !important;
-        gap: 0.7rem !important;
-      }
-      .team-actions-classic .btn i,
-      .modal-cause-actions .action-btn i,
-      .modal-cause-actions .btn i,
-      .after-create .btn i,
-      .modal-buttons .btn i,
-      .btn i,
-      .btn-primary i,
-      .btn-accent i,
-      .btn-outline i {
-        display: inline-block !important;
-      }
-      #teamModal .modal-header,
-      #teamModal .modal-title {
-        text-align: center !important;
-        font-size: 1.1rem !important;
-        font-weight: 700 !important;
-        margin-bottom: 0.7rem !important;
-        word-break: break-word !important;
-      }
-      #teamModal .modal-body {
-        padding: 0.7rem 0.2rem !important;
-        font-size: 0.97rem !important;
-      }
-      #teamModal .modal-close,
-      #createTeamModal .close-modal {
-        top: 0.7rem !important;
-        right: 0.9rem !important;
-        font-size: 1.7rem !important;
-      }
-      /* MODAL VER MÁS: imagen arriba, info debajo */
-      #teamModal .modal-cause-header {
-        flex-direction: column !important;
-        display: flex !important;
-        gap: 1.2rem !important;
-        align-items: stretch !important;
-        width: 100% !important;
-        margin-bottom: 1.2rem !important;
-      }
-      #teamModal .modal-cause-header > div {
-        width: 100% !important;
-        min-width: 0 !important;
-        max-width: 100% !important;
-      }
-      #teamModal .modal-cause-image-wrapper img {
-        width: 100% !important;
-        max-width: 100vw !important;
-        height: auto !important;
-        display: block !important;
-        object-fit: cover !important;
-        margin: 0 auto !important;
-      }
-    }
-
-    @media (max-width: 600px) {
-  .section-header {
-    flex-direction: column !important;
-    align-items: center !important;
-    gap: 0.7rem !important;
-  }
-  .section-header h1 {
-    width: 100%;
-    text-align: center !important;
-    margin-bottom: 0.5rem !important;
-  }
-  .section-header .btn {
-    margin: 0 auto !important;
-    display: block !important;
-    width: 100% !important;   /* <-- Cambia */
-  }
-  .tabs {
-    display: none !important;
-  }
-}
-
   </style>
 {% endblock %}
 

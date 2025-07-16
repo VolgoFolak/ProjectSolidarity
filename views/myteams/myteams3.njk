@@ -982,7 +982,8 @@
     .close-modal:hover, .close-admin-modal:hover { color: var(--primary, #4a6fa5); }
 
     @media (max-width: 600px) {
-      .modal-content, .admin-modal-content {
+      .modal-content, 
+      .admin-modal-content {
         margin-top: 100px !important;
         margin-bottom: 90px !important;
         margin-left: 2vw !important;
@@ -992,14 +993,21 @@
         min-width: 0 !important;
         border-radius: 14px !important;
         box-sizing: border-box !important;
-        left: 0 !important;
-        right: 0 !important;
         max-height: calc(100vh - 190px) !important;
         overflow-y: auto !important;
         padding-left: 5vw !important;
         padding-right: 5vw !important;
       }
-      .btn, .btn-primary, .btn-outline {
+
+      .btn, 
+      .btn-accent, 
+      .btn-primary, 
+      .btn-outline,
+      .team-actions-classic .btn,
+      .modal-cause-actions .action-btn,
+      .modal-cause-actions .btn,
+      .after-create .btn,
+      .modal-buttons .btn {
         border-radius: 999px !important;
         font-weight: 600 !important;
         font-size: 1rem !important;
@@ -1014,32 +1022,70 @@
         box-sizing: border-box !important;
         gap: 0.7rem !important;
       }
-      /* MODAL VER MÁS: imagen arriba, info debajo */
-      #teamModal .team-modal-main {
+
+      .modal-header {
         flex-direction: column !important;
-        display: flex !important;
-        gap: 1.2rem !important;
-        align-items: stretch !important;
-        width: 100% !important;
+        gap: 1rem !important;
+      }
+
+      .modal-title {
+        font-size: 1.3rem !important;
+        text-align: center !important;
+        line-height: 1.4 !important;
+      }
+
+      .team-image-classic,
+      .modal-cause-image-wrapper {
+        height: 180px !important;
+      }
+
+      .modal-body {
+        padding: 0.5rem 0 !important;
+      }
+
+      .admin-tabs {
+        overflow-x: auto !important;
+        flex-wrap: nowrap !important;
+        padding-bottom: 5px !important;
+      }
+
+      .admin-tab {
+        min-width: 120px !important;
+        font-size: 0.95rem !important;
+        padding: 0.8rem !important;
+        white-space: nowrap !important;
+      }
+
+      .form-grid {
+        grid-template-columns: 1fr !important;
+        gap: 1rem !important;
+      }
+
+      .form-group {
         margin-bottom: 1.2rem !important;
       }
-      #teamModal .team-modal-main > div {
-        width: 100% !important;
-        min-width: 0 !important;
+
+      .preview-img {
         max-width: 100% !important;
       }
-      #teamModal .team-modal-main img {
-        width: 100% !important;
-        max-width: 100vw !important;
-        height: auto !important;
-        display: block !important;
-        object-fit: cover !important;
-        margin: 0 auto !important;
+      
+      .modal-cause-header {
+        flex-direction: column !important;
+        gap: 1.5rem !important;
       }
-    }
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(-30px);}
-      to { opacity: 1; transform: translateY(0);}
+      .modal-cause-header > div {
+        width: 100% !important;
+      }
+      .modal-cause-image-wrapper {
+        min-height: auto !important;
+        height: 200px !important;
+      }
+      .modal-cause-info {
+        padding: 0 !important;
+      }
+      .activity-cards-grid {
+        grid-template-columns: 1fr !important;
+      }
     }
   </style>
 {% endblock %}
@@ -1218,12 +1264,12 @@
     </div>
   </div>
 
-  <!-- Modal de ver más comunidad -->
+  <!-- Modal de ver más comunidad (idéntico a tareas, solo cambia textos/campos) -->
   <div id="teamModal" class="modal-bg">
     <div class="modal-content" style="background:#fff; border-radius:18px; max-width:800px; width:95vw; padding:2rem; box-shadow:0 8px 32px rgba(74,111,165,0.13); position:relative; max-height:90vh; overflow-y:auto;">
       <button id="closeTeamModal" style="position:absolute; top:1.5rem; right:1.5rem; background:none; border:none; font-size:1.8rem; color:#6b7280; cursor:pointer; transition:color 0.2s;" onmouseover="this.style.color='#4a6fa5'" onmouseout="this.style.color='#6b7280'">&times;</button>
       <div id="teamModalBody" style="padding:0.5rem;">
-        <!-- Contenido dinámico -->
+        <!-- Contenido dinámico generado por showTeamModal -->
       </div>
     </div>
   </div>
@@ -1334,132 +1380,228 @@
 {% block scripts %}
   {{ super() }}
   <script>
-    // Mover estas funciones FUERA del DOMContentLoaded para que sean accesibles globalmente
-    async function loadTeamMembers(teamId) {
-      try {
-        console.log('🔍 Cargando miembros para team:', teamId);
+    // Función para abrir el modal de administración
+    function openAdminModal(team) {
+      currentAdminTeam = team;
+      document.getElementById('adminModalTitle').textContent = `Administrar ${team.name}`;
+      document.getElementById('adminModal').classList.add('active');
+      document.body.style.overflow = 'hidden';
 
-        // 1. Obtener miembros del equipo - SOLO username y photo_url
-        const { data: members, error: membersError } = await supabase
-          .from('team_members')
-          .select(`
-            user_id, 
-            role,
-            profiles:user_id (
-              username,
-              photo_url
-            )
-          `)
-          .eq('team_id', teamId)
-          .neq('role', 'pending');
+      // Ajustar altura del modal en móvil
+      if (window.innerWidth <= 600) {
+        const modalContent = document.querySelector('.admin-modal-content');
+        modalContent.style.maxHeight = 'calc(100vh - 200px)';
+      }
+      // ... (resto de tu código de administración) ...
+    }
 
-        if (membersError) {
-          console.error('❌ Error cargando miembros:', membersError);
-          return;
-        }
+    // Función para mostrar el modal de detalle
+    async function showTeamModal(teamId) {
+      // 1. Carga la comunidad
+      const { data: team, error } = await supabase
+        .from('teams')
+        .select('*')
+        .eq('id', teamId)
+        .single();
 
-        console.log('✅ Miembros cargados:', members);
+      if (error || !team) {
+        alert('Error al cargar la comunidad');
+        return;
+      }
 
-        // 2. Añadir el fundador si no está en la lista
-        let membersList = members ? [...members] : [];
-        if (currentAdminTeam?.creator_id && !membersList.some(m => m.user_id === currentAdminTeam.creator_id)) {
-          // SOLO username y photo_url
-          const { data: founderProfile } = await supabase
-            .from('profiles')
-            .select('username, photo_url')
-            .eq('id', currentAdminTeam.creator_id)
-            .single();
+      window._currentTeam = team;
 
-          membersList.unshift({
-            user_id: currentAdminTeam.creator_id,
-            role: 'founder',
-            profiles: founderProfile || {}
-          });
-        }
+      // 2. Prepara datos
+      const createdDate = new Date(team.created_at).toLocaleDateString('es-ES', {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric'
+      });
+      const recaudado = team.funds_raised || 0;
+      const meta = team.goal || 0;
+      const porcentaje = meta ? Math.min(100, Math.round((recaudado / meta) * 100)) : 0;
+      const beneficiaries = team.beneficiaries || 0;
+      const impact = team.impact || 0;
+      const category = getCategoryName(team.category);
+      const privacy = team.privacy === 'private' ? 'Privada' : 'Pública';
 
-        // 3. Renderizar miembros
-        const container = document.getElementById('membersList');
-        if (!container) return;
+      // 2.1 Cargar miembros de la comunidad con perfil
+      const { data: members } = await supabase
+        .from('team_members')
+        .select(`
+          id,
+          role,
+          joined_at,
+          profiles:user_id (
+            id,
+            username,
+            photo_url
+          )
+        `)
+        .eq('team_id', teamId)
+        .order('joined_at', { ascending: true });
 
-        container.innerHTML = '';
-        
-        if (membersList.length === 0) {
-          container.innerHTML = '<div style="text-align:center;color:#718096;padding:2rem;">No hay miembros en esta comunidad.</div>';
-          return;
-        }
-
-        membersList.forEach(member => {
-          const profile = member.profiles || {};
-          const isFounder = member.role === 'founder' || member.user_id === currentAdminTeam?.creator_id;
-          const displayName = profile.username || 'Usuario sin nombre';
-          const avatar = profile.photo_url || 'https://via.placeholder.com/40?text=' + (displayName.charAt(0).toUpperCase());
-          
-          const roleText = {
-            'founder': 'Fundador',
-            'coordinator': 'Coordinador', 
-            'admin': 'Administrador',
-            'member': 'Miembro'
-          }[member.role] || 'Miembro';
-
-          const roleIcon = {
-            'founder': 'fa-crown',
-            'coordinator': 'fa-star',
-            'admin': 'fa-user-shield', 
-            'member': 'fa-user'
-          }[member.role] || 'fa-user';
-
-          const memberItem = document.createElement('div');
-          memberItem.className = 'member-item';
-          memberItem.innerHTML = `
-            <div class="member-info">
-              <img src="${avatar}" alt="${displayName}" class="member-avatar" onerror="this.src='https://via.placeholder.com/40?text=${displayName.charAt(0).toUpperCase()}'">
-              <div>
-                <div class="member-name" style="color:#4a6fa5;font-weight:600;">${displayName}</div>
+      // 3. Renderiza el modal (idéntico al de tasks/index.njk)
+      document.getElementById('teamModalBody').innerHTML = `
+      <div class="modal-cause-container">
+        <h1 class="modal-cause-title" style="font-size:2rem; font-weight:800; color:var(--primary); margin-bottom:2.7rem; text-align:center; width:100%;">${team.name}</h1>
+        <div class="modal-cause-header" style="display:flex; gap:2.5rem; margin-bottom:2.7rem;">
+          <div class="modal-cause-image-wrapper" style="flex:1; min-width:320px; height:300px; border-radius:12px; overflow:hidden; position:relative; box-shadow:0 4px 12px rgba(0,0,0,0.08);">
+            <div class="modal-cause-badge" style="top:1.5rem; left:1.5rem; right:auto; background:var(--accent); color:white; position:absolute; padding:0.5rem 1rem; border-radius:50px; font-size:0.9rem; font-weight:600; display:flex; align-items:center; gap:0.6rem; box-shadow:0 2px 8px rgba(0,0,0,0.1); z-index:2;">
+              <i class="fas fa-users"></i> Comunidad
+            </div>
+            ${team.privacy === 'private' ? `
+            <div class="modal-cause-badge" style="right:1.5rem; left:auto; top:1.5rem; background:var(--gray); color:var(--primary-dark); position:absolute; padding:0.5rem 1rem; border-radius:50px; font-size:0.9rem; font-weight:600; display:flex; align-items:center; gap:0.6rem; box-shadow:0 2px 8px rgba(0,0,0,0.1); z-index:2;">
+              <i class="fas fa-lock"></i> Privada
+            </div>` : ''}
+            <img class="modal-cause-image" src="${team.photo_url || 'https://via.placeholder.com/350x180?text=Comunidad'}"
+                 alt="Imagen de la comunidad ${team.name}"
+                 style="width:100%;height:100%;object-fit:cover;"
+                 onerror="this.src='https://via.placeholder.com/350x180?text=Comunidad'">
+          </div>
+          <div class="modal-cause-info" style="flex:1.5; display:flex; flex-direction:column; justify-content:flex-start;">
+            <div class="modal-cause-progress-container" style="background:#f8fafc; padding:1.2rem; border-radius:12px; margin-bottom:1.2rem; border:1px solid #e5e7eb;">
+              <div class="progress-bar">
+                <div class="progress-fill" style="width:${porcentaje}%"></div>
+              </div>
+              <div class="progress-info">
+                <span>${porcentaje}% completado</span>
+                <span>${recaudado} € de ${meta} €</span>
               </div>
             </div>
-            <div class="member-actions">
-              <span class="role-badge ${member.role === 'founder' ? 'admin' : 'member'}" style="font-size:0.8rem;margin-right:0.5rem;">
-                <i class="fas ${roleIcon}"></i> ${roleText}
-              </span>
-              ${isFounder ? '' : `
-                <button class="btn btn-outline btn-sm" onclick="removeMember('${member.user_id}', '${teamId}')" style="font-size:0.8rem;">
-                  <i class="fas fa-user-minus"></i> Quitar
-                </button>
-              `}
+            <div class="modal-cause-meta-grid" style="display:grid; grid-template-columns:1fr 1fr; gap:1.2rem; margin-bottom:1.5rem;">
+              <div class="meta-item">
+                <span class="meta-icon" style="color:var(--primary);font-size:1.1rem;width:1.5rem;text-align:center;"><i class="fas fa-users"></i></span>
+                <span style="color:#6b7280;font-size:0.95rem;">${members?.length || 0} miembros</span>
+              </div>
+              <div class="meta-item">
+                <span class="meta-icon" style="color:var(--primary);font-size:1.1rem;width:1.5rem;text-align:center;"><i class="fas fa-heart"></i></span>
+                <span style="color:#6b7280;font-size:0.95rem;">${beneficiaries} beneficiarios</span>
+              </div>
+              <div class="meta-item">
+                <span class="meta-icon" style="color:var(--primary);font-size:1.1rem;width:1.5rem;text-align:center;"><i class="fas fa-layer-group"></i></span>
+                <span style="color:#6b7280;font-size:0.95rem;">${category}</span>
+              </div>
+              <div class="meta-item">
+                <span class="meta-icon" style="color:var(--primary);font-size:1.1rem;width:1.5rem;text-align:center;"><i class="fas fa-calendar-alt"></i></span>
+                <span style="color:#6b7280;font-size:0.95rem;">${createdDate}</span>
+              </div>
             </div>
-          `;
-          container.appendChild(memberItem);
-        });
+            <div class="points-notice" style="background:#f0f9ff; border-left:4px solid var(--accent); padding:1rem; border-radius:0 8px 8px 0; font-size:0.95rem; display:flex; align-items:center; gap:0.7rem;">
+              <i class="fas fa-bolt" style="color: var(--accent);"></i>
+              Participar en esta comunidad otorgará <strong>${impact} puntos</strong> de impacto
+            </div>
+          </div>
+        </div>
+        <div class="modal-cause-content" style="margin-top:0;">
+          <div class="content-section" style="margin-bottom:2.2rem;">
+            <h3 class="content-title" style="font-size:1.2rem; font-weight:600; color:var(--primary); margin-bottom:0.9rem; display:flex; align-items:center; gap:0.7rem;">
+              <i class="fas fa-quote-left"></i> Resumen
+            </h3>
+            <p class="content-text" style="line-height:1.7; color:#4b5563; font-size:1.05rem; margin-left:0; margin-right:0; text-align:justify;">${team.summary || 'Sin resumen.'}</p>
+          </div>
+          <div class="content-section" style="margin-bottom:2.2rem;">
+            <h3 class="content-title" style="font-size:1.2rem; font-weight:600; color:var(--primary); margin-bottom:0.9rem; display:flex; align-items:center; gap:0.7rem;">
+              <i class="fas fa-align-left"></i> Descripción
+            </h3>
+            <p class="content-text" style="line-height:1.7; color:#4b5563; font-size:1.05rem; margin-left:0; margin-right:0; text-align:justify;">${team.description || 'Esta comunidad no tiene descripción.'}</p>
+          </div>
+          <div class="content-section" style="margin-bottom:2.2rem;">
+            <h3 class="content-title" style="font-size:1.1rem;font-weight:600;color:var(--primary);margin-bottom:1rem;display:flex;align-items:center;gap:0.7rem;">
+              <i class="fas fa-users"></i> Miembros (${members?.length || 0})
+            </h3>
+            <div class="members-grid" style="display:grid;grid-template-columns:repeat(auto-fill, minmax(140px, 1fr));gap:1.2rem;">
+              ${
+                members && members.length > 0
+                  ? members.map(member => `
+                    <div class="member-card" style="display:flex;flex-direction:column;align-items:center;gap:0.5rem;">
+                      <img src="${member.profiles?.photo_url || ("https://ui-avatars.com/api/?name=" + encodeURIComponent(member.profiles?.username || "U") + "&background=4a6fa5&color=fff&size=64")}"
+                           alt="${member.profiles?.username || "Usuario"}"
+                           style="width:60px;height:60px;border-radius:50%;object-fit:cover;border:2px solid #e2e8f0;">
+                      <div style="text-align:center;">
+                        <div style="font-weight:600;font-size:0.95rem;">
+                          ${member.profiles?.username || 'Usuario'}
+                        </div>
+                        <div style="font-size:0.85rem;color:#6b7280;">
+                          ${member.role === 'admin' ? 'Administrador' : member.role === 'moderator' ? 'Moderador' : 'Miembro'}
+                        </div>
+                      </div>
+                    </div>
+                  `).join('')
+                  : `<div style="text-align:center;color:#6b7280;grid-column:1/-1;padding:1rem;">
+                      Esta comunidad aún no tiene miembros
+                    </div>`
+              }
+            </div>
+          </div>
+          <div class="content-section" style="margin-bottom:2.2rem;">
+            <h3 class="content-title" style="font-size:1.1rem;font-weight:600;color:var(--primary);margin-bottom:0.5rem;display:flex;align-items:center;gap:0.7rem;">
+              <i class="fas fa-info-circle"></i> Detalles adicionales
+            </h3>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;">
+              <div>
+                <p style="font-weight:600;color:var(--primary);margin-bottom:0.3rem;">Privacidad</p>
+                <p style="color:#6b7280;">${privacy}</p>
+              </div>
+              <div>
+                <p style="font-weight:600;color:var(--primary);margin-bottom:0.3rem;">Meta de recaudación</p>
+                <p style="color:#6b7280;">${meta} €</p>
+              </div>
+              <div>
+                <p style="font-weight:600;color:var(--primary);margin-bottom:0.3rem;">ID</p>
+                <p style="color:#6b7280;">${team.id}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="cause-actions" style="display:flex; gap:0.8rem; margin-top:2.2rem;">
+          <button class="btn btn-primary" style="flex:1;" id="joinTeamBtn">
+            <i class="fas fa-user-plus"></i> Unirse
+          </button>
+          <button class="btn btn-accent" style="flex:1;" id="shareTeamBtn">
+            <i class="fas fa-share-alt"></i> Compartir
+          </button>
+        </div>
+        <div class="share-section" id="shareSectionTeam"></div>
+      </div>
+    `;
 
-      } catch (error) {
-        console.error('❌ Error loading team members:', error);
-        const container = document.getElementById('membersList');
-        if (container) {
-          container.innerHTML = '<div style="text-align:center;color:#e53e3e;padding:2rem;">Error al cargar miembros</div>';
-        }
+    document.getElementById('teamModal').classList.add('active');
+    document.body.style.overflow = 'hidden';
+
+    // Botón Unirse
+    document.getElementById('joinTeamBtn').onclick = async function() {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session?.user) {
+        alert('Debes iniciar sesión para unirte a la comunidad.');
+        return;
       }
-    }
+      alert('¡Solicitud de unión enviada! (Aquí puedes poner tu lógica real)');
+    };
 
-    async function removeMember(userId, teamId) {
-      if (confirm('¿Estás seguro de que quieres quitar a este miembro de la comunidad?')) {
-        try {
-          const { error } = await supabase
-            .from('team_members')
-            .delete()
-            .eq('user_id', userId)
-            .eq('team_id', teamId);
-          
-          if (error) throw error;
-          
-          alert('Miembro quitado de la comunidad.');
-          await loadTeamMembers(teamId);
-        } catch (error) {
-          console.error('Error removing member:', error);
-          alert('Error al quitar miembro: ' + error.message);
-        }
+    // Botón Compartir
+    document.getElementById('shareTeamBtn').onclick = function() {
+      window.mostrarCompartirEquipo(team.id);
+    };
+
+    // Cerrar modal
+    document.getElementById('closeTeamModal').onclick = function() {
+      document.getElementById('teamModal').classList.remove('active');
+      document.body.style.overflow = '';
+      window.history.pushState({}, '', '/teams');
+    };
+    document.getElementById('teamModal').onclick = function(e) {
+      if (e.target === this) {
+        this.classList.remove('active');
+        document.body.style.overflow = '';
       }
-    }
+    };
 
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="/js/compartir.js"></script>
+  <script src="/js/modules/teams-renderer.js"></script>
+  <script>
     window.getCategoryName = function(category) {
       const categories = {
         'medio_ambiente': 'Medio Ambiente',
@@ -1471,12 +1613,6 @@
       };
       return categories[category] || 'General';
     };
-  </script>
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script src="/js/compartir.js"></script>
-  <script src="/js/modules/teams-renderer.js"></script>
-  <script>
-    // ...tu código de inicialización y showTeamModal...
 
     window.mostrarCompartirEquipo = function(teamId) {
       const team =
@@ -1493,7 +1629,7 @@
         window.renderCompartir({
           title: team.name,
           summary: team.summary || (team.description?.substring(0, 120) + '...'),
-          photo_url: team.photo || 'https://via.placeholder.com/350x180?text=Comunidad',
+          photo_url: team.photo_url || 'https://via.placeholder.com/350x180?text=Comunidad',
           link: `${window.location.origin}/teams/${team.id}`,
           type: 'comunidad'
         }, 'shareSectionTeam');
@@ -1519,12 +1655,25 @@
     }
   </script>
   <script>
-    window.initTeamsRenderer({
-      supabase,
-      session: null, // o la sesión si la tienes
-      onShowTeamModal: showTeamModal
-    });
+    document.addEventListener('DOMContentLoaded', async function() {
+      // Inicializa el renderer con el selector correcto
+      window.initTeamsRenderer({
+        supabase,
+        session,
+        onShowTeamModal: showTeamModal,
+        gridSelector: '#adminTeamsGrid', // O el que uses
+        paginationSelector: '#pagination',
+        prevPageSelector: '#prevPage',
+        nextPageSelector: '#nextPage',
+        pageInfoSelector: '#pageInfo',
+        tabSelector: '.tab',
+        searchInputSelector: '#search-input'
+      });
 
+      // Otros eventos y lógica aquí...
+    }); // <-- No olvides este cierre
+  </script>
+  <script>
     document.addEventListener('DOMContentLoaded', async function() {
       let currentPage = 1;
       const itemsPerPage = 9;
@@ -1532,7 +1681,7 @@
       let filteredTeams = [];
       let currentAdminTeam = null;
 
-      // 1. Obtener usuario actual
+      // 1. Obtener usuario current
       const { data: { session } } = await supabase.auth.getSession();
       if (!session?.user) {
         window.location.href = '/login?return=/my-teams';
@@ -1595,16 +1744,6 @@
           // 2. Obtener los equipos donde el usuario es el creador
           const { data: createdTeams, error: createdTeamsError } = await supabase
             .from('teams')
-            .select('*')
-            .eq('creator_id', userId);
-          if (createdTeamsError) throw createdTeamsError;
-
-          // 3. Obtener los detalles de los equipos donde es miembro
-          const teamIds = memberships.map(m => m.team_id);
-          const { data: teams, error: teamsError } = await supabase
-            .from('teams')
-            .select('*')
-            .in('id', teamIds.length ? teamIds : ['00000000-0000-0000-0000-000000000000'])
             .order('created_at', { ascending: false });
           if (teamsError) throw teamsError;
 
@@ -1648,9 +1787,10 @@
       }
 
       function showEmptyState() {
-        const container = document.getElementById('teamsGrid');
-        container.innerHTML = `
-          <div class="empty-state" style="grid-column: 1 / -1; text-align: center; padding: 3rem;">
+        const adminContainer = document.getElementById('adminTeamsGrid');
+        const memberContainer = document.getElementById('memberTeamsGrid');
+        if (adminContainer) {
+          adminContainer.innerHTML = `<div class="empty-state" style="grid-column: 1 / -1; text-align: center; padding: 3rem;">
             <i class="fas fa-users-slash" style="font-size: 3rem; color: #a0aec0; margin-bottom: 1rem;"></i>
             <h3 style="color: #4a5568; margin-bottom: 0.5rem;">No formas parte de ninguna comunidad aún</h3>
             <p style="color: #718096; margin-bottom: 1.5rem;">Únete a una comunidad existente o crea una nueva para empezar.</p>
@@ -1660,8 +1800,11 @@
             <a href="/teams/create" class="btn btn-accent">
               <i class="fas fa-plus"></i> Crear Comunidad
             </a>
-          </div>
-        `;
+          </div>`;
+        }
+        if (memberContainer) {
+          memberContainer.innerHTML = '';
+        }
         document.getElementById('pagination').style.display = 'none';
       }
 
@@ -1671,18 +1814,22 @@
         filteredTeams = allTeams.filter(team => {
           if (activeFilter !== 'all') {
             if (activeFilter === 'founder' && team.user_role !== 'founder') return false;
-            if (activeFilter === 'coordinator' && !['coordinator', 'admin'].includes(team.user_role)) return false;
+            if (activeFilter === 'coordinator' && !['coordinator', 'admin'].includes(team.user_role))
+
+ return false;
             if (activeFilter === 'member' && team.user_role !== 'member') return false;
             if (activeFilter === 'pending' && team.user_role !== 'pending') return false;
           }
           if (searchTerm) {
-            const matchesName = team.name && team.name.toLowerCase().includes(searchTerm);
-            const matchesDesc = team.description && team.description.toLowerCase().includes(searchTerm);
-            const matchesTags = team.tags && team.tags.some(tag => tag && tag.toLowerCase().includes(searchTerm));
-            return matchesName || matchesDesc || matchesTags;
+            const term = searchTerm.toLowerCase();
+            if (!team.name.toLowerCase().includes(term) && !team.description.toLowerCase().includes(term)) {
+              return false;
+            }
           }
           return true;
         });
+
+        currentPage = 1;
         renderTeams();
       }
 
@@ -2307,7 +2454,7 @@
           'otros': 'Otros'
         };
         return categories[category] || 'General';
-      };
+      }
     }); // Fin del DOMContentLoaded
   </script>
 {% endblock %}

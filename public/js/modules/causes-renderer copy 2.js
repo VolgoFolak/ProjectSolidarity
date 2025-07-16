@@ -70,7 +70,7 @@ card.innerHTML = `
           Ver más
         </button>
         <button class="btn btn-accent admin-activity-btn" data-activity-type="cause" data-activity-id="${cause.id}" style="flex:1;">
-          Administrar
+          <i class="fas fa-cog"></i> Administrar
         </button>
       ` : `
         <button class="btn btn-primary view-cause-btn" data-cause-id="${cause.id}" style="flex:1;">

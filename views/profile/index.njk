@@ -741,15 +741,16 @@
       align-items: center;
       justify-content: center;
       gap: 0.5rem;
-      padding: 0.6rem 1.2rem;
-      border-radius: 8px;
-      font-size: 0.9rem;
-      font-weight: 500;
-      text-decoration: none;
+      padding: 0.7rem 1.3rem;
+      border-radius: 50px;
+      font-size: 1rem;
+      font-weight: 600;
       border: none;
       cursor: pointer;
-      transition: all 0.2s ease;
-      min-height: 40px;
+      transition: all 0.2s;
+      min-height: 44px;
+      background: #4a6fa5;
+      color: #fff;
     }
 
     .btn-primary {
@@ -759,26 +760,17 @@
 
     .btn-primary:hover {
       background: #166088;
-      transform: translateY(-2px);
-      box-shadow: 0 4px 12px rgba(74, 111, 165, 0.3);
     }
 
     .btn-outline {
       background: transparent;
       color: #4a6fa5;
-      border: 1px solid #4a6fa5;
+      border: 2px solid #4a6fa5;
     }
 
-    .btn-outline:hover:not(:disabled) {
+    .btn-outline:hover {
       background: #4a6fa5;
-      color: white;
-      transform: translateY(-2px);
-    }
-
-    .btn-outline:disabled {
-      opacity: 0.5;
-      cursor: not-allowed;
-      transform: none;
+      color: #fff;
     }
 
     /* Botones específicos por tipo */
@@ -1306,36 +1298,50 @@
       justify-content: center;
     }
 
-    /* Grid de comunidades en 3 columnas igual que actividades */
-    .teams-grid-classic {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 2rem;
-      margin-bottom: 3rem;
+    /* Botones pill y responsive */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      padding: 0.7rem 1.3rem;
+      border-radius: 50px;
+      font-size: 1rem;
+      font-weight: 600;
+      border: none;
+      cursor: pointer;
+      transition: all 0.2s;
+      min-height: 44px;
+      background: #4a6fa5;
+      color: #fff;
     }
-
-    /* Responsive para communities grid */
-    @media (max-width: 1024px) {
-      .causes-grid,
-      .tasks-grid,
-      .challenges-grid,
-      .volunteering-grid,
-      .activities-grid,
-      .teams-grid-classic {
-        grid-template-columns: repeat(2, 1fr);
-        gap: 1.5rem;
-      }
+    .btn-primary { background: #4a6fa5; color: #fff; }
+    .btn-primary:hover { background: #166088; }
+    .btn-outline {
+      background: transparent;
+      color: #4a6fa5;
+      border: 2px solid #4a6fa5;
     }
-
+    .btn-outline:hover { background: #4a6fa5; color: #fff; }
     @media (max-width: 600px) {
-      .causes-grid,
-      .tasks-grid,
-      .challenges-grid,
-      .volunteering-grid,
-      .activities-grid,
-      .teams-grid-classic {
-        grid-template-columns: 1fr;
-        gap: 1rem;
+      .btn, .btn-primary, .btn-outline {
+        width: 100%;
+        font-size: 1rem;
+        min-height: 44px;
+        border-radius: 50px;
+        margin-bottom: 0.5rem;
+      }
+      .activities-tabs, .tabs {
+        flex-wrap: nowrap;
+        overflow-x: auto;
+        gap: 0.3rem;
+        padding-bottom: 0.3rem;
+      }
+      .activity-tab, .tab {
+        min-width: 110px;
+        font-size: 0.97rem;
+        border-radius: 999px;
+        padding: 0.6rem 1rem;
       }
     }
   </style>
