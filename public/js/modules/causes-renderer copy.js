@@ -10,7 +10,35 @@ class CausesRenderer {
     this.pendingCauseData = null;
   }
 
-   
+  /**
+   * Renderiza una grilla de tarjetas de causas (EXACTO al código original)
+   */
+  renderGrid(causes, container, options = {}) {
+    this.causes = causes;
+    container.innerHTML = '';
+
+    if (!causes || causes.length === 0) {
+      container.innerHTML = '<div style="color:#6b7280;text-align:center;padding:2rem;grid-column:1/-1;">No se encontraron causas.</div>';
+      return;
+    }
+
+    // Aplicar estilos de grid si no existen
+    if (!container.classList.contains('causes-grid')) {
+      container.className = 'causes-grid';
+      this.injectGridStyles();
+    }
+
+    causes.forEach(cause => {
+      const card = this.createCauseCard(cause, options);
+      container.appendChild(card);
+    });
+
+    // Guardar causas globalmente para compatibilidad
+    window.causes = causes;
+
+    this.attachEventListeners(container);
+  }
+
   /**
    * Renderiza una grilla de tarjetas de causas con botón Donar igual a "Ver más"
    */
@@ -37,52 +65,46 @@ class CausesRenderer {
       const isAdmin = ['founder','admin','coordinator'].includes(cause.userRole);
 
       const card = document.createElement('div');
-card.className = 'cause-card';
-card.innerHTML = `
-  <div class="cause-image">
-    <img src="${cause.photo_url || '/img/causa-default.jpg'}" alt="${cause.title}" 
-         onerror="if (!this._defaulted) { this._defaulted = true; this.src='/img/causa-default.jpg'; }">
-    ${urgentBadge}
-    ${pointsBadge}
-  </div>
-  <div class="cause-content">
-    <h3>${cause.title}</h3>
-    <p>${cause.short_description || ''}</p>
-    <div class="cause-meta">
-      <div class="meta-item"><i class="fas fa-map-marker-alt"></i> ${location}</div>
-      <div class="meta-item"><i class="fas fa-users"></i> ${cause.donors || 0} donantes</div>
-      <div class="beneficiaries-count">
-        <i class="fas fa-heart"></i> Beneficia a ${cause.beneficiaries || 0} personas
-      </div>
-    </div>
-    <div class="cause-progress">
-      <div class="progress-bar">
-        <div class="progress-fill" style="width: ${progress}%"></div>
-      </div>
-      <div class="progress-info">
-        <span>${progress}% completado</span>
-        <span>${cause.raised || 0} € de ${cause.goal || 0} €</span>
-      </div>
-    </div>
-    <div class="cause-actions">
-      ${isAdmin ? `
-        <button class="btn btn-primary view-cause-btn" data-cause-id="${cause.id}" style="flex:1;">
-          Ver más
-        </button>
-        <button class="btn btn-accent admin-activity-btn" data-activity-type="cause" data-activity-id="${cause.id}" style="flex:1;">
-          <i class="fas fa-cog"></i> Administrar
-        </button>
-      ` : `
-        <button class="btn btn-primary view-cause-btn" data-cause-id="${cause.id}" style="flex:1;">
-          <i class="fas fa-eye"></i> Ver más
-        </button>
-        <button class="btn btn-accent donate-btn" data-cause-id="${cause.id}" style="flex:1;">
-          <i class="fas fa-hand-holding-heart"></i> Donar
-        </button>
-      `}
-    </div>
-  </div>
-`;
+      card.className = 'cause-card';
+      card.innerHTML = `
+        <div class="cause-image">
+          <img src="${cause.photo_url || '/img/causa-default.jpg'}" alt="${cause.title}" 
+               onerror="if (!this._defaulted) { this._defaulted = true; this.src='/img/causa-default.jpg'; }">
+          ${urgentBadge}
+          ${pointsBadge}
+        </div>
+        <div class="cause-content">
+          <h3>${cause.title}</h3>
+          <p>${cause.short_description || ''}</p>
+          <div class="cause-meta">
+            <div class="meta-item"><i class="fas fa-map-marker-alt"></i> ${location}</div>
+            <div class="meta-item"><i class="fas fa-users"></i> ${cause.donors || 0} donantes</div>
+            <div class="beneficiaries-count">
+              <i class="fas fa-heart"></i> Beneficia a ${cause.beneficiaries || 0} personas
+            </div>
+          </div>
+          <div class="cause-progress">
+            <div class="progress-bar">
+              <div class="progress-fill" style="width: ${progress}%"></div>
+            </div>
+            <div class="progress-info">
+              <span>${progress}% completado</span>
+              <span>${cause.raised || 0} € de ${cause.goal || 0} €</span>
+            </div>
+          </div>
+          <div class="cause-actions">
+            <button class="btn btn-primary view-cause-btn" data-cause-id="${cause.id}">Ver más</button>
+            <button class="btn btn-accent donate-btn" data-cause-id="${cause.id}">
+              <i class="fas fa-hand-holding-heart"></i> Donar
+            </button>
+            ${isAdmin ? `
+              <button class="btn btn-accent admin-activity-btn" data-activity-type="cause" data-activity-id="${cause.id}">
+                <i class="fas fa-cog"></i> Administrar
+              </button>
+            ` : ''}
+          </div>
+        </div>
+      `;
 
       container.appendChild(card);
     });
@@ -120,22 +142,10 @@ card.innerHTML = `
     const pointsBadge = `<div class="cause-badge points"><i class="fas fa-star"></i> +${cause.points || 0} pts</div>`;
     const location = cause.city && cause.country ? `${cause.city}, ${cause.country}` : "";
     const isAdmin = ['founder','admin','coordinator'].includes(cause.userRole);
-    const isDonor = cause.isDonor; // Este campo debe estar en el objeto causa, igual que isParticipating en tareas
-
-    const canDonate = cause.stripe_enabled && !cause.isDonor;
-
-    // Botón "Donar" funcional
-    const donateBtn = canDonate
-      ? `<button class="btn btn-accent donate-btn" data-cause-id="${cause.id}">
-           <i class="fas fa-donate"></i> Donar
-         </button>`
-      : `<button class="btn btn-outline" disabled>
-           ${cause.stripe_enabled ? 'Ya donaste' : 'Donaciones no disponibles'}
-         </button>`;
 
     let actionsHtml = '';
-    if (options?.showAdminButton && cause.userRole && ['founder', 'admin', 'coordinator'].includes(cause.userRole)) {
-      // Solo mostrar "Ver más" y "Administrar"
+    if (options?.showAdminButton && isAdmin) {
+      // Solo "Ver más" y "Administrar"
       actionsHtml = `
         <div class="cause-actions">
           <button class="btn btn-outline view-cause-btn" data-cause-id="${cause.id}">
@@ -147,7 +157,7 @@ card.innerHTML = `
         </div>
       `;
     } else {
-      // Mostrar todos los botones (Donar, Ver más, Compartir, etc.)
+      // Mostrar todos los botones
       actionsHtml = `
         <div class="cause-actions">
           <button class="btn btn-primary donate-btn" data-cause-id="${cause.id}">
@@ -1664,6 +1674,18 @@ function showStripeError(errorCode) {
   showNotification(messages[errorCode] || 'Error desconocido', 'error');
 }
 
+async function handleStripeSuccess() {
+  try {
+    // Recargar causas para mostrar la nueva
+    await window.causesRenderer.loadCausesFromSupabase();
+    showNotification('¡Cuenta Stripe conectada y causa creada con éxito!', 'success');
+  } catch (error) {
+    console.error('Error handling success:', error);
+    showNotification('Error al cargar la causa creada', 'error');
+  }
+}
+
+function cleanUrlParams() {
 async function handleStripeSuccess() {
   try {
     // Recargar causas para mostrar la nueva
