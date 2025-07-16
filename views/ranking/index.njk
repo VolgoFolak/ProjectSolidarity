@@ -334,20 +334,135 @@
       to { opacity: 1; transform: scale(1);}
     }
     @media (max-width: 600px) {
+      .ranking-container {
+        padding: 0 0.5rem !important;
+        margin-top: 1.2rem !important;
+        margin-bottom: 1.2rem !important;
+        max-width: 100vw !important;
+      }
+      .ranking-header {
+        margin-bottom: 1.2rem !important;
+        padding: 0 0.5rem !important;
+      }
+      .ranking-header h1 {
+        font-size: 1.45rem !important;
+        margin-bottom: 0.3rem !important;
+      }
+      .ranking-header p {
+        font-size: 1rem !important;
+        margin-bottom: 0.7rem !important;
+      }
+      .league-system {
+        flex-direction: column !important;
+        gap: 0.7rem !important;
+        margin-bottom: 1.2rem !important;
+      }
+      .league-card {
+        width: 100% !important;
+        max-width: 98vw !important;
+        padding: 1rem !important;
+        margin-bottom: 0.5rem !important;
+        font-size: 0.98rem !important;
+      }
+      .league-icon {
+        font-size: 2rem !important;
+        margin-bottom: 0.2rem !important;
+      }
+      .ranking-tabs {
+        flex-direction: column !important;
+        gap: 0.5rem !important;
+        margin-bottom: 1rem !important;
+        padding: 0 0.5rem !important;
+      }
+      .ranking-tab {
+        padding: 0.7rem 1rem !important;
+        font-size: 1rem !important;
+        width: 100% !important;
+        border-radius: 8px !important;
+        margin-bottom: 0.2rem !important;
+      }
+      .btn-info {
+        width: 100% !important;
+        margin-left: 0 !important;
+        margin-top: 0.5rem !important;
+      }
+      .subranking-tabs {
+        flex-direction: column !important;
+        gap: 0.5rem !important;
+        margin-bottom: 0.8rem !important;
+        padding: 0 0.5rem !important;
+      }
+      .subranking-tab {
+        width: 100% !important;
+        font-size: 1rem !important;
+        padding: 0.6rem 1rem !important;
+        margin-bottom: 0.2rem !important;
+      }
+      .ranking-info {
+        font-size: 0.98rem !important;
+        padding: 0.6rem 0.7rem !important;
+        margin-bottom: 0.8rem !important;
+      }
+      .ranking-table {
+        margin-bottom: 1.2rem !important;
+        border-radius: 8px !important;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.07) !important;
+        overflow-x: auto !important;
+      }
+      table {
+        font-size: 0.95rem !important;
+        min-width: 340px !important;
+      }
+      th, td {
+        padding: 0.7rem !important;
+      }
+      .user-cell {
+        gap: 0.5rem !important;
+      }
+      .user-avatar-sm, .team-avatar-sm {
+        width: 28px !important;
+        height: 28px !important;
+        font-size: 0.95rem !important;
+      }
       .league-info {
-        max-width: 98vw;
-        padding: 1.2rem 0.5rem;
+        max-width: 99vw !important;
+        padding: 1rem 0.3rem !important;
+        margin-top: 1rem !important;
+        border-radius: 10px !important;
       }
-      .user-avatar-lg {
-        width: 60px;
-        height: 60px;
+      .user-avatar-lg, .user-avatar-xl {
+        width: 48px !important;
+        height: 48px !important;
+        margin-bottom: 0.3rem !important;
       }
-      .user-avatar-xl { width: 70px; height: 70px; }
-    }
-    @media (max-width: 768px) {
-      .league-system { flex-direction: column; align-items: center; }
-      .league-card { width: 100%; max-width: 300px; }
-      table { display: block; overflow-x: auto; }
+      .progreso-title {
+        font-size: 1.1rem !important;
+        margin-bottom: 0.7rem !important;
+        margin-top: 0.2rem !important;
+      }
+      .progress-container {
+        margin: 0.7rem 0 0.5rem 0 !important;
+      }
+      .progress-bar-bg {
+        height: 14px !important;
+      }
+      .progress-label {
+        font-size: 0.92em !important;
+      }
+      #user-progress {
+        font-size: 0.98rem !important;
+        margin-bottom: 0.4rem !important;
+      }
+      .modal-content {
+        max-width: 98vw !important;
+        padding: 1.2rem 0.7rem !important;
+        border-radius: 14px !important;
+      }
+      .close-modal {
+        font-size: 2rem !important;
+        top: 10px !important;
+        right: 12px !important;
+      }
     }
   </style>
 {% endblock %}

@@ -570,97 +570,169 @@
       font-size: 1.1rem;
       line-height: 1.6;
     }
-    /* --- MODALES Y BOTONES: margen superior/inferior y pills en móvil, y mejora modal ver más --- */
+    /* --- MODALES MEJORADOS PARA TAREAS --- */
 @media (max-width: 600px) {
-  #createTaskModal .modal-content,
-  #adminTaskModal .modal-content,
   #taskModal .modal-content,
-  .modal-content {
-    margin-top: 100px !important;
-    margin-bottom: 90px !important;
-    margin-left: 2vw !important;
-    margin-right: 2vw !important;
-    width: 96vw !important;
-    max-width: 96vw !important;
-    min-width: 0 !important;
-    border-radius: 14px !important;
-    box-sizing: border-box !important;
-    left: 0 !important;
-    right: 0 !important;
-    max-height: calc(100vh - 190px) !important;
+  #createTaskModal .modal-content {
+    width: 94vw !important;
+    max-width: 94vw !important;
+    margin: 80px 3vw 70px 3vw !important; /* ← IGUAL QUE EN CAUSAS */
+    padding: 1rem !important;
+    border-radius: 12px !important;
+    max-height: calc(100vh - 150px) !important;
     overflow-y: auto !important;
-    padding-left: 5vw !important;
-    padding-right: 5vw !important;
-  }
-  .btn, .btn-accent, .btn-primary, .btn-outline,
-  .task-actions .btn, .modal-cause-actions .action-btn, .modal-cause-actions .btn,
-  .after-create .btn, .modal-buttons .btn {
-    border-radius: 999px !important;
-    font-weight: 600 !important;
-    font-size: 1rem !important;
-    padding: 0.7rem 1.2rem !important;
-    width: 100% !important;
-    min-width: 0 !important;
-    max-width: 100vw !important;
-    display: flex !important;
-    justify-content: center !important;
-    align-items: center !important;
-    margin: 0.3rem 0 !important;
+    overflow-x: hidden !important;
     box-sizing: border-box !important;
-    gap: 0.7rem !important;
-  }
-  .task-actions .btn i,
-  .modal-cause-actions .action-btn i,
-  .modal-cause-actions .btn i,
-  .after-create .btn i,
-  .modal-buttons .btn i,
-  .btn i,
-  .btn-primary i,
-  .btn-accent i,
-  .btn-outline i {
-    display: inline-block !important;
-  }
-  #taskModal .modal-header,
-  #taskModal .modal-title {
-    text-align: center !important;
-    font-size: 1.1rem !important;
-    font-weight: 700 !important;
-    margin-bottom: 0.7rem !important;
-    word-break: break-word !important;
   }
   #taskModal .modal-body {
-    padding: 0.7rem 0.2rem !important;
-    font-size: 0.97rem !important;
-  }
-  #taskModal .modal-close,
-  #createTaskModal .close-modal {
-    top: 0.7rem !important;
-    right: 0.9rem !important;
-    font-size: 1.7rem !important;
-  }
-  /* MODAL VER MÁS: imagen arriba, info debajo */
-  #taskModal .task-modal-main {
-    flex-direction: column !important;
     display: flex !important;
-    gap: 1.2rem !important;
+    flex-direction: column !important;
     align-items: stretch !important;
     width: 100% !important;
-    margin-bottom: 1.2rem !important;
   }
-  #taskModal .task-modal-main > div {
+  #taskModal .task-image-container,
+  #taskModal .task-image {
     width: 100% !important;
-    min-width: 0 !important;
     max-width: 100% !important;
+    min-width: 0 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    display: block !important;
   }
-  #taskModal .task-modal-main img {
+  #taskModal .task-image img {
     width: 100% !important;
-    max-width: 100vw !important;
+    max-width: 100% !important;
     height: auto !important;
     display: block !important;
     object-fit: cover !important;
     margin: 0 auto !important;
   }
+  #taskModal .task-details {
+    width: 100% !important;
+    max-width: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    display: block !important;
+  }
+  #taskModal .task-meta-grid {
+    display: grid !important;
+    grid-template-columns: 1fr !important;
+    gap: 0.8rem !important;
+    margin-top: 1rem !important;
+  }
+  #taskModal .task-actions,
+  #createTaskModal .form-actions {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 0.8rem !important;
+    width: 100% !important;
+    margin-top: 1.2rem !important;
+  }
+  #taskModal .task-actions .btn,
+  #createTaskModal .form-actions .btn {
+    width: 100% !important;
+    margin: 0 !important;
+    border-radius: 999px !important;
+    padding: 0.8rem !important;
+    text-align: center !important;
+    font-size: 1rem !important;
+    font-weight: 600 !important;
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+  }
+  #createTaskModal .task-form {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 1rem !important;
+  }
+  #createTaskModal .form-group {
+    width: 100% !important;
+    margin-bottom: 0 !important;
+  }
+  #createTaskModal .preview-img {
+    max-width: 100% !important;
+    height: auto !important;
+    margin: 0.5rem 0 !important;
+  }
+  /* Evita scroll lateral en todo el modal */
+  #taskModal .modal-content,
+  #createTaskModal .modal-content,
+  .modal-content {
+    overflow-x: hidden !important;
+    max-width: 100vw !important;
+  }
+  #taskModal .modal-content * {
+    box-sizing: border-box !important;
+    max-width: 100vw !important;
+    word-break: break-word !important;
+  }
 }
+    /* Ajustar dinámicamente la posición de los modales en móvil */
+function adjustModalPosition() {
+  if (window.innerWidth <= 600) {
+    const modals = ['createTaskModal', 'taskModal', 'loginModal'];
+    modals.forEach(modalId => {
+      const modal = document.getElementById(modalId);
+      if (modal) {
+        modal.style.alignItems = 'flex-start';
+        modal.style.paddingTop = '80px'; // Altura del header
+        modal.style.paddingBottom = '65px'; // Altura del menú inferior
+      }
+    });
+  } else {
+    const modals = ['createTaskModal', 'taskModal', 'loginModal'];
+    modals.forEach(modalId => {
+      const modal = document.getElementById(modalId);
+      if (modal) {
+        modal.style.alignItems = '';
+        modal.style.paddingTop = '';
+        modal.style.paddingBottom = '';
+      }
+    });
+  }
+}
+document.addEventListener('DOMContentLoaded', adjustModalPosition);
+window.addEventListener('resize', adjustModalPosition);
+
+// Mejorar el scroll en modales para móvil
+function setupModalScrolling() {
+  const modals = ['createTaskModal', 'taskModal'];
+  modals.forEach(modalId => {
+    const modal = document.getElementById(modalId);
+    if (modal) {
+      const content = modal.querySelector('.modal-content');
+      if (content) {
+        content.addEventListener('touchstart', function() {
+          this.classList.add('no-scroll');
+        });
+        content.addEventListener('touchend', function() {
+          this.classList.remove('no-scroll');
+        });
+      }
+    }
+  });
+}
+document.addEventListener('DOMContentLoaded', setupModalScrolling);
+
+// Añadir estilos extra para el scroll (por si el <style> no se aplica)
+(function() {
+  const style = document.createElement('style');
+  style.textContent = `
+    @media (max-width: 600px) {
+      .modal-content.no-scroll {
+        overflow: hidden !important;
+      }
+      .modal-content {
+        -webkit-overflow-scrolling: touch !important;
+      }
+      .modal-content::-webkit-scrollbar {
+        display: none !important;
+      }
+    }
+  `;
+  document.head.appendChild(style);
+})();
   </style>
 {% endblock %}
 

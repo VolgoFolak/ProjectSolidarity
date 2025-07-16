@@ -145,23 +145,17 @@
     margin-bottom: 1.2rem !important;
   }
   .tasks-header h1 {
-    font-size: 1.45rem !important; /* Más grande que antes */
+    font-size: 1.2rem !important;
     text-align: center !important;
     width: 100%;
-    margin: 0 auto 0.7rem auto !important;
-    font-weight: 800 !important;
-    letter-spacing: -0.5px;
+    margin: 0 auto 0.5rem auto !important;
   }
   .btn-primary {
-    font-size: 1.07rem !important;
-    padding: 0.7rem 0 !important;
+    font-size: 0.97rem !important;
+    padding: 0.6rem 1.2rem !important;
     margin: 0 auto !important;
     display: block !important;
-    width: 90vw !important;
-    max-width: 350px !important;
-    min-width: 180px !important;
-    border-radius: 9px !important;
-    text-align: center !important;
+    width: auto !important;
   }
   .tasks-intro {
     padding: 1rem !important;
@@ -172,20 +166,11 @@
     margin-top: 1.2rem !important;
   }
   .tasks-intro h2 {
-    font-size: 1.2rem !important; /* Igual que volunteering */
+    font-size: 1.1rem !important;
     gap: 0.5rem !important;
-    font-weight: 700 !important;
-    margin-bottom: 0.7rem !important;
-    text-align: center !important;
-    line-height: 1.25 !important;
-    letter-spacing: -0.5px;
-  }
-  .tasks-intro h2 i {
-    font-size: 1.1em !important;
   }
   .tasks-intro p {
     font-size: 0.97rem !important;
-    text-align: center !important;
   }
   .tasks-search {
     margin-bottom: 1.2rem !important;
@@ -570,97 +555,6 @@
       font-size: 1.1rem;
       line-height: 1.6;
     }
-    /* --- MODALES Y BOTONES: margen superior/inferior y pills en móvil, y mejora modal ver más --- */
-@media (max-width: 600px) {
-  #createTaskModal .modal-content,
-  #adminTaskModal .modal-content,
-  #taskModal .modal-content,
-  .modal-content {
-    margin-top: 100px !important;
-    margin-bottom: 90px !important;
-    margin-left: 2vw !important;
-    margin-right: 2vw !important;
-    width: 96vw !important;
-    max-width: 96vw !important;
-    min-width: 0 !important;
-    border-radius: 14px !important;
-    box-sizing: border-box !important;
-    left: 0 !important;
-    right: 0 !important;
-    max-height: calc(100vh - 190px) !important;
-    overflow-y: auto !important;
-    padding-left: 5vw !important;
-    padding-right: 5vw !important;
-  }
-  .btn, .btn-accent, .btn-primary, .btn-outline,
-  .task-actions .btn, .modal-cause-actions .action-btn, .modal-cause-actions .btn,
-  .after-create .btn, .modal-buttons .btn {
-    border-radius: 999px !important;
-    font-weight: 600 !important;
-    font-size: 1rem !important;
-    padding: 0.7rem 1.2rem !important;
-    width: 100% !important;
-    min-width: 0 !important;
-    max-width: 100vw !important;
-    display: flex !important;
-    justify-content: center !important;
-    align-items: center !important;
-    margin: 0.3rem 0 !important;
-    box-sizing: border-box !important;
-    gap: 0.7rem !important;
-  }
-  .task-actions .btn i,
-  .modal-cause-actions .action-btn i,
-  .modal-cause-actions .btn i,
-  .after-create .btn i,
-  .modal-buttons .btn i,
-  .btn i,
-  .btn-primary i,
-  .btn-accent i,
-  .btn-outline i {
-    display: inline-block !important;
-  }
-  #taskModal .modal-header,
-  #taskModal .modal-title {
-    text-align: center !important;
-    font-size: 1.1rem !important;
-    font-weight: 700 !important;
-    margin-bottom: 0.7rem !important;
-    word-break: break-word !important;
-  }
-  #taskModal .modal-body {
-    padding: 0.7rem 0.2rem !important;
-    font-size: 0.97rem !important;
-  }
-  #taskModal .modal-close,
-  #createTaskModal .close-modal {
-    top: 0.7rem !important;
-    right: 0.9rem !important;
-    font-size: 1.7rem !important;
-  }
-  /* MODAL VER MÁS: imagen arriba, info debajo */
-  #taskModal .task-modal-main {
-    flex-direction: column !important;
-    display: flex !important;
-    gap: 1.2rem !important;
-    align-items: stretch !important;
-    width: 100% !important;
-    margin-bottom: 1.2rem !important;
-  }
-  #taskModal .task-modal-main > div {
-    width: 100% !important;
-    min-width: 0 !important;
-    max-width: 100% !important;
-  }
-  #taskModal .task-modal-main img {
-    width: 100% !important;
-    max-width: 100vw !important;
-    height: auto !important;
-    display: block !important;
-    object-fit: cover !important;
-    margin: 0 auto !important;
-  }
-}
   </style>
 {% endblock %}
 

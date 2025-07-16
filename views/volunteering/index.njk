@@ -24,7 +24,14 @@
       background: linear-gradient(135deg, #f0f9ff 0%, #e6f0fa 100%);
       border-radius: var(--radius); padding: 2rem; margin-bottom: 2rem; border: 1px solid var(--gray);
     }
-    .volunteering-intro h2 { font-size: 1.8rem; color: var(--primary-dark); margin-bottom: 1rem; display: flex; align-items: center; gap: 0.8rem; }
+    .volunteering-intro h2 {
+      font-size: 1.25rem !important;
+      color: var(--primary-dark);
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+    }
     .volunteering-intro h2 i { color: var(--accent); }
     .volunteering-intro p { color: #4a6fa5; font-size: 1.1rem; line-height: 1.6; }
     .volunteering-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; }
@@ -107,6 +114,272 @@
       gap: 0.7rem;
       margin-bottom: 0;
     }
+    /* --- MOBILE ONLY: Mejor experiencia móvil, sin afectar escritorio --- */
+    @media (max-width: 600px) {
+      html, body {
+        max-width: 100vw !important;
+        overflow-x: hidden !important;
+      }
+      .main-container {
+        padding-left: 0.3rem !important;
+        padding-right: 0.3rem !important;
+        max-width: 100vw !important;
+        box-sizing: border-box;
+      }
+      .volunteering-intro {
+        padding: 1rem !important;
+        margin-bottom: 1.5rem !important;
+        border-radius: 10px !important;
+      }
+      .volunteering-header {
+        flex-direction: column !important;
+        align-items: center !important;
+        gap: 0.7rem !important;
+        margin-bottom: 1.2rem !important;
+      }
+      .volunteering-header h1 {
+        font-size: 1.2rem !important;
+        text-align: center !important;
+        width: 100%;
+        margin: 0 auto 0.5rem auto !important;
+      }
+      .volunteering-actions {
+        width: 100%;
+        display: flex;
+        justify-content: center !important;
+      }
+      .volunteering-actions .btn {
+        font-size: 0.97rem !important;
+        padding: 0.6rem 1.2rem !important;
+        margin: 0 auto !important;
+        display: block !important;
+        width: auto !important;
+      }
+      .volunteering-intro-content {
+        margin-top: 1.2rem !important;
+      }
+      /* Elimina tabs en móvil */
+      .tabs {
+        display: none !important;
+      }
+      .volunteering-search {
+        margin-bottom: 1.2rem !important;
+        width: 100% !important;
+        max-width: 100vw !important;
+      }
+      .volunteering-search input {
+        font-size: 0.97rem !important;
+        padding: 0.5rem 0.7rem !important;
+        height: 40px !important;
+        width: 100% !important;
+      }
+      .volunteering-grid {
+        grid-template-columns: 1fr !important;
+        gap: 1.2rem !important;
+      }
+      .volunteering-card {
+        border-radius: 9px !important;
+        min-width: 0 !important;
+      }
+      .volunteering-image {
+        height: 120px !important;
+      }
+      .volunteering-content {
+        padding: 0.7rem !important;
+      }
+      .volunteering-content h3 {
+        font-size: 1.05rem !important;
+      }
+      .volunteering-content p {
+        font-size: 0.93rem !important;
+      }
+      .volunteering-meta {
+        gap: 0.5rem !important;
+        font-size: 0.82rem !important;
+      }
+      .linked-cause {
+        font-size: 0.82rem !important;
+      }
+      .volunteering-actions {
+        flex-direction: column !important;
+        gap: 0.5rem !important;
+      }
+      .btn, .btn-accent, .btn-primary, .btn-outline {
+        font-size: 0.97rem !important;
+        padding: 0.6rem 0.7rem !important;
+      }
+      .modal-content {
+        max-width: 99vw !important;
+        width: 99vw !important;
+        min-width: 0 !important;
+        padding: 1.1rem 0.5rem !important;
+        border-radius: 12px !important;
+        left: 0 !important;
+        right: 0 !important;
+        margin: 0 auto !important;
+      }
+      .close-modal {
+        top: 0.7rem !important;
+        right: 0.7rem !important;
+        font-size: 1.7rem !important;
+      }
+      .form-inline-group {
+        flex-direction: column !important;
+        gap: 0.5rem !important;
+      }
+      .preview-img {
+        max-width: 100% !important;
+        height: auto !important;
+      }
+      .points-info {
+        font-size: 0.97rem !important;
+        padding: 0.5rem 0.7rem !important;
+      }
+      .after-create {
+        padding: 1rem !important;
+        border-radius: 10px !important;
+        font-size: 0.97rem !important;
+      }
+      .modal-bg {
+        align-items: flex-start !important;
+        padding-top: 2vh !important;
+      }
+      .modal-content {
+        max-height: 95vh !important;
+        overflow-y: auto !important;
+      }
+      .choices__inner {
+        font-size: 0.97rem !important;
+        min-height: 38px !important;
+        padding: 0.5rem 0.7rem !important;
+      }
+      /* Hamburger menu: oculto en móvil */
+      .navbar .hamburger {
+        display: none !important;
+      }
+      /* Menú inferior fijo: ocupa todo el ancho y sin scroll lateral */
+      .bottom-nav,
+      .mobile-bottom-nav {
+        position: fixed !important;
+        left: 0 !important;
+        right: 0 !important;
+        bottom: 0 !important;
+        width: 100vw !important;
+        max-width: 100vw !important;
+        min-width: 0 !important;
+        border-radius: 0 !important;
+        box-shadow: 0 -2px 12px rgba(0,0,0,0.07);
+        z-index: 1002;
+      }
+      .bottom-nav .nav-item,
+      .mobile-bottom-nav .nav-item {
+        flex: 1 1 0;
+        min-width: 0;
+        text-align: center;
+        font-size: 1.1rem;
+        padding: 0.7rem 0 0.3rem 0;
+      }
+      /* Evita scroll lateral por cualquier elemento */
+      * {
+        box-sizing: border-box !important;
+        max-width: 100vw;
+        word-break: break-word;
+      }
+    }
+    /* Refuerzo para evitar scroll lateral en todo el sitio */
+    body {
+      overflow-x: hidden !important;
+      max-width: 100vw !important;
+    }
+    @media (max-width: 600px) {
+      #createVolunteeringModal .modal-content,
+      #volunteeringModal .modal-content,
+      .modal-content {
+        margin-top: 100px !important;
+        margin-bottom: 90px !important;
+        margin-left: 2vw !important;
+        margin-right: 2vw !important;
+        width: 96vw !important;
+        max-width: 96vw !important;
+        min-width: 0 !important;
+        border-radius: 14px !important;
+        box-sizing: border-box !important;
+        left: 0 !important;
+        right: 0 !important;
+        max-height: calc(100vh - 190px) !important;
+        overflow-y: auto !important;
+        padding-left: 5vw !important;
+        padding-right: 5vw !important;
+      }
+      .btn, .btn-accent, .btn-primary, .btn-outline,
+      .volunteering-actions .btn, .modal-cause-actions .action-btn, .modal-cause-actions .btn,
+      .after-create .btn, .modal-buttons .btn {
+        border-radius: 999px !important;
+        font-weight: 600 !important;
+        font-size: 1rem !important;
+        padding: 0.7rem 1.2rem !important;
+        width: 100% !important;
+        min-width: 0 !important;
+        max-width: 100vw !important;
+        display: flex !important;
+        justify-content: center !important;
+        align-items: center !important;
+        margin: 0.3rem 0 !important;
+        box-sizing: border-box !important;
+        gap: 0.7rem !important;
+      }
+      .volunteering-actions .btn i,
+      .modal-cause-actions .action-btn i,
+      .modal-cause-actions .btn i,
+      .after-create .btn i,
+      .modal-buttons .btn i,
+      .btn i,
+      .btn-primary i,
+      .btn-accent i,
+      .btn-outline i {
+        display: inline-block !important;
+      }
+      #volunteeringModal .modal-header,
+      #volunteeringModal .modal-title {
+        text-align: center !important;
+        font-size: 1.1rem !important;
+        font-weight: 700 !important;
+        margin-bottom: 0.7rem !important;
+        word-break: break-word !important;
+      }
+      #volunteeringModal .modal-body {
+        padding: 0.7rem 0.2rem !important;
+        font-size: 0.97rem !important;
+      }
+      #volunteeringModal .modal-close,
+      #createVolunteeringModal .close-modal {
+        top: 0.7rem !important;
+        right: 0.9rem !important;
+        font-size: 1.7rem !important;
+      }
+      /* MODAL VER MÁS: imagen arriba, info debajo */
+      #volunteeringModal .volunteering-modal-main {
+        flex-direction: column !important;
+        display: flex !important;
+        gap: 1.2rem !important;
+        align-items: stretch !important;
+        width: 100% !important;
+        margin-bottom: 1.2rem !important;
+      }
+      #volunteeringModal .volunteering-modal-main > div {
+        width: 100% !important;
+        min-width: 0 !important;
+        max-width: 100% !important;
+      }
+      #volunteeringModal .volunteering-modal-main img {
+        width: 100% !important;
+        max-width: 100vw !important;
+        height: auto !important;
+        display: block !important;
+        object-fit: cover !important;
+        margin: 0 auto !important;
+      }
+    }
   </style>
 {% endblock %}
 
@@ -187,8 +460,8 @@
         </div>
         <div class="form-inline-group">
           <div class="form-group">
-            <label for="beneficiaries">Beneficiarios</label>
-            <input type="number" id="beneficiaries" name="beneficiaries" min="1" placeholder="Ej: 100" required>
+            <label for="beneficiarios">Beneficiarios</label>
+            <input type="number" id="beneficiarios" name="beneficiarios" min="1" placeholder="Ej: 100" required>
           </div>
           <div class="form-group">
             <label for="volunteers_needed">Voluntarios necesarios</label>
@@ -405,7 +678,7 @@ document.addEventListener('DOMContentLoaded', async function() {
     const city = document.getElementById('city').value.trim();
     const country = document.getElementById('country').value.trim();
     const points = parseInt(document.getElementById('points').value, 10);
-    const beneficiaries = parseInt(document.getElementById('beneficiaries').value, 10);
+    const beneficiaries = parseInt(document.getElementById('beneficiarios').value, 10);
     const volunteers_needed = parseInt(document.getElementById('volunteers_needed').value, 10);
     const start_date = document.getElementById('start_date').value;
     const end_date = document.getElementById('end_date').value;

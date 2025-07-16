@@ -575,12 +575,11 @@
       transform: none;
     }
     .admin-activity-btn {
-      background: #ff6b6b;
+      background: #10b981;
       color: white;
     }
     .admin-activity-btn:hover {
-      background: #ff5252;
-      transform: translateY(-2px);
+      background: #059669;
     }
 
     /* --- ESTILOS PARA ESTADOS VACÍOS --- */
@@ -807,24 +806,12 @@
     }
 
     .admin-activity-btn {
-      background: #ff6b6b;
+      background: #10b981;
       color: white;
     }
 
     .admin-activity-btn:hover {
-      background: #ff5252;
-    }
-
-    /* Challenge buttons */
-    .btn-warning {
-      background: #ffe066;
-      color: #a67c00;
-      border: 1px solid #ffe066;
-    }
-
-    .btn-warning:hover {
-      background: #a67c00;
-      color: white;
+      background: #059669;
     }
 
     /* --- ESTILOS PARA TABS --- */
@@ -1827,6 +1814,19 @@
 
         console.log('✅ Usuario cargado:', user.id);
 
+        // 2. Cargar perfil
+        const { data: profile, error: profileError } = await supabase
+          .from('profiles')
+          .select('*')
+          .eq('id', user.id)
+          .single();
+
+        if (!profileError && profile) {
+          document.querySelector('.profile-photo').src = profile.photo_url || '/img/avatar-default.jpg';
+          document.getElementById('profile-name').textContent = `${profile.first_name || ''} ${profile.last_name || ''}`.trim() || 'Usuario';
+          if (profile.country) {
+            document.getElementById('profile-location').innerHTML = `
+              <i class="fas fa-map-marker-alt"></i> 
         // 2. Cargar perfil
         const { data: profile, error: profileError } = await supabase
           .from('profiles')

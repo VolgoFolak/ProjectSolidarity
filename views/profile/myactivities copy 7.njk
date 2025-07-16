@@ -712,6 +712,411 @@
       color: #4a5568;
     }
 
+    /* --- ESTILOS DEL MODAL DE ADMINISTRACIÓN --- */
+    .admin-modal {
+      display: none;
+      position: fixed;
+      z-index: 10000;
+      left: 0;
+      top: 0;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(0, 0, 0, 0.7);
+      align-items: center;
+      justify-content: center;
+      overflow-y: auto;
+    }
+
+    .admin-modal.active {
+      display: flex;
+    }
+
+    .admin-modal-content {
+      background: #fff;
+      border-radius: 18px;
+      padding: 2rem;
+      max-width: 900px;
+      width: 90vw;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      gap: 1.2rem;
+    }
+
+    .close-admin-modal {
+      position: absolute;
+      top: 1rem;
+      right: 1rem;
+      background: none;
+      border: none;
+      font-size: 1.8rem;
+      color: #6b7280;
+      cursor: pointer;
+      transition: color 0.2s;
+      z-index: 2;
+    }
+
+    .close-admin-modal:hover {
+      color: var(--primary);
+    }
+
+    .admin-tabs {
+      display: flex;
+      gap: 0.5rem;
+      margin-bottom: 1.2rem;
+      border-bottom: 2px solid #e2e8f0;
+      overflow-x: auto;
+      scrollbar-width: none;
+      padding-bottom: 0.2rem;
+    }
+    .admin-tabs::-webkit-scrollbar { display: none; }
+    .admin-tab {
+      flex: none;
+      padding: 0.7rem 1.2rem;
+      border-radius: 999px 999px 0 0;
+      background: #f8fafc;
+      color: #4a5568;
+      font-weight: 600;
+      border: none;
+      border-bottom: 2px solid transparent;
+      cursor: pointer;
+      transition: background 0.2s, color 0.2s, border-bottom 0.2s;
+      margin-right: 0.2rem;
+    }
+    .admin-tab.active {
+      background: #fff;
+      color: var(--primary);
+      border-bottom: 2px solid var(--primary);
+      box-shadow: 0 2px 8px #4a6fa511;
+      z-index: 2;
+    }
+    .admin-tab-content {
+      display: none;
+      width: 100%;
+    }
+    .admin-tab-content.active {
+      display: block;
+    }
+    @media (max-width: 700px) {
+      .admin-modal-content {
+        padding: 1rem;
+        border-radius: 14px;
+        margin-top: 70px;
+        margin-bottom: 80px;
+        width: 98vw;
+        max-width: 98vw;
+        min-width: 0;
+        box-sizing: border-box;
+      }
+      .admin-tabs {
+        gap: 0.3rem !important;
+        margin-bottom: 0.7rem !important;
+        padding-bottom: 0.1rem !important;
+      }
+      .admin-tab {
+        font-size: 0.97rem !important;
+        padding: 0.6rem 1rem !important;
+        min-width: 90px !important;
+        margin-right: 0.1rem !important;
+      }
+    }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+      gap: 1.5rem;
+      margin-bottom: 2rem;
+    }
+
+    .stat-card {
+      background: #f9fafb;
+      border-radius: 10px;
+      padding: 1.5rem;
+      text-align: center;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .stat-value {
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: var(--primary);
+      margin-bottom: 0.5rem;
+    }
+
+    .stat-label {
+      font-size: 0.9rem;
+      color: #6b7280;
+    }
+
+    .progress-bar {
+      height: 8px;
+      background: #e2e8f0;
+      border-radius: 4px;
+      overflow: hidden;
+      margin-bottom: 0.5rem;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: var(--primary);
+      border-radius: 4px;
+    }
+
+    .progress-info {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.9rem;
+      color: #6b7280;
+    }
+
+    /* Estilos específicos para el modal de administración */
+    .admin-modal h2 {
+      font-size: 1.8rem;
+      margin-bottom: 1.5rem;
+      color: var(--primary);
+      text-align: center;
+    }
+
+    .admin-modal .btn {
+      width: 100%;
+      padding: 0.8rem;
+      border-radius: 50px;
+      font-weight: 600;
+      font-size: 1rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      transition: all 0.3s ease;
+    }
+
+    .admin-modal .btn-primary {
+      background: var(--primary);
+      color: white;
+    }
+
+    .admin-modal .btn-primary:hover {
+      background: var(--primary-dark);
+    }
+
+    .admin-modal .btn-accent {
+      background: var(--accent);
+      color: white;
+    }
+
+    .admin-modal .btn-accent:hover {
+      background: var(--accent-dark);
+    }
+
+    .admin-modal .btn-warning {
+      background: var(--challenge);
+      color: #333;
+    }
+
+    .admin-modal .btn-warning:hover {
+      background: var(--challenge-dark);
+      color: white;
+    }
+
+    .admin-modal .btn-secondary {
+      background: var(--volunteering);
+      color: white;
+    }
+    .admin-modal .btn-secondary:hover {
+      background: var(--volunteering-dark);
+    }
+
+    /* Estilos para el formulario de configuración de actividad */
+    .solidarity-form {
+      background: #f9fafb;
+      padding: 2rem;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      margin-top: 1rem;
+    }
+
+    .solidarity-form .form-section-title {
+      font-size: 1.5rem;
+      margin-bottom: 1.5rem;
+      color: var(--primary);
+    }
+
+    .solidarity-form .form-group {
+      margin-bottom: 1.5rem;
+    }
+
+    .solidarity-form label {
+      font-weight: 500;
+      margin-bottom: 0.5rem;
+      display: block;
+      color: #4a5568;
+    }
+
+    .solidarity-form input,
+    .solidarity-form select,
+    .solidarity-form textarea {
+      width: 100%;
+      padding: 0.8rem;
+      border-radius: 8px;
+      border: 1.5px solid var(--gray);
+      font-size: 1rem;
+      outline: none;
+      transition: border 0.2s;
+      background: #fff;
+    }
+
+    .solidarity-form input:focus,
+    .solidarity-form select:focus,
+    .solidarity-form textarea:focus {
+      border-color: var(--primary);
+    }
+
+    .solidarity-form .btn {
+      width: auto;
+      padding: 0.7rem 1.2rem;
+      border-radius: 50px;
+      font-weight: 600;
+      font-size: 1rem;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      transition: all 0.3s ease;
+    }
+
+    .solidarity-form .btn-primary {
+      background: var(--primary);
+      color: white;
+    }
+
+    .solidarity-form .btn-primary:hover {
+      background: var(--primary-dark);
+    }
+
+    .solidarity-form .btn-accent {
+      background: var(--accent);
+      color: white;
+    }
+
+    .solidarity-form .btn-accent:hover {
+      background: var(--accent-dark);
+    }
+
+    .solidarity-form .btn-warning {
+      background: var(--challenge);
+      color: #333;
+    }
+
+    .solidarity-form .btn-warning:hover {
+      background: var(--challenge-dark);
+      color: white;
+    }
+
+    .solidarity-form .btn-secondary {
+      background: var(--volunteering);
+      color: white;
+    }
+
+    .solidarity-form .btn-secondary:hover {
+      background: var(--volunteering-dark);
+    }
+
+    /* Estilos para las tarjetas de actividad en el modal de administración */
+    .activity-cards-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+      gap: 1rem;
+    }
+
+    .activity-card {
+      background: #fff;
+      border-radius: 12px;
+      padding: 1.5rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      transition: transform 0.2s;
+    }
+
+    .activity-card:hover {
+      transform: translateY(-4px);
+    }
+
+    .activity-card img {
+      width: 50px;
+      height: 50px;
+      margin-bottom: 1rem;
+    }
+
+    /* Estilos para la lista de miembros */
+    .members-list {
+      max-height: 300px;
+      overflow-y: auto;
+      margin-bottom: 1.5rem;
+    }
+
+    .member-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.8rem;
+      background: #f9fafb;
+      border-radius: 8px;
+      margin-bottom: 0.7rem;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .member-info {
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+    }
+
+    .member-avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      object-fit: cover;
+    }
+
+    .member-name {
+      font-weight: 500;
+      color: #2d3748;
+    }
+
+    .role-badge {
+      padding: 0.3rem 0.6rem;
+      border-radius: 12px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .role-badge.founder {
+      background: #4a6fa5;
+      color: white;
+    }
+
+    .role-badge.coordinator {
+      background: #3da58a;
+      color: white;
+    }
+
+    .role-badge.admin {
+      background: #166088;
+      color: white;
+    }
+
+    .role-badge.member {
+      background: #e2e8f0;
+      color: #4a5568;
+    }
+
     /* --- MEJORAS PARA MODALES EN MÓVIL --- */
     @media (max-width: 600px) {
       .modal-content {
@@ -794,74 +1199,6 @@
         max-width: 100% !important;
       }
     }
-
-    /* Modal Ver Más Actividad */
-    .modal-bg {
-      display: none;
-      position: fixed;
-      z-index: 1000;
-      left: 0;
-      top: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(0, 0, 0, 0.8);
-      align-items: center;
-      justify-content: center;
-      overflow-y: auto;
-    }
-
-    .modal-content {
-      background: #fff;
-      border-radius: 12px;
-      padding: 2rem;
-      max-width: 600px;
-      width: 90vw;
-      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
-      position: relative;
-      display: flex;
-      flex-direction: column;
-      gap: 1.2rem;
-    }
-
-    .close-modal {
-      position: absolute;
-      top: 1rem;
-      right: 1rem;
-      background: none;
-      border: none;
-      font-size: 1.5rem;
-      color: #6b7280;
-      cursor: pointer;
-      transition: color 0.2s;
-    }
-
-    .close-modal:hover {
-      color: var(--primary);
-    }
-
-    .modal-title {
-      font-size: 1.6rem;
-      color: var(--primary);
-      margin: 0;
-      font-weight: 700;
-      text-align: center;
-    }
-
-    .activity-image {
-      width: 100%;
-      height: 180px;
-      object-fit: cover;
-      border-radius: 10px;
-      margin-bottom: 1.2rem;
-    }
-
-    .mobile-flex-column {
-      display: flex;
-      flex-direction: column;
-      gap: 0.8rem;
-    }
-
-    /* --- FIN ESTILOS --- */
   </style>
 {% endblock %}
 
@@ -1074,27 +1411,6 @@
         </button>
         <h3 style="margin-top: 2rem;">Movimientos recientes</h3>
         <div id="recentActivities"></div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Modal Ver Más Actividad -->
-  <div id="activityModal1" class="modal-bg">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h2 class="modal-title">Título de la Actividad</h2>
-        <button class="close-modal" onclick="closeModal('activityModal1')">&times;</button>
-      </div>
-      <div class="modal-body">
-        <img class="activity-image" src="URL_DE_LA_IMAGEN" alt="Título de la Actividad">
-        <div class="mobile-flex-column">
-          <!-- Aquí va el contenido específico de la actividad -->
-          <p>Descripción, detalles, etc.</p>
-        </div>
-      </div>
-      <div class="activity-actions">
-        <button class="btn btn-primary">Participar</button>
-        <button class="btn btn-accent">Compartir</button>
       </div>
     </div>
   </div>

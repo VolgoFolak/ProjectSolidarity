@@ -570,95 +570,103 @@
       font-size: 1.1rem;
       line-height: 1.6;
     }
-    /* --- MODALES Y BOTONES: margen superior/inferior y pills en móvil, y mejora modal ver más --- */
+    /* --- MODALES Y BOTONES: Ajustes responsive para móvil igual que causas --- */
 @media (max-width: 600px) {
+  /* --- MODALES: Ajustes específicos para tasks en móvil --- */
   #createTaskModal .modal-content,
-  #adminTaskModal .modal-content,
   #taskModal .modal-content,
   .modal-content {
-    margin-top: 100px !important;
-    margin-bottom: 90px !important;
-    margin-left: 2vw !important;
-    margin-right: 2vw !important;
-    width: 96vw !important;
-    max-width: 96vw !important;
+    margin-top: 100px !important;      /* espacio para header fijo */
+    margin-bottom: 90px !important;    /* espacio para menú inferior fijo */
+    margin-left: 4vw !important;
+    margin-right: 4vw !important;
+    width: 92vw !important;
+    max-width: 92vw !important;
     min-width: 0 !important;
     border-radius: 14px !important;
     box-sizing: border-box !important;
-    left: 0 !important;
-    right: 0 !important;
+    padding-left: 1rem !important;
+    padding-right: 1rem !important;
     max-height: calc(100vh - 190px) !important;
     overflow-y: auto !important;
-    padding-left: 5vw !important;
-    padding-right: 5vw !important;
   }
-  .btn, .btn-accent, .btn-primary, .btn-outline,
-  .task-actions .btn, .modal-cause-actions .action-btn, .modal-cause-actions .btn,
-  .after-create .btn, .modal-buttons .btn {
+
+  /* Contenido del modal más espaciado */
+  #taskModal .modal-body,
+  #createTaskModal .task-form {
+    padding: 0.5rem 0.3rem !important;
+  }
+
+  /* Botones estilo "pill" con mejor espaciado */
+  .task-actions .btn,
+  .modal-actions .btn,
+  .btn,
+  .btn-primary,
+  .btn-accent,
+  .btn-outline {
+    width: 100% !important;
+    min-width: 0 !important;
+    margin: 0.5rem 0 !important;
     border-radius: 999px !important;
     font-weight: 600 !important;
     font-size: 1rem !important;
-    padding: 0.7rem 1.2rem !important;
-    width: 100% !important;
-    min-width: 0 !important;
-    max-width: 100vw !important;
-    display: flex !important;
-    justify-content: center !important;
-    align-items: center !important;
-    margin: 0.3rem 0 !important;
-    box-sizing: border-box !important;
+    padding: 0.8rem 1.5rem !important;
     gap: 0.7rem !important;
   }
-  .task-actions .btn i,
-  .modal-cause-actions .action-btn i,
-  .modal-cause-actions .btn i,
-  .after-create .btn i,
-  .modal-buttons .btn i,
-  .btn i,
-  .btn-primary i,
-  .btn-accent i,
-  .btn-outline i {
-    display: inline-block !important;
+
+  /* Inputs y textareas con mejor espaciado */
+  .task-form .form-group input,
+  .task-form .form-group textarea,
+  .task-form .form-group select {
+    margin-bottom: 0.8rem !important;
+    padding: 0.8rem 1rem !important;
   }
-  #taskModal .modal-header,
-  #taskModal .modal-title {
-    text-align: center !important;
-    font-size: 1.1rem !important;
-    font-weight: 700 !important;
-    margin-bottom: 0.7rem !important;
-    word-break: break-word !important;
-  }
-  #taskModal .modal-body {
-    padding: 0.7rem 0.2rem !important;
-    font-size: 0.97rem !important;
-  }
-  #taskModal .modal-close,
-  #createTaskModal .close-modal {
-    top: 0.7rem !important;
-    right: 0.9rem !important;
-    font-size: 1.7rem !important;
-  }
-  /* MODAL VER MÁS: imagen arriba, info debajo */
-  #taskModal .task-modal-main {
-    flex-direction: column !important;
-    display: flex !important;
-    gap: 1.2rem !important;
-    align-items: stretch !important;
-    width: 100% !important;
+
+  /* Títulos más legibles */
+  .create-task-title,
+  .modal-title {
+    font-size: 1.2rem !important;
     margin-bottom: 1.2rem !important;
+    padding: 0 0.5rem !important;
   }
-  #taskModal .task-modal-main > div {
-    width: 100% !important;
-    min-width: 0 !important;
-    max-width: 100% !important;
+
+  /* Mejor espaciado para secciones */
+  .content-section {
+    margin-bottom: 1.5rem !important;
+    padding: 0 0.3rem !important;
   }
-  #taskModal .task-modal-main img {
-    width: 100% !important;
-    max-width: 100vw !important;
-    height: auto !important;
-    display: block !important;
-    object-fit: cover !important;
-    margin: 0 auto !important;
+
+  /* Ajuste específico para el modal de visualización de tarea */
+  #taskModal .modal-header {
+    padding: 1rem 0.5rem 0.5rem !important;
+  }
+
+  /* Ajuste para el modal de creación */
+  #createTaskModal .task-form {
+    padding: 0 0.5rem !important;
+  }
+
+  /* Botón cerrar más accesible */
+  .close-modal {
+    top: 0.8rem !important;
+    right: 1rem !important;
+    width: 2rem !important;
+    height: 2rem !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    background: rgba(255,255,255,0.8) !important;
+    border-radius: 50% !important;
+  }
+  /* Scroll mejorado en modales */
+  .modal-content.no-scroll {
+    overflow: hidden !important;
+  }
+  .modal-content {
+    -webkit-overflow-scrolling: touch !important;
+  }
+  .modal-content::-webkit-scrollbar {
+    display: none !important;
   }
 }
   </style>
@@ -1199,5 +1207,53 @@ window.mostrarCompartirTarea = function(taskId) {
 
 // Hacer funciones globales para que las use el renderer
 window.participateInTask = participateInTask;
-</script>
+
+// Ajustar dinámicamente la posición de los modales en móvil
+function adjustModalPosition() {
+  if (window.innerWidth <= 600) {
+    const modals = ['createTaskModal', 'taskModal', 'loginModal'];
+    modals.forEach(modalId => {
+      const modal = document.getElementById(modalId);
+      if (modal) {
+        modal.style.alignItems = 'flex-start';
+        modal.style.paddingTop = '80px'; // Altura del header
+        modal.style.paddingBottom = '65px'; // Altura del menú inferior
+      }
+    });
+  } else {
+    const modals = ['createTaskModal', 'taskModal', 'loginModal'];
+    modals.forEach(modalId => {
+      const modal = document.getElementById(modalId);
+      if (modal) {
+        modal.style.alignItems = '';
+        modal.style.paddingTop = '';
+        modal.style.paddingBottom = '';
+      }
+    });
+  }
+}
+
+// Ejecutar al cargar y al redimensionar
+document.addEventListener('DOMContentLoaded', adjustModalPosition);
+window.addEventListener('resize', adjustModalPosition);
+
+// Mejorar el scroll en modales para móvil
+function setupModalScrolling() {
+  const modals = ['createTaskModal', 'taskModal'];
+  modals.forEach(modalId => {
+    const modal = document.getElementById(modalId);
+    if (modal) {
+      const content = modal.querySelector('.modal-content');
+      if (content) {
+        content.addEventListener('touchstart', function() {
+          this.classList.add('no-scroll');
+        });
+        content.addEventListener('touchend', function() {
+          this.classList.remove('no-scroll');
+        });
+      }
+    }
+  });
+}
+setupModalScrolling();
 {% endblock %}

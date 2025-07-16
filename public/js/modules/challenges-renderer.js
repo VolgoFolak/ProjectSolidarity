@@ -625,7 +625,7 @@ const ChallengesRenderer = {
     // Llenar contenido del modal
     document.getElementById('challengeModalBody').innerHTML = `
       <h1 style="font-size:2rem; font-weight:800; color:var(--primary); margin-bottom:2rem; text-align:center;">${challenge.title}</h1>
-      <div style="display:flex; gap:2rem; margin-bottom:2rem;">
+      <div class="challenge-modal-main" style="display:flex; gap:2rem; margin-bottom:2rem;">
         <div style="flex:1; min-width:320px; height:300px; border-radius:12px; overflow:hidden; position:relative;">
           <img src="${challenge.photo_url || '/img/challenge-default.jpg'}" 
                alt="Imagen del desafío ${challenge.title}"
