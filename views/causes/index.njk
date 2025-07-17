@@ -1870,6 +1870,27 @@ document.addEventListener('DOMContentLoaded', async function() {
   
   // Event listeners para tabs y búsqueda
   setupTabsAndSearch();
+
+  // --- Abrir modal si la URL es /causes/{id} ---
+  const match = window.location.pathname.match(/^\/causes\/([a-zA-Z0-9-]+)$/);
+  if (match) {
+    const causeId = match[1];
+    // Espera a que window.causes esté disponible
+    const waitForCauses = () => new Promise(resolve => {
+      let tries = 0;
+      const check = () => {
+        if (window.causes && window.causes.length > 0) return resolve();
+        tries++;
+        if (tries > 20) return resolve(); // timeout
+        setTimeout(check, 100);
+      };
+      check();
+    });
+    await waitForCauses();
+    if (window.causesRenderer && typeof window.causesRenderer.showModal === 'function') {
+      window.causesRenderer.showModal(causeId);
+    }
+  }
 });
 
 // --- Control de modales en móvil: cierre al pulsar fuera y scroll lock ---
