@@ -245,6 +245,12 @@ app.get('/members', (req, res) => { res.render('members/members', { lang: req.la
 app.get('/messages', (req, res) => { res.render('messages/index', { lang: req.lang, user: req.session.user }); });
 app.get('/docs/privacy', (req, res) => { res.render('docs/privacy', { lang: req.lang, user: req.session.user }); });
 app.get('/docs/terms', (req, res) => { res.render('docs/terms', { lang: req.lang, user: req.session.user }); });
+app.get('/contact', (req, res) => {
+  res.render('contact', { lang: req.lang, user: req.session.user });
+});
+app.get('/docs/about', (req, res) => {
+  res.render('docs/about', { lang: req.lang, user: req.session.user });
+});
 
 // --- API para mensajes ---
 app.get('/api/conversations', async (req, res) => {

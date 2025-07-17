@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url><loc>https://project-solidarity.com/</loc><priority>1.0</priority></url>
+  <url><loc>https://project-solidarity.com/login</loc><priority>0.9</priority></url>
+  <url><loc>https://project-solidarity.com/register</loc><priority>0.9</priority></url>
+  <url><loc>https://project-solidarity.com/causes</loc><priority>0.9</priority></url>
+  <url><loc>https://project-solidarity.com/causes/create</loc><priority>0.8</priority></url>
+  <url><loc>https://project-solidarity.com/tasks</loc><priority>0.9</priority></url>
+  <url><loc>https://project-solidarity.com/tasks/create</loc><priority>0.8</priority></url>
+  <url><loc>https://project-solidarity.com/volunteering</loc><priority>0.9</priority></url>
+  <url><loc>https://project-solidarity.com/volunteering/create</loc><priority>0.8</priority></url>
+  <url><loc>https://project-solidarity.com/challenges</loc><priority>0.9</priority></url>
+  <url><loc>https://project-solidarity.com/teams</loc><priority>0.9</priority></url>
+  <url><loc>https://project-solidarity.com/myteams</loc><priority>0.8</priority></url>
+  <url><loc>https://project-solidarity.com/takeaction</loc><priority>0.7</priority></url>
+  <url><loc>https://project-solidarity.com/ranking</loc><priority>0.7</priority></url>
+  <url><loc>https://project-solidarity.com/profile</loc><priority>0.8</priority></url>
+  <url><loc>https://project-solidarity.com/editprofile</loc><priority>0.7</priority></url>
+  <url><loc>https://project-solidarity.com/profile/myactivities</loc><priority>0.7</priority></url>
+  <url><loc>https://project-solidarity.com/maps</loc><priority>0.6</priority></url>
+  <url><loc>https://project-solidarity.com/members</loc><priority>0.7</priority></url>
+  <url><loc>https://project-solidarity.com/messages</loc><priority>0.6</priority></url>
+  <url><loc>https://project-solidarity.com/docs/privacy</loc><priority>0.5</priority></url>
+  <url><loc>https://project-solidarity.com/docs/terms</loc><priority>0.5</priority></url>
+  <url><loc>https://project-solidarity.com/contact</loc><priority>0.8</priority></url>
+  <url><loc>https://project-solidarity.com/docs/about</loc><priority>0.7</priority></url>
+  <!-- Rutas dinámicas (ejemplo): -->
+  <!-- <url><loc>https://project-solidarity.com/causes/123</loc><priority>0.8</priority></url> -->
+  <!-- <url><loc>https://project-solidarity.com/tasks/456</loc><priority>0.8</priority></url> -->
+  <!-- <url><loc>https://project-solidarity.com/volunteering/789</loc><priority>0.8</priority></url> -->
+  <!-- <url><loc>https://project-solidarity.com/challenges/101</loc><priority>0.8</priority></url> -->
+  <!-- <url><loc>https://project-solidarity.com/teams/202</loc><priority>0.8</priority></url> -->
+  <!-- <url><loc>https://project-solidarity.com/profile/303</loc><priority>0.7</priority></url> -->
+</urlset>

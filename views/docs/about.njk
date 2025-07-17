@@ -1,167 +1,74 @@
 {% extends "layout.njk" %}
 
-{% block title %}Acerca de Solidarity{% endblock %}
-
-{% block head %}
-  {{ super() }}
-  <style>
-    .about-container {
-      max-width: 900px;
-      margin: 2rem auto;
-      padding: 2rem;
-      background: #fff;
-      border-radius: 16px;
-      box-shadow: 0 8px 32px rgba(74,111,165,0.10);
-    }
-    .about-title {
-      color: var(--primary);
-      font-size: 2.2rem;
-      font-weight: 800;
-      margin-bottom: 1.2rem;
-      text-align: center;
-    }
-    .about-section {
-      margin-bottom: 2.5rem;
-    }
-    .about-section h2 {
-      color: var(--primary-dark);
-      font-size: 1.3rem;
-      font-weight: 700;
-      margin-bottom: 0.7rem;
-    }
-    .about-section ul {
-      margin-left: 1.5rem;
-      color: #4a5568;
-    }
-    .about-team {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 2rem;
-      margin-top: 1rem;
-    }
-    .about-member {
-      flex: 1 1 200px;
-      background: #f8fafc;
-      border-radius: 10px;
-      padding: 1.2rem;
-      text-align: center;
-      box-shadow: 0 2px 8px rgba(74,111,165,0.06);
-    }
-    .about-member img {
-      width: 70px;
-      height: 70px;
-      border-radius: 50%;
-      object-fit: cover;
-      margin-bottom: 0.5rem;
-    }
-    .about-member .name {
-      font-weight: 700;
-      color: var(--primary);
-    }
-    .about-member .role {
-      color: #6b7280;
-      font-size: 0.95rem;
-    }
-    .about-contact {
-      background: #f8fafc;
-      border-radius: 10px;
-      padding: 1.2rem;
-      margin-top: 1rem;
-    }
-    .about-contact a {
-      color: var(--primary-dark);
-      text-decoration: underline;
-    }
-    @media (max-width: 700px) {
-      .about-container { padding: 1rem; }
-      .about-team { flex-direction: column; gap: 1rem; }
-    }
-  </style>
-{% endblock %}
+{% block title %}About Solidarity{% endblock %}
 
 {% block content %}
-<div class="about-container">
-  <div class="about-title">
-    <i class="fas fa-hands-helping"></i> Acerca de Solidarity
-  </div>
-
-  <div class="about-section">
-    <h2>¿Qué es Solidarity?</h2>
-    <p>
-      <strong>Solidarity</strong> es una plataforma digital que conecta personas, organizaciones y causas solidarias para crear un impacto positivo en la sociedad. Aquí puedes descubrir, crear y participar en causas, tareas, retos y voluntariados que buscan mejorar el mundo.
-    </p>
-  </div>
-
-  <div class="about-section">
-    <h2>Nuestra misión</h2>
-    <p>
-      Fomentar la solidaridad, la colaboración y el compromiso social, facilitando la participación ciudadana y el apoyo a quienes más lo necesitan.
-    </p>
-  </div>
-
-  <div class="about-section">
-    <h2>Valores</h2>
-    <ul>
-      <li><strong>Transparencia:</strong> Todas las actividades y causas son públicas y auditables.</li>
-      <li><strong>Colaboración:</strong> Creemos en el trabajo en equipo y la suma de esfuerzos.</li>
-      <li><strong>Impacto:</strong> Medimos y celebramos cada acción solidaria.</li>
-      <li><strong>Inclusión:</strong> Cualquier persona puede participar y proponer iniciativas.</li>
-      <li><strong>Innovación:</strong> Usamos tecnología para facilitar la solidaridad.</li>
-    </ul>
-  </div>
-
-  <div class="about-section">
-    <h2>¿Qué puedes hacer en Solidarity?</h2>
-    <ul>
-      <li>Explorar y unirte a <strong>causas solidarias</strong> de tu interés.</li>
-      <li>Participar en <strong>tareas</strong> y <strong>retos</strong> para sumar puntos de impacto.</li>
-      <li>Organizar o apuntarte a <strong>voluntariados</strong> presenciales o virtuales.</li>
-      <li>Crear tus propias actividades y gestionar equipos.</li>
-      <li>Hacer seguimiento de tu impacto y logros solidarios.</li>
-    </ul>
-  </div>
-
-  <div class="about-section">
-    <h2>El equipo</h2>
-    <div class="about-team">
-      <div class="about-member">
-        <img src="/img/avatar1.png" alt="Gabriela Martínez">
-        <div class="name">Gabriela Martínez</div>
-        <div class="role">Fundadora &amp; Desarrollo</div>
-      </div>
-      <div class="about-member">
-        <img src="/img/avatar2.png" alt="Carlos Ruiz">
-        <div class="name">Carlos Ruiz</div>
-        <div class="role">Diseño UX/UI</div>
-      </div>
-      <div class="about-member">
-        <img src="/img/avatar3.png" alt="Lucía Gómez">
-        <div class="name">Lucía Gómez</div>
-        <div class="role">Comunidad &amp; Comunicación</div>
-      </div>
-      <!-- Añade más miembros si lo deseas -->
-    </div>
-  </div>
-
-  <div class="about-section">
-    <h2>Contacto</h2>
-    <div class="about-contact">
-      ¿Tienes dudas, sugerencias o quieres colaborar? <br>
-      Escríbenos a <a href="mailto:info@solidarity.com">info@solidarity.com</a> o síguenos en nuestras redes sociales:<br>
-      <a href="https://twitter.com/solidarity" target="_blank"><i class="fab fa-twitter"></i> Twitter</a> |
-      <a href="https://instagram.com/solidarity" target="_blank"><i class="fab fa-instagram"></i> Instagram</a>
-    </div>
-  </div>
-
-  <div class="about-section">
-    <h2>Enlaces útiles</h2>
-    <ul>
-      <li><a href="/causes"><i class="fas fa-heart"></i> Explorar causas</a></li>
-      <li><a href="/tasks"><i class="fas fa-tasks"></i> Ver tareas</a></li>
-      <li><a href="/challenges"><i class="fas fa-trophy"></i> Descubrir retos</a></li>
-      <li><a href="/volunteering"><i class="fas fa-hands-helping"></i> Voluntariados</a></li>
-      <li><a href="/profile/myactivities"><i class="fas fa-user"></i> Mi perfil solidario</a></li>
-    </ul>
-  </div>
-</div>
+<main class="main-container" style="max-width:900px;margin:2rem auto;padding:2rem;background:#f8fafc;border-radius:12px;">
+  <h1 style="color:var(--primary,#4a6fa5);font-size:2.2rem;font-weight:800;margin-bottom:1.2rem;">About Solidarity</h1>
+  <p style="font-size:1.15rem;color:#444;margin-bottom:1.5rem;">
+    Welcome to Solidarity, the world's leading platform for social impact, donations, volunteering, and humanitarian aid. Our mission is to empower individuals and communities to create real change through collective action, visibility, and support.
+  </p>
+  <h2 style="color:var(--primary,#4a6fa5);font-size:1.5rem;font-weight:700;margin-top:2rem;">What is Solidarity?</h2>
+  <p>
+    Solidarity is a digital hub designed to connect people, organizations, and causes in a unified space dedicated to making the world a better place. Whether you are looking to volunteer, donate, join a community, or simply learn more about humanitarian efforts, Solidarity provides the tools and resources you need to get involved and make a difference.
+  </p>
+  <h2 style="color:var(--primary,#4a6fa5);font-size:1.5rem;font-weight:700;margin-top:2rem;">Donations: Amplify Your Impact</h2>
+  <p>
+    At Solidarity, donations are more than just financial support—they are a way to empower causes, help those in need, and foster a culture of giving. Our platform makes it easy to discover verified causes, contribute securely, and track the impact of your donations. Every contribution, big or small, helps build a stronger, more compassionate world.
+  </p>
+  <ul>
+    <li>Support local and global causes</li>
+    <li>Transparent donation tracking</li>
+    <li>Direct impact stories from beneficiaries</li>
+    <li>Easy and secure payment options</li>
+  </ul>
+  <h2 style="color:var(--primary,#4a6fa5);font-size:1.5rem;font-weight:700;margin-top:2rem;">Volunteering: Join the Movement</h2>
+  <p>
+    Volunteering is at the heart of Solidarity. Our platform connects volunteers with opportunities that match their skills, interests, and availability. From environmental projects to educational initiatives, health campaigns to community development, Solidarity makes it simple to find and participate in meaningful activities.
+  </p>
+  <ul>
+    <li>Browse hundreds of volunteering opportunities</li>
+    <li>Connect with organizations and communities</li>
+    <li>Track your impact and achievements</li>
+    <li>Earn recognition and rewards for your efforts</li>
+  </ul>
+  <h2 style="color:var(--primary,#4a6fa5);font-size:1.5rem;font-weight:700;margin-top:2rem;">Solidarity: Building Communities</h2>
+  <p>
+    Solidarity is more than a platform—it's a movement. We believe in the power of communities to drive change, share resources, and support one another. Our platform enables users to create, join, and manage communities focused on specific causes, interests, or regions. Together, we can amplify our voices and multiply our impact.
+  </p>
+  <ul>
+    <li>Create or join communities for shared goals</li>
+    <li>Collaborate on projects and initiatives</li>
+    <li>Share stories, resources, and best practices</li>
+    <li>Celebrate achievements and milestones</li>
+  </ul>
+  <h2 style="color:var(--primary,#4a6fa5);font-size:1.5rem;font-weight:700;margin-top:2rem;">Humanitarian Aid: Responding to Global Challenges</h2>
+  <p>
+    In times of crisis, Solidarity provides a reliable platform for humanitarian aid. We connect donors, volunteers, and organizations to respond quickly and effectively to emergencies, natural disasters, and urgent needs. Our goal is to ensure that help reaches those who need it most, when they need it most.
+  </p>
+  <ul>
+    <li>Emergency response coordination</li>
+    <li>Real-time updates on humanitarian efforts</li>
+    <li>Support for refugees, disaster victims, and vulnerable populations</li>
+    <li>Partnerships with trusted NGOs and agencies</li>
+  </ul>
+  <h2 style="color:var(--primary,#4a6fa5);font-size:1.5rem;font-weight:700;margin-top:2rem;">Why Choose Solidarity?</h2>
+  <p>
+    Solidarity stands out for its commitment to transparency, security, and impact. Our platform is designed to be user-friendly, accessible, and inclusive. We prioritize the needs of our users and the communities we serve, ensuring that every action taken on Solidarity contributes to a better world.
+  </p>
+  <ul>
+    <li>Verified causes and organizations</li>
+    <li>Secure donation and participation processes</li>
+    <li>Comprehensive impact tracking and reporting</li>
+    <li>Global reach with local focus</li>
+    <li>Continuous innovation and improvement</li>
+  </ul>
+  <h2 style="color:var(--primary,#4a6fa5);font-size:1.5rem;font-weight:700;margin-top:2rem;">Get Involved Today</h2>
+  <p>
+    Whether you are an individual, a nonprofit, or a business, Solidarity welcomes you to join our mission. Explore causes, volunteer your time, make a donation, or start a community—every action counts. Together, we can create lasting change and build a future rooted in solidarity, compassion, and hope.
+  </p>
+  <p style="font-size:1.1rem;color:var(--accent,#4fc3a1);font-weight:600;margin-top:2rem;">
+    Ready to make a difference? <a href="/register" style="color:var(--primary,#4a6fa5);text-decoration:underline;">Join Solidarity now</a> and start your journey towards real social impact.
+  </p>
+</main>
 {% endblock %}
