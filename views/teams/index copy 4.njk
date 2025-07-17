@@ -878,7 +878,7 @@
           <input type="text" id="teamTags" name="tags" placeholder="ej: reciclaje, voluntariado, jóvenes">
         </div>
         <div class="form-group">
-          <label for="how_to_donate">Cómo Donar <span style="color:#888;font-size:0.95em;">(explica cómo quieres recibir donaciones)</span></label>
+          <label for="how_to_donate">Cómo Donar <span style="color:#888;font-size:0.95em;">(opcional, explica cómo quieres recibir donaciones)</span></label>
           <textarea id="how_to_donate" name="how_to_donate" placeholder="Ej: Puedes donar por Bizum, transferencia bancaria, PayPal, etc. Indica aquí instrucciones claras..."></textarea>
         </div>
         <div class="form-group">
@@ -1127,31 +1127,6 @@
         </h3>
         <p class="content-text" style="line-height:1.7; color:#4b5563; font-size:1.05rem; margin-left:0; margin-right:0; text-align:justify;">${team.description || 'Esta comunidad no tiene descripción.'}</p>
       </div>
-      <div class="content-section" style="margin-bottom:2rem;">
-        <h3 class="content-title" style="font-size:1.15rem; font-weight:600; color:var(--primary); margin-bottom:0.7rem; display:flex; align-items:center; gap:0.7rem;">
-          <i class="fas fa-donate"></i> Cómo Donar
-        </h3>
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;">
-          <div>
-            <p style="font-weight:600;color:var(--primary);margin-bottom:0.3rem;">Instrucciones</p>
-            <p style="color:#6b7280;">
-              ${team.how_to_donate ? team.how_to_donate : '—'}
-            </p>
-          </div>
-          <div>
-            <p style="font-weight:600;color:var(--primary);margin-bottom:0.3rem;">Mobile Wallet</p>
-            <p style="color:#6b7280;">
-              ${team.mobile_wallet ? team.mobile_wallet : '—'}
-            </p>
-          </div>
-          <div>
-            <p style="font-weight:600;color:var(--primary);margin-bottom:0.3rem;">Cuenta Bancaria / IBAN</p>
-            <p style="color:#6b7280;">
-              ${team.bank_account ? team.bank_account : '—'}
-            </p>
-          </div>
-        </div>
-      </div>
       <div class="content-section" style="margin-bottom:2.2rem;">
         <h3 class="content-title" style="font-size:1.1rem;font-weight:600;color:var(--primary);margin-bottom:1rem;display:flex;align-items:center;gap:0.7rem;">
           <i class="fas fa-users"></i> Miembros (${members?.length || 0})
@@ -1327,9 +1302,6 @@
       .map(t => t.trim())
       .filter(Boolean);
     const goal = document.getElementById('teamGoal').value || null;
-    const how_to_donate = document.getElementById('how_to_donate').value.trim() || null;
-const mobile_wallet = document.getElementById('mobile_wallet').value.trim() || null;
-const bank_account = document.getElementById('bank_account').value.trim() || null;
 
     const fileInput = document.getElementById('teamPhoto');
     let photo = null;
@@ -1361,13 +1333,10 @@ const bank_account = document.getElementById('bank_account').value.trim() || nul
           category,
           privacy,
           tags,
-          photo_url: photo,
+          photo_url: photo, // ✅ CAMBIADO DE photo A photo_url
           goal,
           creator_id: session.user.id,
-          created_at: new Date().toISOString(),
-          how_to_donate,      // <-- Añade esto
-          mobile_wallet,      // <-- Añade esto
-          bank_account        // <-- Añade esto
+          created_at: new Date().toISOString()
         }])
         .select();
 

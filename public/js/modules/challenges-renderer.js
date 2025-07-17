@@ -682,6 +682,22 @@ const ChallengesRenderer = {
           ${challenge.description || 'No hay descripción disponible para este desafío.'}
         </p>
       </div>
+      <div class="content-section" style="margin-bottom:2rem;">
+        <h3 class="content-title" style="font-size:1.15rem; font-weight:600; color:var(--primary); margin-bottom:0.7rem; display:flex; align-items:center; gap:0.7rem;">
+          <i class="fas fa-check-circle"></i> Fuentes de verificación
+        </h3>
+        <p class="content-text" style="color:#6b7280; font-size:1.05rem; margin:0;">
+          ${challenge.verification_sources ? challenge.verification_sources : '—'}
+        </p>
+      </div>
+      <div class="content-section" style="margin-bottom:2rem;">
+        <h3 class="content-title" style="font-size:1.15rem; font-weight:600; color:var(--primary); margin-bottom:0.7rem; display:flex; align-items:center; gap:0.7rem;">
+          <i class="fas fa-gift"></i> Recompensa
+        </h3>
+        <p class="content-text" style="color:#6b7280; font-size:1.05rem; margin:0;">
+          ${challenge.reward ? challenge.reward : '—'}
+        </p>
+      </div>
       ${participantsHtml}
       <div style="display:flex; gap:0.8rem; margin-top:2rem;">
         <button class="btn btn-primary" style="flex:1;" onclick="window.participateInChallenge('${challenge.id}')">
