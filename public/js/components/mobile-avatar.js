@@ -96,6 +96,38 @@ class SolidarityMobileAvatar extends HTMLElement {
           display: none !important; /* Ocultar texto */
         }
 
+        .login-button img {
+  width: 40px !important;
+  height: 40px !important;
+  border-radius: 50% !important;
+  object-fit: cover !important;
+  display: none;
+  box-shadow: none !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+@media (max-width: 768px) {
+  .login-button img {
+    display: none !important;
+  }
+  .login-button #solidarityUserIcon {
+    display: block !important;
+  }
+  .login-button svg:not(#solidarityUserIcon),
+  .login-button i {
+    display: none !important;
+  }
+}
+@media (min-width: 769px) {
+  .login-button #solidarityUserIcon {
+    display: none !important;
+  }
+  .login-button svg:not(#solidarityUserIcon),
+  .login-button i {
+    display: block !important;
+  }
+}
+
         /* Ocultar elementos según estado */
         .hidden {
           display: none !important;
@@ -110,12 +142,15 @@ class SolidarityMobileAvatar extends HTMLElement {
       
       <!-- Botón para usuario no logueado - formato circular como avatar -->
       <button class="login-button hidden" id="loginButton" aria-label="Iniciar sesión">
+        <svg id="solidarityUserIcon" width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <circle cx="20" cy="20" r="18" fill="#fff" stroke="#e2e8f0" stroke-width="2"/>
+    <!-- Signo + centrado, mismo grosor y color que menú hamburguesa -->
+    <line x1="20" y1="13" x2="20" y2="27" stroke="#4a6fa5" stroke-width="3" stroke-linecap="round"/>
+    <line x1="13" y1="20" x2="27" y2="20" stroke="#4a6fa5" stroke-width="3" stroke-linecap="round"/>
+  </svg>
         <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <!-- Cabeza del usuario -->
           <circle cx="12" cy="8" r="3.5"></circle>
-          <!-- Cuerpo del usuario -->
           <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
-          <!-- Símbolo + para "añadir/registrarse" -->
           <line x1="18" y1="6" x2="18" y2="12"></line>
           <line x1="21" y1="9" x2="15" y2="9"></line>
         </svg>
