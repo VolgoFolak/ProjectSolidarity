@@ -317,23 +317,30 @@ card.innerHTML = `
               ${cause.description || 'No hay descripción detallada disponible para esta causa.'}
             </p>
           </div>
-          <div class="content-section" style="margin-bottom:2.2rem;">
-            <h3 class="content-title" style="font-size:1.2rem; font-weight:600; color:var(--primary); margin-bottom:0.9rem; display:flex; align-items:center; gap:0.7rem;">
-              <i class="fas fa-hand-holding-heart"></i> Cómo Donar
+          <div class="content-section" style="margin-bottom:2rem;">
+            <h3 class="content-title" style="font-size:1.15rem; font-weight:600; color:var(--primary); margin-bottom:0.7rem; display:flex; align-items:center; gap:0.7rem;">
+              <i class="fas fa-donate"></i> Cómo Donar
             </h3>
-            <p class="content-text" style="line-height:1.7; color:#4b5563; font-size:1rem;">
-              ${cause.how_to_donate || ''}
-            </p>
-            ${cause.mobile_wallet ? `
-              <div class="meta-item" style="margin-top:0.7rem;">
-                <i class="fas fa-mobile-alt"></i> <strong>Mobile Wallet:</strong> ${cause.mobile_wallet}
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;">
+              <div>
+                <p style="font-weight:600;color:var(--primary);margin-bottom:0.3rem;">Instrucciones</p>
+                <p style="color:#6b7280;">
+                  ${cause.how_to_donate ? cause.how_to_donate : '—'}
+                </p>
               </div>
-            ` : ''}
-            ${cause.bank_account ? `
-              <div class="meta-item" style="margin-top:0.7rem;">
-                <i class="fas fa-university"></i> <strong>Cuenta Bancaria / IBAN:</strong> ${cause.bank_account}
+              <div>
+                <p style="font-weight:600;color:var(--primary);margin-bottom:0.3rem;">Mobile Wallet</p>
+                <p style="color:#6b7280;">
+                  ${cause.mobile_wallet ? cause.mobile_wallet : '—'}
+                </p>
               </div>
-            ` : ''}
+              <div>
+                <p style="font-weight:600;color:var(--primary);margin-bottom:0.3rem;">Cuenta Bancaria / IBAN</p>
+                <p style="color:#6b7280;">
+                  ${cause.bank_account ? cause.bank_account : '—'}
+                </p>
+              </div>
+            </div>
           </div>
           <div class="content-section">
             <h3 class="content-title"><i class="fas fa-users"></i> Donantes</h3>

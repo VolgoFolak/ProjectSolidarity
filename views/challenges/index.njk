@@ -484,6 +484,14 @@ html, body, {
             Marcar como urgente
           </label>
         </div>
+        <div class="form-group">
+          <label for="verification_sources">Fuentes de verificación <span style="color:#888;font-size:0.95em;">(opcional, explica cómo se puede comprobar que el reto se ha realizado)</span></label>
+          <textarea id="verification_sources" name="verification_sources" placeholder="Ej: Enviar foto, vídeo, testimonio, enlace, etc."></textarea>
+        </div>
+        <div class="form-group">
+          <label for="reward">Recompensa <span style="color:#888;font-size:0.95em;">(opcional, ofrece una recompensa a quienes completen el reto)</span></label>
+          <input type="text" id="reward" name="reward" placeholder="Ej: Medalla, puntos extra, regalo, etc.">
+        </div>
         <input type="hidden" id="lat" name="lat">
         <input type="hidden" id="lng" name="lng">
         <button type="submit" class="btn btn-primary" style="margin-top:1rem;">
@@ -682,6 +690,8 @@ document.addEventListener('DOMContentLoaded', async function() {
     const is_urgent = document.getElementById('is_urgent').checked;
     const photoFile = document.getElementById('photo').files[0];
     let photo_url = null;
+    const verification_sources = document.getElementById('verification_sources').value.trim() || null;
+    const reward = document.getElementById('reward').value.trim() || null;
 
     if (challenge_type === 'duel' && !opponent_id) {
       alert('Debes seleccionar un oponente para un reto 1 VS 1 o cambiar a reto abierto');
@@ -715,7 +725,26 @@ document.addEventListener('DOMContentLoaded', async function() {
 
     const { data: newChallenge, error: challengeError } = await supabase
       .from('challenges')
-      .insert([{ title, summary, description, challenge_type, creator_id: user.id, opponent_id, cause_id, city, country, points, deadline, is_urgent, photo_url, status: opponent_id ? 'pending' : 'active', lat: lat ? parseFloat(lat) : null, lng: lng ? parseFloat(lng) : null }])
+      .insert([{
+        title,
+        summary,
+        description,
+        challenge_type,
+        creator_id: user.id,
+        opponent_id,
+        cause_id,
+        city,
+        country,
+        points,
+        deadline,
+        is_urgent,
+        photo_url,
+        status: opponent_id ? 'pending' : 'active',
+        lat: lat ? parseFloat(lat) : null,
+        lng: lng ? parseFloat(lng) : null,
+        verification_sources, // <-- nuevo campo
+        reward                // <-- nuevo campo
+      }])
       .select()
       .single();
 
