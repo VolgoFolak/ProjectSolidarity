@@ -1174,7 +1174,8 @@
   .testimonials-section,
   .ranking-section,
   .cta-section {
-     width: 100vw !important;
+     width: 100% !important;
+     box-sizing: border-box;
   }
 }
 
@@ -1955,6 +1956,7 @@
       };
 
       return `
+       
         <div class="preview-card">
           <div class="preview-image" style="background-image: url('${getImageUrl()}')"></div>
           <div class="preview-content">
