@@ -731,17 +731,20 @@
     }
 
     .ranking-grid {
-      display: flex;
-      justify-content: center;
-      align-items: flex-start;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 3rem;
       max-width: 1200px;
       margin: 0 auto;
+      align-items: flex-start;
     }
 
     .top-members {
+      background: white;
+      border-radius: 16px;
+      padding: 2rem 2rem 2rem 2rem;
+      box-shadow: 0 5px 20px rgba(0,0,0,0.05);
       width: 100%;
-      max-width: 600px;
-      margin: 0 auto;
     }
 
     .member-item {
