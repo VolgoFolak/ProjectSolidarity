@@ -149,61 +149,7 @@
     .register-form .slogan-section input {
       font-style: italic;
     }
-    .social-register {
-      display: flex;
-      flex-direction: column;
-      gap: 0.7rem;
-      margin-bottom: 2rem;
-      margin-top: 0.5rem;
-    }
-    .social-btn {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 0.7rem;
-      border-radius: 8px;
-      border: 1.5px solid #e5e7eb;
-      background: #f8fafc;
-      color: #222;
-      font-weight: 600;
-      font-size: 1rem;
-      padding: 0.7rem 0;
-      cursor: pointer;
-      transition: background 0.18s, border 0.18s;
-      text-decoration: none;
-    }
-    .social-btn:hover {
-      background: var(--primary-light, #e6f0fa);
-      border: 1.5px solid var(--primary);
-      color: var(--primary);
-    }
-    .social-btn img {
-      width: 22px;
-      height: 22px;
-      margin-right: 0.7rem;
-      border-radius: 4px;
-      background: #fff;
-      object-fit: contain;
-      box-shadow: 0 1px 3px rgba(0,0,0,0.04);
-    }
-    .social-divider {
-      text-align: center;
-      color: #b0b0b0;
-      margin: 1.5rem 0 1.2rem 0;
-      font-size: 1rem;
-      position: relative;
-    }
-    .social-divider:before,
-    .social-divider:after {
-      content: "";
-      display: inline-block;
-      width: 35%;
-      height: 1px;
-      background: #e5e7eb;
-      vertical-align: middle;
-      margin: 0 0.7rem;
-    }
-    .register-form .mini-icon {
+    .mini-icon {
       width: 20px;
       height: 20px;
       margin-right: 7px;
@@ -228,20 +174,6 @@
       <i class="fas fa-hands-helping" style="font-size:2rem;color:var(--accent,#2dd4bf);"></i>
     </span>
     <h1>Únete a Solidarity</h1>
-  </div>
-  <div class="social-register">
-    <a href="/auth/google" class="social-btn gmail">
-      <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/google/google-original.svg" alt="Google logo">
-      Registrarse con Gmail
-    </a>
-    <a href="/auth/facebook" class="social-btn facebook">
-      <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/facebook/facebook-original.svg" alt="Facebook logo">
-      Registrarse con Facebook
-    </a>
-    <a href="/auth/twitter" class="social-btn twitter">
-      <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/twitter/twitter-original.svg" alt="Twitter logo">
-      Registrarse con Twitter
-    </a>
   </div>
   <form class="register-form" id="registerForm" enctype="multipart/form-data" autocomplete="off">
     <div class="form-desc">
@@ -273,9 +205,44 @@
     <label for="country">País</label>
     <select id="country" name="country" required>
       <option value="">Selecciona tu país</option>
+      <!-- Europa -->
       <option value="España">España</option>
+      <option value="Portugal">Portugal</option>
+      <option value="Francia">Francia</option>
+      <option value="Italia">Italia</option>
+      <option value="Alemania">Alemania</option>
+      <option value="Reino Unido">Reino Unido</option>
+      <option value="Irlanda">Irlanda</option>
+      <option value="Países Bajos">Países Bajos</option>
+      <option value="Bélgica">Bélgica</option>
+      <option value="Suiza">Suiza</option>
+      <option value="Austria">Austria</option>
+      <option value="Suecia">Suecia</option>
+      <option value="Noruega">Noruega</option>
+      <option value="Dinamarca">Dinamarca</option>
+      <option value="Finlandia">Finlandia</option>
+      <option value="Polonia">Polonia</option>
+      <option value="República Checa">República Checa</option>
+      <option value="Hungría">Hungría</option>
+      <option value="Grecia">Grecia</option>
+      <option value="Rumanía">Rumanía</option>
+      <option value="Bulgaria">Bulgaria</option>
+      <option value="Croacia">Croacia</option>
+      <option value="Serbia">Serbia</option>
+      <option value="Eslovaquia">Eslovaquia</option>
+      <option value="Eslovenia">Eslovenia</option>
+      <option value="Estonia">Estonia</option>
+      <option value="Letonia">Letonia</option>
+      <option value="Lituania">Lituania</option>
+      <option value="Ucrania">Ucrania</option>
+      <option value="Rusia">Rusia</option>
+      <option value="Turquía">Turquía</option>
+      <!-- América -->
+      <option value="Estados Unidos">Estados Unidos</option>
+      <option value="Canadá">Canadá</option>
       <option value="México">México</option>
       <option value="Argentina">Argentina</option>
+      <option value="Brasil">Brasil</option>
       <option value="Colombia">Colombia</option>
       <option value="Chile">Chile</option>
       <option value="Perú">Perú</option>
@@ -285,6 +252,44 @@
       <option value="Ecuador">Ecuador</option>
       <option value="Costa Rica">Costa Rica</option>
       <option value="Panamá">Panamá</option>
+      <option value="Guatemala">Guatemala</option>
+      <option value="El Salvador">El Salvador</option>
+      <option value="Honduras">Honduras</option>
+      <option value="Nicaragua">Nicaragua</option>
+      <option value="Paraguay">Paraguay</option>
+      <option value="Puerto Rico">Puerto Rico</option>
+      <option value="Cuba">Cuba</option>
+      <option value="República Dominicana">República Dominicana</option>
+      <option value="Jamaica">Jamaica</option>
+      <option value="Trinidad y Tobago">Trinidad y Tobago</option>
+      <!-- Asia principales -->
+      <option value="China">China</option>
+      <option value="Japón">Japón</option>
+      <option value="India">India</option>
+      <option value="Corea del Sur">Corea del Sur</option>
+      <option value="Indonesia">Indonesia</option>
+      <option value="Filipinas">Filipinas</option>
+      <option value="Tailandia">Tailandia</option>
+      <option value="Vietnam">Vietnam</option>
+      <option value="Malasia">Malasia</option>
+      <option value="Singapur">Singapur</option>
+      <option value="Israel">Israel</option>
+      <option value="Arabia Saudita">Arabia Saudita</option>
+      <option value="Emiratos Árabes Unidos">Emiratos Árabes Unidos</option>
+      <option value="Qatar">Qatar</option>
+      <option value="Kazajistán">Kazajistán</option>
+      <option value="Pakistán">Pakistán</option>
+      <option value="Bangladesh">Bangladesh</option>
+      <option value="Irán">Irán</option>
+      <option value="Turquía">Turquía</option>
+      <!-- Otros -->
+      <option value="Australia">Australia</option>
+      <option value="Nueva Zelanda">Nueva Zelanda</option>
+      <option value="Sudáfrica">Sudáfrica</option>
+      <option value="Egipto">Egipto</option>
+      <option value="Marruecos">Marruecos</option>
+      <option value="Nigeria">Nigeria</option>
+      <option value="Kenia">Kenia</option>
       <option value="Otro">Otro</option>
     </select>
 
