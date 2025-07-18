@@ -251,6 +251,9 @@ app.get('/contact', (req, res) => {
 app.get('/docs/about', (req, res) => {
   res.render('docs/about', { lang: req.lang, user: req.session.user });
 });
+app.get('/docs/help', (req, res) => {
+  res.render('docs/help', { lang: req.lang, user: req.session.user });
+});
 
 // --- API para mensajes ---
 app.get('/api/conversations', async (req, res) => {

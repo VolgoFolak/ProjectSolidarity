@@ -76,70 +76,6 @@
         width: 100%;
         font-size: 1.1rem;
     }
-    .login-divider {
-        width: 100%;
-        text-align: center;
-        margin: 1.5rem 0 1.2rem 0;
-        color: #b0b0b0;
-        font-size: 0.98rem;
-        position: relative;
-    }
-    .login-divider:before,
-    .login-divider:after {
-        content: "";
-        display: inline-block;
-        width: 35%;
-        height: 1px;
-        background: #e2e8f0;
-        vertical-align: middle;
-        margin: 0 0.5rem;
-    }
-    .social-login {
-        display: flex;
-        flex-direction: column;
-        gap: 0.7rem;
-        width: 100%;
-    }
-    .social-btn {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: 0.7rem;
-        border: none;
-        border-radius: 50px;
-        padding: 0.7rem 1rem;
-        font-size: 1rem;
-        font-weight: 600;
-        cursor: pointer;
-        transition: background 0.2s, color 0.2s;
-    }
-    .social-btn.google {
-        background: #fff;
-        color: #ea4335;
-        border: 1.5px solid #ea4335;
-    }
-    .social-btn.google:hover {
-        background: #ea4335;
-        color: #fff;
-    }
-    .social-btn.facebook {
-        background: #fff;
-        color: #1877f3;
-        border: 1.5px solid #1877f3;
-    }
-    .social-btn.facebook:hover {
-        background: #1877f3;
-        color: #fff;
-    }
-    .social-btn.twitter {
-        background: #fff;
-        color: #1da1f2;
-        border: 1.5px solid #1da1f2;
-    }
-    .social-btn.twitter:hover {
-        background: #1da1f2;
-        color: #fff;
-    }
     .login-footer {
         margin-top: 1.5rem;
         text-align: center;
@@ -193,18 +129,6 @@
             <i class="fas fa-sign-in-alt"></i> Iniciar Sesión
         </button>
     </form>
-    <div class="login-divider">o inicia sesión con</div>
-    <div class="social-login">
-        <button type="button" class="social-btn google">
-            <i class="fab fa-google"></i> Google
-        </button>
-        <button type="button" class="social-btn facebook">
-            <i class="fab fa-facebook-f"></i> Facebook
-        </button>
-        <button type="button" class="social-btn twitter">
-            <i class="fab fa-twitter"></i> Twitter
-        </button>
-    </div>
     <div class="login-footer">
         ¿No tienes cuenta?
         <a href="/register">Regístrate</a>
