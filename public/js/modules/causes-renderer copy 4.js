@@ -1,6 +1,10 @@
 /**
  * Módulo para renderizar tarjetas y modales de causas
+<<<<<<< HEAD
  * Template basado EXACTAMENTE en views/causes/index.njk
+=======
+ * Template basado EXACTO en views/causes/index.njk
+>>>>>>> 59461df1b33d25c65c9221b39256b8f9c62636c9
  */
 
 class CausesRenderer {

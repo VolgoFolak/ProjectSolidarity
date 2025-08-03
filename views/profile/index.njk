@@ -741,6 +741,7 @@
       align-items: center;
       justify-content: center;
       gap: 0.5rem;
+<<<<<<< HEAD
       padding: 0.6rem 1.2rem;
       border-radius: 8px;
       font-size: 0.9rem;
@@ -750,6 +751,18 @@
       cursor: pointer;
       transition: all 0.2s ease;
       min-height: 40px;
+=======
+      padding: 0.7rem 1.3rem;
+      border-radius: 50px;
+      font-size: 1rem;
+      font-weight: 600;
+      border: none;
+      cursor: pointer;
+      transition: all 0.2s;
+      min-height: 44px;
+      background: #4a6fa5;
+      color: #fff;
+>>>>>>> 59461df1b33d25c65c9221b39256b8f9c62636c9
     }
 
     .btn-primary {
@@ -759,13 +772,17 @@
 
     .btn-primary:hover {
       background: #166088;
+<<<<<<< HEAD
       transform: translateY(-2px);
       box-shadow: 0 4px 12px rgba(74, 111, 165, 0.3);
+=======
+>>>>>>> 59461df1b33d25c65c9221b39256b8f9c62636c9
     }
 
     .btn-outline {
       background: transparent;
       color: #4a6fa5;
+<<<<<<< HEAD
       border: 1px solid #4a6fa5;
     }
 
@@ -779,6 +796,14 @@
       opacity: 0.5;
       cursor: not-allowed;
       transform: none;
+=======
+      border: 2px solid #4a6fa5;
+    }
+
+    .btn-outline:hover {
+      background: #4a6fa5;
+      color: #fff;
+>>>>>>> 59461df1b33d25c65c9221b39256b8f9c62636c9
     }
 
     /* Botones específicos por tipo */
@@ -1306,6 +1331,7 @@
       justify-content: center;
     }
 
+<<<<<<< HEAD
     /* Grid de comunidades en 3 columnas igual que actividades */
     .teams-grid-classic {
       display: grid;
@@ -1336,6 +1362,52 @@
       .teams-grid-classic {
         grid-template-columns: 1fr;
         gap: 1rem;
+=======
+    /* Botones pill y responsive */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      padding: 0.7rem 1.3rem;
+      border-radius: 50px;
+      font-size: 1rem;
+      font-weight: 600;
+      border: none;
+      cursor: pointer;
+      transition: all 0.2s;
+      min-height: 44px;
+      background: #4a6fa5;
+      color: #fff;
+    }
+    .btn-primary { background: #4a6fa5; color: #fff; }
+    .btn-primary:hover { background: #166088; }
+    .btn-outline {
+      background: transparent;
+      color: #4a6fa5;
+      border: 2px solid #4a6fa5;
+    }
+    .btn-outline:hover { background: #4a6fa5; color: #fff; }
+    @media (max-width: 600px) {
+      .btn, .btn-primary, .btn-outline {
+        width: 100%;
+        font-size: 1rem;
+        min-height: 44px;
+        border-radius: 50px;
+        margin-bottom: 0.5rem;
+      }
+      .activities-tabs, .tabs {
+        flex-wrap: nowrap;
+        overflow-x: auto;
+        gap: 0.3rem;
+        padding-bottom: 0.3rem;
+      }
+      .activity-tab, .tab {
+        min-width: 110px;
+        font-size: 0.97rem;
+        border-radius: 999px;
+        padding: 0.6rem 1rem;
+>>>>>>> 59461df1b33d25c65c9221b39256b8f9c62636c9
       }
     }
   </style>

@@ -1689,6 +1689,7 @@ to { opacity: 0; transform: translateX(-50%) translateY(-20px); }
 {% block scripts %}
 {{ super() }}
 
+<<<<<<< HEAD
 <script>
 // Función global para mostrar notificaciones
 function showNotification(message, type = 'info') {
@@ -1734,6 +1735,8 @@ const supabaseClient = window.supabase || createClient(
 window.supabase = supabaseClient;
 </script>
 
+=======
+>>>>>>> 59461df1b33d25c65c9221b39256b8f9c62636c9
 <script src="https://cdn.jsdelivr.net/npm/choices.js/public/assets/scripts/choices.min.js"></script>
 <script src="/js/compartir.js"></script>
 <script src="/js/modules/causes-renderer.js"></script>
@@ -1760,7 +1763,11 @@ document.addEventListener('DOMContentLoaded', async function() {
   // Botón crear causa
   document.getElementById('create-cause-btn').onclick = async function(e) {
     e.preventDefault();
+<<<<<<< HEAD
     const { data: { session } } = await supabase.auth.getSession(); // ✅ USAR supabase
+=======
+    const { data: { session } } = await supabase.auth.getSession();
+>>>>>>> 59461df1b33d25c65c9221b39256b8f9c62636c9
     if (!session?.user) {
       document.getElementById('loginModal').classList.add('active');
       document.body.style.overflow = 'hidden';
@@ -1770,9 +1777,27 @@ document.addEventListener('DOMContentLoaded', async function() {
     document.body.style.overflow = 'hidden';
   };
 
+<<<<<<< HEAD
   // Stripe option
   document.getElementById('stripeOption').onclick = async function() {
     const { data: { session } } = await supabase.auth.getSession(); // ✅ USAR supabase
+=======
+  // Cierre modal método donación
+  document.getElementById('closeDonationMethodModal').onclick = function() {
+    document.getElementById('donationMethodModal').classList.remove('active');
+    document.body.style.overflow = '';
+  };
+  document.getElementById('donationMethodModal').onclick = function(e) {
+    if (e.target === this) {
+      this.classList.remove('active');
+      document.body.style.overflow = '';
+    }
+  };
+
+  // Stripe option
+  document.getElementById('stripeOption').onclick = async function() {
+    const { data: { session } } = await supabase.auth.getSession();
+>>>>>>> 59461df1b33d25c65c9221b39256b8f9c62636c9
     if (!session?.user) return;
     // Verificar estado Stripe
     const response = await fetch(`/stripe-account-status/${session.user.id}`);
@@ -1793,6 +1818,7 @@ document.addEventListener('DOMContentLoaded', async function() {
     document.body.style.overflow = 'hidden';
   };
 
+<<<<<<< HEAD
   // Manejo del modal éxito Stripe (SOLO después del onboarding)
   const urlParams = new URLSearchParams(window.location.search);
   if (urlParams.get('stripe') === 'success') {
@@ -1863,10 +1889,26 @@ document.addEventListener('DOMContentLoaded', async function() {
       document.getElementById('stripeSuccessModal').classList.remove('active');
       document.body.style.overflow = '';
       cleanUrlParams();
+=======
+  // Modal éxito Stripe tras onboarding
+  const urlParams = new URLSearchParams(window.location.search);
+  if (urlParams.get('stripe') === 'success') {
+    document.getElementById('stripeSuccessModal').classList.add('active');
+    document.body.style.overflow = 'hidden';
+    document.getElementById('createCauseAfterStripe').onclick = function() {
+      document.getElementById('stripeSuccessModal').classList.remove('active');
+      document.getElementById('createCauseModal').classList.add('active');
+      document.body.style.overflow = 'hidden';
+    };
+    document.getElementById('closeStripeSuccess').onclick = function() {
+      document.getElementById('stripeSuccessModal').classList.remove('active');
+      document.body.style.overflow = '';
+>>>>>>> 59461df1b33d25c65c9221b39256b8f9c62636c9
     };
     document.getElementById('closeStripeSuccessModal').onclick = function() {
       document.getElementById('stripeSuccessModal').classList.remove('active');
       document.body.style.overflow = '';
+<<<<<<< HEAD
       cleanUrlParams();
     };
     document.getElementById('stripeSuccessModal').onclick = function(e) {
@@ -1903,6 +1945,136 @@ document.addEventListener('DOMContentLoaded', async function() {
     showNotification(errorMessages[stripeError] || 'Error desconocido', 'error');
     cleanUrlParams();
   }
+=======
+    };
+    document.getElementById('stripeSuccessModal').onclick = function(e) {
+      if (e.target === this) {
+
+        document.getElementById('stripeSuccessModal').classList.remove('active');
+        document.body.style.overflow = '';
+      }
+    };
+    // Limpiar parámetro de la URL
+    const url = new URL(window.location);
+    url.searchParams.delete('stripe');
+    window.history.replaceState({}, '', url);
+  }
+
+  // Modal Stripe Onboarding
+  window.showStripeOnboardingModal = function(user) {
+    const modal = document.createElement('div');
+    modal.className = 'modal-bg active';
+    modal.innerHTML = `
+      <div class="modal-content">
+        <button class="close-modal" id="closeStripeOnboardingModal">&times;</button>
+        <h3 style="color: var(--primary); text-align: center; margin-bottom: 1.5rem;">
+          <i class="fab fa-stripe"></i> Configura tu cuenta Stripe
+        </h3>
+        <p style="text-align: center; margin-bottom: 1.5rem;">
+          Para recibir donaciones directamente en tu cuenta bancaria, necesitamos conectar con Stripe.
+          El proceso es rápido, seguro y solo toma 2 minutos.
+        </p>
+        <div style="background: #f8fafc; padding: 1rem; border-radius: 8px; margin-bottom: 1.5rem;">
+          <div style="display: flex; align-items: center; gap: 0.8rem; margin-bottom: 0.8rem;">
+            <i class="fas fa-check-circle" style="color: var(--accent);"></i>
+            <span>Recibirás pagos directamente en tu cuenta bancaria</span>
+          </div>
+          <div style="display: flex; align-items: center; gap: 0.8rem; margin-bottom: 0.8rem;">
+            <i class="fas fa-check-circle" style="color: var(--accent);"></i>
+            <span>Solo 2% de comisión por transacción</span>
+          </div>
+          <div style="display: flex; align-items: center; gap: 0.8rem;">
+            <i class="fas fa-check-circle" style="color: var(--accent);"></i>
+            <span>Proceso seguro y verificado</span>
+          </div>
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 0.8rem;">
+          <button id="startStripeOnboarding" class="btn btn-primary">
+            <i class="fab fa-stripe"></i> Configurar Stripe
+          </button>
+          <button id="cancelStripeOnboarding" class="btn btn-outline">
+            Configurar más tarde
+          </button>
+        </div>
+      </div>
+    `;
+    document.body.appendChild(modal);
+
+    document.getElementById('startStripeOnboarding').onclick = async () => {
+      try {
+        // Obtén el token CSRF del backend (puede estar en una variable global, cookie, o como parte del HTML)
+        const csrfToken = document.querySelector('meta[name="csrf-token"]')?.content;
+
+        // Crear cuenta Stripe y obtener enlace de onboarding
+        const response = await fetch('/api/stripe/create-account', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'CSRF-Token': csrfToken // Aquí va el token
+          },
+          body: JSON.stringify({ userId: user.id, email: user.email })
+        });
+        const { accountId } = await response.json();
+        const linkResponse = await fetch('/api/stripe/create-account-link', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            accountId,
+            returnUrl: `${window.location.origin}/causes?stripe=success`,
+            refreshUrl: `${window.location.origin}/causes?stripe=error`
+          })
+        });
+        const { url } = await linkResponse.json();
+        window.location.href = url;
+      } catch (error) {
+        showNotification(`Error: ${error.message}`, 'error');
+        modal.remove();
+      }
+    };
+    document.getElementById('cancelStripeOnboarding').onclick = () => {
+      modal.remove();
+      document.getElementById('donationMethodModal').classList.remove('active');
+      document.getElementById('createCauseModal').classList.add('active');
+      document.body.style.overflow = 'hidden';
+    };
+    document.getElementById('closeStripeOnboardingModal').onclick = () => {
+      modal.remove();
+    };
+    modal.onclick = function(e) {
+      if (e.target === this) modal.remove();
+    };
+  };
+
+  // Notificación global
+  window.showNotification = function(message, type = 'info', duration = 4000) {
+    const existing = document.querySelector('.global-notification');
+    if (existing) existing.remove();
+    const icons = {
+      error: 'times-circle',
+      warning: 'exclamation-triangle',
+      success: 'check-circle',
+      info: 'info-circle'
+    };
+    const notification = document.createElement('div');
+    notification.className = `global-notification ${type}`;
+    notification.innerHTML = `
+      <div class="notification-content">
+        <i class="fas fa-${icons[type] || 'info-circle'}"></i>
+        <span>${message}</span>
+      </div>
+    `;
+    document.body.appendChild(notification);
+    setTimeout(() => {
+      notification.style.opacity = '1';
+      notification.style.transform = 'translateY(0)';
+    }, 10);
+    setTimeout(() => {
+      notification.style.opacity = '0';
+      notification.style.transform = 'translateY(-20px)';
+      setTimeout(() => notification.remove(), 300);
+    }, duration);
+  };
+>>>>>>> 59461df1b33d25c65c9221b39256b8f9c62636c9
 });
 </script>
 
@@ -1918,7 +2090,10 @@ async function loadCauses(page = 1, filter = "all", search = "") {
   let query = supabase
     .from('causes')
     .select('*', { count: 'exact' })
+<<<<<<< HEAD
     .eq('status', 'active') // ✅ AGREGAR FILTRO ACTIVAS
+=======
+>>>>>>> 59461df1b33d25c65c9221b39256b8f9c62636c9
     .order('created_at', { ascending: false })
     .range((page - 1) * pageSize, page * pageSize - 1);
 
@@ -1973,6 +2148,7 @@ document.getElementById('search-input').addEventListener('input', function(e) {
 // Inicializar al cargar
 document.addEventListener('DOMContentLoaded', function() {
   loadCauses();
+<<<<<<< HEAD
 
   // Recuperar datos de causa después del onboarding de Stripe
   const urlParams = new URLSearchParams(window.location.search);
@@ -1985,6 +2161,8 @@ document.addEventListener('DOMContentLoaded', function() {
       window.location.reload();
     }, 3000);
   }
+=======
+>>>>>>> 59461df1b33d25c65c9221b39256b8f9c62636c9
 });
 </script>
 <script>
@@ -2023,11 +2201,19 @@ fetch('/me')
   });
 </script>
 <script>
+<<<<<<< HEAD
 // Manejo del formulario de creación
 document.getElementById('causeForm').addEventListener('submit', async function(e) {
   e.preventDefault();
   
   const { data: { session } } = await supabase.auth.getSession(); // ✅ USAR supabase
+=======
+// Manejo del formulario de creación de causa
+document.getElementById('causeForm').addEventListener('submit', async function(e) {
+  e.preventDefault();
+  
+  const { data: { session } } = await supabase.auth.getSession();
+>>>>>>> 59461df1b33d25c65c9221b39256b8f9c62636c9
   if (!session?.user) {
     showNotification('Debes iniciar sesión para continuar', 'error');
     return;
@@ -2049,9 +2235,15 @@ document.getElementById('causeForm').addEventListener('submit', async function(e
     how_to_donate: formData.get('how_to_donate'),
     mobile_wallet: formData.get('mobile_wallet'),
     bank_account: formData.get('bank_account'),
+<<<<<<< HEAD
     category: 'community',
     urgent: false,
     photo_url: null
+=======
+    category: 'community', // Valor por defecto
+    urgent: false,
+    photo_url: null // Se manejará la imagen por separado
+>>>>>>> 59461df1b33d25c65c9221b39256b8f9c62636c9
   };
 
   // Validación básica
@@ -2061,8 +2253,11 @@ document.getElementById('causeForm').addEventListener('submit', async function(e
   }
 
   try {
+<<<<<<< HEAD
     showNotification('Creando causa...', 'info');
 
+=======
+>>>>>>> 59461df1b33d25c65c9221b39256b8f9c62636c9
     // Subir imagen si existe
     const photoFile = formData.get('photo');
     if (photoFile && photoFile.size > 0) {
@@ -2081,7 +2276,29 @@ document.getElementById('causeForm').addEventListener('submit', async function(e
       }
     }
 
+<<<<<<< HEAD
     // Crear causa usando la API mejorada
+=======
+    // Verificar si el usuario seleccionó Stripe como método de pago
+    const selectedStripeOption = document.querySelector('#stripeOption').classList.contains('selected');
+    
+    if (selectedStripeOption) {
+      // Verificar estado de Stripe
+      const stripeResponse = await fetch(`/stripe-account-status/${session.user.id}`, {
+        credentials: 'include'
+      });
+      const stripeStatus = await stripeResponse.json();
+      
+      if (!stripeStatus.hasAccount || stripeStatus.status !== 'active') {
+        // Guardar datos y redirigir a onboarding
+        document.getElementById('createCauseModal').classList.remove('active');
+        window.startStripeOnboarding(causeData);
+        return;
+      }
+    }
+
+    // Crear causa directamente
+>>>>>>> 59461df1b33d25c65c9221b39256b8f9c62636c9
     const createResponse = await fetch('/api/causes/create-final', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -2094,6 +2311,7 @@ document.getElementById('causeForm').addEventListener('submit', async function(e
       throw new Error(errorData.error || 'Error creando causa');
     }
 
+<<<<<<< HEAD
     const { cause, stripeEnabled } = await createResponse.json();
     
     // Cerrar modal de creación
@@ -2111,6 +2329,19 @@ document.getElementById('causeForm').addEventListener('submit', async function(e
         window.location.reload();
       }, 2000);
     }
+=======
+    const { cause } = await createResponse.json();
+    
+    // Mostrar éxito
+    document.getElementById('createCauseModal').classList.remove('active');
+    document.getElementById('afterCreate').style.display = 'block';
+    showNotification('¡Causa creada exitosamente!', 'success');
+    
+    // Recargar causas
+    setTimeout(() => {
+      window.location.reload();
+    }, 2000);
+>>>>>>> 59461df1b33d25c65c9221b39256b8f9c62636c9
 
   } catch (error) {
     console.error('Error creando causa:', error);
@@ -2151,6 +2382,7 @@ document.querySelectorAll('.donation-method-option').forEach(option => {
     this.classList.add('selected');
   });
 });
+<<<<<<< HEAD
 </script>     
 <script>
 // Reemplazar la función showStripeOnboardingModal:
@@ -2247,3 +2479,6 @@ window.showStripeOnboardingModal = function(user) {
 };
 </script>
 {% endblock %}
+=======
+</script>
+>>>>>>> 59461df1b33d25c65c9221b39256b8f9c62636c9

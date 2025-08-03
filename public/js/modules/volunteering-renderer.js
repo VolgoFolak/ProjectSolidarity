@@ -303,7 +303,11 @@ class VolunteeringRenderer {
     // Llenar contenido del modal
     modalBody.innerHTML = `
       <h1 style="font-size:2rem; font-weight:800; color:var(--primary); margin-bottom:2rem; text-align:left;">${volunteering.title}</h1>
+<<<<<<< HEAD
       <div style="display:flex; gap:2rem; margin-bottom:2rem; flex-wrap:wrap;">
+=======
+      <div class="volunteering-modal-main" style="display:flex; gap:2rem; margin-bottom:2rem; flex-wrap:wrap;">
+>>>>>>> 59461df1b33d25c65c9221b39256b8f9c62636c9
         <div style="flex:1; min-width:320px; height:300px; border-radius:12px; overflow:hidden; position:relative;">
           <img src="${volunteering.photo_url || '/img/volunteering-default.jpg'}" 
                alt="Imagen del voluntariado ${volunteering.title}"

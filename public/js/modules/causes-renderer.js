@@ -1730,6 +1730,7 @@ document.addEventListener('DOMContentLoaded', checkStripeCallback);
 // Función mejorada para manejar el onboarding de Stripe
 window.startStripeOnboarding = async function(causeData = null) {
   try {
+<<<<<<< HEAD
     window.showLoader?.("Preparando la configuración de pagos...");
     const response = await fetch('/api/stripe/create-account', {
       method: 'POST',
@@ -1738,10 +1739,42 @@ window.startStripeOnboarding = async function(causeData = null) {
       body: JSON.stringify({
         causeData,
         email: window.currentUser?.email
+=======
+    const { data: { session } } = await supabase.auth.getSession();
+    if (!session?.user) {
+      showNotification('Debes iniciar sesión para continuar', 'error');
+      return;
+    }
+
+    console.log('🚀 Iniciando onboarding de Stripe...');
+    
+    // Mostrar loading
+    const loadingOverlay = document.createElement('div');
+    loadingOverlay.innerHTML = `
+      <div style="position:fixed;top:0;left:0;width:100vw;height:100vh;background:rgba(0,0,0,0.7);z-index:10000;display:flex;align-items:center;justify-content:center;">
+        <div style="background:white;padding:2rem;border-radius:12px;text-align:center;">
+          <i class="fas fa-spinner fa-spin" style="font-size:2rem;color:var(--primary);margin-bottom:1rem;"></i>
+          <p>Configurando cuenta Stripe...</p>
+        </div>
+      </div>
+    `;
+    document.body.appendChild(loadingOverlay);
+
+    const response = await fetch('/api/stripe/create-account', {
+      method: 'POST',
+      headers: { 
+        'Content-Type': 'application/json'
+      },
+      credentials: 'include',
+      body: JSON.stringify({
+        email: session.user.email,
+        causeData: causeData
+>>>>>>> 59461df1b33d25c65c9221b39256b8f9c62636c9
       })
     });
 
     if (!response.ok) {
+<<<<<<< HEAD
       throw new Error('No autorizado o error del servidor');
     }
 
@@ -1750,5 +1783,20 @@ window.startStripeOnboarding = async function(causeData = null) {
   } catch (error) {
     window.hideLoader?.();
     window.showErrorModal?.('Error al configurar pagos', error.message);
+=======
+      const errorData = await response.json();
+      loadingOverlay.remove();
+      throw new Error(errorData.error || 'Error creando cuenta Stripe');
+    }
+
+    const { returnUrl } = await response.json();
+    
+    console.log('✅ Redirigiendo a Stripe:', returnUrl);
+    window.location.href = returnUrl;
+
+  } catch (error) {
+    console.error('❌ Error en onboarding:', error);
+    showNotification(`Error: ${error.message}`, 'error');
+>>>>>>> 59461df1b33d25c65c9221b39256b8f9c62636c9
   }
 };

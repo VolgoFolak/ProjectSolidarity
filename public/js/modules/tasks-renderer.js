@@ -316,7 +316,11 @@ const TasksRenderer = {
     // Llenar contenido del modal
     document.getElementById('taskModalBody').innerHTML = `
       <h1 style="font-size:2rem; font-weight:800; color:var(--primary); margin-bottom:2rem; text-align:left !important;">${task.title}</h1>
+<<<<<<< HEAD
       <div style="display:flex; gap:2rem; margin-bottom:2rem;">
+=======
+      <div class="task-modal-main" style="display:flex; gap:2rem; margin-bottom:2rem;">
+>>>>>>> 59461df1b33d25c65c9221b39256b8f9c62636c9
         <div style="flex:1; min-width:320px; height:300px; border-radius:12px; overflow:hidden; position:relative;">
           <img src="${task.photo_url || '/img/task-default.jpg'}" 
                alt="Imagen de la tarea ${task.title}"
