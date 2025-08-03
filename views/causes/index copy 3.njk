@@ -1727,7 +1727,7 @@ function showNotification(message, type = 'info') {
 
 // Conectar con Supabase
 const { createClient } = supabase;
-const supabaseClient = window.supabase || createClient(
+const supabaseClient = createClient(
   'https://cyftasxlrzuynzbrfgkd.supabase.co',
   'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImN5ZnRhc3hscnp1eW56YnJmZ2tkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDgwMzUzMTksImV4cCI6MjA2MzYxMTMxOX0.I56ZqFTfLgdwWlcozMVncGNGBZ4A2_5VpAbHeNmtDhA'
 );

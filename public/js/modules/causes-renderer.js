@@ -10,8 +10,9 @@ class CausesRenderer {
     this.pendingCauseData = null;
   }
 
+   
   /**
-   * Renderiza una grilla de tarjetas de causas (EXACTO al código original)
+   * Renderiza una grilla de tarjetas de causas con botón Donar igual a "Ver más"
    */
   renderGrid(causes, container, options = {}) {
     this.causes = causes;
@@ -29,14 +30,85 @@ class CausesRenderer {
     }
 
     causes.forEach(cause => {
-      const card = this.createCauseCard(cause, options);
+      const progress = cause.goal ? Math.min(Math.round((cause.raised / cause.goal) * 100), 100) : 0;
+      const urgentBadge = cause.urgent ? `<div class="cause-badge urgent"><i class="fas fa-exclamation-circle"></i> Urgente</div>` : "";
+      const pointsBadge = `<div class="cause-badge points"><i class="fas fa-star"></i> +${cause.points || 0} pts</div>`;
+      const location = cause.city && cause.country ? `${cause.city}, ${cause.country}` : "";
+      const isAdmin = ['founder','admin','coordinator'].includes(cause.userRole);
+
+      const card = document.createElement('div');
+card.className = 'cause-card';
+card.innerHTML = `
+  <div class="cause-image">
+    <img src="${cause.photo_url || '/img/causa-default.jpg'}" alt="${cause.title}" 
+         onerror="if (!this._defaulted) { this._defaulted = true; this.src='/img/causa-default.jpg'; }">
+    ${urgentBadge}
+    ${pointsBadge}
+  </div>
+  <div class="cause-content">
+    <h3>${cause.title}</h3>
+    <p>${cause.short_description || ''}</p>
+    <div class="cause-meta">
+      <div class="meta-item"><i class="fas fa-map-marker-alt"></i> ${location}</div>
+      <div class="meta-item"><i class="fas fa-users"></i> ${cause.donors || 0} donantes</div>
+      <div class="beneficiaries-count">
+        <i class="fas fa-heart"></i> Beneficia a ${cause.beneficiaries || 0} personas
+      </div>
+    </div>
+    <div class="cause-progress">
+      <div class="progress-bar">
+        <div class="progress-fill" style="width: ${progress}%"></div>
+      </div>
+      <div class="progress-info">
+        <span>${progress}% completado</span>
+        <span>${cause.raised || 0} € de ${cause.goal || 0} €</span>
+      </div>
+    </div>
+    <div class="cause-actions">
+      ${isAdmin ? `
+        <button class="btn btn-primary view-cause-btn" data-cause-id="${cause.id}" style="flex:1;">
+          Ver más
+        </button>
+        <button class="btn btn-accent admin-activity-btn" data-activity-type="cause" data-activity-id="${cause.id}" style="flex:1;">
+          <i class="fas fa-cog"></i> Administrar
+        </button>
+      ` : `
+        <button class="btn btn-primary view-cause-btn" data-cause-id="${cause.id}" style="flex:1;">
+          <i class="fas fa-eye"></i> Ver más
+        </button>
+        <button class="btn btn-accent donate-btn" data-cause-id="${cause.id}" style="flex:1;">
+          <i class="fas fa-hand-holding-heart"></i> Donar
+        </button>
+      `}
+    </div>
+  </div>
+`;
+
       container.appendChild(card);
     });
 
     // Guardar causas globalmente para compatibilidad
     window.causes = causes;
 
-    this.attachEventListeners(container);
+    // Adjunta eventos: ambos botones abren el modal de detalles
+    container.querySelectorAll('.view-cause-btn, .donate-btn').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.preventDefault();
+        const causeId = btn.getAttribute('data-cause-id');
+        this.showModal(causeId);
+      });
+    });
+
+    container.querySelectorAll('.admin-activity-btn').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.preventDefault();
+        const activityId = btn.getAttribute('data-activity-id');
+        if (typeof window.openAdminModal === 'function') {
+          const cause = window.causes?.find(c => c.id == activityId);
+          if (cause) window.openAdminModal(cause);
+        } 
+      });
+    });
   }
 
   /**
@@ -60,6 +132,36 @@ class CausesRenderer {
       : `<button class="btn btn-outline" disabled>
            ${cause.stripe_enabled ? 'Ya donaste' : 'Donaciones no disponibles'}
          </button>`;
+
+    let actionsHtml = '';
+    if (options?.showAdminButton && cause.userRole && ['founder', 'admin', 'coordinator'].includes(cause.userRole)) {
+      // Solo mostrar "Ver más" y "Administrar"
+      actionsHtml = `
+        <div class="cause-actions">
+          <button class="btn btn-outline view-cause-btn" data-cause-id="${cause.id}">
+            <i class="fas fa-eye"></i> Ver más
+          </button>
+          <button class="btn btn-secondary admin-activity-btn" data-activity-type="cause" data-activity-id="${cause.id}">
+            <i class="fas fa-cog"></i> Administrar
+          </button>
+        </div>
+      `;
+    } else {
+      // Mostrar todos los botones (Donar, Ver más, Compartir, etc.)
+      actionsHtml = `
+        <div class="cause-actions">
+          <button class="btn btn-primary donate-btn" data-cause-id="${cause.id}">
+            <i class="fas fa-donate"></i> Donar
+          </button>
+          <button class="btn btn-outline view-cause-btn" data-cause-id="${cause.id}">
+            <i class="fas fa-eye"></i> Ver más
+          </button>
+          <button class="btn btn-outline share-btn" data-cause-id="${cause.id}">
+            <i class="fas fa-share-alt"></i> Compartir
+          </button>
+        </div>
+      `;
+    }
 
     const card = document.createElement('div');
     card.className = 'cause-card';
@@ -89,14 +191,7 @@ class CausesRenderer {
             <span>${cause.raised || 0} € de ${cause.goal || 0} €</span>
           </div>
         </div>
-        <div class="cause-actions">
-          <button class="btn btn-primary view-cause-btn" data-cause-id="${cause.id}">Ver más</button>
-          ${isAdmin ? `
-            <button class="btn btn-accent admin-activity-btn" data-activity-type="cause" data-activity-id="${cause.id}">
-              <i class="fas fa-cog"></i> Administrar
-            </button>
-          ` : donateBtn}
-        </div>
+        ${actionsHtml}
       </div>
     `;
 
@@ -218,7 +313,34 @@ class CausesRenderer {
             <h3 class="content-title" style="font-size:1.2rem; font-weight:600; color:var(--primary); margin-bottom:0.9rem; display:flex; align-items:center; gap:0.7rem;">
               <i class="fas fa-info-circle"></i> Descripción completa
             </h3>
-            <p class="content-text" style="line-height:1.7; color:#4b5563; font-size:1rem; margin-left:0; margin-right:0; text-align:justify;">${cause.description || 'No hay descripción detallada disponible para esta causa.'}</p>
+            <p class="content-text" style="line-height:1.7; color:#4b5563; font-size:1rem; margin-left:0; margin-right:0; text-align:justify;">
+              ${cause.description || 'No hay descripción detallada disponible para esta causa.'}
+            </p>
+          </div>
+          <div class="content-section" style="margin-bottom:2rem;">
+            <h3 class="content-title" style="font-size:1.15rem; font-weight:600; color:var(--primary); margin-bottom:0.7rem; display:flex; align-items:center; gap:0.7rem;">
+              <i class="fas fa-donate"></i> Cómo Donar
+            </h3>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;">
+              <div>
+                <p style="font-weight:600;color:var(--primary);margin-bottom:0.3rem;">Instrucciones</p>
+                <p style="color:#6b7280;">
+                  ${cause.how_to_donate ? cause.how_to_donate : '—'}
+                </p>
+              </div>
+              <div>
+                <p style="font-weight:600;color:var(--primary);margin-bottom:0.3rem;">Mobile Wallet</p>
+                <p style="color:#6b7280;">
+                  ${cause.mobile_wallet ? cause.mobile_wallet : '—'}
+                </p>
+              </div>
+              <div>
+                <p style="font-weight:600;color:var(--primary);margin-bottom:0.3rem;">Cuenta Bancaria / IBAN</p>
+                <p style="color:#6b7280;">
+                  ${cause.bank_account ? cause.bank_account : '—'}
+                </p>
+              </div>
+            </div>
           </div>
           <div class="content-section">
             <h3 class="content-title"><i class="fas fa-users"></i> Donantes</h3>
@@ -1225,45 +1347,81 @@ window.mostrarCompartir = function(causeId) {
 };
 
 // Funciones auxiliares globales
-window.donateToCause = async function(causeId, amount) {
+window.donateToCause = async function(causeId) {
   try {
-    const response = await fetch('/api/causes/create-donation', {
+    // Verificar sesión
+    const { data: { session } } = await supabase.auth.getSession();
+    if (!session) {
+      return showLoginModal(() => donateToCause(causeId));
+    }
+
+    // Mostrar selector de monto
+    const amount = await showDonationAmountSelector();
+    if (!amount) return;
+
+    // Crear sesión de pago
+    const response = await fetch('/api/donations', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      credentials: 'include', // <-- Añadido
+      credentials: 'include',
       body: JSON.stringify({ causeId, amount })
     });
+
     const { sessionId, error } = await response.json();
     if (error) throw new Error(error);
-    const stripe = Stripe('pk_test_51RXeFrRo1sZSKMfJEVFU03TStZOKzm3Azc6o8rsvAvhmDuwad4lmX1CvtJkszN4pZJtAICHJ5IxoU1PxmNmVqX3s00fAWq9aea');
+
+    // Redirigir a Stripe
+    const stripe = Stripe(window.stripePublicKey);
     await stripe.redirectToCheckout({ sessionId });
-  } catch (err) {
-    showNotification('Error al iniciar donación. Intenta nuevamente.', 'error');
-    console.error('Error Stripe Checkout:', err);
+
+  } catch (error) {
+    showNotification(`Error al donar: ${error.message}`, 'error');
   }
 };
 
-window.joinCause = async function(causeId) {
-  const { data: { session } } = await supabase.auth.getSession();
-  if (!session?.user) {
-    alert('Debes iniciar sesión para participar.');
-    return;
-  }
-  const userId = session.user.id;
-  
-  // ✅ CORREGIR: Usar la tabla causes_members como en el código original
-  await supabase
-    .from('causes_members')
-    .insert([{ cause_id: causeId, user_id: userId, role: 'member', status: 'active' }])
-    .then(() => {
-      alert('¡Ahora eres miembro de esta causa!');
-      window.causesRenderer.closeModal();
-    })
-    .catch(error => {
-      console.error('Error al unirse a la causa:', error);
-      alert('No se pudo unir a la causa. Inténtalo nuevamente más tarde.');
+async function showDonationAmountSelector() {
+  return new Promise((resolve) => {
+    const modal = document.createElement('div');
+    modal.className = 'donation-modal';
+    modal.innerHTML = `
+      <div class="modal-content">
+        <h3>Selecciona el monto</h3>
+        <div class="amount-options">
+          ${[5, 10, 20, 50, 100].map(amount => `
+            <button data-amount="${amount}">${amount}€</button>
+          `).join('')}
+        </div>
+        <input type="number" placeholder="Otra cantidad" min="1">
+        <button class="btn confirm-btn">Continuar</button>
+      </div>
+    `;
+
+    let selectedAmount = 0;
+    
+    modal.querySelectorAll('[data-amount]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        modal.querySelectorAll('.donation-amount').forEach(b => b.classList.remove('selected'));
+        btn.classList.add('selected');
+        selectedAmount = parseInt(btn.dataset.amount);
+        modal.querySelector('input').value = '';
+        updateFeeDisplay(selectedAmount);
+      });
     });
-};
+
+    modal.querySelector('input').addEventListener('input', (e) => {
+      selectedAmount = parseFloat(e.target.value) || 0;
+      modal.querySelectorAll('.donation-amount').forEach(b => b.classList.remove('selected'));
+      updateFeeDisplay(selectedAmount);
+    });
+
+    modal.querySelector('.confirm-btn').addEventListener('click', () => {
+      modal.remove();
+      resolve(selectedAmount);
+    });
+
+    document.body.appendChild(modal);
+  });
+}
 
 // AGREGAR al final del archivo causes-renderer.js, después de la línea window.donateToCoause = window.donateToCause;
 
@@ -1473,28 +1631,27 @@ async function setupStripeAccount() {
     const userId = session.user.id;
     const email = session.user.email;
 
-    // Crear cuenta Stripe
-    const response = await fetch('/create-stripe-account', {
+    // 1. Crear cuenta Stripe
+    const response = await fetch('/api/stripe/create-account', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      credentials: 'include', // <-- Añadido
-      body: JSON.stringify({ userId, email })
-    });
-    const { accountId } = await response.json();
-
-    // Crear enlace de onboarding
-    const linkResponse = await fetch('/create-account-link', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      credentials: 'include', // <-- Añadido
-      body: JSON.stringify({
-        accountId,
-        returnUrl: `${window.location.origin}/causes?stripe=success`,
-        refreshUrl: `${window.location.origin}/causes?stripe=error`
+      credentials: 'include',
+      body: JSON.stringify({ 
+        email,
+        causeData: this.pendingCauseData 
       })
     });
-    const { url } = await linkResponse.json();
-    window.location.href = url;
+    
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.error || 'Error creando cuenta');
+    }
+    
+    const { returnUrl } = await response.json();
+    
+    // Redireccionar directamente (ya no necesitamos crear enlace separado)
+    window.location.href = returnUrl;
+    
   } catch (error) {
     showNotification(`Error configurando Stripe: ${error.message}`, 'error');
   }
@@ -1567,3 +1724,31 @@ function cleanUrlParams() {
 
 // Ejecutar al cargar la página
 document.addEventListener('DOMContentLoaded', checkStripeCallback);
+
+// Añadir al final del archivo causes-renderer.js
+
+// Función mejorada para manejar el onboarding de Stripe
+window.startStripeOnboarding = async function(causeData = null) {
+  try {
+    window.showLoader?.("Preparando la configuración de pagos...");
+    const response = await fetch('/api/stripe/create-account', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      credentials: 'include', // MUY IMPORTANTE para enviar la cookie de sesión
+      body: JSON.stringify({
+        causeData,
+        email: window.currentUser?.email
+      })
+    });
+
+    if (!response.ok) {
+      throw new Error('No autorizado o error del servidor');
+    }
+
+    const { url } = await response.json();
+    window.location.href = url; // Redirige al onboarding de Stripe
+  } catch (error) {
+    window.hideLoader?.();
+    window.showErrorModal?.('Error al configurar pagos', error.message);
+  }
+};

@@ -1727,9 +1727,9 @@ function showNotification(message, type = 'info') {
 
 // Conectar con Supabase
 const { createClient } = supabase;
-const supabaseClient = window.supabase || createClient(
-  'https://cyftasxlrzuynzbrfgkd.supabase.co',
-  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImN5ZnRhc3hscnp1eW56YnJmZ2tkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDgwMzUzMTksImV4cCI6MjA2MzYxMTMxOX0.I56ZqFTfLgdwWlcozMVncGNGBZ4A2_5VpAbHeNmtDhA'
+const supabaseClient = createClient(
+  'https://rnbvbodbqkhfswzzilha.supabase.co',
+  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJuYnZib2RicWtoZnN3enppaGhhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzQ3MDY0ODUsImV4cCI6MjA1MDI4MjQ4NX0.gYjEo56DhM8kJ9Kv1QeIk7Y5WLp0YbZo_2D0WMsZHf0'
 );
 window.supabase = supabaseClient;
 </script>
@@ -1760,7 +1760,7 @@ document.addEventListener('DOMContentLoaded', async function() {
   // Botón crear causa
   document.getElementById('create-cause-btn').onclick = async function(e) {
     e.preventDefault();
-    const { data: { session } } = await supabase.auth.getSession(); // ✅ USAR supabase
+    const { data: { session } } = await supabase.auth.getSession();
     if (!session?.user) {
       document.getElementById('loginModal').classList.add('active');
       document.body.style.overflow = 'hidden';
@@ -1770,9 +1770,21 @@ document.addEventListener('DOMContentLoaded', async function() {
     document.body.style.overflow = 'hidden';
   };
 
+  // Cierre modal método donación
+  document.getElementById('closeDonationMethodModal').onclick = function() {
+    document.getElementById('donationMethodModal').classList.remove('active');
+    document.body.style.overflow = '';
+  };
+  document.getElementById('donationMethodModal').onclick = function(e) {
+    if (e.target === this) {
+      this.classList.remove('active');
+      document.body.style.overflow = '';
+    }
+  };
+
   // Stripe option
   document.getElementById('stripeOption').onclick = async function() {
-    const { data: { session } } = await supabase.auth.getSession(); // ✅ USAR supabase
+    const { data: { session } } = await supabase.auth.getSession();
     if (!session?.user) return;
     // Verificar estado Stripe
     const response = await fetch(`/stripe-account-status/${session.user.id}`);
@@ -1918,7 +1930,6 @@ async function loadCauses(page = 1, filter = "all", search = "") {
   let query = supabase
     .from('causes')
     .select('*', { count: 'exact' })
-    .eq('status', 'active') // ✅ AGREGAR FILTRO ACTIVAS
     .order('created_at', { ascending: false })
     .range((page - 1) * pageSize, page * pageSize - 1);
 
@@ -2027,7 +2038,7 @@ fetch('/me')
 document.getElementById('causeForm').addEventListener('submit', async function(e) {
   e.preventDefault();
   
-  const { data: { session } } = await supabase.auth.getSession(); // ✅ USAR supabase
+  const { data: { session } } = await supabase.auth.getSession();
   if (!session?.user) {
     showNotification('Debes iniciar sesión para continuar', 'error');
     return;
@@ -2245,5 +2256,5 @@ window.showStripeOnboardingModal = function(user) {
     if (e.target === this) modal.remove();
   };
 };
-</script>
+</script>     
 {% endblock %}

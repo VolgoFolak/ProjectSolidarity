@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="{{ lang if lang else 'es' }}">
+<html lang="{{ lang if lang else 'en' }}">
 <head>
   <meta charset="UTF-8">
   <title>{% block title %}Solidarity{% endblock %}</title>
@@ -55,16 +55,17 @@
     });
   </script>
   
-  <!-- CSS - ORDEN ORIGINAL -->
+  <!-- CSS -->
   <link rel="stylesheet" href="/css/style.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   
   {% block head %}{% endblock %}
 </head>
-<body class="{{ bodyClass if bodyClass else ('lang-' + (lang if lang else 'es')) }}">
-  <!-- Navbar - SOLO TU ORIGINAL -->
+<body class="{{ bodyClass if bodyClass else ('lang-' + (lang if lang else 'en')) }}">
+  <!-- Navbar -->
   <header>
     {% include "partials/navbar.njk" %}
+    <!-- ✅ ELIMINADO: language-selector.njk ya no es necesario -->
   </header>
 
   <!-- Contenido principal -->
@@ -72,66 +73,29 @@
     {% block content %}{% endblock %}
   </main>
 
-  <!-- Footer - SOLO TU ORIGINAL -->
+  <!-- Footer -->
   {% include "partials/footer.njk" %}
 
-  <!-- ✅ SCRIPTS BASE - ORDEN CORRECTO CON SUPABASE ARREGLADO -->
+  <!-- ✅ SCRIPTS BASE - ORDEN CORRECTO -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script>
-    // ✅ INICIALIZACIÓN SEGURA DE SUPABASE (SIN TOCAR ESTILOS)
-    (function() {
-      // Solo ejecutar si no existe ya una instancia
-      if (window.supabaseClient || window.supabaseInitialized) {
-        return;
-      }
-
-      const supabaseUrl = 'https://cyftasxlrzuynzbrfgkd.supabase.co';
-      const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImN5ZnRhc3hscnp1eW56YnJmZ2tkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDgwMzUzMTksImV4cCI6MjA2MzYxMTMxOX0.I56ZqFTfLgdwWlcozMVncGNGBZ4A2_5VpAbHeNmtDhA';
-      
-      // Esperar a que el DOM y Supabase estén listos
-      function initWhenReady() {
-        if (typeof window.supabase === 'undefined' || !window.supabase.createClient) {
-          setTimeout(initWhenReady, 100);
-          return;
-        }
-
-        try {
-          // Crear cliente Supabase
-          window.supabaseClient = window.supabase.createClient(supabaseUrl, supabaseKey);
-          
-          // Mantener compatibilidad con código existente
-          if (!window.supabase.auth) {
-            window.supabase = window.supabaseClient;
-          }
-          
-          // Marcar como inicializado
-          window.supabaseInitialized = true;
-          
-          console.log('✅ Supabase inicializado correctamente como objeto global');
-          
-          // Evento para scripts dependientes
-          window.dispatchEvent(new CustomEvent('supabaseReady', {
-            detail: { client: window.supabaseClient }
-          }));
-          
-        } catch (error) {
-          console.error('❌ Error inicializando Supabase:', error);
-        }
-      }
-
-      // Iniciar cuando sea seguro
-      if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', initWhenReady);
-      } else {
-        initWhenReady();
-      }
-    })();
+    // ✅ VARIABLES PARA ANALYTICS
+    window.currentUserId = '{{ user.id if user else null }}';
+    window.userType = '{{ user.type if user else "anonymous" }}';
+    window.userRegistrationDate = '{{ user.created_at if user else null }}';
+    window.lastLoginDate = '{{ user.last_login if user else null }}';
+    window.currentLang = '{{ lang if lang else "es" }}';
+    
+    // Configuración de Supabase
+    const supabaseUrl = 'https://cyftasxlrzuynzbrfgkd.supabase.co';
+    const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImN5ZnRhc3hscnp1eW56YnJmZ2tkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDgwMzUzMTksImV4cCI6MjA2MzYxMTMxOX0.I56ZqFTfLgdwWlcozMVncGNGBZ4A2_5VpAbHeNmtDhA';
+    const supabase = window.supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
   </script>
   
   <!-- ✅ SISTEMA DE TRADUCCIONES MEJORADO -->
   <script src="/js/i18n.js"></script>
   
-  <!-- ✅ OTROS SCRIPTS - TU ORDEN ORIGINAL -->
+  <!-- ✅ OTROS SCRIPTS -->
   <script src="/js/navbar.js"></script>
   <script src="/js/impactpoints.js"></script>
 
