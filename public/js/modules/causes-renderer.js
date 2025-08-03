@@ -1347,45 +1347,81 @@ window.mostrarCompartir = function(causeId) {
 };
 
 // Funciones auxiliares globales
-window.donateToCause = async function(causeId, amount) {
+window.donateToCause = async function(causeId) {
   try {
-    const response = await fetch('/api/causes/create-donation', {
+    // Verificar sesión
+    const { data: { session } } = await supabase.auth.getSession();
+    if (!session) {
+      return showLoginModal(() => donateToCause(causeId));
+    }
+
+    // Mostrar selector de monto
+    const amount = await showDonationAmountSelector();
+    if (!amount) return;
+
+    // Crear sesión de pago
+    const response = await fetch('/api/donations', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      credentials: 'include', // <-- Añadido
+      credentials: 'include',
       body: JSON.stringify({ causeId, amount })
     });
+
     const { sessionId, error } = await response.json();
     if (error) throw new Error(error);
-    const stripe = Stripe('pk_test_51RXeFrRo1sZSKMfJEVFU03TStZOKzm3Azc6o8rsvAvhmDuwad4lmX1CvtJkszN4pZJtAICHJ5IxoU1PxmNmVqX3s00fAWq9aea');
+
+    // Redirigir a Stripe
+    const stripe = Stripe(window.stripePublicKey);
     await stripe.redirectToCheckout({ sessionId });
-  } catch (err) {
-    showNotification('Error al iniciar donación. Intenta nuevamente.', 'error');
-    console.error('Error Stripe Checkout:', err);
+
+  } catch (error) {
+    showNotification(`Error al donar: ${error.message}`, 'error');
   }
 };
 
-window.joinCause = async function(causeId) {
-  const { data: { session } } = await supabase.auth.getSession();
-  if (!session?.user) {
-    alert('Debes iniciar sesión para participar.');
-    return;
-  }
-  const userId = session.user.id;
-  
-  // ✅ CORREGIR: Usar la tabla causes_members como en el código original
-  await supabase
-    .from('causes_members')
-    .insert([{ cause_id: causeId, user_id: userId, role: 'member', status: 'active' }])
-    .then(() => {
-      alert('¡Ahora eres miembro de esta causa!');
-      window.causesRenderer.closeModal();
-    })
-    .catch(error => {
-      console.error('Error al unirse a la causa:', error);
-      alert('No se pudo unir a la causa. Inténtalo nuevamente más tarde.');
+async function showDonationAmountSelector() {
+  return new Promise((resolve) => {
+    const modal = document.createElement('div');
+    modal.className = 'donation-modal';
+    modal.innerHTML = `
+      <div class="modal-content">
+        <h3>Selecciona el monto</h3>
+        <div class="amount-options">
+          ${[5, 10, 20, 50, 100].map(amount => `
+            <button data-amount="${amount}">${amount}€</button>
+          `).join('')}
+        </div>
+        <input type="number" placeholder="Otra cantidad" min="1">
+        <button class="btn confirm-btn">Continuar</button>
+      </div>
+    `;
+
+    let selectedAmount = 0;
+    
+    modal.querySelectorAll('[data-amount]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        modal.querySelectorAll('.donation-amount').forEach(b => b.classList.remove('selected'));
+        btn.classList.add('selected');
+        selectedAmount = parseInt(btn.dataset.amount);
+        modal.querySelector('input').value = '';
+        updateFeeDisplay(selectedAmount);
+      });
     });
-};
+
+    modal.querySelector('input').addEventListener('input', (e) => {
+      selectedAmount = parseFloat(e.target.value) || 0;
+      modal.querySelectorAll('.donation-amount').forEach(b => b.classList.remove('selected'));
+      updateFeeDisplay(selectedAmount);
+    });
+
+    modal.querySelector('.confirm-btn').addEventListener('click', () => {
+      modal.remove();
+      resolve(selectedAmount);
+    });
+
+    document.body.appendChild(modal);
+  });
+}
 
 // AGREGAR al final del archivo causes-renderer.js, después de la línea window.donateToCoause = window.donateToCause;
 
@@ -1595,28 +1631,27 @@ async function setupStripeAccount() {
     const userId = session.user.id;
     const email = session.user.email;
 
-    // Crear cuenta Stripe
-    const response = await fetch('/create-stripe-account', {
+    // 1. Crear cuenta Stripe
+    const response = await fetch('/api/stripe/create-account', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      credentials: 'include', // <-- Añadido
-      body: JSON.stringify({ userId, email })
-    });
-    const { accountId } = await response.json();
-
-    // Crear enlace de onboarding
-    const linkResponse = await fetch('/create-account-link', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      credentials: 'include', // <-- Añadido
-      body: JSON.stringify({
-        accountId,
-        returnUrl: `${window.location.origin}/causes?stripe=success`,
-        refreshUrl: `${window.location.origin}/causes?stripe=error`
+      credentials: 'include',
+      body: JSON.stringify({ 
+        email,
+        causeData: this.pendingCauseData 
       })
     });
-    const { url } = await linkResponse.json();
-    window.location.href = url;
+    
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.error || 'Error creando cuenta');
+    }
+    
+    const { returnUrl } = await response.json();
+    
+    // Redireccionar directamente (ya no necesitamos crear enlace separado)
+    window.location.href = returnUrl;
+    
   } catch (error) {
     showNotification(`Error configurando Stripe: ${error.message}`, 'error');
   }
@@ -1689,3 +1724,57 @@ function cleanUrlParams() {
 
 // Ejecutar al cargar la página
 document.addEventListener('DOMContentLoaded', checkStripeCallback);
+
+// Añadir al final del archivo causes-renderer.js
+
+// Función mejorada para manejar el onboarding de Stripe
+window.startStripeOnboarding = async function(causeData = null) {
+  try {
+    const { data: { session } } = await supabase.auth.getSession();
+    if (!session?.user) {
+      showNotification('Debes iniciar sesión para continuar', 'error');
+      return;
+    }
+
+    console.log('🚀 Iniciando onboarding de Stripe...');
+    
+    // Mostrar loading
+    const loadingOverlay = document.createElement('div');
+    loadingOverlay.innerHTML = `
+      <div style="position:fixed;top:0;left:0;width:100vw;height:100vh;background:rgba(0,0,0,0.7);z-index:10000;display:flex;align-items:center;justify-content:center;">
+        <div style="background:white;padding:2rem;border-radius:12px;text-align:center;">
+          <i class="fas fa-spinner fa-spin" style="font-size:2rem;color:var(--primary);margin-bottom:1rem;"></i>
+          <p>Configurando cuenta Stripe...</p>
+        </div>
+      </div>
+    `;
+    document.body.appendChild(loadingOverlay);
+
+    const response = await fetch('/api/stripe/create-account', {
+      method: 'POST',
+      headers: { 
+        'Content-Type': 'application/json'
+      },
+      credentials: 'include',
+      body: JSON.stringify({
+        email: session.user.email,
+        causeData: causeData
+      })
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      loadingOverlay.remove();
+      throw new Error(errorData.error || 'Error creando cuenta Stripe');
+    }
+
+    const { returnUrl } = await response.json();
+    
+    console.log('✅ Redirigiendo a Stripe:', returnUrl);
+    window.location.href = returnUrl;
+
+  } catch (error) {
+    console.error('❌ Error en onboarding:', error);
+    showNotification(`Error: ${error.message}`, 'error');
+  }
+};

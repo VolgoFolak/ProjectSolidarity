@@ -270,6 +270,37 @@
   margin: 2.5rem 0 0 2.5rem; /* Opcional: separa del borde superior/izquierdo */
 }
 
+/* --- Modal Stripe Success */
+.modal-bg {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0,0,0,0.5);
+  z-index: 9999;
+  align-items: center;
+  justify-content: center;
+}
+.modal-bg.active { display: flex; }
+
+.modal-content {
+  background: white;
+  border-radius: 16px;
+  padding: 2.5rem;
+  max-width: 500px;
+  width: 90%;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+  animation: fadeIn 0.3s ease-out;
+  position: relative;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
 /* --- Responsive Design para renderers --- */
 @media (max-width: 768px) {
   .challenges-grid,
@@ -1102,5 +1133,4 @@ header {
   border-top: 1px solid #e2e8f0;
   font-weight: 600;
   font-size: 1.1rem;
-}
-}
+}}

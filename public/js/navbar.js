@@ -1,31 +1,33 @@
 document.addEventListener('DOMContentLoaded', async () => {
-  const { data: { user } } = await supabase.auth.getUser();
   const authButtons = document.getElementById('auth-buttons');
   const userMenu = document.getElementById('user-menu');
-  if (user) {
-    // Consulta el perfil del usuario
-    const { data: perfil } = await supabase
-      .from('profiles')
-      .select('username, photo_url')
-      .eq('id', user.id)
-      .single();
+  const userAvatar = document.getElementById('user-avatar');
+  const userName = document.getElementById('user-name');
 
-    document.getElementById('user-avatar').src = perfil?.photo_url || '/img/default-avatar.jpg';
-    document.getElementById('user-name').textContent = perfil?.username || user.email;
-    authButtons.style.display = 'none';
-    userMenu.style.display = 'flex';
-  } else {
+  try {
+    const resp = await fetch('/api/check-session', { credentials: 'include' });
+    if (resp.ok) {
+      const user = await resp.json();
+      userAvatar.src = user.photo_url || '/img/default-avatar.jpg';
+      userName.textContent = user.username || user.email || 'Usuario';
+      authButtons.style.display = 'none';
+      userMenu.style.display = 'flex';
+    } else {
+      authButtons.style.display = 'flex';
+      userMenu.style.display = 'none';
+    }
+  } catch (e) {
     authButtons.style.display = 'flex';
     userMenu.style.display = 'none';
   }
 
-  // Usa el id correcto
+  // Logout
   const logoutBtn = document.getElementById('logout-btn-link');
   if (logoutBtn) {
     logoutBtn.onclick = async (e) => {
       e.preventDefault();
-      await supabase.auth.signOut();
-      window.location.reload();
+      await fetch('/logout', { method: 'POST', credentials: 'include' });
+      window.location.href = '/';
     };
   }
 });

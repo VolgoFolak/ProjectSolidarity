@@ -1392,7 +1392,7 @@ async function showDonationAmountSelector() {
           `).join('')}
         </div>
         <input type="number" placeholder="Otra cantidad" min="1">
-        <button class="confirm-btn">Continuar</button>
+        <button class="btn confirm-btn">Continuar</button>
       </div>
     `;
 
@@ -1631,28 +1631,27 @@ async function setupStripeAccount() {
     const userId = session.user.id;
     const email = session.user.email;
 
-    // Crear cuenta Stripe
-    const response = await fetch('/create-stripe-account', {
+    // 1. Crear cuenta Stripe
+    const response = await fetch('/api/stripe/create-account', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      credentials: 'include', // <-- Añadido
-      body: JSON.stringify({ userId, email })
-    });
-    const { accountId } = await response.json();
-
-    // Crear enlace de onboarding
-    const linkResponse = await fetch('/create-account-link', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      credentials: 'include', // <-- Añadido
-      body: JSON.stringify({
-        accountId,
-        returnUrl: `${window.location.origin}/causes?stripe=success`,
-        refreshUrl: `${window.location.origin}/causes?stripe=error`
+      credentials: 'include',
+      body: JSON.stringify({ 
+        email,
+        causeData: this.pendingCauseData 
       })
     });
-    const { url } = await linkResponse.json();
-    window.location.href = url;
+    
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.error || 'Error creando cuenta');
+    }
+    
+    const { returnUrl } = await response.json();
+    
+    // Redireccionar directamente (ya no necesitamos crear enlace separado)
+    window.location.href = returnUrl;
+    
   } catch (error) {
     showNotification(`Error configurando Stripe: ${error.message}`, 'error');
   }
@@ -1725,3 +1724,89 @@ function cleanUrlParams() {
 
 // Ejecutar al cargar la página
 document.addEventListener('DOMContentLoaded', checkStripeCallback);
+
+// Añadir al final del archivo causes-renderer.js
+
+// Función mejorada para manejar el onboarding de Stripe
+window.startStripeOnboarding = async function(causeData = null) {
+  try {
+    const { data: { session } } = await supabase.auth.getSession();
+    if (!session?.user) {
+      showNotification('Debes iniciar sesión para continuar', 'error');
+      return;
+    }
+
+    console.log('🚀 Iniciando onboarding de Stripe...');
+
+    const response = await fetch('/api/stripe/create-account', {
+      method: 'POST',
+      headers: { 
+        'Content-Type': 'application/json',
+        'Cache-Control': 'no-cache'
+      },
+      credentials: 'include',
+      body: JSON.stringify({
+        email: session.user.email,
+        causeData: causeData
+      })
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.error || 'Error creando cuenta Stripe');
+    }
+
+    const { returnUrl } = await response.json();
+    
+    console.log('✅ Redirigiendo a Stripe:', returnUrl);
+    
+    // Mostrar mensaje de carga antes de redireccionar
+    showNotification('Redirigiendo a Stripe para configurar tu cuenta...', 'info', 2000);
+    
+    // Pequeño delay para que el usuario vea el mensaje
+    setTimeout(() => {
+      window.location.href = returnUrl;
+    }, 1000);
+
+  } catch (error) {
+    console.error('❌ Error en onboarding:', error);
+    showNotification(`Error: ${error.message}`, 'error');
+  }
+};
+
+// Función para mostrar notificación de carga durante redirección
+function showLoadingDuringRedirect() {
+  const loadingDiv = document.createElement('div');
+  loadingDiv.style.cssText = `
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height:  100vh;
+    background: rgba(74, 111, 165, 0.95);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    z-index: 10001;
+
+    color: white;
+  `;
+  
+  loadingDiv.innerHTML = `
+    <div style="text-align: center;">
+      <div style="width: 60px; height: 60px; border: 4px solid rgba(255,255,255,0.3); border-top: 4px solid white; border-radius: 50%; animation: spin 1s linear infinite; margin-bottom: 2rem;"></div>
+      <h2 style="margin-bottom: 1rem;">Configurando tu cuenta de pagos</h2>
+      <p>Te estamos redirigiendo a Stripe para completar la configuración de manera segura...</p>
+    </div>
+    <style>
+      @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+      }
+    </style>
+  `;
+  
+  document.body.appendChild(loadingDiv);
+  return loadingDiv;
+}

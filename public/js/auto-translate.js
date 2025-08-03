@@ -293,9 +293,8 @@ class AutoTranslate {
 }
 
 window.autoTranslate = new AutoTranslate();
-window.resetAutoTranslate = function() {
-  window.autoTranslate.reset();
-  location.reload();
-};
+document.addEventListener('DOMContentLoaded', () => {
+  window.autoTranslate.init();
+});
 
 console.log('🌍 AutoTranslate EXPANDIDO cargado con 40+ idiomas');

@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="{{ lang if lang else 'en' }}">
+<head>
+  <meta charset="UTF-8">
+  <title>{% block title %}Solidarity{% endblock %}</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Welcome to Solidarity! The world's best platform to showcase your actions, volunteering, and communities, and create real social impact.">
+  <!-- Open Graph / Facebook -->
+  <meta property="og:title" content="Solidarity">
+  <meta property="og:description" content="Welcome to Solidarity! The world's best platform to showcase your actions, volunteering, and communities, and create real social impact.">
+  <meta property="og:image" content="https://project-solidarity.com/img/logotransparente.png">
+  <meta property="og:url" content="https://project-solidarity.com">
+  <!-- Twitter -->
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="icon" href="/img/logotransparente.png" type="image/png">
+
+  <!-- Stripe.js para pagos y onboarding -->
+  <script src="https://js.stripe.com/v3/"></script>
+
+  <!-- Google Analytics 4 -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-KLTQ612VGL"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-KLTQ612VGL', {
+      anonymize_ip: true,
+      allow_google_signals: true,
+      allow_ad_personalization_signals: false,
+      send_page_view: true,
+      page_title: document.title,
+      page_location: window.location.href,
+      user_id: window.currentUserId || null,
+      custom_map: {
+        'custom_parameter_1': 'user_type',
+        'custom_parameter_2': 'user_language',
+        'custom_parameter_3': 'platform_section'
+      },
+      enhanced_conversions: true,
+      debug_mode: false
+    });
+    gtag('set', {
+      user_properties: {
+        user_type: window.userType || 'anonymous',
+        preferred_language: window.currentLang || 'es',
+        platform_version: '1.0',
+        registration_date: window.userRegistrationDate || null,
+        last_login: window.lastLoginDate || null
+      }
+    });
+  </script>
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <style>
+    html, body {
+      box-sizing: border-box !important;
+      overflow-x: hidden !important;
+      max-width: 100vw !important;
+    }
+  </style>
+  {% block head %}{% endblock %}
+</head>
+<body class="{{ bodyClass if bodyClass else ('lang-' + (lang if lang else 'en')) }}">
+  <header>
+    {% include "partials/navbar.njk" %}
+  </header>
+  <main class="main-content">
+    {% block content %}{% endblock %}
+  </main>
+  {% include "partials/footer.njk" %}
+
+  <!-- Scripts base -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script>
+    window.currentUserId = '{{ user.id if user else null }}';
+    window.userType = '{{ user.type if user else "anonymous" }}';
+    window.userRegistrationDate = '{{ user.created_at if user else null }}';
+    window.lastLoginDate = '{{ user.last_login if user else null }}';
+    window.currentLang = '{{ lang if lang else "es" }}';
+    // Configuración de Supabase
+    const supabaseUrl = 'https://cyftasxlrzuynzbrfgkd.supabase.co';
+    const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImN5ZnRhc3hscnp1eW56YnJmZ2tkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDgwMzUzMTksImV4cCI6MjA2MzYxMTMxOX0.I56ZqFTfLgdwWlcozMVncGNGBZ4A2_5VpAbHeNmtDhA';
+    const supabase = window.supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
+  </script>
+  <script src="/js/i18n.js"></script>
+  <script src="/js/navbar.js"></script>
+  <script src="/js/impactpoints.js"></script>
+  {% block scripts %}{% endblock %}
+
+  <!-- Notificaciones -->
+  <div id="notifications" class="notifications-container"></div>
+
+  <!-- Modal de bienvenida -->
+  <div id="welcomeModal" style="display:none; position:fixed; top:0; left:0; width:100vw; height:100vh; background:rgba(0,0,0,0.35); z-index:9999; align-items:center; justify-content:center;">
+    <div style="background:#fff; border-radius:18px; max-width:370px; margin:auto; padding:2.2rem 1.7rem; box-shadow:0 8px 32px rgba(0,0,0,0.13); text-align:center;">
+      <span style="font-size:2.7rem; color:#2dd4bf; display:block; margin-bottom:1rem;">
+        <i class="fas fa-fire"></i>
+      </span>
+      <h2 style="color:#2dd4bf; font-weight:900; margin-bottom:0.7rem;" data-i18n="welcome.title">¡Bienvenido/a de nuevo!</h2>
+      <p style="color:#444; font-size:1.13rem;" data-i18n="welcome.message">
+        ¡Nos alegra verte en Solidarity!<br>
+        <strong>Hoy es un gran día para ayudar, inspirar y transformar el mundo.</strong>
+      </p>
+      <p style="color:#888; font-size:0.97rem; margin-top:1em;" data-i18n="welcome.subtitle">
+        ¿Listo/a para dejar tu huella positiva?<br>
+        ¡Explora, conecta y actúa!
+      </p>
+      <button onclick="document.getElementById('welcomeModal').style.display='none';" 
+              style="margin-top:1.5rem; background:#2dd4bf; color:#fff; border:none; border-radius:8px; padding:0.8rem 1.7rem; font-size:1.1rem; font-weight:700; cursor:pointer;" 
+              data-i18n="welcome.button">
+        ¡Vamos allá!
+      </button>
+    </div>
+  </div>
+  
+  <!-- ✅ SCRIPT PARA TRADUCIR AUTOMÁTICAMENTE -->
+  <script>
+    document.addEventListener('i18nReady', () => {
+      translateElements();
+    });
+    function translateElements() {
+      console.log('🌍 Iniciando traducción de elementos...');
+      const elementsToTranslate = document.querySelectorAll('[data-i18n]');
+      elementsToTranslate.forEach(element => {
+        const key = element.getAttribute('data-i18n');
+        if (window.t && typeof window.t === 'function') {
+          const translation = window.t(key);
+          if (translation && translation !== key) {
+            element.textContent = translation;
+            console.log('✅ Traducido:', key, '->', translation);
+          }
+        }
+      });
+      const elementsWithTitle = document.querySelectorAll('[data-i18n-title]');
+      elementsWithTitle.forEach(element => {
+        const key = element.getAttribute('data-i18n-title');
+        if (window.t && typeof window.t === 'function') {
+          const translation = window.t(key);
+          if (translation && translation !== key) {
+            element.setAttribute('title', translation);
+          }
+        }
+      });
+    }
+    document.addEventListener('DOMContentLoaded', function() {
+      if (typeof gtag !== 'undefined') {
+        gtag('event', 'page_view', {
+          page_title: document.title,
+          page_location: window.location.href,
+          user_type: window.userType || 'anonymous',
+          page_section: getCurrentPageSection()
+        });
+        console.log('📊 Analytics inicializado para:', window.location.pathname);
+      }
+    });
+    function getCurrentPageSection() {
+      const path = window.location.pathname;
+      if (path.includes('/causes')) return 'causes';
+      if (path.includes('/teams')) return 'teams';
+      if (path.includes('/challenges')) return 'challenges';
+      if (path.includes('/volunteer')) return 'volunteer';
+      if (path.includes('/profile')) return 'profile';
+      if (path === '/') return 'home';
+      return 'other';
+    }
+    function isTrending(activity) {
+      if (activity.type === 'cause') {
+        return (activity.beneficiaries || 0) + (activity.raised || 0) > 100;
+      }
+      if (activity.type === 'task') {
+        return (activity.beneficiaries || 0) > 50;
+      }
+      if (activity.type === 'volunteering') {
+        return (activity.volunteers_needed || 0) > 30;
+      }
+      if (activity.type === 'challenge') {
+        const created = new Date(activity.created_at);
+        const now = new Date();
+        const diffDays = (now - created) / (1000 * 60 * 60 * 24);
+        return diffDays < 7;
+      }
+      return false;
+    }
+    window.trackSolidarityEvent = function(eventName, parameters = {}) {
+      if (typeof gtag !== 'undefined') {
+        const enrichedParams = {
+          ...parameters,
+          user_type: window.userType || 'anonymous',
+          timestamp: new Date().toISOString(),
+          page_section: getCurrentPageSection(),
+          user_language: window.currentLang || 'es'
+        };
+        gtag('event', eventName, enrichedParams);
+        console.log('📊 Evento tracked:', eventName, enrichedParams);
+      }
+    };
+  </script>
+
+  <!-- Scripts antes del cierre del body -->
+  <script src="/js/compartir.js"></script>
+
+  <!-- Mobile Navigation Components -->
+  <script src="/js/components/mobile-bottom-nav.js"></script>
+  <solidarity-bottom-nav></solidarity-bottom-nav>
+  <script src="/js/components/mobile-hamburger-menu.js"></script>
+  <script src="/js/components/mobile-header.js"></script>
+  <script src="/js/components/mobile-avatar.js"></script>
+  <solidarity-mobile-header>
+    <solidarity-hamburger-menu slot="hamburger"></solidarity-hamburger-menu>
+    <solidarity-mobile-avatar slot="avatar"></solidarity-mobile-avatar>
+  </solidarity-mobile-header>
+
+  <!-- ✅ ANALYTICS AVANZADO -->
+  <script src="/js/analytics.js"></script>
+  <script src="/js/auto-translate.js"></script>
+  <div id="google_translate_element" style="display:none;"></div>
+  <script type="text/javascript">
+    function googleTranslateElementInit() {
+      new google.translate.TranslateElement({
+        pageLanguage: 'es',
+        includedLanguages: 'en,es,fr,de,it,pt,ru,zh-CN,ar,ja,ko,hi,tr,pl,nl,sv,da,no,fi,he,th,vi,id,ms,tl,uk,cs,hu,ro,bg,hr,sk,sl,et,lv,lt,mt,el,ca,eu,gl',
+        layout: google.translate.TranslateElement.InlineLayout.SIMPLE,
+        autoDisplay: false,
+        multilanguagePage: true,
+        gaTrack: true,
+        gaId: 'G-KLTQ612VGL'
+      }, 'google_translate_element');
+      setTimeout(() => {
+        if (window.autoTranslate) window.autoTranslate.init();
+      }, 1500);
+    }
+  </script>
+  <script src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+
+  <!-- Mejoras de sesión: ping para mantener sesión activa -->
+  <script>
+    setInterval(() => {
+      fetch('/api/check-session', { credentials: 'include' })
+        .then(res => res.json())
+        .then(data => {
+          if (!data.ok) {
+            window.location.href = '/login';
+          }
+        });
+    }, 5 * 60 * 1000);
+  </script>
+
+  <!-- Stripe onboarding y dashboard helpers -->
+  <script>
+    window.openStripeDashboard = async function() {
+      const res = await fetch('/api/stripe/dashboard-link', { credentials: 'include' });
+      const data = await res.json();
+      if (data.url) window.open(data.url, '_blank');
+      else alert('No tienes cuenta Stripe activa.');
+    };
+    window.retryStripeOnboarding = async function() {
+      window.location.href = '/reauth-stripe';
+    };
+  </script>
+</body>
+</html>
