@@ -39,7 +39,9 @@ const isLocalhost = process.env.NODE_ENV !== 'production';
 const frontendUrl = isLocalhost ? 'http://localhost:3000' : process.env.FRONTEND_URL;
 
 const corsOptions = {
-  origin: frontendUrl,
+  origin: process.env.NODE_ENV === 'production' 
+    ? [process.env.FRONTEND_URL, 'https://www.project-solidarity.com']
+    : ['http://localhost:3000', 'http://127.0.0.1:3000'],
   credentials: true,
   allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'Accept'],
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS']
@@ -215,7 +217,12 @@ app.get('/current-language', (req, res) => {
 });
 
 // --- Rutas principales (todas las vistas) ---
-app.get('/', (req, res) => { res.render('index', { lang: req.lang, user: req.session.user }); });
+app.get('/', (req, res) => {
+  res.render('index', {
+    supabaseUrl: process.env.SUPABASE_URL,
+    supabaseKey: process.env.SUPABASE_KEY
+  });
+});
 app.get('/login', (req, res) => { res.render('auth/login', { lang: req.lang }); });
 app.get('/register', (req, res) => { res.render('auth/register', { lang: req.lang }); });
 app.get('/causes', (req, res) => { res.render('causes/index', { lang: req.lang, user: req.session.user }); });
@@ -359,14 +366,6 @@ app.get('/api/users', async (req, res) => {
     }
 });
 
-app.get('/api/check-session', (req, res) => {
-  if (req.session.user) {
-    res.json({ ok: true });
-  } else {
-    res.status(401).json({ ok: false });
-  }
-});
-
 // --- RUTAS STRIPE (CORREGIDAS) ---
 
 // Estado de cuenta Stripe (SIN autenticación para permitir verificaciones públicas)
@@ -420,7 +419,7 @@ app.post('/api/stripe/create-account', async (req, res) => {
     const accountLink = await stripe.accountLinks.create({
       account: account.id,
       refresh_url: `${frontendUrl}/causes?stripe_error=refresh`,
-      return_url: `${frontendUrl}/causes?stripe_success=true&account_id=${account.id}`,
+      return_url: `${frontendUrl}/api/causes/stripe-callback?user_id=${userId}`, // ✅ CORREGIDO
       type: 'account_onboarding'
     });
 
@@ -673,4 +672,145 @@ app.use((req, res) => {
 
 app.listen(PORT, () => {
     console.log(`Servidor iniciado en http://localhost:${PORT}`);
+});
+
+// Reemplazar la ruta callback existente:
+app.get('/api/causes/stripe-callback', async (req, res) => {
+  try {
+    const { user_id } = req.query;
+    
+    if (!user_id) {
+      return res.redirect('/causes?stripe_error=no_user');
+    }
+
+    // Verificar estado de la cuenta Stripe
+    const { data: stripeAccount } = await supabase
+      .from('stripe_accounts')
+      .select('stripe_account_id')
+      .eq('user_id', user_id)
+      .single();
+
+    if (!stripeAccount) {
+      return res.redirect('/causes?stripe_error=no_account');
+    }
+
+    // Verificar con Stripe API
+    const account = await stripe.accounts.retrieve(stripeAccount.stripe_account_id);
+    
+    if (!account.charges_enabled || !account.details_submitted) {
+      return res.redirect('/causes?stripe_error=not_verified');
+    }
+
+    // Redirigir SOLO al modal de éxito, SIN crear causa automáticamente
+    res.redirect('/causes?stripe=success&onboarding_complete=true');
+
+  } catch (error) {
+    console.error('Error in Stripe callback:', error);
+    res.redirect('/causes?stripe_error=internal_error');
+  }
+});
+
+// API para crear causa final (después del onboarding exitoso)
+app.post('/api/causes/create-final', authenticateUser, async (req, res) => {
+  try {
+    const { causeData } = req.body;
+    const userId = req.session.user.id;
+
+    if (!causeData || !userId) {
+      return res.status(400).json({ error: 'Datos incompletos' });
+    }
+
+    // Verificar si el usuario tiene Stripe configurado
+    const { data: stripeAccount } = await supabase
+      .from('stripe_accounts')
+      .select('stripe_account_id, status')
+      .eq('user_id', userId)
+      .single();
+
+    let stripeEnabled = false;
+    let stripeAccountId = null;
+
+    if (stripeAccount?.stripe_account_id) {
+      const account = await stripe.accounts.retrieve(stripeAccount.stripe_account_id);
+      stripeEnabled = account.charges_enabled && account.details_submitted;
+      stripeAccountId = stripeEnabled ? stripeAccount.stripe_account_id : null;
+    }
+
+    // Crear causa
+    const { data: newCause, error: causeError } = await supabase
+      .from('causes')
+      .insert([{
+        ...causeData,
+        user_id: userId,
+        status: 'active',
+        stripe_enabled: stripeEnabled,
+        stripe_account_id: stripeAccountId,
+        created_at: new Date().toISOString()
+      }])
+      .select()
+      .single();
+
+    if (causeError) {
+      console.error('Error creating cause:', causeError);
+      throw new Error(causeError.message);
+    }
+
+    // Crear membresía del fundador
+    await supabase
+      .from('causes_members')
+      .insert({
+        user_id: userId,
+        cause_id: newCause.id,
+        role: 'founder',
+        status: 'active'
+      });
+
+    res.json({
+      success: true,
+      cause: newCause,
+      stripeEnabled
+    });
+
+  } catch (error) {
+    console.error('Error creating final cause:', error);
+    res.status(500).json({
+      error: 'Error creando causa',
+      details: error.message
+    });
+  }
+});
+
+// Agregar rutas API faltantes ANTES de app.listen():
+
+// Ruta para verificar sesión
+app.get('/api/check-session', (req, res) => {
+  if (req.session && req.session.user) {
+    res.json({ 
+      authenticated: true, 
+      user: req.session.user 
+    });
+  } else {
+    res.status(401).json({ 
+      authenticated: false, 
+      message: 'No authenticated' 
+    });
+  }
+});
+
+// Ruta para obtener causas
+app.get('/api/causes', async (req, res) => {
+  try {
+    const { data, error } = await supabase
+      .from('causes')
+      .select('*')
+      .eq('status', 'active')
+      .order('created_at', { ascending: false });
+
+    if (error) throw error;
+
+    res.json(data || []);
+  } catch (error) {
+    console.error('Error al obtener causas:', error);
+    res.status(500).json({ error: 'Error interno del servidor' });
+  }
 });
