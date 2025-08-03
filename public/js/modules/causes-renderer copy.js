@@ -1,29 +1,16 @@
 /**
  * Módulo para renderizar tarjetas y modales de causas
-<<<<<<< HEAD
  * Template basado EXACTAMENTE en views/causes/index.njk
-=======
- * Template basado EXACTO en views/causes/index.njk
->>>>>>> 59461df1b33d25c65c9221b39256b8f9c62636c9
  */
 
 class CausesRenderer {
   constructor() {
     this.causes = [];
     this.currentFilter = "all";
-<<<<<<< HEAD
   }
 
   /**
    * Renderiza una grilla de tarjetas de causas (EXACTO al código original)
-=======
-    this.pendingCauseData = null;
-  }
-
-   
-  /**
-   * Renderiza una grilla de tarjetas de causas con botón Donar igual a "Ver más"
->>>>>>> 59461df1b33d25c65c9221b39256b8f9c62636c9
    */
   renderGrid(causes, container, options = {}) {
     this.causes = causes;
@@ -41,93 +28,14 @@ class CausesRenderer {
     }
 
     causes.forEach(cause => {
-<<<<<<< HEAD
       const card = this.createCauseCard(cause, options);
-=======
-      const progress = cause.goal ? Math.min(Math.round((cause.raised / cause.goal) * 100), 100) : 0;
-      const urgentBadge = cause.urgent ? `<div class="cause-badge urgent"><i class="fas fa-exclamation-circle"></i> Urgente</div>` : "";
-      const pointsBadge = `<div class="cause-badge points"><i class="fas fa-star"></i> +${cause.points || 0} pts</div>`;
-      const location = cause.city && cause.country ? `${cause.city}, ${cause.country}` : "";
-      const isAdmin = ['founder','admin','coordinator'].includes(cause.userRole);
-
-      const card = document.createElement('div');
-card.className = 'cause-card';
-card.innerHTML = `
-  <div class="cause-image">
-    <img src="${cause.photo_url || '/img/causa-default.jpg'}" alt="${cause.title}" 
-         onerror="if (!this._defaulted) { this._defaulted = true; this.src='/img/causa-default.jpg'; }">
-    ${urgentBadge}
-    ${pointsBadge}
-  </div>
-  <div class="cause-content">
-    <h3>${cause.title}</h3>
-    <p>${cause.short_description || ''}</p>
-    <div class="cause-meta">
-      <div class="meta-item"><i class="fas fa-map-marker-alt"></i> ${location}</div>
-      <div class="meta-item"><i class="fas fa-users"></i> ${cause.donors || 0} donantes</div>
-      <div class="beneficiaries-count">
-        <i class="fas fa-heart"></i> Beneficia a ${cause.beneficiaries || 0} personas
-      </div>
-    </div>
-    <div class="cause-progress">
-      <div class="progress-bar">
-        <div class="progress-fill" style="width: ${progress}%"></div>
-      </div>
-      <div class="progress-info">
-        <span>${progress}% completado</span>
-        <span>${cause.raised || 0} € de ${cause.goal || 0} €</span>
-      </div>
-    </div>
-    <div class="cause-actions">
-      ${isAdmin ? `
-        <button class="btn btn-primary view-cause-btn" data-cause-id="${cause.id}" style="flex:1;">
-          Ver más
-        </button>
-        <button class="btn btn-accent admin-activity-btn" data-activity-type="cause" data-activity-id="${cause.id}" style="flex:1;">
-          <i class="fas fa-cog"></i> Administrar
-        </button>
-      ` : `
-        <button class="btn btn-primary view-cause-btn" data-cause-id="${cause.id}" style="flex:1;">
-          <i class="fas fa-eye"></i> Ver más
-        </button>
-        <button class="btn btn-accent donate-btn" data-cause-id="${cause.id}" style="flex:1;">
-          <i class="fas fa-hand-holding-heart"></i> Donar
-        </button>
-      `}
-    </div>
-  </div>
-`;
-
->>>>>>> 59461df1b33d25c65c9221b39256b8f9c62636c9
       container.appendChild(card);
     });
 
     // Guardar causas globalmente para compatibilidad
     window.causes = causes;
 
-<<<<<<< HEAD
     this.attachEventListeners(container);
-=======
-    // Adjunta eventos: ambos botones abren el modal de detalles
-    container.querySelectorAll('.view-cause-btn, .donate-btn').forEach(btn => {
-      btn.addEventListener('click', (e) => {
-        e.preventDefault();
-        const causeId = btn.getAttribute('data-cause-id');
-        this.showModal(causeId);
-      });
-    });
-
-    container.querySelectorAll('.admin-activity-btn').forEach(btn => {
-      btn.addEventListener('click', (e) => {
-        e.preventDefault();
-        const activityId = btn.getAttribute('data-activity-id');
-        if (typeof window.openAdminModal === 'function') {
-          const cause = window.causes?.find(c => c.id == activityId);
-          if (cause) window.openAdminModal(cause);
-        } 
-      });
-    });
->>>>>>> 59461df1b33d25c65c9221b39256b8f9c62636c9
   }
 
   /**
@@ -139,57 +47,12 @@ card.innerHTML = `
     const pointsBadge = `<div class="cause-badge points"><i class="fas fa-star"></i> +${cause.points || 0} pts</div>`;
     const location = cause.city && cause.country ? `${cause.city}, ${cause.country}` : "";
     const isAdmin = ['founder','admin','coordinator'].includes(cause.userRole);
-<<<<<<< HEAD
     const isDonor = cause.isDonor;
 
     // Botón "Donar" funcional
     const donateBtn = isDonor
       ? `<button class="btn btn-accent donate-btn" data-cause-id="${cause.id}" disabled style="opacity:0.7;cursor:not-allowed;">Ya donaste</button>`
       : `<button class="btn btn-accent donate-btn" data-cause-id="${cause.id}">Donar</button>`;
-=======
-    const isDonor = cause.isDonor; // Este campo debe estar en el objeto causa, igual que isParticipating en tareas
-
-    const canDonate = cause.stripe_enabled && !cause.isDonor;
-
-    // Botón "Donar" funcional
-    const donateBtn = canDonate
-      ? `<button class="btn btn-accent donate-btn" data-cause-id="${cause.id}">
-           <i class="fas fa-donate"></i> Donar
-         </button>`
-      : `<button class="btn btn-outline" disabled>
-           ${cause.stripe_enabled ? 'Ya donaste' : 'Donaciones no disponibles'}
-         </button>`;
-
-    let actionsHtml = '';
-    if (options?.showAdminButton && cause.userRole && ['founder', 'admin', 'coordinator'].includes(cause.userRole)) {
-      // Solo mostrar "Ver más" y "Administrar"
-      actionsHtml = `
-        <div class="cause-actions">
-          <button class="btn btn-outline view-cause-btn" data-cause-id="${cause.id}">
-            <i class="fas fa-eye"></i> Ver más
-          </button>
-          <button class="btn btn-secondary admin-activity-btn" data-activity-type="cause" data-activity-id="${cause.id}">
-            <i class="fas fa-cog"></i> Administrar
-          </button>
-        </div>
-      `;
-    } else {
-      // Mostrar todos los botones (Donar, Ver más, Compartir, etc.)
-      actionsHtml = `
-        <div class="cause-actions">
-          <button class="btn btn-primary donate-btn" data-cause-id="${cause.id}">
-            <i class="fas fa-donate"></i> Donar
-          </button>
-          <button class="btn btn-outline view-cause-btn" data-cause-id="${cause.id}">
-            <i class="fas fa-eye"></i> Ver más
-          </button>
-          <button class="btn btn-outline share-btn" data-cause-id="${cause.id}">
-            <i class="fas fa-share-alt"></i> Compartir
-          </button>
-        </div>
-      `;
-    }
->>>>>>> 59461df1b33d25c65c9221b39256b8f9c62636c9
 
     const card = document.createElement('div');
     card.className = 'cause-card';
@@ -219,7 +82,6 @@ card.innerHTML = `
             <span>${cause.raised || 0} € de ${cause.goal || 0} €</span>
           </div>
         </div>
-<<<<<<< HEAD
         <div class="cause-actions">
           <button class="btn btn-primary view-cause-btn" data-cause-id="${cause.id}">Ver más</button>
           ${isAdmin ? `
@@ -228,9 +90,6 @@ card.innerHTML = `
             </button>
           ` : donateBtn}
         </div>
-=======
-        ${actionsHtml}
->>>>>>> 59461df1b33d25c65c9221b39256b8f9c62636c9
       </div>
     `;
 
@@ -246,37 +105,7 @@ card.innerHTML = `
       console.error('❌ Causa no encontrada:', causeId);
       return;
     }
-<<<<<<< HEAD
     
-=======
-
-    // Obtener donantes de Supabase (usa 'profiles' si tu relación es así)
-    const { data: donors, error: donorsError } = await supabase
-      .from('causes_members')
-      .select('user_id, profiles(username, photo_url)')
-      .eq('cause_id', causeId)
-      .eq('role', 'donor')
-      .eq('status', 'active');
-
-    let donorsHtml = '';
-    if (donorsError) {
-      donorsHtml = `<div style="color:#e53e3e;">Error al cargar los donantes.</div>`;
-    } else if (!donors || donors.length === 0) {
-      donorsHtml = `<div style="color:#6b7280;">Aún no hay donantes para esta causa.</div>`;
-    } else {
-      donorsHtml = `
-        <div style="display:flex; flex-wrap:wrap; gap:1rem; margin-top:1rem;">
-          ${donors.map(d => `
-            <div style="display:flex; align-items:center; gap:0.6rem; background:#f8fafc; border-radius:8px; padding:0.5rem 1rem;">
-              <img src="${d.profiles?.photo_url || '/img/avatar-default.png'}" alt="${d.profiles?.username}" style="width:32px; height:32px; border-radius:50%; object-fit:cover;">
-              <span style="font-weight:600; color:#4a6fa5;">${d.profiles?.username || 'Usuario'}</span>
-            </div>
-          `).join('')}
-        </div>
-      `;
-    }
-
->>>>>>> 59461df1b33d25c65c9221b39256b8f9c62636c9
     const progress = cause.goal ? Math.min(Math.round((cause.raised / cause.goal) * 100), 100) : 0;
     const createdDate = new Date(cause.created_at).toLocaleDateString('es-ES', {
       year: 'numeric',
@@ -288,11 +117,7 @@ card.innerHTML = `
     const modal = this.getOrCreateModal();
     const modalBody = modal.querySelector('#modalBody');
 
-<<<<<<< HEAD
     // ✅ TEMPLATE EXACTO del modal original
-=======
-    // TEMPLATE EXACTO del modal original, inserta donorsHtml después de la descripción
->>>>>>> 59461df1b33d25c65c9221b39256b8f9c62636c9
     modalBody.innerHTML = `
       <div class="modal-cause-container">
         <!-- Título principal centrado, más espacio abajo -->
@@ -360,42 +185,7 @@ card.innerHTML = `
             <h3 class="content-title" style="font-size:1.2rem; font-weight:600; color:var(--primary); margin-bottom:0.9rem; display:flex; align-items:center; gap:0.7rem;">
               <i class="fas fa-info-circle"></i> Descripción completa
             </h3>
-<<<<<<< HEAD
             <p class="content-text" style="line-height:1.7; color:#4b5563; font-size:1rem; margin-left:0; margin-right:0; text-align:justify;">${cause.description || 'No hay descripción detallada disponible para esta causa.'}</p>
-=======
-            <p class="content-text" style="line-height:1.7; color:#4b5563; font-size:1rem; margin-left:0; margin-right:0; text-align:justify;">
-              ${cause.description || 'No hay descripción detallada disponible para esta causa.'}
-            </p>
-          </div>
-          <div class="content-section" style="margin-bottom:2rem;">
-            <h3 class="content-title" style="font-size:1.15rem; font-weight:600; color:var(--primary); margin-bottom:0.7rem; display:flex; align-items:center; gap:0.7rem;">
-              <i class="fas fa-donate"></i> Cómo Donar
-            </h3>
-            <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;">
-              <div>
-                <p style="font-weight:600;color:var(--primary);margin-bottom:0.3rem;">Instrucciones</p>
-                <p style="color:#6b7280;">
-                  ${cause.how_to_donate ? cause.how_to_donate : '—'}
-                </p>
-              </div>
-              <div>
-                <p style="font-weight:600;color:var(--primary);margin-bottom:0.3rem;">Mobile Wallet</p>
-                <p style="color:#6b7280;">
-                  ${cause.mobile_wallet ? cause.mobile_wallet : '—'}
-                </p>
-              </div>
-              <div>
-                <p style="font-weight:600;color:var(--primary);margin-bottom:0.3rem;">Cuenta Bancaria / IBAN</p>
-                <p style="color:#6b7280;">
-                  ${cause.bank_account ? cause.bank_account : '—'}
-                </p>
-              </div>
-            </div>
-          </div>
-          <div class="content-section">
-            <h3 class="content-title"><i class="fas fa-users"></i> Donantes</h3>
-            ${donorsHtml}
->>>>>>> 59461df1b33d25c65c9221b39256b8f9c62636c9
           </div>
           
           ${(cause.contact_email || cause.phone_number) ? `
@@ -403,11 +193,7 @@ card.innerHTML = `
               <h3 class="content-title" style="font-size:1.2rem; font-weight:600; color:var(--primary); margin-bottom:0.9rem; display:flex; align-items:center; gap:0.7rem;">
                 <i class="fas fa-address-book"></i> Información de contacto
               </h3>
-<<<<<<< HEAD
               <div style="background:#f8fafc; border-radius:12px; padding:1.5rem; border:1px solid #e5e7eb;">
-=======
-              <div style="background:#f8fafc; border-radius:12px; padding:1.5rem; border:1px solid #e5e7eb; text-align:left;">
->>>>>>> 59461df1b33d25c65c9221b39256b8f9c62636c9
                 ${cause.contact_email ? `
                   <div style="display:flex; align-items:center; gap:0.7rem; margin-bottom:${cause.phone_number ? '1rem' : '0'};">
                     <i class="fas fa-envelope" style="color:var(--primary); font-size:1.1rem;"></i>
@@ -451,7 +237,6 @@ card.innerHTML = `
       </div>
     `;
 
-<<<<<<< HEAD
     // Obtener donantes de Supabase
     const { data: donors, error: donorsError } = await supabase
       .from('causes_members')
@@ -486,8 +271,6 @@ card.innerHTML = `
       </div>
     `;
 
-=======
->>>>>>> 59461df1b33d25c65c9221b39256b8f9c62636c9
     modal.style.display = 'flex';
     document.body.style.overflow = 'hidden';
 
@@ -574,13 +357,8 @@ card.innerHTML = `
       btn.addEventListener('click', (e) => {
         e.preventDefault();
         const causeId = btn.getAttribute('data-cause-id');
-<<<<<<< HEAD
         if (window.donateToCoause) {
           window.donateToCoause(causeId);
-=======
-        if (window.donateToCause) {
-          window.donateToCause(causeId);
->>>>>>> 59461df1b33d25c65c9221b39256b8f9c62636c9
         }
       });
     });
@@ -621,33 +399,7 @@ card.innerHTML = `
       return { causes: [], error };
     }
 
-<<<<<<< HEAD
     return { causes: causes || [], error: null };
-=======
-    // Obtener información de donaciones del usuario actual
-    const { data: { session } } = await supabase.auth.getSession();
-    const userId = session?.user?.id;
-    let donatedIds = [];
-    if (userId) {
-      const { data: memberships } = await supabase
-        .from('causes_members')
-        .select('cause_id')
-        .eq('user_id', userId)
-        .eq('role', 'donor');
-      donatedIds = memberships ? memberships.map(m => m.cause_id) : [];
-    }
-
-    // Procesar causas con información adicional
-    const causesWithInfo = causes ? causes.map(cause => ({
-      ...cause,
-      isDonor: donatedIds.includes(cause.id)
-    })) : [];
-
-    // Renderizar
-    window.causesRenderer.renderGrid(causesWithInfo, causesList);
-
-    return { causes: causesWithInfo, error: null };
->>>>>>> 59461df1b33d25c65c9221b39256b8f9c62636c9
   }
 
   /**
@@ -1060,354 +812,9 @@ card.innerHTML = `
         display: block;
         margin-top: 0.3rem;
       }
-<<<<<<< HEAD
     `;
     document.head.appendChild(style);
   }
-=======
-
-      /* Animaciones de entrada y salida para el modal de éxito */
-      @keyframes bounceIn {
-        0% { opacity: 0; transform: scale(0.3); }
-        50% { opacity: 1; transform: scale(1.05); }
-        70% { transform: scale(0.9); }
-        100% { opacity: 1; transform: scale(1); }
-      }
-      @keyframes slideInDown {
-        from { opacity: 0; transform: translateX(-50%) translateY(-20px); }
-        to { opacity: 1; transform: translateX(-50%) translateY(0); }
-      }
-      @keyframes slideOutUp {
-        from { opacity: 1; transform: translateX(-50%) translateY(0); }
-        to { opacity: 0; transform: translateX(-50%) translateY(-20px); }
-      }
-      .modal-bg { display: none; }
-      .modal-bg.active { display: flex; }
-    `;
-    document.head.appendChild(style);
-  }
-
-  /**
-   * Muestra el modal para configurar Stripe
-   */
-  async showStripeSetupModal(stripeStatus, causeData) {
-    this.pendingCauseData = causeData;
-
-    const modal = document.createElement('div');
-    modal.className = 'stripe-setup-modal';
-    modal.innerHTML = `
-      <div class="modal-content">
-        <h3><i class="fab fa-stripe"></i> Configuración de Pagos Requerida</h3>
-        ${!stripeStatus.hasAccount ? `
-          <p>Para recibir donaciones, necesitas vincular una cuenta de Stripe. Este proceso es seguro y solo toma 2 minutos.</p>
-          <div class="benefits-list" style="text-align:left; margin:1.5rem 0;">
-            <div style="display:flex; align-items:center; gap:0.7rem; margin-bottom:0.8rem;">
-              <i class="fas fa-check-circle" style="color:var(--accent);"></i>
-              <span>Recibirás pagos directamente en tu cuenta bancaria</span>
-            </div>
-            <div style="display:flex; align-items:center; gap:0.7rem; margin-bottom:0.8rem;">
-              <i class="fas fa-check-circle" style="color:var(--accent);"></i>
-              <span>Solo 2% de comisión por transacción</span>
-            </div>
-            <div style="display:flex; align-items:center; gap:0.7rem;">
-              <i class="fas fa-check-circle" style="color:var(--accent);"></i>
-              <span>Proceso seguro y verificado</span>
-            </div>
-          </div>
-        ` : `
-          <p>Tu cuenta de Stripe necesita verificación para recibir pagos. Completa el proceso para habilitar donaciones.</p>
-        `}
-        <div class="modal-actions" style="margin-top:2rem;">
-          <button id="configureStripeBtn" class="btn btn-primary" style="flex:1;">
-            <i class="fab fa-stripe"></i> Configurar ahora
-          </button>
-          <button id="saveDraftBtn" class="btn btn-outline" style="flex:1;">
-            <i class="fas fa-save"></i> Guardar borrador
-          </button>
-        </div>
-        <p style="font-size:0.9rem; color:#6b7280; margin-top:1.5rem;">
-          <i class="fas fa-info-circle"></i> Puedes configurar Stripe más tarde desde tu perfil
-        </p>
-      </div>
-    `;
-
-    document.body.appendChild(modal);
-
-    modal.querySelector('#configureStripeBtn').addEventListener('click', async () => {
-      try {
-        const { data: { session } } = await supabase.auth.getSession();
-        if (!session?.user) throw new Error('No hay sesión de usuario');
-
-        // 1. Crear o actualizar cuenta Stripe
-        const response = await fetch('/api/stripe/create-account', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            userId: session.user.id,
-            email: session.user.email,
-            causeData: this.pendingCauseData
-          })
-        });
-        const { accountId, returnUrl } = await response.json();
-        // Guardar draft en Supabase
-        await fetch('/api/causes/save-draft', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            userId: session.user.id,
-            causeData: this.pendingCauseData,
-            stripeAccountId: accountId
-          })
-        });
-        window.location.href = returnUrl;
-
-      } catch (error) {
-        console.error('Error en configuración de Stripe:', error);
-        showNotification(`Error: ${error.message}`, 'error');
-        modal.remove();
-      }
-    });
-
-    modal.querySelector('#saveDraftBtn').addEventListener('click', async () => {
-      try {
-        const { data: { session } } = await supabase.auth.getSession();
-        if (!session?.user) throw new Error('No hay sesión de usuario');
-
-        const saveResponse = await fetch('/api/causes/save-draft', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            userId: session.user.id,
-            causeData: this.pendingCauseData,
-            stripeEnabled: false
-          })
-        });
-
-        if (!saveResponse.ok) throw new Error('Error guardando borrador');
-
-        const { draftId } = await saveResponse.json();
-        showNotification('Borrador guardado correctamente', 'success');
-        modal.remove();
-
-        // Mostrar opción para continuar más tarde
-        this.showDraftSavedNotification(draftId);
-
-      } catch (error) {
-        console.error('Error guardando borrador:', error);
-        showNotification(`Error: ${error.message}`, 'error');
-        modal.remove();
-      }
-    });
-  }
-
-  showDraftSavedNotification(draftId) {
-    const notification = document.createElement('div');
-    notification.className = 'draft-notification';
-    notification.innerHTML = `
-      <div style="position:fixed; bottom:20px; right:20px; background:white; border-radius:12px; padding:1.5rem; box-shadow:0 4px 20px rgba(0,0,0,0.15); z-index:9999; max-width:350px; border-left:4px solid var(--accent);">
-        <h4 style="margin-top:0; color:var(--primary);">
-          <i class="fas fa-save"></i> Borrador guardado
-        </h4>
-        <p style="margin-bottom:1.5rem;">Tu causa se ha guardado como borrador. ¿Quieres completar la configuración ahora?</p>
-        <div style="display:flex; gap:0.8rem;">
-          <button id="continueDraftBtn" class="btn btn-primary" style="flex:1;">
-            <i class="fas fa-pen"></i> Continuar
-          </button>
-          <button id="dismissDraftBtn" class="btn btn-outline">
-            <i class="fas fa-times"></i> Descartar
-          </button>
-        </div>
-      </div>
-    `;
-
-    document.body.appendChild(notification);
-
-    notification.querySelector('#continueDraftBtn').addEventListener('click', async () => {
-      try {
-        const { data: { session } } = await supabase.auth.getSession();
-        if (!session?.user) throw new Error('No hay sesión de usuario');
-
-        // Verificar estado de Stripe
-        const statusResponse = await fetch(`/api/stripe/account-status/${session.user.id}`);
-        if (!statusResponse.ok) throw new Error('Error verificando cuenta Stripe');
-
-        const stripeStatus = await statusResponse.json();
-        this.showStripeSetupModal(stripeStatus, this.pendingCauseData);
-        notification.remove();
-
-      } catch (error) {
-        console.error('Error continuando borrador:', error);
-        showNotification(`Error: ${error.message}`, 'error');
-        notification.remove();
-      }
-    });
-
-    notification.querySelector('#dismissDraftBtn').addEventListener('click', () => {
-      notification.remove();
-    });
-  }
-
-  /**
-   * Maneja el flujo completo de creación de causa con Stripe
-   */
-  async handleCauseCreation(formData) {
-    try {
-      // 1. Guardar borrador
-      const draftResponse = await this.saveCauseDraft(formData);
-      
-      // 2. Verificar estado de Stripe
-      const stripeStatus = await this.checkStripeStatus();
-      
-      if (!stripeStatus.hasAccount || !stripeStatus.charges_enabled) {
-        // Mostrar modal de configuración de Stripe
-        this.showStripeSetupModal(stripeStatus, draftResponse.draftId);
-        return;
-      }
-      
-      // 3. Crear causa final
-      const cause = await this.createFinalCause(draftResponse.draftId);
-      
-      // 4. Mostrar éxito
-      this.showCreationSuccess(cause);
-      
-    } catch (error) {
-      console.error('Error en creación de causa:', error);
-      this.showNotification(error.message, 'error');
-    }
-  }
-
-  /**
-   * Muestra el modal de configuración de Stripe
-   */
-  showStripeSetupModal(stripeStatus, draftId) {
-    const modal = document.createElement('div');
-    modal.className = 'stripe-setup-modal';
-    modal.innerHTML = `
-      <div class="modal-content">
-        <h3><i class="fab fa-stripe"></i> Configuración de Pagos</h3>
-        <p>Para recibir donaciones, necesitas completar la configuración de tu cuenta Stripe.</p>
-        
-        ${!stripeStatus.hasAccount ? `
-          <div class="stripe-benefits">
-            <div class="benefit-item">
-              <i class="fas fa-check-circle"></i>
-              <span>Recibirás pagos directamente en tu cuenta bancaria</span>
-            </div>
-            <div class="benefit-item">
-              <i class="fas fa-check-circle"></i>
-              <span>Solo 2% de comisión por transacción</span>
-            </div>
-          </div>
-        ` : `
-          <div class="stripe-status-warning">
-            <i class="fas fa-exclamation-triangle"></i>
-            <span>Tu cuenta necesita verificación adicional</span>
-          </div>
-        `}
-        
-        <div class="modal-actions">
-          <button id="configureStripeBtn" class="btn btn-primary">
-            <i class="fab fa-stripe"></i> Completar Configuración
-          </button>
-          <button id="saveDraftBtn" class="btn btn-outline">
-            <i class="fas fa-save"></i> Guardar como Borrador
-          </button>
-        </div>
-      </div>
-    `;
-
-    document.body.appendChild(modal);
-
-    // Configurar Stripe
-    modal.querySelector('#configureStripeBtn').addEventListener('click', async () => {
-      try {
-        const { data: { session } } = await supabase.auth.getSession();
-        if (!session?.user) throw new Error('No autenticado');
-        
-        const response = await fetch('/start-stripe-onboarding', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          credentials: 'include',
-          body: JSON.stringify({
-            draftId,
-            email: session.user.email
-          })
-        });
-        
-        const { url } = await response.json();
-        window.location.href = url;
-        
-      } catch (error) {
-        this.showNotification(error.message, 'error');
-        modal.remove();
-      }
-    });
-
-    // Guardar borrador
-    modal.querySelector('#saveDraftBtn').addEventListener('click', async () => {
-      modal.remove();
-      this.showNotification('Borrador guardado correctamente', 'success');
-      // Mostrar notificación para continuar después
-      this.showDraftSavedNotification(draftId);
-    });
-  }
-
-  /**
-   * Muestra notificación de borrador guardado
-   */
-  showDraftSavedNotification(draftId) {
-    const notification = document.createElement('div');
-    notification.className = 'draft-notification';
-    notification.innerHTML = `
-      <div class="notification-content">
-        <h4><i class="fas fa-save"></i> Borrador Guardado</h4>
-        <p>Puedes continuar con la configuración de pagos cuando lo desees.</p>
-        <div class="notification-actions">
-          <button id="continueDraftBtn" class="btn btn-primary">
-            <i class="fas fa-pen"></i> Continuar Ahora
-          </button>
-          <button id="dismissDraftBtn" class="btn btn-outline">
-            <i class="fas fa-times"></i> Cerrar
-          </button>
-        </div>
-      </div>
-    `;
-
-    document.body.appendChild(notification);
-
-    notification.querySelector('#continueDraftBtn').addEventListener('click', async () => {
-      notification.remove();
-      const stripeStatus = await this.checkStripeStatus();
-      this.showStripeSetupModal(stripeStatus, draftId);
-    });
-
-    notification.querySelector('#dismissDraftBtn').addEventListener('click', () => {
-      notification.remove();
-    });
-  }
-
-  /**
-   * Verifica el estado de Stripe
-   */
-  async checkStripeStatus() {
-    try {
-      const { data: { session } } = await supabase.auth.getSession();
-      if (!session?.user) return { hasAccount: false };
-      
-      const response = await fetch(`/stripe-account-status/${session.user.id}`, {
-        credentials: 'include'
-      });
-      
-      if (!response.ok) throw new Error('Error verificando estado');
-      
-      return await response.json();
-      
-    } catch (error) {
-      console.error('Error checking Stripe status:', error);
-      return { hasAccount: false, error: error.message };
-    }
-  }
->>>>>>> 59461df1b33d25c65c9221b39256b8f9c62636c9
 }
 
 // Hacer disponible globalmente
@@ -1455,7 +862,6 @@ window.mostrarCompartir = function(causeId) {
 
 // Funciones auxiliares globales
 window.donateToCause = async function(causeId) {
-<<<<<<< HEAD
   if (!supabase) {
     showNotification('Error: Supabase no está disponible', 'error');
     return;
@@ -1574,82 +980,6 @@ window.joinCause = async function(causeId) {
       alert('No se pudo unir a la causa. Inténtalo nuevamente más tarde.');
     });
 };
-=======
-  try {
-    // Verificar sesión
-    const { data: { session } } = await supabase.auth.getSession();
-    if (!session) {
-      return showLoginModal(() => donateToCause(causeId));
-    }
-
-    // Mostrar selector de monto
-    const amount = await showDonationAmountSelector();
-    if (!amount) return;
-
-    // Crear sesión de pago
-    const response = await fetch('/api/donations', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      credentials: 'include',
-      body: JSON.stringify({ causeId, amount })
-    });
-
-    const { sessionId, error } = await response.json();
-    if (error) throw new Error(error);
-
-    // Redirigir a Stripe
-    const stripe = Stripe(window.stripePublicKey);
-    await stripe.redirectToCheckout({ sessionId });
-
-  } catch (error) {
-    showNotification(`Error al donar: ${error.message}`, 'error');
-  }
-};
-
-async function showDonationAmountSelector() {
-  return new Promise((resolve) => {
-    const modal = document.createElement('div');
-    modal.className = 'donation-modal';
-    modal.innerHTML = `
-      <div class="modal-content">
-        <h3>Selecciona el monto</h3>
-        <div class="amount-options">
-          ${[5, 10, 20, 50, 100].map(amount => `
-            <button data-amount="${amount}">${amount}€</button>
-          `).join('')}
-        </div>
-        <input type="number" placeholder="Otra cantidad" min="1">
-        <button class="confirm-btn">Continuar</button>
-      </div>
-    `;
-
-    let selectedAmount = 0;
-    
-    modal.querySelectorAll('[data-amount]').forEach(btn => {
-      btn.addEventListener('click', () => {
-        modal.querySelectorAll('.donation-amount').forEach(b => b.classList.remove('selected'));
-        btn.classList.add('selected');
-        selectedAmount = parseInt(btn.dataset.amount);
-        modal.querySelector('input').value = '';
-        updateFeeDisplay(selectedAmount);
-      });
-    });
-
-    modal.querySelector('input').addEventListener('input', (e) => {
-      selectedAmount = parseFloat(e.target.value) || 0;
-      modal.querySelectorAll('.donation-amount').forEach(b => b.classList.remove('selected'));
-      updateFeeDisplay(selectedAmount);
-    });
-
-    modal.querySelector('.confirm-btn').addEventListener('click', () => {
-      modal.remove();
-      resolve(selectedAmount);
-    });
-
-    document.body.appendChild(modal);
-  });
-}
->>>>>>> 59461df1b33d25c65c9221b39256b8f9c62636c9
 
 // AGREGAR al final del archivo causes-renderer.js, después de la línea window.donateToCoause = window.donateToCause;
 
@@ -1759,7 +1089,6 @@ function shareDonation() {
   }
 }
 
-<<<<<<< HEAD
 function showNotification(message, type = 'info') {
   // Eliminar notificación existente
   const existing = document.querySelector('.notification');
@@ -1834,199 +1163,3 @@ window.showDonationSuccessModal = showDonationSuccessModal;
 window.closeDonationSuccessModal = closeDonationSuccessModal;
 window.shareDonation = shareDonation;
 window.showNotification = showNotification;
-=======
-// NUEVO: Función para mostrar el modal de donación
-function showDonationModal(causeId, creatorId, donorId) {
-  const modal = document.createElement('div');
-  modal.className = 'donation-modal';
-  modal.innerHTML = `
-    <div class="modal-content">
-      <h3><i class="fas fa-donate"></i> Apoya esta causa</h3>
-      <p class="donation-info">
-        <i class="fas fa-info-circle"></i> Montos válidos: 1€ - 10,000€
-      </p>
-      <div class="donation-options">
-        <button class="donation-amount" data-amount="5">5€</button>
-        <button class="donation-amount" data-amount="10">10€</button>
-        <button class="donation-amount" data-amount="25">25€</button>
-        <button class="donation-amount" data-amount="50">50€</button>
-        <div class="custom-donation">
-          <input type="number" id="custom-amount" min="1" max="10000" placeholder="Otra cantidad" step="0.01">
-          <span>€</span>
-        </div>
-      </div>
-      <div class="fee-transparency">
-        <div class="fee-item">
-          <span>Para la causa:</span>
-          <span id="cause-amount">0.00€</span>
-        </div>
-        <div class="fee-item">
-          <span>Comisión de Solidarity (2%):</span>
-          <span id="fee-amount">0.00€</span>
-        </div>
-        <div class="fee-total">
-          <span>Total:</span>
-          <span id="total-amount">0.00€</span>
-        </div>
-      </div>
-      <button id="confirm-donation" class="btn btn-primary">
-        <i class="fas fa-check"></i> Confirmar donación
-      </button>
-    </div>
-  `;
-  document.body.appendChild(modal);
-
-  let selectedAmount = 0;
-  function updateFeeDisplay(amount) {
-    const fee = (amount * 0.02).toFixed(2);
-    const net = (amount * 0.98).toFixed(2);
-    modal.querySelector('#cause-amount').textContent = `${net}€`;
-    modal.querySelector('#fee-amount').textContent = `${fee}€`;
-    modal.querySelector('#total-amount').textContent = `${amount.toFixed(2)}€`;
-  }
-
-  modal.querySelectorAll('.donation-amount').forEach(btn => {
-    btn.addEventListener('click', () => {
-      modal.querySelectorAll('.donation-amount').forEach(b => b.classList.remove('selected'));
-      btn.classList.add('selected');
-      selectedAmount = parseFloat(btn.getAttribute('data-amount'));
-      modal.querySelector('#custom-amount').value = '';
-      updateFeeDisplay(selectedAmount);
-    });
-  });
-
-  modal.querySelector('#custom-amount').addEventListener('input', (e) => {
-    selectedAmount = parseFloat(e.target.value) || 0;
-    modal.querySelectorAll('.donation-amount').forEach(b => b.classList.remove('selected'));
-    updateFeeDisplay(selectedAmount);
-  });
-
-  modal.querySelector('#confirm-donation').addEventListener('click', async () => {
-    const amount = selectedAmount;
-    if (!amount || amount < 1 || amount > 10000) {
-      showNotification('Monto inválido. Debe ser entre 1€ y 10,000€', 'error');
-      return;
-    }
-    try {
-      const response = await fetch('/create-donation', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        credentials: 'include', // <-- Añadido
-        body: JSON.stringify({ amount, causeId })
-      });
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.error || 'Error en la solicitud');
-      }
-      const { id: sessionId } = await response.json();
-      modal.remove();
-      const stripe = Stripe('pk_test_51RXeFrRo1sZSKMfJEVFU03TStZOKzm3Azc6o8rsvAvhmDuwad4lmX1CvtJkszN4pZJtAICHJ5IxoU1PxmNmVqX3s00fAWq9aea');
-      stripe.redirectToCheckout({ sessionId });
-    } catch (error) {
-      showNotification('Error al procesar la donación: ' + error.message, 'error');
-    }
-  });
-}
-
-// Funciones para configurar Stripe
-async function setupStripeAccount() {
-  try {
-    const { data: { session } } = await supabase.auth.getSession();
-    const userId = session.user.id;
-    const email = session.user.email;
-
-    // Crear cuenta Stripe
-    const response = await fetch('/create-stripe-account', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      credentials: 'include', // <-- Añadido
-      body: JSON.stringify({ userId, email })
-    });
-    const { accountId } = await response.json();
-
-    // Crear enlace de onboarding
-    const linkResponse = await fetch('/create-account-link', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      credentials: 'include', // <-- Añadido
-      body: JSON.stringify({
-        accountId,
-        returnUrl: `${window.location.origin}/causes?stripe=success`,
-        refreshUrl: `${window.location.origin}/causes?stripe=error`
-      })
-    });
-    const { url } = await linkResponse.json();
-    window.location.href = url;
-  } catch (error) {
-    showNotification(`Error configurando Stripe: ${error.message}`, 'error');
-  }
-}
-
-// Comprobar estado Stripe
-async function checkStripeAccount(userId) {
-  try {
-    const response = await fetch(`/stripe-account-status/${userId}`, {
-      method: 'GET',
-      credentials: 'include', // <-- Añadido
-    });
-    if (!response.ok) throw new Error('Error al verificar el estado de la cuenta Stripe');
-
-    const data = await response.json();
-    return {
-      hasAccount: data.account_id != null,
-      status: data.status
-    };
-  } catch (error) {
-    console.error('Error en checkStripeAccount:', error);
-    return { hasAccount: false, status: 'error' };
-  }
-}
-
-// --- Flujo mejorado para Stripe callback en frontend ---
-async function checkStripeCallback() {
-  const urlParams = new URLSearchParams(window.location.search);
-  const stripeError = urlParams.get('stripe_error');
-  const stripeSuccess = urlParams.get('stripe');
-
-  if (stripeError) {
-    showStripeError(stripeError);
-    cleanUrlParams();
-    return;
-  }
-
-  if (stripeSuccess === 'success') {
-    await handleStripeSuccess();
-    cleanUrlParams();
-  }
-}
-
-function showStripeError(errorCode) {
-  const messages = {
-    'unauthorized': 'No autorizado. Inicia sesión nuevamente.',
-    'no_account': 'No se encontró cuenta Stripe vinculada.',
-    'not_verified': 'Cuenta no verificada. Completa el proceso en Stripe.',
-    'no_draft': 'No se encontró borrador para crear la causa.',
-    'internal_error': 'Error interno. Por favor intenta nuevamente.'
-  };
-  showNotification(messages[errorCode] || 'Error desconocido', 'error');
-}
-
-async function handleStripeSuccess() {
-  try {
-    // Recargar causas para mostrar la nueva
-    await window.causesRenderer.loadCausesFromSupabase();
-    showNotification('¡Cuenta Stripe conectada y causa creada con éxito!', 'success');
-  } catch (error) {
-    console.error('Error handling success:', error);
-    showNotification('Error al cargar la causa creada', 'error');
-  }
-}
-
-function cleanUrlParams() {
-  // Limpiar parámetros de la URL sin recargar
-  window.history.replaceState({}, '', window.location.pathname);
-}
-
-// Ejecutar al cargar la página
-document.addEventListener('DOMContentLoaded', checkStripeCallback);
->>>>>>> 59461df1b33d25c65c9221b39256b8f9c62636c9

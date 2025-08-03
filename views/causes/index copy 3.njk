@@ -109,7 +109,6 @@
     align-items: center;
     gap: 0.7rem;
   }
-<<<<<<< HEAD
   .donation-method-option {
     display: flex;
     flex-direction: column;
@@ -145,15 +144,6 @@
   .success-modal-content h2 {
     color: var(--primary);
     margin-bottom: 1rem;
-=======
-  .after-create {
-    margin-top: 2rem;
-    background: var(--primary-light, #e6f0fa);
-    color: #444;
-    border-radius: 10px;
-    padding: 1.5rem 1rem;
-    text-align: center;
->>>>>>> 59461df1b33d25c65c9221b39256b8f9c62636c9
   }
   @media (max-width: 600px) {
   html, body {
@@ -921,10 +911,6 @@
     align-items: flex-start !important;
     justify-content: flex-start !important;
   }
-<<<<<<< HEAD
-=======
-
->>>>>>> 59461df1b33d25c65c9221b39256b8f9c62636c9
   #createCauseModal .modal-content .create-cause-title {
     text-align: center !important;
   }
@@ -989,26 +975,16 @@
     position: fixed;
     top: 20px;
     left: 50%;
-<<<<<<< HEAD
     transform: translateX(-50%);
-=======
-    transform: translateX(-50%) translateY(-20px);
->>>>>>> 59461df1b33d25c65c9221b39256b8f9c62636c9
     padding: 1rem 1.5rem;
     border-radius: 8px;
     display: flex;
     align-items: center;
     gap: 0.8rem;
     z-index: 10000;
-<<<<<<< HEAD
     box-shadow: 0 4px 12px rgba(0,0,0,0.1);
     opacity: 0;
     transition: all 0.3s ease;
-=======
-    opacity: 0;
-    transition: all 0.3s ease;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
->>>>>>> 59461df1b33d25c65c9221b39256b8f9c62636c9
   }
   .global-notification.info {
     background: #dbeafe;
@@ -1414,7 +1390,6 @@ to { opacity: 0; transform: translateX(-50%) translateY(-20px); }
   <!-- Modal para usuarios no logueados -->
   <div class="modal-bg" id="loginModal">
     <div class="modal-content">
-<<<<<<< HEAD
       <button class="close-modal" id="closeLoginModal">&times;</button>
       <h3>Para crear una causa</h3>
       <p>Debes ser un usuario registrado. ¿Deseas iniciar sesión o registrarte ahora?</p>
@@ -1422,19 +1397,10 @@ to { opacity: 0; transform: translateX(-50%) translateY(-20px); }
         <a href="/login?return=/causes" class="btn btn-primary">Iniciar Sesión</a>
         <a href="/register?return=/causes" class="btn btn-outline">Registrarse</a>
         <button id="cancelLoginModal" class="btn">Cancelar</button>
-=======
-      <h3>Para crear una causa</h3>
-      <p>Debes ser un usuario registrado. ¿Deseas iniciar sesión o registrarte ahora?</p>
-      <div class="modal-buttons">
-        <a href="/login?return=/causes" class="btn btn-primary">Iniciar Sesión</a>
-        <a href="/register?return=/causes" class="btn btn-outline">Registrarse</a>
-        <button id="cancelModal" class="btn">Cancelar</button>
->>>>>>> 59461df1b33d25c65c9221b39256b8f9c62636c9
       </div>
     </div>
   </div>
 
-<<<<<<< HEAD
   <!-- Modal de selección de método de donación -->
   <div id="donationMethodModal" class="modal-bg">
     <div class="modal-content">
@@ -1454,26 +1420,6 @@ to { opacity: 0; transform: translateX(-50%) translateY(-20px); }
         <i class="fas fa-wallet" style="color: var(--primary); font-size: 2rem; margin-bottom: 0.5rem;"></i>
         <h4 style="margin: 0 0 0.5rem 0; color: var(--primary);">Otros métodos (transferencia, Bizum, PayPal...)</h4>
         <p style="margin: 0; color: #666; font-size: 0.9rem;">Tú gestionas las donaciones</p>
-=======
-  <!-- Modal de selección de método de donación (SIEMPRE ANTES del modal de crear causa) -->
-  <div id="donationMethodModal" class="modal-bg">
-    <div class="modal-content" style="max-width:420px;">
-      <button class="close-modal" id="closeDonationMethodModal" title="Cerrar">&times;</button>
-      <h3 style="color:#4a6fa5;font-weight:800;text-align:center;margin-bottom:1.2rem;">
-        ¿Cómo quieres recibir donaciones?
-      </h3>
-      <p style="text-align:center;margin-bottom:1.5rem;">
-        Elige la forma en la que prefieres recibir las donaciones para tu causa.
-      </p>
-      <div style="display:flex;flex-direction:column;gap:1.2rem;">
-        <button id="chooseStripe" class="btn btn-accent" style="font-size:1.1rem;">
-          <i class="fab fa-stripe"></i> Directamente en tu cuenta bancaria (Stripe Connect) <br>
-          <span style="font-size:0.95em;color:#666;font-weight:400;">Rápido, seguro y recomendado</span>
-        </button>
-        <button id="chooseOther" class="btn btn-outline" style="font-size:1.1rem;">
-          <i class="fas fa-wallet"></i> Otros métodos (transferencia, Bizum, PayPal...)
-        </button>
->>>>>>> 59461df1b33d25c65c9221b39256b8f9c62636c9
       </div>
     </div>
   </div>
@@ -1481,52 +1427,28 @@ to { opacity: 0; transform: translateX(-50%) translateY(-20px); }
   <!-- Modal emergente para crear causa -->
   <div id="createCauseModal" class="modal-bg">
     <div class="modal-content">
-<<<<<<< HEAD
       <button class="close-modal" id="closeCreateCauseModal">&times;</button>
-=======
-      <button class="close-modal" id="closeCreateCauseModal" title="Cerrar">&times;</button>
->>>>>>> 59461df1b33d25c65c9221b39256b8f9c62636c9
       <div class="create-cause-title">
         <i class="fas fa-plus-circle"></i> Crear Nueva Causa Solidaria
       </div>
       <form class="cause-form" id="causeForm" autocomplete="off">
-<<<<<<< HEAD
-=======
-        <!-- Título de la causa -->
->>>>>>> 59461df1b33d25c65c9221b39256b8f9c62636c9
         <div class="form-group">
           <label for="title">Título de la causa</label>
           <input type="text" id="title" name="title" placeholder="Ej: Agua limpia para todos" required>
         </div>
-<<<<<<< HEAD
-=======
-        <!-- Foto principal (ahora justo después del título) -->
->>>>>>> 59461df1b33d25c65c9221b39256b8f9c62636c9
         <div class="form-group">
           <label for="photo">Foto principal</label>
           <input type="file" id="photo" name="photo" accept="image/*">
           <img id="previewImg" class="preview-img" alt="Vista previa de la foto" style="display:none;">
         </div>
-<<<<<<< HEAD
-=======
-        <!-- Resumen corto -->
->>>>>>> 59461df1b33d25c65c9221b39256b8f9c62636c9
         <div class="form-group">
           <label for="short_description">Descripción corta (máx. 3 líneas)</label>
           <textarea id="short_description" name="short_description" maxlength="180" placeholder="Resumen breve para mostrar en la tarjeta..." required></textarea>
         </div>
-<<<<<<< HEAD
-=======
-        <!-- Descripción larga -->
->>>>>>> 59461df1b33d25c65c9221b39256b8f9c62636c9
         <div class="form-group">
           <label for="description">Descripción exhaustiva</label>
           <textarea id="description" name="description" placeholder="Describe la causa, el objetivo, contexto, cómo se usará la ayuda..." required></textarea>
         </div>
-<<<<<<< HEAD
-=======
-        <!-- Meta y beneficiarios -->
->>>>>>> 59461df1b33d25c65c9221b39256b8f9c62636c9
         <div class="form-inline-group">
           <div class="form-group">
             <label for="goal">Meta de recaudación (€)</label>
@@ -1537,10 +1459,6 @@ to { opacity: 0; transform: translateX(-50%) translateY(-20px); }
             <input type="number" id="beneficiaries" name="beneficiaries" min="1" placeholder="Ej: 100" required>
           </div>
         </div>
-<<<<<<< HEAD
-=======
-        <!-- Ciudad y país -->
->>>>>>> 59461df1b33d25c65c9221b39256b8f9c62636c9
         <div class="form-inline-group">
           <div class="form-group">
             <label for="city">Ciudad</label>
@@ -1551,10 +1469,6 @@ to { opacity: 0; transform: translateX(-50%) translateY(-20px); }
             <input type="text" id="country" name="country" placeholder="Ej: España" required>
           </div>
         </div>
-<<<<<<< HEAD
-=======
-        <!-- Puntos -->
->>>>>>> 59461df1b33d25c65c9221b39256b8f9c62636c9
         <div class="form-group">
           <label for="points">Puntos por colaborar</label>
           <input type="number" id="points" name="points" min="1" max="1000" value="50" required>
@@ -1563,42 +1477,22 @@ to { opacity: 0; transform: translateX(-50%) translateY(-20px); }
             Colaborar en esta causa otorgará <strong>50 puntos</strong> a cada participante.
           </div>
         </div>
-<<<<<<< HEAD
-=======
-        <!-- Email de contacto -->
->>>>>>> 59461df1b33d25c65c9221b39256b8f9c62636c9
         <div class="form-group">
           <label for="contact_email">Email de contacto</label>
           <input type="email" id="contact_email" name="contact_email" placeholder="ejemplo@email.com">
         </div>
-<<<<<<< HEAD
-=======
-        <!-- Teléfono de contacto -->
->>>>>>> 59461df1b33d25c65c9221b39256b8f9c62636c9
         <div class="form-group">
           <label for="phone_number">Teléfono de contacto</label>
           <input type="tel" id="phone_number" name="phone_number" placeholder="+34 600 123 456">
         </div>
-<<<<<<< HEAD
-=======
-        <!-- Campo: Cómo Donar -->
->>>>>>> 59461df1b33d25c65c9221b39256b8f9c62636c9
         <div class="form-group">
           <label for="how_to_donate">Cómo Donar <span style="color:#888;font-size:0.95em;">(explica cómo quieres recibir donaciones)</span></label>
           <textarea id="how_to_donate" name="how_to_donate" placeholder="Ej: Puedes donar por Bizum, transferencia bancaria, PayPal, etc. Indica aquí instrucciones claras..." required></textarea>
         </div>
-<<<<<<< HEAD
-=======
-        <!-- Campo: Mobile Wallet -->
->>>>>>> 59461df1b33d25c65c9221b39256b8f9c62636c9
         <div class="form-group">
           <label for="mobile_wallet">Mobile Wallet (Bizum, PayPal, etc.) <span style="color:#888;font-size:0.95em;">(opcional)</span></label>
           <input type="text" id="mobile_wallet" name="mobile_wallet" placeholder="Ej: Bizum al 600123456, PayPal: miemail@email.com">
         </div>
-<<<<<<< HEAD
-=======
-        <!-- Campo: Cuenta Bancaria / IBAN -->
->>>>>>> 59461df1b33d25c65c9221b39256b8f9c62636c9
         <div class="form-group">
           <label for="bank_account">Cuenta Bancaria / IBAN <span style="color:#888;font-size:0.95em;">(opcional)</span></label>
           <input type="text" id="bank_account" name="bank_account" placeholder="Ej: ES12 3456 7890 1234 5678 9012">
@@ -1623,7 +1517,6 @@ to { opacity: 0; transform: translateX(-50%) translateY(-20px); }
     </div>
   </div>
 
-<<<<<<< HEAD
   <!-- Modal de éxito de Stripe -->
   <div id="stripeSuccessModal" class="modal-bg">
     <div class="modal-content" style="text-align: center;">
@@ -1645,8 +1538,6 @@ to { opacity: 0; transform: translateX(-50%) translateY(-20px); }
     </div>
   </div>
 
-=======
->>>>>>> 59461df1b33d25c65c9221b39256b8f9c62636c9
   <!-- Modal de Causa (compatible con causes-renderer.js) -->
   <div id="causeModal" class="modal" style="display:none; position:fixed; z-index:9999; left:0; top:0; width:100vw; height:100vh; background:rgba(0,0,0,0.35); align-items:center; justify-content:center;">
     <div class="modal-content" style="background:#fff; border-radius:18px; max-width:900px; width:95vw; padding:0; position:relative; max-height:90vh; overflow-y:auto;">
@@ -1755,7 +1646,6 @@ to { opacity: 0; transform: translateX(-50%) translateY(-20px); }
     <div class="causes-grid" id="causesList">
       <!-- Las causas se cargarán dinámicamente desde Supabase -->
     </div>
-<<<<<<< HEAD
     <div class="pagination" style="justify-content: center; margin-top: 1.5rem;">
       <button class="btn" id="prevPage" style="cursor: pointer;" disabled>
         <i class="fas fa-chevron-left"></i>
@@ -1765,8 +1655,6 @@ to { opacity: 0; transform: translateX(-50%) translateY(-20px); }
         <i class="fas fa-chevron-right"></i>
       </button>
     </div>
-=======
->>>>>>> 59461df1b33d25c65c9221b39256b8f9c62636c9
   </div>
 
   <!-- Modal para conectar Stripe si el usuario aún no lo ha hecho -->
@@ -1800,7 +1688,6 @@ to { opacity: 0; transform: translateX(-50%) translateY(-20px); }
 
 {% block scripts %}
 {{ super() }}
-<<<<<<< HEAD
 
 <script>
 // Función global para mostrar notificaciones
@@ -1877,29 +1764,12 @@ document.addEventListener('DOMContentLoaded', async function() {
     if (!session?.user) {
       document.getElementById('loginModal').classList.add('active');
       document.body.style.overflow = 'hidden';
-=======
-<script>
-window.stripePublicKey = "{{ stripe_public_key }}";
-</script>
-<script src="/js/compartir.js"></script>
-<script src="/js/modules/causes-renderer.js"></script>
-<script src="https://js.stripe.com/v3/"></script>
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-  // Botón crear causa
-  document.getElementById('create-cause-btn').onclick = async function(e) {
-    e.preventDefault();
-    const { data: { session } } = await supabase.auth.getSession();
-    if (!session?.user) {
-      document.getElementById('loginModal').classList.add('active');
->>>>>>> 59461df1b33d25c65c9221b39256b8f9c62636c9
       return;
     }
     document.getElementById('donationMethodModal').classList.add('active');
     document.body.style.overflow = 'hidden';
   };
 
-<<<<<<< HEAD
   // Stripe option
   document.getElementById('stripeOption').onclick = async function() {
     const { data: { session } } = await supabase.auth.getSession(); // ✅ USAR supabase
@@ -1911,47 +1781,18 @@ document.addEventListener('DOMContentLoaded', function() {
       showStripeOnboardingModal(session.user);
     } else {
       document.getElementById('donationMethodModal').classList.remove('active');
-=======
-  // Modal método de donación
-  document.getElementById('closeDonationMethodModal').onclick = function() {
-    document.getElementById('donationMethodModal').classList.remove('active');
-    document.body.style.overflow = '';
-  };
-  document.getElementById('donationMethodModal').onclick = function(e) {
-    if (e.target === this) {
-      this.classList.remove('active');
-      document.body.style.overflow = '';
-    }
-  };
-
-  // Stripe option
-  document.getElementById('chooseStripe').onclick = async function() {
-    document.getElementById('donationMethodModal').classList.remove('active');
-    const { data: { session } } = await supabase.auth.getSession();
-    if (!session?.user) return;
-    const response = await fetch(`/stripe-account-status/${session.user.id}`, { credentials: 'include' });
-    const stripeStatus = await response.json();
-    if (!stripeStatus.hasAccount || stripeStatus.status !== 'active') {
-      document.getElementById('stripeSetupModal').style.display = 'flex';
-    } else {
->>>>>>> 59461df1b33d25c65c9221b39256b8f9c62636c9
       document.getElementById('createCauseModal').classList.add('active');
       document.body.style.overflow = 'hidden';
     }
   };
 
   // Otros métodos
-<<<<<<< HEAD
   document.getElementById('otherMethodsOption').onclick = function() {
-=======
-  document.getElementById('chooseOther').onclick = function() {
->>>>>>> 59461df1b33d25c65c9221b39256b8f9c62636c9
     document.getElementById('donationMethodModal').classList.remove('active');
     document.getElementById('createCauseModal').classList.add('active');
     document.body.style.overflow = 'hidden';
   };
 
-<<<<<<< HEAD
   // Manejo del modal éxito Stripe (SOLO después del onboarding)
   const urlParams = new URLSearchParams(window.location.search);
   if (urlParams.get('stripe') === 'success') {
@@ -2404,110 +2245,5 @@ window.showStripeOnboardingModal = function(user) {
     if (e.target === this) modal.remove();
   };
 };
-=======
-  // Cierre modal crear causa
-  document.getElementById('closeCreateCauseModal').onclick = function() {
-    document.getElementById('createCauseModal').classList.remove('active');
-    document.body.style.overflow = '';
-    document.getElementById('causeForm').reset();
-    document.getElementById('previewImg').style.display = 'none';
-    document.getElementById('causeForm').style.display = 'block';
-    document.getElementById('afterCreate').style.display = 'none';
-  };
-  document.getElementById('createCauseModal').onclick = function(e) {
-    if (e.target === this) {
-      this.classList.remove('active');
-      document.body.style.overflow = '';
-      document.getElementById('causeForm').style.display = 'block';
-      document.getElementById('afterCreate').style.display = 'none';
-    }
-  };
-
-  // Modal login
-  document.getElementById('cancelModal').onclick = function() {
-    document.getElementById('loginModal').classList.remove('active');
-  };
-  document.getElementById('loginModal').onclick = function(e) {
-    if (e.target === this) this.classList.remove('active');
-  };
-
-  // Vista previa de imagen
-  document.getElementById('photo').addEventListener('change', function(e) {
-    const file = e.target.files[0];
-    const preview = document.getElementById('previewImg');
-    if (file) {
-      const reader = new FileReader();
-      reader.onload = function(evt) {
-        preview.src = evt.target.result;
-        preview.style.display = 'block';
-      };
-      reader.readAsDataURL(file);
-    } else {
-      preview.src = '';
-      preview.style.display = 'none';
-    }
-  });
-
-  // Actualizar texto de puntos
-  document.getElementById('points').addEventListener('input', function() {
-    const val = this.value || 0;
-    document.getElementById('pointsText').innerHTML = `<i class="fas fa-star"></i> Colaborar en esta causa otorgará <strong>${val} puntos</strong> a cada participante.`;
-  });
-
-  // Stripe Setup Modal: cancelar
-  document.getElementById('cancelStripeSetupBtn').onclick = function() {
-    document.getElementById('stripeSetupModal').style.display = 'none';
-  };
-  document.getElementById('stripeSetupModal').onclick = function(e) {
-    if (e.target === this) this.style.display = 'none';
-  };
-
-  // Stripe Required Modal: abrir setup Stripe
-  document.getElementById('openStripeSetupBtn').onclick = function() {
-    document.getElementById('stripeRequiredModal').style.display = 'none';
-    document.getElementById('stripeSetupModal').style.display = 'flex';
-  };
-  document.getElementById('closeStripeRequiredBtn').onclick = function() {
-    document.getElementById('stripeRequiredModal').style.display = 'none';
-  };
-  document.getElementById('stripeRequiredModal').onclick = function(e) {
-    if (e.target === this) this.style.display = 'none';
-  };
-
-  // Modal éxito Stripe tras onboarding
-  const urlParams = new URLSearchParams(window.location.search);
-  if (urlParams.get('stripe') === 'success') {
-    const modal = document.createElement('div');
-    modal.className = 'modal-solidarity';
-    modal.style.display = 'flex';
-    modal.innerHTML = `
-      <div class="modal-content">
-        <img src="/img/solidarity-success.svg" alt="Éxito" style="width:80px;margin-bottom:16px;">
-        <h2>¡Tu cuenta Stripe está conectada!</h2>
-        <p>Ya puedes empezar a recibir donaciones en tu causa.<br>
-        <strong>¡Gracias por sumar solidaridad!</strong></p>
-        <button id="openCreateCause" class="btn btn-solidarity">Crear causa</button>
-        <button id="closeSuccessModal" class="btn btn-outline">Cerrar</button>
-      </div>
-    `;
-    document.body.appendChild(modal);
-    document.getElementById('openCreateCause').onclick = function() {
-      modal.remove();
-      document.getElementById('createCauseModal').classList.add('active');
-      document.body.style.overflow = 'hidden';
-    };
-    document.getElementById('closeSuccessModal').onclick = function() {
-      modal.remove();
-    };
-    modal.onclick = function(e) {
-      if (e.target === modal) modal.remove();
-    };
-    // Limpia el parámetro de la URL
-    const url = new URL(window.location.href);
-    url.searchParams.delete('stripe');
-    window.history.replaceState({}, '', url.pathname + url.search);
-  }
-});
->>>>>>> 59461df1b33d25c65c9221b39256b8f9c62636c9
 </script>
 {% endblock %}

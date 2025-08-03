@@ -328,17 +328,12 @@
 
     .admin-modal-content {
       background: #fff;
-<<<<<<< HEAD
       border-radius: 12px;
-=======
-      border-radius: 18px;
->>>>>>> 59461df1b33d25c65c9221b39256b8f9c62636c9
       padding: 2rem;
       max-width: 900px;
       width: 90vw;
       box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
       position: relative;
-<<<<<<< HEAD
     }
 
     /* 🎨 MEJORAS ESTÉTICAS ESPECÍFICAS DEL MODAL ADMIN 🎨 */
@@ -563,11 +558,6 @@
       width: 90vw;
       box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
       position: relative;
-=======
-      display: flex;
-      flex-direction: column;
-      gap: 1.2rem;
->>>>>>> 59461df1b33d25c65c9221b39256b8f9c62636c9
     }
 
     .close-admin-modal {
@@ -576,18 +566,10 @@
       right: 1rem;
       background: none;
       border: none;
-<<<<<<< HEAD
       font-size: 1.5rem;
       color: #6b7280;
       cursor: pointer;
       transition: color 0.2s;
-=======
-      font-size: 1.8rem;
-      color: #6b7280;
-      cursor: pointer;
-      transition: color 0.2s;
-      z-index: 2;
->>>>>>> 59461df1b33d25c65c9221b39256b8f9c62636c9
     }
 
     .close-admin-modal:hover {
@@ -601,32 +583,19 @@
       border-bottom: 2px solid #e2e8f0;
       overflow-x: auto;
       scrollbar-width: none;
-<<<<<<< HEAD
-=======
-      padding-bottom: 0.2rem;
->>>>>>> 59461df1b33d25c65c9221b39256b8f9c62636c9
     }
     .admin-tabs::-webkit-scrollbar { display: none; }
     .admin-tab {
       flex: none;
       padding: 0.7rem 1.2rem;
-<<<<<<< HEAD
       border-radius: 8px 8px 0 0;
       background: none;
-=======
-      border-radius: 999px 999px 0 0;
-      background: #f8fafc;
->>>>>>> 59461df1b33d25c65c9221b39256b8f9c62636c9
       color: #4a5568;
       font-weight: 600;
       border: none;
       border-bottom: 2px solid transparent;
       cursor: pointer;
       transition: background 0.2s, color 0.2s, border-bottom 0.2s;
-<<<<<<< HEAD
-=======
-      margin-right: 0.2rem;
->>>>>>> 59461df1b33d25c65c9221b39256b8f9c62636c9
     }
     .admin-tab.active {
       background: #fff;
@@ -635,7 +604,6 @@
       box-shadow: 0 2px 8px #4a6fa511;
       z-index: 2;
     }
-<<<<<<< HEAD
 
     .admin-tab-content {
       display: none;
@@ -644,38 +612,6 @@
     .admin-tab-content.active {
       display: block;
     }
-=======
-    .admin-tab-content {
-      display: none;
-      width: 100%;
-    }
-    .admin-tab-content.active {
-      display: block;
-    }
-    @media (max-width: 700px) {
-      .admin-modal-content {
-        padding: 1rem;
-        border-radius: 14px;
-        margin-top: 70px;
-        margin-bottom: 80px;
-        width: 98vw;
-        max-width: 98vw;
-        min-width: 0;
-        box-sizing: border-box;
-      }
-      .admin-tabs {
-        gap: 0.3rem !important;
-        margin-bottom: 0.7rem !important;
-        padding-bottom: 0.1rem !important;
-      }
-      .admin-tab {
-        font-size: 0.97rem !important;
-        padding: 0.6rem 1rem !important;
-        min-width: 90px !important;
-        margin-right: 0.1rem !important;
-      }
-    }
->>>>>>> 59461df1b33d25c65c9221b39256b8f9c62636c9
 
     .stats-grid {
       display: grid;
@@ -967,7 +903,6 @@
       color: white;
     }
 
-<<<<<<< HEAD
     /* Estilos para los movimientos recientes */
     #recentActivities {
       max-height: 300px;
@@ -1108,170 +1043,12 @@
   color: #166088;
   margin-right: 0.4em;
 }
-=======
-    .role-badge.member {
-      background: #e2e8f0;
-      color: #4a5568;
-    }
-
-    /* --- MEJORAS PARA MODALES EN MÓVIL --- */
-    @media (max-width: 600px) {
-      .modal-content {
-        margin-top: 100px !important;
-        margin-bottom: 90px !important;
-        margin-left: 2vw !important;
-        margin-right: 2vw !important;
-        width: 96vw !important;
-        max-width: 96vw !important;
-        min-width: 0 !important;
-        border-radius: 14px !important;
-        box-sizing: border-box !important;
-        max-height: calc(100vh - 190px) !important;
-        overflow-y: auto !important;
-        padding: 1.5rem 1rem !important;
-      }
-
-      .btn, 
-      .btn-accent, 
-      .btn-primary, 
-      .btn-outline,
-      .activity-actions .btn {
-        border-radius: 999px !important;
-        font-weight: 600 !important;
-        font-size: 1rem !important;
-        padding: 0.7rem 1.2rem !important;
-        width: 100% !important;
-        min-width: 0 !important;
-        max-width: 100vw !important;
-        display: flex !important;
-        justify-content: center !important;
-        align-items: center !important;
-        margin: 0.3rem 0 !important;
-        box-sizing: border-box !important;
-        gap: 0.7rem !important;
-      }
-
-      .modal-header {
-        flex-direction: column !important;
-        gap: 1rem !important;
-      }
-
-      .modal-title {
-        font-size: 1.3rem !important;
-        text-align: center !important;
-        line-height: 1.4 !important;
-      }
-
-      .activity-image {
-        height: 180px !important;
-      }
-
-      .modal-body {
-        padding: 0.5rem 0 !important;
-      }
-
-      .admin-tabs {
-        overflow-x: auto !important;
-        flex-wrap: nowrap !important;
-        padding-bottom: 5px !important;
-      }
-
-      .admin-tab {
-        min-width: 120px !important;
-        font-size: 0.95rem !important;
-        padding: 0.8rem !important;
-        white-space: nowrap !important;
-      }
-
-      .form-grid {
-        grid-template-columns: 1fr !important;
-        gap: 1rem !important;
-      }
-
-      .form-group {
-        margin-bottom: 1.2rem !important;
-      }
-
-      .preview-img {
-        max-width: 100% !important;
-      }
-    }
-
-    /* Modal Ver Más Actividad */
-    .modal-bg {
-      display: none;
-      position: fixed;
-      z-index: 1000;
-      left: 0;
-      top: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(0, 0, 0, 0.8);
-      align-items: center;
-      justify-content: center;
-      overflow-y: auto;
-    }
-
-    .modal-content {
-      background: #fff;
-      border-radius: 12px;
-      padding: 2rem;
-      max-width: 600px;
-      width: 90vw;
-      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
-      position: relative;
-      display: flex;
-      flex-direction: column;
-      gap: 1.2rem;
-    }
-
-    .close-modal {
-      position: absolute;
-      top: 1rem;
-      right: 1rem;
-      background: none;
-      border: none;
-      font-size: 1.5rem;
-      color: #6b7280;
-      cursor: pointer;
-      transition: color 0.2s;
-    }
-
-    .close-modal:hover {
-      color: var(--primary);
-    }
-
-    .modal-title {
-      font-size: 1.6rem;
-      color: var(--primary);
-      margin: 0;
-      font-weight: 700;
-      text-align: center;
-    }
-
-    .activity-image {
-      width: 100%;
-      height: 180px;
-      object-fit: cover;
-      border-radius: 10px;
-      margin-bottom: 1.2rem;
-    }
-
-    .mobile-flex-column {
-      display: flex;
-      flex-direction: column;
-      gap: 0.8rem;
-    }
-
-    /* --- FIN ESTILOS --- */
->>>>>>> 59461df1b33d25c65c9221b39256b8f9c62636c9
   </style>
 {% endblock %}
 
 {% block content %}
   <div class="main-container">
     <div class="section-header">
-<<<<<<< HEAD
       <h1>Tus Actividades Solidarias</h1>
     </div>
     <div class="search-container">
@@ -1298,36 +1075,12 @@
           <i class="fas fa-hands-helping"></i> Ver voluntariados
         </a>
       </div>
-=======
-      <h1>Mis Actividades</h1>
-      <div class="search-container">
-        <input type="text" id="activitySearch" placeholder="Buscar actividades...">
-        <button class="btn btn-primary" id="searchButton">
-          <i class="fas fa-search"></i> Buscar
-        </button>
-      </div>
-    </div>
-
-    <!-- Estado general (cuando no hay actividades) -->
-    <div id="generalEmptyState" style="display: none; text-align: center; margin-bottom: 2rem;">
-      <div style="font-size: 3rem; color: #edf2f7; margin-bottom: 1rem;">
-        <i class="fas fa-clipboard-list" style="color: var(--primary);"></i>
-      </div>
-      <h3 style="color: #4a5568; margin-bottom: 0.5rem;">No tienes actividades aún</h3>
-      <p style="color: #718096; margin-bottom: 1.5rem; font-size: 0.95rem;">
-        Explora y únete a causas, tareas, retos o voluntariados que te interesen.
-      </p>
-      <a href="/explore" class="btn btn-accent" style="padding: 0.7rem 1.2rem; border-radius: 50px; font-weight: 600; font-size: 1rem;">
-        <i class="fas fa-plus-circle"></i> Explorar actividades
-      </a>
->>>>>>> 59461df1b33d25c65c9221b39256b8f9c62636c9
     </div>
 
     <!-- Sección de Causas -->
     <section class="activity-section causes-section" style="margin-bottom: 3.5rem;">
       <div class="activity-section-header"
            style="display:flex;align-items:center;gap:1.1rem;margin-bottom:2.2rem;
-<<<<<<< HEAD
                   background:linear-gradient(90deg,#e6f4ea 0%,#fff 100%);
                   border-radius:14px;padding:1.2rem 1.7rem;box-shadow:0 2px 12px #e3eefd55;">
         <div style="background:var(--accent);color:#fff;border-radius:50%;width:48px;height:48px;display:flex;align-items:center;justify-content:center;font-size:2rem;box-shadow:0 2px 8px #4fc3a133;">
@@ -1336,16 +1089,6 @@
         <div>
           <h2 style="color:var(--accent);font-weight:900;font-size:1.45rem;margin:0;letter-spacing:-1px;">Tus causas</h2>
           <div style="color:#3da58a;font-size:1rem;font-weight:500;">Todas tus causas solidarias activas</div>
-=======
-                  background:linear-gradient(90deg,#e6fffa 0%,#fff 100%);
-                  border-radius:14px;padding:1.2rem 1.7rem;box-shadow:0 2px 12px #00bcd433;">
-        <div style="background:var(--primary);color:#fff;border-radius:50%;width:48px;height:48px;display:flex;align-items:center;justify-content:center;font-size:2rem;box-shadow:0 2px 8px #00bcd433;">
-          <i class="fas fa-heart"></i>
-        </div>
-        <div>
-          <h2 style="color:var(--primary);font-weight:900;fontsize:1.45rem;margin:0;letter-spacing:-1px;">Tus causas</h2>
-          <div style="color:#00796b;font-size:1rem;font-weight:500;">Causas que apoyas y contribuciones</div>
->>>>>>> 59461df1b33d25c65c9221b39256b8f9c62636c9
         </div>
       </div>
       <div class="activities-grid" id="causesGrid"></div>
@@ -1355,7 +1098,6 @@
     <section class="activity-section tasks-section" style="margin-bottom: 3.5rem;">
       <div class="activity-section-header"
            style="display:flex;align-items:center;gap:1.1rem;margin-bottom:2.2rem;
-<<<<<<< HEAD
                   background:linear-gradient(90deg,#e3eefd 0%,#fff 100%);
                   border-radius:14px;padding:1.2rem 1.7rem;box-shadow:0 2px 12px #e3eefd55;">
         <div style="background:var(--primary);color:#fff;border-radius:50%;width:48px;height:48px;display:flex;align-items:center;justify-content:center;font-size:2rem;box-shadow:0 2px 8px #4a6fa533;">
@@ -1367,19 +1109,6 @@
         </div>
       </div>
       <div class="activities-grid tasks-grid" id="tasksGrid"></div>
-=======
-                  background:linear-gradient(90deg,#e8f0ff 0%,#fff 100%);
-                  border-radius:14px;padding:1.2rem 1.7rem;box-shadow:0 2px 12px #4a6fa5;">
-        <div style="background:var(--accent-dark);color:#fff;border-radius:50%;width:48px;height:48px;display:flex;align-items:center;justify-content:center;font-size:2rem;box-shadow:0 2px 8px #4a6fa5;">
-          <i class="fas fa-tasks"></i>
-        </div>
-        <div>
-          <h2 style="color:var(--accent-dark);font-weight:900;font-size:1.45rem;margin:0;letter-spacing:-1px;">Tus tareas</h2>
-          <div style="color:#3da58a;font-size:1rem;font-weight:500;">Tareas y colaboraciones pendientes</div>
-        </div>
-      </div>
-      <div class="activities-grid" id="tasksGrid"></div>
->>>>>>> 59461df1b33d25c65c9221b39256b8f9c62636c9
     </section>
 
     <!-- Sección de Retos -->
@@ -1392,11 +1121,7 @@
           <i class="fas fa-trophy"></i>
         </div>
         <div>
-<<<<<<< HEAD
           <h2 style="color:var(--challenge-dark);font-weight:900;font-size:1.45rem;margin:0;letter-spacing:-1px;">Tus retos</h2>
-=======
-          <h2 style="color:var(--challenge-dark);font-weight:900;fontsize:1.45rem;margin:0;letter-spacing:-1px;">Tus retos</h2>
->>>>>>> 59461df1b33d25c65c9221b39256b8f9c62636c9
           <div style="color:#a67c00;font-size:1rem;font-weight:500;">Tus retos y desafíos solidarios</div>
         </div>
       </div>
@@ -1428,10 +1153,7 @@
       <h2 id="adminModalTitle">Administrar Actividad</h2>
       <div class="admin-tabs">
         <button class="admin-tab active" data-tab="overview">Resumen</button>
-<<<<<<< HEAD
         <button class="admin-tab" data-tab="crearactividad">Crear actividad</button>
-=======
->>>>>>> 59461df1b33d25c65c9221b39256b8f9c62636c9
         <button class="admin-tab" data-tab="members">Miembros</button>
         <button class="admin-tab" data-tab="settings">Configuración</button>
         <button class="admin-tab" data-tab="content">Contenido</button>
@@ -1464,7 +1186,6 @@
           <span id="progressAmount">0 € de 0 €</span>
         </div>
       </div>
-<<<<<<< HEAD
       <div class="admin-tab-content" id="crearactividadTab">
         <h3 style="margin-bottom:1.5rem;">Crear nueva actividad</h3>
         <div class="activity-cards-grid">
@@ -1506,8 +1227,6 @@
           </div>
         </div>
       </div>
-=======
->>>>>>> 59461df1b33d25c65c9221b39256b8f9c62636c9
       <div class="admin-tab-content" id="membersTab">
         <h3>Miembros actuales</h3>
         <div class="members-list" id="membersList"></div>
@@ -1586,30 +1305,6 @@
       </div>
     </div>
   </div>
-<<<<<<< HEAD
-=======
-
-  <!-- Modal Ver Más Actividad -->
-  <div id="activityModal1" class="modal-bg">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h2 class="modal-title">Título de la Actividad</h2>
-        <button class="close-modal" onclick="closeModal('activityModal1')">&times;</button>
-      </div>
-      <div class="modal-body">
-        <img class="activity-image" src="URL_DE_LA_IMAGEN" alt="Título de la Actividad">
-        <div class="mobile-flex-column">
-          <!-- Aquí va el contenido específico de la actividad -->
-          <p>Descripción, detalles, etc.</p>
-        </div>
-      </div>
-      <div class="activity-actions">
-        <button class="btn btn-primary">Participar</button>
-        <button class="btn btn-accent">Compartir</button>
-      </div>
-    </div>
-  </div>
->>>>>>> 59461df1b33d25c65c9221b39256b8f9c62636c9
 {% endblock %}
 
 {% block scripts %}
@@ -1721,11 +1416,7 @@
           modal = document.createElement('div');
           modal.id = 'volunteeringModal';
           modal.style.cssText = 'display:none; position:fixed; z-index:9999; left:0; top:0; width:100vw; height:100vh; background:rgba(0,0,0,0.35); align-items:center; justify-content:center;';
-<<<<<<< HEAD
           
-=======
-
->>>>>>> 59461df1b33d25c65c9221b39256b8f9c62636c9
           modal.innerHTML = `
             <div class="modal-content" style="background:#fff; border-radius:18px; max-width:800px; width:95vw; padding:2rem; box-shadow:0 8px 32px rgba(74,111,165,0.13); position:relative; max-height:90vh; overflow-y:auto; text-align:left;">
               <button id="closeVolunteeringModal" style="position:absolute; top:1.5rem; right:1.5rem; background:none; border:none; font-size:1.8rem; color:#6b7280; cursor:pointer; transition:color 0.2s;" onmouseover="this.style.color='#4a6fa5'" onmouseout="this.style.color='#6b7280'">&times;</button>
@@ -2097,10 +1788,6 @@
               joinedVolunteering = volunteeringDetails.map(volunteering => {
                 const membership = memberships.find(m => m.volunteering_id === volunteering.id);
                 return {
-<<<<<<< HEAD
-=======
-
->>>>>>> 59461df1b33d25c65c9221b39256b8f9c62636c9
                   ...volunteering,
                   userRole: membership ? membership.role : 'member',
                   isCreator: false
@@ -2573,7 +2260,6 @@
         // Campos comunes para todos los tipos
         const commonFields = `
           <div class="form-group">
-<<<<<<< HEAD
             <label for="editActivityTitle"><i class="fas fa-heading"></i> Título de la actividad</label>
             <input type="text" id="editActivityTitle" name="editActivityTitle" required value="${activity.title || ''}">
           </div>
@@ -2975,8 +2661,6 @@ formGrid.innerHTML = commonFields + specificFields + locationAndPointsFields;
         // Campos comunes para todos los tipos
         const commonFields = `
           <div class="form-group">
-=======
->>>>>>> 59461df1b33d25c65c9221b39256b8f9c62636c9
             <label for="editActivityTitle">Título de la actividad</label>
             <input type="text" id="editActivityTitle" name="editActivityTitle" required value="${activity.title || ''}">
           </div>
@@ -3107,7 +2791,6 @@ formGrid.innerHTML = commonFields + specificFields + locationAndPointsFields;
           document.getElementById('editPointsText').innerHTML = `<i class="fas fa-star"></i> Colaborar en esta actividad otorgará <strong>${val} puntos</strong> a cada participante.`;
         });
 
-<<<<<<< HEAD
         // Guardar cambios en Supabase
         document.getElementById('activitySettingsForm').onsubmit = async function(e) {
           e.preventDefault();
@@ -3212,9 +2895,6 @@ formGrid.innerHTML = commonFields + specificFields + locationAndPointsFields;
 
         // --- Rellenar stats del resumen ---
         document.getElementById('membersCount').textContent = members.length;
-=======
-        //
->>>>>>> 59461df1b33d25c65c9221b39256b8f9c62636c9
         document.getElementById('activitiesCount').textContent = 1;
         document.getElementById('impactPoints').textContent = activity.points || 0;
         document.getElementById('beneficiariesCount').textContent = activity.beneficiaries || 0;

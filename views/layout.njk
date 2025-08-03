@@ -1,44 +1,20 @@
 <!DOCTYPE html>
-<<<<<<< HEAD
 <html lang="{{ lang if lang else 'es' }}">
-=======
-<html lang="{{ lang if lang else 'en' }}">
->>>>>>> 59461df1b33d25c65c9221b39256b8f9c62636c9
 <head>
   <meta charset="UTF-8">
   <title>{% block title %}Solidarity{% endblock %}</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<<<<<<< HEAD
   <meta name="description" content="Plataforma colaborativa para impulsar la solidaridad y el impacto social">
   
   <!-- Favicon -->
   <link rel="icon" href="/images/favicon.ico" type="image/x-icon">
   
   <!-- ✅ GOOGLE ANALYTICS 4 - CONFIGURACIÓN ACTUALIZADA -->
-=======
-  <meta name="description" content="Welcome to Solidarity! The world's best platform to showcase your actions, volunteering, and communities, and create real social impact.">
-  <!-- Open Graph / Facebook -->
-  <meta property="og:title" content="Solidarity">
-  <meta property="og:description" content="Welcome to Solidarity! The world's best platform to showcase your actions, volunteering, and communities, and create real social impact.">
-  <meta property="og:image" content="https://project-solidarity.com/img/logotransparente.png">
-  <meta property="og:url" content="https://project-solidarity.com">
-  <!-- Twitter -->
-  <meta name="twitter:card" content="summary_large_image">
-  <link rel="icon" href="/img/logotransparente.png" type="image/png">
-  
-  <meta name="csrf-token" content="{{ csrfToken }}">
-
-  <!-- Stripe.js para pagos y onboarding -->
-  <script src="https://js.stripe.com/v3/"></script>
-
-  <!-- Google Analytics 4 -->
->>>>>>> 59461df1b33d25c65c9221b39256b8f9c62636c9
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-KLTQ612VGL"></script>
   <script>
     window.dataLayer = window.dataLayer || [];
     function gtag(){dataLayer.push(arguments);}
     gtag('js', new Date());
-<<<<<<< HEAD
 
     // ✅ CONFIGURACIÓN CON TU ID REAL
     gtag('config', 'G-KLTQ612VGL', {
@@ -53,22 +29,12 @@
       page_location: window.location.href,
       
       // Datos personalizados de usuario
-=======
-    gtag('config', 'G-KLTQ612VGL', {
-      anonymize_ip: true,
-      allow_google_signals: true,
-      allow_ad_personalization_signals: false,
-      send_page_view: true,
-      page_title: document.title,
-      page_location: window.location.href,
->>>>>>> 59461df1b33d25c65c9221b39256b8f9c62636c9
       user_id: window.currentUserId || null,
       custom_map: {
         'custom_parameter_1': 'user_type',
         'custom_parameter_2': 'user_language',
         'custom_parameter_3': 'platform_section'
       },
-<<<<<<< HEAD
       
       // Configuraciones de enhanced ecommerce
       enhanced_conversions: true,
@@ -78,11 +44,6 @@
     });
 
     // ✅ DATOS EXTENDIDOS DEL USUARIO
-=======
-      enhanced_conversions: true,
-      debug_mode: false
-    });
->>>>>>> 59461df1b33d25c65c9221b39256b8f9c62636c9
     gtag('set', {
       user_properties: {
         user_type: window.userType || 'anonymous',
@@ -93,7 +54,6 @@
       }
     });
   </script>
-<<<<<<< HEAD
   
   <!-- CSS - ORDEN ORIGINAL -->
   <link rel="stylesheet" href="/css/style.css">
@@ -175,46 +135,6 @@
   <script src="/js/navbar.js"></script>
   <script src="/js/impactpoints.js"></script>
 
-=======
-
-  <!-- CSS -->
-  <link rel="stylesheet" href="/css/style.css">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-  <style>
-    html, body {
-      box-sizing: border-box !important;
-      overflow-x: hidden !important;
-      max-width: 100vw !important;
-    }
-  </style>
-  {% block head %}{% endblock %}
-</head>
-<body class="{{ bodyClass if bodyClass else ('lang-' + (lang if lang else 'en')) }}">
-  <header>
-    {% include "partials/navbar.njk" %}
-  </header>
-  <main class="main-content">
-    {% block content %}{% endblock %}
-  </main>
-  {% include "partials/footer.njk" %}
-
-  <!-- Scripts base -->
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script>
-    window.currentUserId = '{{ user.id if user else null }}';
-    window.userType = '{{ user.type if user else "anonymous" }}';
-    window.userRegistrationDate = '{{ user.created_at if user else null }}';
-    window.lastLoginDate = '{{ user.last_login if user else null }}';
-    window.currentLang = '{{ lang if lang else "es" }}';
-    // Configuración de Supabase
-    const supabaseUrl = 'https://cyftasxlrzuynzbrfgkd.supabase.co';
-    const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImN5ZnRhc3hscnp1eW56YnJmZ2tkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDgwMzUzMTksImV4cCI6MjA2MzYxMTMxOX0.I56ZqFTfLgdwWlcozMVncGNGBZ4A2_5VpAbHeNmtDhA';
-    const supabase = window.supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
-  </script>
-  <script src="/js/i18n.js"></script>
-  <script src="/js/navbar.js"></script>
-  <script src="/js/impactpoints.js"></script>
->>>>>>> 59461df1b33d25c65c9221b39256b8f9c62636c9
   {% block scripts %}{% endblock %}
 
   <!-- Notificaciones -->
@@ -245,7 +165,6 @@
   
   <!-- ✅ SCRIPT PARA TRADUCIR AUTOMÁTICAMENTE -->
   <script>
-<<<<<<< HEAD
     // Traducir elementos cuando i18n esté listo
     document.addEventListener('i18nReady', () => {
       translateElements();
@@ -256,13 +175,6 @@
       console.log('🌍 Iniciando traducción de elementos...');
       
       // Traducir elementos con data-i18n
-=======
-    document.addEventListener('i18nReady', () => {
-      translateElements();
-    });
-    function translateElements() {
-      console.log('🌍 Iniciando traducción de elementos...');
->>>>>>> 59461df1b33d25c65c9221b39256b8f9c62636c9
       const elementsToTranslate = document.querySelectorAll('[data-i18n]');
       elementsToTranslate.forEach(element => {
         const key = element.getAttribute('data-i18n');
@@ -274,11 +186,8 @@
           }
         }
       });
-<<<<<<< HEAD
 
       // Traducir atributos title
-=======
->>>>>>> 59461df1b33d25c65c9221b39256b8f9c62636c9
       const elementsWithTitle = document.querySelectorAll('[data-i18n-title]');
       elementsWithTitle.forEach(element => {
         const key = element.getAttribute('data-i18n-title');
@@ -290,14 +199,10 @@
         }
       });
     }
-<<<<<<< HEAD
 
     // ✅ EVENTOS ANALYTICS PERSONALIZADOS PARA SOLIDARITY
     document.addEventListener('DOMContentLoaded', function() {
       // Trackear visita a página específica
-=======
-    document.addEventListener('DOMContentLoaded', function() {
->>>>>>> 59461df1b33d25c65c9221b39256b8f9c62636c9
       if (typeof gtag !== 'undefined') {
         gtag('event', 'page_view', {
           page_title: document.title,
@@ -305,18 +210,12 @@
           user_type: window.userType || 'anonymous',
           page_section: getCurrentPageSection()
         });
-<<<<<<< HEAD
 
         console.log('📊 Analytics inicializado para:', window.location.pathname);
       }
     });
 
     // ✅ FUNCIÓN PARA DETECTAR SECCIÓN DE LA PÁGINA
-=======
-        console.log('📊 Analytics inicializado para:', window.location.pathname);
-      }
-    });
->>>>>>> 59461df1b33d25c65c9221b39256b8f9c62636c9
     function getCurrentPageSection() {
       const path = window.location.pathname;
       if (path.includes('/causes')) return 'causes';
@@ -327,11 +226,8 @@
       if (path === '/') return 'home';
       return 'other';
     }
-<<<<<<< HEAD
 
     // Función para actividades trending
-=======
->>>>>>> 59461df1b33d25c65c9221b39256b8f9c62636c9
     function isTrending(activity) {
       if (activity.type === 'cause') {
         return (activity.beneficiaries || 0) + (activity.raised || 0) > 100;
@@ -350,11 +246,8 @@
       }
       return false;
     }
-<<<<<<< HEAD
 
     // ✅ FUNCIÓN GLOBAL PARA TRACKEAR EVENTOS DESDE CUALQUIER PARTE
-=======
->>>>>>> 59461df1b33d25c65c9221b39256b8f9c62636c9
     window.trackSolidarityEvent = function(eventName, parameters = {}) {
       if (typeof gtag !== 'undefined') {
         const enrichedParams = {
@@ -364,10 +257,7 @@
           page_section: getCurrentPageSection(),
           user_language: window.currentLang || 'es'
         };
-<<<<<<< HEAD
         
-=======
->>>>>>> 59461df1b33d25c65c9221b39256b8f9c62636c9
         gtag('event', eventName, enrichedParams);
         console.log('📊 Evento tracked:', eventName, enrichedParams);
       }
@@ -380,17 +270,11 @@
   <!-- Mobile Navigation Components -->
   <script src="/js/components/mobile-bottom-nav.js"></script>
   <solidarity-bottom-nav></solidarity-bottom-nav>
-<<<<<<< HEAD
 
   <script src="/js/components/mobile-hamburger-menu.js"></script>
   <script src="/js/components/mobile-header.js"></script>
   <script src="/js/components/mobile-avatar.js"></script>
 
-=======
-  <script src="/js/components/mobile-hamburger-menu.js"></script>
-  <script src="/js/components/mobile-header.js"></script>
-  <script src="/js/components/mobile-avatar.js"></script>
->>>>>>> 59461df1b33d25c65c9221b39256b8f9c62636c9
   <solidarity-mobile-header>
     <solidarity-hamburger-menu slot="hamburger"></solidarity-hamburger-menu>
     <solidarity-mobile-avatar slot="avatar"></solidarity-mobile-avatar>
@@ -398,15 +282,11 @@
 
   <!-- ✅ ANALYTICS AVANZADO -->
   <script src="/js/analytics.js"></script>
-<<<<<<< HEAD
   
   <!-- ✅ CARGAR AUTO-TRANSLATE -->
   <script src="/js/auto-translate.js"></script>
 
   <!-- ✅ GOOGLE TRANSLATE INVISIBLE - SOLO FUNCIONALIDAD -->
-=======
-  <script src="/js/auto-translate.js"></script>
->>>>>>> 59461df1b33d25c65c9221b39256b8f9c62636c9
   <div id="google_translate_element" style="display:none;"></div>
   <script type="text/javascript">
     function googleTranslateElementInit() {
@@ -419,7 +299,6 @@
         gaTrack: true,
         gaId: 'G-KLTQ612VGL'
       }, 'google_translate_element');
-<<<<<<< HEAD
       
       // ✅ INICIAR AUTO-TRADUCCIÓN
       setTimeout(() => {
@@ -427,344 +306,10 @@
           window.autoTranslate.init();
           console.log('🌍 Auto-translate iniciado');
         }
-=======
-      setTimeout(() => {
-        if (window.autoTranslate) window.autoTranslate.init();
->>>>>>> 59461df1b33d25c65c9221b39256b8f9c62636c9
       }, 1500);
     }
   </script>
   <script src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
 
-<<<<<<< HEAD
-=======
-  <!-- Mejoras de sesión: ping para mantener sesión activa -->
-  <script>
-    setInterval(() => {
-      fetch('/api/check-session', { credentials: 'include' })
-        .then(res => res.json())
-        .then(data => {
-          if (!data.ok) {
-            window.location.href = '/login';
-          }
-        });
-    }, 5 * 60 * 1000);
-  </script>
-
-  <!-- Stripe onboarding y dashboard helpers -->
-  <script>
-    window.openStripeDashboard = async function() {
-      const res = await fetch('/api/stripe/dashboard-link', { credentials: 'include' });
-      const data = await res.json();
-      if (data.url) window.open(data.url, '_blank');
-      else alert('No tienes cuenta Stripe activa.');
-    };
-    window.retryStripeOnboarding = async function() {
-      window.location.href = '/reauth-stripe';
-    };
-  </script>
-  <!-- Modal de éxito Stripe mejorado -->
-<div id="stripeSuccessModal" class="modal-bg">
-  <div class="modal-content" style="text-align: center; max-width: 500px;">
-    <button class="close-modal" id="closeStripeSuccessModal" style="position:absolute;top:18px;right:18px;font-size:2rem;background:none;border:none;color:#2dd4bf;cursor:pointer;">&times;</button>
-    
-    <!-- Animación de éxito -->
-    <div style="background: linear-gradient(135deg, #4fc3a1, #4a6fa5); width:100px; height:100px; border-radius:50%; margin:0 auto 2rem; display:flex; align-items:center; justify-content:center; box-shadow:0 8px 25px rgba(79,195,161,0.3); animation: pulse 2s infinite;">
-      <i class="fas fa-check" style="color:white; font-size:3rem;"></i>
-    </div>
-
-    <h2 style="color: #2dd4bf; margin-bottom: 1rem; font-size: 1.8rem;">¡Cuenta conectada con éxito!</h2>
-    
-    <div id="causeCreatedSection" style="display: none;">
-      <p style="margin-bottom: 1.5rem; font-size: 1.1rem; color: #4b5563;">
-        ¡Fantástico! Tu causa "<span id="createdCauseTitle" style="color: #4a6fa5; font-weight: 600;"></span>" ha sido creada exitosamente.<br>
-        <strong>¡Ya estás listo para recibir donaciones!</strong>
-      </p>
-      <div style="display: flex; flex-direction: column; gap: 0.8rem; max-width: 300px; margin: 0 auto;">
-        <button id="viewCreatedCause" class="btn btn-primary" style="padding: 1rem;">
-          <i class="fas fa-eye"></i> Ver mi causa
-        </button>
-        <button id="shareCause" class="btn btn-accent" style="padding: 1rem;">
-          <i class="fas fa-share-alt"></i> Compartir causa
-        </button>
-      </div>
-    </div>
-
-    <div id="noSpecificCauseSection">
-      <p style="margin-bottom: 1.5rem; font-size: 1.1rem; color: #4b5563;">
-        ¡Perfecto! Ahora puedes recibir donaciones directamente en tu cuenta bancaria.<br>
-        <strong>¿Listo para crear tu primera causa solidaria?</strong>
-      </p>
-      <div style="display: flex; flex-direction: column; gap: 0.8rem; max-width: 300px; margin: 0 auto;">
-        <button id="createCauseAfterStripe" class="btn btn-primary" style="padding: 1rem;">
-          <i class="fas fa-plus"></i> Crear mi primera causa
-        </button>
-        <button id="exploreCausesBtn" class="btn btn-outline" style="padding: 1rem;">
-          <i class="fas fa-compass"></i> Explorar otras causas
-        </button>
-      </div>
-    </div>
-
-    <div style="margin-top: 2rem; padding-top: 1rem; border-top: 1px solid #eee;">
-      <p style="font-size: 0.9rem; color: #666;">
-        <i class="fas fa-lightbulb"></i> Consejo: Comparte tu causa en redes sociales para llegar a más personas
-      </p>
-    </div>
-  </div>
-</div>
-
-<style>
-@keyframes pulse {
-  0% { transform: scale(1); }
-  50% { transform: scale(1.05); }
-  100% { transform: scale(1); }
-}
-
-.modal-bg {
-  display: none;
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  background: rgba(0,0,0,0.5);
-  z-index: 9999;
-  align-items: center;
-  justify-content: center;
-}
-
-.modal-bg.active {
-  display: flex;
-}
-
-.modal-content {
-  background: white;
-  border-radius: 16px;
-  padding: 2.5rem;
-  max-width: 500px;
-  width: 90%;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-  animation: fadeIn 0.3s ease-out;
-  position: relative;
-}
-
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(-20px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-</style>
-
-<script>
-document.addEventListener('DOMContentLoaded', async () => {
-  const urlParams = new URLSearchParams(window.location.search);
-  const stripeStatus = urlParams.get('stripe');
-  const userId = urlParams.get('user_id');
-  const causeId = urlParams.get('cause_id');
-
-  console.log('🔄 Verificando parámetros:', { stripeStatus, userId, causeId });
-
-  // Manejo del éxito de Stripe
-  if (stripeStatus === 'success') {
-    console.log('✅ Stripe success detectado');
-
-    // Restaurar sesión si es necesario
-    if (!window.currentUserId && userId) {
-      console.log('🔄 Restaurando sesión...');
-      try {
-        const response = await fetch('/api/restore-session', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          credentials: 'include',
-          body: JSON.stringify({ user_id: userId })
-        });
-
-        if (response.ok) {
-          const data = await response.json();
-          console.log('✅ Sesión restaurada:', data.user);
-          window.currentUserId = data.user.id;
-          
-          // Actualizar navbar si existe
-          if (window.updateNavbar) {
-            window.updateNavbar(data.user);
-          }
-        } else {
-          console.error('❌ Error en respuesta de restauración:', response.status);
-        }
-      } catch (error) {
-        console.error('❌ Error restaurando sesión:', error);
-      }
-    }
-
-    // Mostrar modal de éxito
-    const modal = document.getElementById('stripeSuccessModal');
-    if (modal) {
-      // Si se creó una causa específica
-      if (causeId) {
-        console.log('🎯 Mostrando éxito con causa específica:', causeId);
-        document.getElementById('causeCreatedSection').style.display = 'block';
-        document.getElementById('noSpecificCauseSection').style.display = 'none';
-        
-        // Cargar título de la causa
-        try {
-          const { data: cause } = await supabase
-            .from('causes')
-            .select('title')
-            .eq('id', causeId)
-            .single();
-          
-          if (cause) {
-            document.getElementById('createdCauseTitle').textContent = cause.title;
-            
-            // Configurar botón para ver causa
-            document.getElementById('viewCreatedCause').onclick = () => {
-              modal.classList.remove('active');
-              document.body.style.overflow = '';
-              
-              // Usar el renderer si está disponible
-              if (window.causesRenderer && window.causesRenderer.showModal) {
-                setTimeout(() => {
-                  window.causesRenderer.showModal(causeId);
-                }, 300);
-              } else {
-                window.location.href = `/causes/${causeId}`;
-              }
-            };
-
-            // Configurar botón para compartir
-            document.getElementById('shareCause').onclick = () => {
-              const shareText = `¡Acabo de crear mi causa "${cause.title}" en Solidarity! 🌟 ¡Ayúdame a transformar vidas! 💚`;
-              const shareUrl = `${window.location.origin}/causes/${causeId}`;
-              
-              if (navigator.share) {
-                navigator.share({
-                  title: cause.title,
-                  text: shareText,
-                  url: shareUrl
-                });
-              } else {
-                navigator.clipboard.writeText(shareText + ' ' + shareUrl).then(() => {
-                  showNotification('¡Enlace copiado! Compártelo donde quieras', 'success');
-                }).catch(() => {
-                  // Fallback
-                  prompt('Copia este enlace:', shareText + ' ' + shareUrl);
-                });
-              }
-            };
-          }
-        } catch (error) {
-          console.error('Error cargando causa:', error);
-          // Mostrar sección general si falla cargar la causa específica
-          document.getElementById('causeCreatedSection').style.display = 'none';
-          document.getElementById('noSpecificCauseSection').style.display = 'block';
-        }
-      } else {
-        console.log('🎯 Mostrando éxito general');
-        document.getElementById('causeCreatedSection').style.display = 'none';
-        document.getElementById('noSpecificCauseSection').style.display = 'block';
-      }
-
-      modal.classList.add('active');
-      document.body.style.overflow = 'hidden';
-      
-      // Auto-cerrar después de 30 segundos
-      setTimeout(() => {
-        if (modal.classList.contains('active')) {
-          modal.classList.remove('active');
-          document.body.style.overflow = '';
-        }
-      }, 30000);
-    }
-
-    // Limpiar URL sin recargar
-    const cleanUrl = new URL(window.location);
-    cleanUrl.searchParams.delete('stripe');
-    cleanUrl.searchParams.delete('user_id');
-    cleanUrl.searchParams.delete('cause_id');
-    window.history.replaceState({}, '', cleanUrl.toString());
-  }
-
-  // Manejo de errores de Stripe
-  const stripeError = urlParams.get('stripe_error');
-  if (stripeError) {
-    console.log('❌ Error de Stripe detectado:', stripeError);
-    
-    const errorMessages = {
-      'refresh': 'Necesitas completar la configuración de Stripe nuevamente.',
-      'incomplete': 'La configuración de tu cuenta Stripe está incompleta. Por favor, completa el proceso.',
-      'no_user_id': 'Error de sesión. Por favor, inicia sesión nuevamente.',
-      'user_not_found': 'Usuario no encontrado. Por favor, inicia sesión nuevamente.',
-      'no_stripe_account': 'No se encontró tu cuenta de Stripe. Por favor, intenta configurar nuevamente.',
-      'stripe_api_error': 'Error de comunicación con Stripe. Por favor, intenta más tarde.',
-      'callback_failed': 'Error en el proceso de verificación. Por favor, intenta nuevamente.'
-    };
-
-    const message = errorMessages[stripeError] || 'Error desconocido en la configuración de Stripe.';
-    
-    if (window.showNotification) {
-      window.showNotification(message, 'error', 8000);
-    } else {
-      alert(message);
-    }
-
-    // Limpiar URL
-    const cleanUrl = new URL(window.location);
-    cleanUrl.searchParams.delete('stripe_error');
-    cleanUrl.searchParams.delete('user_id');
-    window.history.replaceState({}, '', cleanUrl.toString());
-  }
-
-  // Configurar botones del modal
-  const createBtn = document.getElementById('createCauseAfterStripe');
-  if (createBtn) {
-    createBtn.onclick = () => {
-      modal.classList.remove('active');
-      document.body.style.overflow = '';
-      
-      // Trigger crear causa si estamos en la página de causas
-      if (window.location.pathname === '/causes' || window.location.pathname === '/causes/') {
-        setTimeout(() => {
-          const createCauseBtn = document.getElementById('create-cause-btn');
-          if (createCauseBtn) {
-            createCauseBtn.click();
-          } else {
-            window.location.href = '/causes/create';
-          }
-        }, 100);
-      } else {
-        window.location.href = '/causes';
-      }
-    };
-  }
-
-  const exploreBtn = document.getElementById('exploreCausesBtn');
-  if (exploreBtn) {
-    exploreBtn.onclick = () => {
-      modal.classList.remove('active');
-      document.body.style.overflow = '';
-      window.location.href = '/causes';
-    };
-  }
-
-  const closeBtn = document.getElementById('closeStripeSuccessModal');
-  if (closeBtn) {
-    closeBtn.onclick = () => {
-      document.getElementById('stripeSuccessModal').classList.remove('active');
-      document.body.style.overflow = '';
-    };
-  }
-
-  // Cerrar modal al hacer clic fuera
-  const modal = document.getElementById('stripeSuccessModal');
-  if (modal) {
-    modal.onclick = (e) => {
-      if (e.target === modal) {
-        modal.classList.remove('active');
-        document.body.style.overflow = '';
-      }
-    };
-  }
-});
-</script>
->>>>>>> 59461df1b33d25c65c9221b39256b8f9c62636c9
 </body>
 </html>

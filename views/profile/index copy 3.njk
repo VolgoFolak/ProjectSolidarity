@@ -575,20 +575,12 @@
       transform: none;
     }
     .admin-activity-btn {
-<<<<<<< HEAD
       background: #ff6b6b;
       color: white;
     }
     .admin-activity-btn:hover {
       background: #ff5252;
       transform: translateY(-2px);
-=======
-      background: #10b981;
-      color: white;
-    }
-    .admin-activity-btn:hover {
-      background: #059669;
->>>>>>> 59461df1b33d25c65c9221b39256b8f9c62636c9
     }
 
     /* --- ESTILOS PARA ESTADOS VACÍOS --- */
@@ -815,16 +807,11 @@
     }
 
     .admin-activity-btn {
-<<<<<<< HEAD
       background: #ff6b6b;
-=======
-      background: #10b981;
->>>>>>> 59461df1b33d25c65c9221b39256b8f9c62636c9
       color: white;
     }
 
     .admin-activity-btn:hover {
-<<<<<<< HEAD
       background: #ff5252;
     }
 
@@ -838,9 +825,6 @@
     .btn-warning:hover {
       background: #a67c00;
       color: white;
-=======
-      background: #059669;
->>>>>>> 59461df1b33d25c65c9221b39256b8f9c62636c9
     }
 
     /* --- ESTILOS PARA TABS --- */
@@ -1856,22 +1840,6 @@
           if (profile.country) {
             document.getElementById('profile-location').innerHTML = `
               <i class="fas fa-map-marker-alt"></i> 
-<<<<<<< HEAD
-=======
-        // 2. Cargar perfil
-        const { data: profile, error: profileError } = await supabase
-          .from('profiles')
-          .select('*')
-          .eq('id', user.id)
-          .single();
-
-        if (!profileError && profile) {
-          document.querySelector('.profile-photo').src = profile.photo_url || '/img/avatar-default.jpg';
-          document.getElementById('profile-name').textContent = `${profile.first_name || ''} ${profile.last_name || ''}`.trim() || 'Usuario';
-          if (profile.country) {
-            document.getElementById('profile-location').innerHTML = `
-              <i class="fas fa-map-marker-alt"></i> 
->>>>>>> 59461df1b33d25c65c9221b39256b8f9c62636c9
               ${[profile.city, profile.country].filter(Boolean).join(', ')}
             `;
           }

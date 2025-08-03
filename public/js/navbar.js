@@ -1,5 +1,4 @@
 document.addEventListener('DOMContentLoaded', async () => {
-<<<<<<< HEAD
   const { data: { user } } = await supabase.auth.getUser();
   const authButtons = document.getElementById('auth-buttons');
   const userMenu = document.getElementById('user-menu');
@@ -16,46 +15,17 @@ document.addEventListener('DOMContentLoaded', async () => {
     authButtons.style.display = 'none';
     userMenu.style.display = 'flex';
   } else {
-=======
-  const authButtons = document.getElementById('auth-buttons');
-  const userMenu = document.getElementById('user-menu');
-  const userAvatar = document.getElementById('user-avatar');
-  const userName = document.getElementById('user-name');
-
-  try {
-    const resp = await fetch('/api/check-session', { credentials: 'include' });
-    if (resp.ok) {
-      const user = await resp.json();
-      userAvatar.src = user.photo_url || '/img/default-avatar.jpg';
-      userName.textContent = user.username || user.email || 'Usuario';
-      authButtons.style.display = 'none';
-      userMenu.style.display = 'flex';
-    } else {
-      authButtons.style.display = 'flex';
-      userMenu.style.display = 'none';
-    }
-  } catch (e) {
->>>>>>> 59461df1b33d25c65c9221b39256b8f9c62636c9
     authButtons.style.display = 'flex';
     userMenu.style.display = 'none';
   }
 
-<<<<<<< HEAD
   // Usa el id correcto
-=======
-  // Logout
->>>>>>> 59461df1b33d25c65c9221b39256b8f9c62636c9
   const logoutBtn = document.getElementById('logout-btn-link');
   if (logoutBtn) {
     logoutBtn.onclick = async (e) => {
       e.preventDefault();
-<<<<<<< HEAD
       await supabase.auth.signOut();
       window.location.reload();
-=======
-      await fetch('/logout', { method: 'POST', credentials: 'include' });
-      window.location.href = '/';
->>>>>>> 59461df1b33d25c65c9221b39256b8f9c62636c9
     };
   }
 });

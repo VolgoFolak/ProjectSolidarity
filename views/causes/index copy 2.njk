@@ -109,7 +109,6 @@
     align-items: center;
     gap: 0.7rem;
   }
-<<<<<<< HEAD
   .donation-method-option {
     display: flex;
     flex-direction: column;
@@ -145,15 +144,6 @@
   .success-modal-content h2 {
     color: var(--primary);
     margin-bottom: 1rem;
-=======
-  .after-create {
-    margin-top: 2rem;
-    background: var(--primary-light, #e6f0fa);
-    color: #444;
-    border-radius: 10px;
-    padding: 1.5rem 1rem;
-    text-align: center;
->>>>>>> 59461df1b33d25c65c9221b39256b8f9c62636c9
   }
   @media (max-width: 600px) {
   html, body {
@@ -921,10 +911,6 @@
     align-items: flex-start !important;
     justify-content: flex-start !important;
   }
-<<<<<<< HEAD
-=======
-
->>>>>>> 59461df1b33d25c65c9221b39256b8f9c62636c9
   #createCauseModal .modal-content .create-cause-title {
     text-align: center !important;
   }
@@ -989,26 +975,16 @@
     position: fixed;
     top: 20px;
     left: 50%;
-<<<<<<< HEAD
     transform: translateX(-50%);
-=======
-    transform: translateX(-50%) translateY(-20px);
->>>>>>> 59461df1b33d25c65c9221b39256b8f9c62636c9
     padding: 1rem 1.5rem;
     border-radius: 8px;
     display: flex;
     align-items: center;
     gap: 0.8rem;
     z-index: 10000;
-<<<<<<< HEAD
     box-shadow: 0 4px 12px rgba(0,0,0,0.1);
     opacity: 0;
     transition: all 0.3s ease;
-=======
-    opacity: 0;
-    transition: all 0.3s ease;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
->>>>>>> 59461df1b33d25c65c9221b39256b8f9c62636c9
   }
   .global-notification.info {
     background: #dbeafe;
@@ -1213,11 +1189,7 @@ to { opacity: 0; transform: translateX(-50%) translateY(-20px); }
     .causes-search input { font-size: 0.97rem; }
     .causes-grid { grid-template-columns: 1fr; gap: 1rem; }
     .cause-card { border-radius: 9px; }
-<<<<<<< HEAD
     .cause-image { height: 170px !important; }
-=======
-    .cause-image { height: 120px; }
->>>>>>> 59461df1b33d25c65c9221b39256b8f9c62636c9
     .cause-content { padding: 0.7rem; }
     .cause-content h3 { font-size: 1.05rem; }
     .cause-content p { font-size: 0.93rem; }
@@ -1229,11 +1201,7 @@ to { opacity: 0; transform: translateX(-50%) translateY(-20px); }
     .pagination .btn { font-size: 0.97rem; min-width: 32px; height: 32px; }
     .modal-content { padding: 1rem 0.3rem; border-radius: 10px; }
     .modal-cause-header { flex-direction: column; gap: 0.7rem; }
-<<<<<<< HEAD
     .modal-cause-image-wrapper { min-width: 0; height: 180px; }
-=======
-    .modal-cause-image-wrapper { min-width: 0; height: 120px; }
->>>>>>> 59461df1b33d25c65c9221b39256b8f9c62636c9
     .modal-cause-title { font-size: 1.1rem; }
     .modal-cause-meta-grid { grid-template-columns: 1fr; gap: 0.5rem 0; }
     .points-notice { font-size: 0.93rem; padding: 0.7rem; }
@@ -1311,11 +1279,7 @@ to { opacity: 0; transform: translateX(-50%) translateY(-20px); }
   }
   #causeModal .modal-cause-image-wrapper {
     min-width: 0 !important;
-<<<<<<< HEAD
     height: 180px !important;
-=======
-    height: 120px !important;
->>>>>>> 59461df1b33d25c65c9221b39256b8f9c62636c9
     width: 100% !important;
     max-width: 100vw !important;
   }
@@ -1366,14 +1330,10 @@ to { opacity: 0; transform: translateX(-50%) translateY(-20px); }
     right: 0 !important;
     max-height: calc(100vh - 190px) !important;
     overflow-y: auto !important;
-<<<<<<< HEAD
     padding-left: 5vw !important;
     padding-right: 5vw !important;
   }
   
-=======
-  }
->>>>>>> 59461df1b33d25c65c9221b39256b8f9c62636c9
   /* Pills y ancho completo en móvil */
   .btn, .btn-accent, .btn-primary, .btn-outline,
   .cause-actions .btn, .modal-cause-actions .action-btn, .modal-cause-actions .btn,
@@ -1430,7 +1390,6 @@ to { opacity: 0; transform: translateX(-50%) translateY(-20px); }
   <!-- Modal para usuarios no logueados -->
   <div class="modal-bg" id="loginModal">
     <div class="modal-content">
-<<<<<<< HEAD
       <button class="close-modal" id="closeLoginModal">&times;</button>
       <h3>Para crear una causa</h3>
       <p>Debes ser un usuario registrado. ¿Deseas iniciar sesión o registrarte ahora?</p>
@@ -1461,14 +1420,6 @@ to { opacity: 0; transform: translateX(-50%) translateY(-20px); }
         <i class="fas fa-wallet" style="color: var(--primary); font-size: 2rem; margin-bottom: 0.5rem;"></i>
         <h4 style="margin: 0 0 0.5rem 0; color: var(--primary);">Otros métodos (transferencia, Bizum, PayPal...)</h4>
         <p style="margin: 0; color: #666; font-size: 0.9rem;">Tú gestionas las donaciones</p>
-=======
-      <h3>Para crear una causa</h3>
-      <p>Debes ser un usuario registrado. ¿Deseas iniciar sesión o registrarte ahora?</p>
-      <div class="modal-buttons">
-        <a href="/login?return=/causes" class="btn btn-primary">Iniciar Sesión</a>
-        <a href="/register?return=/causes" class="btn btn-outline">Registrarse</a>
-        <button id="cancelModal" class="btn">Cancelar</button>
->>>>>>> 59461df1b33d25c65c9221b39256b8f9c62636c9
       </div>
     </div>
   </div>
@@ -1476,52 +1427,28 @@ to { opacity: 0; transform: translateX(-50%) translateY(-20px); }
   <!-- Modal emergente para crear causa -->
   <div id="createCauseModal" class="modal-bg">
     <div class="modal-content">
-<<<<<<< HEAD
       <button class="close-modal" id="closeCreateCauseModal">&times;</button>
-=======
-      <button class="close-modal" id="closeCreateCauseModal" title="Cerrar">&times;</button>
->>>>>>> 59461df1b33d25c65c9221b39256b8f9c62636c9
       <div class="create-cause-title">
         <i class="fas fa-plus-circle"></i> Crear Nueva Causa Solidaria
       </div>
       <form class="cause-form" id="causeForm" autocomplete="off">
-<<<<<<< HEAD
-=======
-        <!-- Título de la causa -->
->>>>>>> 59461df1b33d25c65c9221b39256b8f9c62636c9
         <div class="form-group">
           <label for="title">Título de la causa</label>
           <input type="text" id="title" name="title" placeholder="Ej: Agua limpia para todos" required>
         </div>
-<<<<<<< HEAD
-=======
-        <!-- Foto principal (ahora justo después del título) -->
->>>>>>> 59461df1b33d25c65c9221b39256b8f9c62636c9
         <div class="form-group">
           <label for="photo">Foto principal</label>
           <input type="file" id="photo" name="photo" accept="image/*">
           <img id="previewImg" class="preview-img" alt="Vista previa de la foto" style="display:none;">
         </div>
-<<<<<<< HEAD
-=======
-        <!-- Resumen corto -->
->>>>>>> 59461df1b33d25c65c9221b39256b8f9c62636c9
         <div class="form-group">
           <label for="short_description">Descripción corta (máx. 3 líneas)</label>
           <textarea id="short_description" name="short_description" maxlength="180" placeholder="Resumen breve para mostrar en la tarjeta..." required></textarea>
         </div>
-<<<<<<< HEAD
-=======
-        <!-- Descripción larga -->
->>>>>>> 59461df1b33d25c65c9221b39256b8f9c62636c9
         <div class="form-group">
           <label for="description">Descripción exhaustiva</label>
           <textarea id="description" name="description" placeholder="Describe la causa, el objetivo, contexto, cómo se usará la ayuda..." required></textarea>
         </div>
-<<<<<<< HEAD
-=======
-        <!-- Meta y beneficiarios -->
->>>>>>> 59461df1b33d25c65c9221b39256b8f9c62636c9
         <div class="form-inline-group">
           <div class="form-group">
             <label for="goal">Meta de recaudación (€)</label>
@@ -1532,10 +1459,6 @@ to { opacity: 0; transform: translateX(-50%) translateY(-20px); }
             <input type="number" id="beneficiaries" name="beneficiaries" min="1" placeholder="Ej: 100" required>
           </div>
         </div>
-<<<<<<< HEAD
-=======
-        <!-- Ciudad y país -->
->>>>>>> 59461df1b33d25c65c9221b39256b8f9c62636c9
         <div class="form-inline-group">
           <div class="form-group">
             <label for="city">Ciudad</label>
@@ -1546,10 +1469,6 @@ to { opacity: 0; transform: translateX(-50%) translateY(-20px); }
             <input type="text" id="country" name="country" placeholder="Ej: España" required>
           </div>
         </div>
-<<<<<<< HEAD
-=======
-        <!-- Puntos -->
->>>>>>> 59461df1b33d25c65c9221b39256b8f9c62636c9
         <div class="form-group">
           <label for="points">Puntos por colaborar</label>
           <input type="number" id="points" name="points" min="1" max="1000" value="50" required>
@@ -1558,42 +1477,22 @@ to { opacity: 0; transform: translateX(-50%) translateY(-20px); }
             Colaborar en esta causa otorgará <strong>50 puntos</strong> a cada participante.
           </div>
         </div>
-<<<<<<< HEAD
-=======
-        <!-- Email de contacto -->
->>>>>>> 59461df1b33d25c65c9221b39256b8f9c62636c9
         <div class="form-group">
           <label for="contact_email">Email de contacto</label>
           <input type="email" id="contact_email" name="contact_email" placeholder="ejemplo@email.com">
         </div>
-<<<<<<< HEAD
-=======
-        <!-- Teléfono de contacto -->
->>>>>>> 59461df1b33d25c65c9221b39256b8f9c62636c9
         <div class="form-group">
           <label for="phone_number">Teléfono de contacto</label>
           <input type="tel" id="phone_number" name="phone_number" placeholder="+34 600 123 456">
         </div>
-<<<<<<< HEAD
-=======
-        <!-- Campo: Cómo Donar -->
->>>>>>> 59461df1b33d25c65c9221b39256b8f9c62636c9
         <div class="form-group">
           <label for="how_to_donate">Cómo Donar <span style="color:#888;font-size:0.95em;">(explica cómo quieres recibir donaciones)</span></label>
           <textarea id="how_to_donate" name="how_to_donate" placeholder="Ej: Puedes donar por Bizum, transferencia bancaria, PayPal, etc. Indica aquí instrucciones claras..." required></textarea>
         </div>
-<<<<<<< HEAD
-=======
-        <!-- Campo: Mobile Wallet -->
->>>>>>> 59461df1b33d25c65c9221b39256b8f9c62636c9
         <div class="form-group">
           <label for="mobile_wallet">Mobile Wallet (Bizum, PayPal, etc.) <span style="color:#888;font-size:0.95em;">(opcional)</span></label>
           <input type="text" id="mobile_wallet" name="mobile_wallet" placeholder="Ej: Bizum al 600123456, PayPal: miemail@email.com">
         </div>
-<<<<<<< HEAD
-=======
-        <!-- Campo: Cuenta Bancaria / IBAN -->
->>>>>>> 59461df1b33d25c65c9221b39256b8f9c62636c9
         <div class="form-group">
           <label for="bank_account">Cuenta Bancaria / IBAN <span style="color:#888;font-size:0.95em;">(opcional)</span></label>
           <input type="text" id="bank_account" name="bank_account" placeholder="Ej: ES12 3456 7890 1234 5678 9012">
@@ -1618,7 +1517,6 @@ to { opacity: 0; transform: translateX(-50%) translateY(-20px); }
     </div>
   </div>
 
-<<<<<<< HEAD
   <!-- Modal de éxito de Stripe -->
   <div id="stripeSuccessModal" class="modal-bg">
     <div class="modal-content" style="text-align: center;">
@@ -1640,8 +1538,6 @@ to { opacity: 0; transform: translateX(-50%) translateY(-20px); }
     </div>
   </div>
 
-=======
->>>>>>> 59461df1b33d25c65c9221b39256b8f9c62636c9
   <!-- Modal de Causa (compatible con causes-renderer.js) -->
   <div id="causeModal" class="modal" style="display:none; position:fixed; z-index:9999; left:0; top:0; width:100vw; height:100vh; background:rgba(0,0,0,0.35); align-items:center; justify-content:center;">
     <div class="modal-content" style="background:#fff; border-radius:18px; max-width:900px; width:95vw; padding:0; position:relative; max-height:90vh; overflow-y:auto;">
@@ -1750,7 +1646,6 @@ to { opacity: 0; transform: translateX(-50%) translateY(-20px); }
     <div class="causes-grid" id="causesList">
       <!-- Las causas se cargarán dinámicamente desde Supabase -->
     </div>
-<<<<<<< HEAD
     <div class="pagination" style="justify-content: center; margin-top: 1.5rem;">
       <button class="btn" id="prevPage" style="cursor: pointer;" disabled>
         <i class="fas fa-chevron-left"></i>
@@ -1789,42 +1684,10 @@ to { opacity: 0; transform: translateX(-50%) translateY(-20px); }
       </div>
     </div>
   </div>
-=======
-  </div>
-
-  <!-- Modal de éxito de Stripe -->
-  {% if request.query.stripe == 'success' %}
-  <div id="modal-success" class="modal-solidarity" style="display:flex;">
-    <div class="modal-content">
-      <img src="/img/solidarity-success.svg" alt="Éxito" style="width:80px;margin-bottom:16px;">
-      <h2>¡Tu cuenta Stripe está conectada!</h2>
-      <p>Ya puedes empezar a recibir donaciones en tu causa.<br>
-      <strong>¡Gracias por sumar solidaridad!</strong></p>
-      <a href="/causes/create" class="btn btn-solidarity">Crear otra causa</a>
-      <button id="closeSuccessModal" class="btn btn-outline">Cerrar</button>
-    </div>
-  </div>
-  <script>
-  document.getElementById('closeSuccessModal').onclick = function() {
-    document.getElementById('modal-success').style.display = 'none';
-    // Limpia el parámetro de la URL para que no vuelva a salir el modal
-    if (window.location.search.includes('stripe=success')) {
-      const url = new URL(window.location.href);
-      url.searchParams.delete('stripe');
-      window.history.replaceState({}, '', url.pathname + url.search);
-    }
-  };
-  document.getElementById('modal-success').onclick = function(e) {
-    if (e.target === this) document.getElementById('modal-success').style.display = 'none';
-  };
-  </script>
-  {% endif %}
->>>>>>> 59461df1b33d25c65c9221b39256b8f9c62636c9
 {% endblock %}
 
 {% block scripts %}
 {{ super() }}
-<<<<<<< HEAD
 
 <script>
 // Función global para mostrar notificaciones
@@ -2394,302 +2257,4 @@ window.showStripeOnboardingModal = function(user) {
   };
 };
 </script>     
-=======
-<script src="/js/compartir.js"></script>
-<script src="/js/modules/causes-renderer.js"></script>
-<script>
-// --- CREACIÓN DE CAUSA SIMPLE (como tareas) ---
-document.getElementById('causeForm').addEventListener('submit', async function(e) {
-  e.preventDefault();
-
-  const submitBtn = this.querySelector('button[type="submit"]');
-  const originalBtnText = submitBtn.innerHTML;
-  submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Creando causa...';
-  submitBtn.disabled = true;
-
-  try {
-    // Recopilar datos del formulario
-    const formData = {
-      title: document.getElementById('title').value.trim(),
-      short_description: document.getElementById('short_description').value.trim(),
-      description: document.getElementById('description').value.trim(),
-      goal: parseFloat(document.getElementById('goal').value),
-      beneficiaries: parseInt(document.getElementById('beneficiaries').value, 10),
-      city: document.getElementById('city').value.trim(),
-      country: document.getElementById('country').value.trim(),
-      points: parseInt(document.getElementById('points').value, 10) || 50,
-      // --- NUEVOS CAMPOS ---
-      how_to_donate: document.getElementById('how_to_donate').value.trim(),
-      mobile_wallet: document.getElementById('mobile_wallet').value.trim() || null,
-      bank_account: document.getElementById('bank_account').value.trim() || null,
-      // --- FIN NUEVOS CAMPOS ---
-      contact_email: document.getElementById('contact_email').value.trim() || null,
-      phone_number: document.getElementById('phone_number').value.trim() || null,
-      photoFile: document.getElementById('photo').files[0]
-    };
-
-    // Validar campos requeridos
-    if (!formData.title || !formData.short_description || !formData.description ||
-        !formData.goal || !formData.beneficiaries || !formData.city || !formData.country) {
-      throw new Error('Por favor completa todos los campos requeridos');
-    }
-
-    // Obtener sesión de usuario
-    const { data: { session } } = await supabase.auth.getSession();
-    if (!session?.user) {
-      throw new Error('Debes iniciar sesión para crear una causa');
-    }
-    const userId = session.user.id;
-
-    // Subir foto si existe
-    let photo_url = null;
-    if (formData.photoFile) {
-      const fileExt = formData.photoFile.name.split('.').pop();
-      const fileName = `${Date.now()}-${Math.random().toString(36).substr(2, 9)}.${fileExt}`;
-      const filePath = `public/${fileName}`;
-      const { error: uploadError } = await supabase.storage
-        .from('causes')
-        .upload(filePath, formData.photoFile, { upsert: true });
-      if (uploadError) throw new Error('Error subiendo foto: ' + uploadError.message);
-      const { data } = supabase.storage.from('causes').getPublicUrl(filePath);
-      photo_url = data.publicUrl;
-    }
-
-    // Insertar causa en Supabase
-    const { data: newCause, error: causeError } = await supabase
-      .from('causes')
-      .insert([{
-        title: formData.title,
-        short_description: formData.short_description,
-        description: formData.description,
-        goal: formData.goal,
-        beneficiaries: formData.beneficiaries,
-        city: formData.city,
-        country: formData.country,
-        points: formData.points,
-        photo_url,
-        // --- NUEVOS CAMPOS ---
-        how_to_donate: formData.how_to_donate,
-        mobile_wallet: formData.mobile_wallet,
-        bank_account: formData.bank_account,
-        // --- FIN NUEVOS CAMPOS ---
-        contact_email: formData.contact_email,
-        phone_number: formData.phone_number,
-        user_id: userId,
-        status: 'active',
-        raised: 0,
-        donors: 0
-      }])
-      .select()
-      .single();
-
-    if (causeError) throw new Error('Error en Supabase: ' + causeError.message);
-
-    // Agregar al creador como miembro fundador
-    await supabase
-      .from('causes_members')
-      .insert([{
-        cause_id: newCause.id,
-        user_id: userId,
-        role: 'founder',
-        status: 'active'
-      }]);
-
-    // Mostrar mensaje de éxito y recargar causas
-    document.getElementById('causeForm').style.display = 'none';
-    document.getElementById('afterCreate').style.display = 'block';
-    showNotification('¡Causa creada con éxito!', 'success');
-    await loadCausesFromSupabase();
-
-  } catch (error) {
-    console.error('Error creando causa:', error);
-    showNotification(error.message, 'error');
-  } finally {
-    submitBtn.innerHTML = originalBtnText;
-    submitBtn.disabled = false;
-  }
-});
-
-// --- FUNCIONES AUXILIARES Y EVENTOS ---
-function showNotification(message, type = 'info', duration = 4000) {
-  const existing = document.querySelector('.global-notification');
-  if (existing) existing.remove();
-  const notification = document.createElement('div');
-  notification.className = `global-notification ${type}`;
-  notification.innerHTML = `
-    <div class="notification-content">
-      <i class="fas fa-${type === 'error' ? 'times-circle' : type === 'warning' ? 'exclamation-triangle' : type === 'success' ? 'check-circle' : 'info-circle'}"></i>
-      <span>${message}</span>
-    </div>
-  `;
-  document.body.appendChild(notification);
-  setTimeout(() => {
-    notification.style.opacity = '1';
-    notification.style.transform = 'translateY(0)';
-  }, 10);
-  setTimeout(() => {
-    notification.style.opacity = '0';
-    notification.style.transform = 'translateY(-20px)';
-    setTimeout(() => notification.remove(), 300);
-  }, duration);
-}
-
-// --- CARGA Y FILTRO DE CAUSAS ---
-async function loadCausesFromSupabase(filter = "all", searchTerm = "") {
-  if (window.causesRenderer) {
-    const { causes, error } = await window.causesRenderer.loadCausesFromSupabase(filter, searchTerm);
-    if (error) {
-      document.getElementById('causesList').innerHTML = '<div style="color:#e53e3e;text-align:center;">Error al cargar las causas.</div>';
-      return;
-    }
-    const container = document.getElementById('causesList');
-    window.causesRenderer.renderGrid(causes, container);
-    window.causes = causes;
-  }
-}
-
-// --- EVENTOS DE MODAL Y BUSQUEDA ---
-function setupCreateCauseListeners() {
-  document.getElementById('create-cause-btn').onclick = async function(e) {
-    e.preventDefault();
-    const { data: { session } } = await supabase.auth.getSession();
-    if (session?.user) {
-      document.getElementById('createCauseModal').classList.add('active');
-      document.body.style.overflow = 'hidden';
-    } else {
-      document.getElementById('loginModal').classList.add('active');
-    }
-  };
-
-  document.getElementById('closeCreateCauseModal').onclick = function() {
-    document.getElementById('createCauseModal').classList.remove('active');
-    document.body.style.overflow = '';
-    document.getElementById('causeForm').reset();
-    document.getElementById('previewImg').style.display = 'none';
-    document.getElementById('causeForm').style.display = 'block';
-    document.getElementById('afterCreate').style.display = 'none';
-  };
-
-  document.getElementById('createCauseModal').onclick = function(e) {
-    if (e.target === this) {
-      this.classList.remove('active');
-      document.body.style.overflow = '';
-      document.getElementById('causeForm').style.display = 'block';
-      document.getElementById('afterCreate').style.display = 'none';
-    }
-  };
-
-  document.getElementById('cancelModal').onclick = function() {
-    document.getElementById('loginModal').classList.remove('active');
-  };
-  document.getElementById('loginModal').onclick = function(e) {
-    if (e.target === this) this.classList.remove('active');
-  };
-
-  // Vista previa de imagen
-  document.getElementById('photo').addEventListener('change', function(e) {
-    const file = e.target.files[0];
-    const preview = document.getElementById('previewImg');
-    if (file) {
-      const reader = new FileReader();
-
-      reader.onload = function(evt) {
-        preview.src = evt.target.result;
-        preview.style.display = 'block';
-      };
-      reader.readAsDataURL(file);
-    } else {
-      preview.src = '';
-      preview.style.display = 'none';
-    }
-  });
-
-  // Actualizar texto de puntos
-  document.getElementById('points').addEventListener('input', function() {
-    const val = this.value || 0;
-    document.getElementById('pointsText').innerHTML = `<i class="fas fa-star"></i> Colaborar en esta causa otorgará <strong>${val} puntos</strong> a cada participante.`;
-  });
-
-  // Geocodificación (si tienes función)
-  if (typeof geocodeCityCountry === 'function') {
-    document.getElementById('city').addEventListener('change', geocodeCityCountry);
-    document.getElementById('country').addEventListener('change', geocodeCityCountry);
-  }
-}
-
-// --- FILTROS Y BUSQUEDA ---
-function setupTabsAndSearch() {
-  document.querySelectorAll('.tab').forEach(tab => {
-    tab.addEventListener('click', function() {
-      const filter = this.getAttribute('data-filter');
-      document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-      this.classList.add('active');
-      loadCausesFromSupabase(filter, document.getElementById('search-input').value);
-    });
-  });
-
-  document.getElementById('search-input').addEventListener('input', function() {
-    const searchTerm = this.value.trim();
-    const activeTab = document.querySelector('.tab.active');
-    const filter = activeTab ? activeTab.getAttribute('data-filter') : 'all';
-    loadCausesFromSupabase(filter, searchTerm);
-  });
-}
-
-// --- CARGA INICIAL DE CAUSAS ---
-document.addEventListener('DOMContentLoaded', async function() {
-  // Cargar causas inicialmente
-  await loadCausesFromSupabase();
-
-  // Configurar listeners para crear causa
-  setupCreateCauseListeners();
-  
-  // Event listeners para tabs y búsqueda
-  setupTabsAndSearch();
-});
-
-// --- Control de modales en móvil: cierre al pulsar fuera y scroll lock ---
-function setupMobileModals() {
-  const mobileModals = ['createCauseModal', 'activityAdminModal', 'causeModal'];
-  mobileModals.forEach(modalId => {
-    const modal = document.getElementById(modalId);
-    if (modal) {
-      modal.addEventListener('click', function(e) {
-        if (e.target === this) {
-          closeMobileModal(modalId);
-        }
-      });
-    }
-  });
-  function closeMobileModal(modalId) {
-    const modal = document.getElementById(modalId);
-    if (modal) {
-      modal.classList.remove('active');
-      document.body.style.overflow = 'auto';
-    }
-  }
-  function openMobileModal(modalId) {
-    const modal = document.getElementById(modalId);
-    if (modal) {
-      modal.classList.add('active');
-      document.body.style.overflow = 'hidden';
-      const content = modal.querySelector('.modal-content');
-      if (content) content.scrollTo(0, 0);
-    }
-  }
-  // Si usas data-toggle/data-target para abrir modales, puedes activar esto:
-  document.querySelectorAll('[data-toggle="modal"]').forEach(btn => {
-    btn.addEventListener('click', function() {
-      const targetModal = this.getAttribute('data-target');
-      openMobileModal(targetModal);
-    });
-  });
-}
-document.addEventListener('DOMContentLoaded', function() {
-  if (window.innerWidth <= 600) {
-    setupMobileModals();
-  }
-});
-</script>
->>>>>>> 59461df1b33d25c65c9221b39256b8f9c62636c9
 {% endblock %}
