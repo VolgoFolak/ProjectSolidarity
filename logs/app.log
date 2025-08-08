@@ -2616,3 +2616,17 @@
 [2025-08-08T22:51:48.730Z] 🔍 Session User: VolgoFolak
 [2025-08-08T22:53:34.693Z] 📝 POST /api/session/keep-alive - Session ID: pPdtQJrIedqYEv7TIFOkPm8lD0geLRKI
 [2025-08-08T22:53:34.696Z] 🔍 Session User: VolgoFolak
+[2025-08-08T22:55:13.772Z] 🚀 Servidor iniciado en puerto 3000
+[2025-08-08T22:55:13.864Z] 🌍 Entorno: production
+[2025-08-08T22:55:13.865Z] 🔗 URL: https://www.project-solidarity.com
+[2025-08-08T22:55:13.865Z] ✅ Configuración de producción activa
+[2025-08-08T22:55:13.866Z] 🔒 Cookies seguras habilitadas
+[2025-08-08T22:55:13.866Z] 🌐 CORS configurado para project-solidarity.com
+[2025-08-08T22:55:14.673Z] ✅ PostgreSQL/Supabase connection successful
+[2025-08-08T22:58:06.917Z] 🚀 Servidor iniciado en puerto 3000
+[2025-08-08T22:58:06.927Z] 🌍 Entorno: production
+[2025-08-08T22:58:06.928Z] 🔗 URL: https://www.project-solidarity.com
+[2025-08-08T22:58:06.928Z] ✅ Configuración de producción activa
+[2025-08-08T22:58:06.929Z] 🔒 Cookies seguras habilitadas
+[2025-08-08T22:58:06.929Z] 🌐 CORS configurado para project-solidarity.com
+[2025-08-08T22:58:07.688Z] ✅ PostgreSQL/Supabase connection successful
