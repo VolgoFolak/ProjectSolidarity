@@ -1,24 +1,5 @@
 require('dotenv').config();
 
-// ✅ VERIFICACIÓN DE CONFIGURACIÓN CRÍTICA
-console.log('🔧 Verificando configuración...');
-const requiredEnvVars = [
-  'SUPABASE_URL', 'SUPABASE_ANON_KEY', 'STRIPE_SECRET_KEY', 
-  'STRIPE_PUBLISHABLE_KEY', 'SESSION_SECRET', 'DOMAIN'
-];
-
-const missingVars = requiredEnvVars.filter(varName => !process.env[varName]);
-if (missingVars.length > 0) {
-  console.error('❌ Variables de entorno faltantes:', missingVars);
-  process.exit(1);
-}
-
-console.log('✅ Configuración verificada:');
-console.log('- NODE_ENV:', process.env.NODE_ENV);
-console.log('- DOMAIN:', process.env.DOMAIN);
-console.log('- FRONTEND_URL:', process.env.FRONTEND_URL);
-console.log('- COOKIE_DOMAIN:', process.env.COOKIE_DOMAIN);
-
 // ✅ CONFIGURACIÓN DE PRODUCCIÓN
 if (process.env.NODE_ENV === 'production') {
   const fs = require('fs');
@@ -76,21 +57,23 @@ app.use(express.json({ limit: '10mb' }));
 app.use(cookieParser());
 app.use(bodyParser.urlencoded({ extended: true, limit: '10mb' }));
 
-// ✅ 2. CONFIGURACIÓN DE CONFIANZA DE PROXY (CORREGIDA)
+// ✅ 2. CONFIGURACIÓN DE CONFIANZA DE PROXY
 const isLocalhost = process.env.NODE_ENV !== 'production';
 const frontendUrl = isLocalhost ? 'http://localhost:3000' : 'https://www.project-solidarity.com';
 
 if (!isLocalhost) {
-  app.set('trust proxy', 1); // ✅ Esto está correcto para producción
+  app.set('trust proxy', 1);
 }
 
-// ✅ 3. CONFIGURACIÓN CORS (CORREGIDA)
+// ✅ 3. CONFIGURACIÓN CORS
+const allowedOrigins = [
+  'https://project-solidarity.com',
+  'https://www.project-solidarity.com',
+  'http://localhost:3000'
+];
+
 app.use(cors({
-  origin: [
-    'http://localhost:3000', // para desarrollo
-    'https://project-solidarity.com', // ✅ sin www
-    'https://www.project-solidarity.com' // ✅ con www
-  ],
+  origin: ['http://localhost:3000', 'https://project-solidarity.com'],
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS']
 }));
@@ -181,12 +164,9 @@ app.use('/api/', createRateLimit(1 * 60 * 1000, 100, 'Demasiadas peticiones API'
 // Middleware para servir archivos estáticos
 app.use(express.static(path.join(__dirname, 'public')));
 
-// ✅ 9. CONFIGURACIÓN DE MULTER (VERIFICAR UPLOADS)
+// ✅ 9. CONFIGURACIÓN DE MULTER
 const uploadDir = path.join(__dirname, 'public', 'uploads');
-if (!fs.existsSync(uploadDir)) {
-  fs.mkdirSync(uploadDir, { recursive: true });
-  console.log('📁 Created uploads directory:', uploadDir);
-}
+if (!fs.existsSync(uploadDir)) fs.mkdirSync(uploadDir, { recursive: true });
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => cb(null, uploadDir),
@@ -235,8 +215,7 @@ app.use((req, res, next) => {
   res.locals.env = {
     SUPABASE_URL: process.env.SUPABASE_URL,
     SUPABASE_ANON_KEY: process.env.SUPABASE_ANON_KEY,
-    NODE_ENV: process.env.NODE_ENV,
-    DOMAIN: process.env.DOMAIN // ✅ Agregar esto
+    NODE_ENV: process.env.NODE_ENV
   };
   next();
 });
@@ -713,9 +692,8 @@ const renderView = (view, title = '') => (req, res) => {
     user: req.session.user,
     env: {
       SUPABASE_URL: process.env.SUPABASE_URL,
-      SUPABASE_ANON_KEY: process.env.SUPABASE_ANON_KEY,
-      NODE_ENV: process.env.NODE_ENV,
-      DOMAIN: process.env.DOMAIN // ✅ Agregar esto
+      SUPABASE_ANON_KEY: process.env.SUPABASE_ANON_KEY, // <-- CORREGIDO
+      NODE_ENV: process.env.NODE_ENV
     }
   });
 };
@@ -1344,24 +1322,8 @@ app.use((req, res) => {
 });
 
 // Iniciar servidor
-const server = app.listen(PORT, () => {
-  console.log(`🚀 Servidor iniciado en puerto ${PORT}`);
-  console.log(`🌍 Entorno: ${process.env.NODE_ENV}`);
-  console.log(`🔗 URL: ${process.env.DOMAIN || `http://localhost:${PORT}`}`);
-  
-  if (process.env.NODE_ENV === 'production') {
-    console.log('✅ Configuración de producción activa');
-    console.log('🔒 Cookies seguras habilitadas');
-    console.log('🌐 CORS configurado para project-solidarity.com');
-  }
-});
-
-// Manejo graceful de cierre
-process.on('SIGTERM', () => {
-  console.log('📡 SIGTERM recibido, cerrando servidor...');
-  server.close(() => {
-    console.log('✅ Servidor cerrado correctamente');
-  });
+app.listen(PORT, () => {
+  console.log(`🚀 Servidor iniciado en http://localhost:${PORT}`);
 });
 
 // Añadir después de las rutas de Stripe existentes:

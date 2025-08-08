@@ -6,25 +6,25 @@
   {{ super() }}
   <style>
     :root {
-      --primary: #4a6fa5;        /* Azul Solidarity - CAUSAS (mantener) */
+      --primary: #4a6fa5;
       --primary-dark: #166088;
-      --teal: #0891b2;           /* Azul verdoso/teal - TAREAS (más diferenciado) */
-      --accent: #4fc3a1;         /* Verde - VOLUNTARIADOS (mantener) */
+      --teal: #0891b2;
+      --accent: #4fc3a1;
       --accent-dark: #3da58a;
-      --warning: #f59e42;        /* Naranja - RETOS (mantener) */
-      --purple: #8b5cf6;         /* Púrpura - COMUNIDADES (mantener) */
-      --gold: #eab308;           /* Dorado - RANKING (mantener) */
+      --warning: #f59e42;
+      --purple: #8b5cf6;
+      --gold: #eab308;
       --urgent: #e53e3e;
       --light: #f8fafc;
       --dark: #2d3748;
       --gray: #e2e8f0;
     }
 
-    /* ✅ HERO - Fondo azul Solidarity correcto */
+    /* HERO - Fondo azul Solidarity correcto */
     .hero {
-      background: linear-gradient(135deg, var(--primary), var(--primary-dark)) !important;
-      color: white !important;
-      padding: 4rem 2rem 6rem;
+      background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+      color: white;
+      padding: 2rem 3rem 5rem; /* Menos espacio arriba */
       text-align: center;
       position: relative;
       overflow: hidden;
@@ -44,54 +44,126 @@
     .hero-content {
       flex: 1;
       text-align: left;
-      padding: 2rem 0;
+      padding: 2rem 0 3rem 0; /* Más espacio arriba y abajo */
     }
 
-    .hero-image {
-      flex: 1;
-      position: relative;
-      display: none; /* Oculto en móvil */
-    }
-
-    .hero-image img {
-      width: 100%;
-      max-width: 500px;
-      border-radius: 16px;
-      box-shadow: 0 20px 40px rgba(0,0,0,0.2);
-      transform: rotate(-3deg);
-      transition: transform 0.3s ease;
-    }
-
-    .hero-image:hover img {
-      transform: rotate(0) scale(1.02);
-    }
-
-    .hero h1 {
+    .hero-title {
       font-size: 2.8rem;
+      font-weight: 900;
       margin-bottom: 1.5rem;
-      font-weight: 800;
-      line-height: 1.2;
-      text-shadow: 0 2px 4px rgba(0,0,0,0.1);
-      color: white !important;
+      margin-top: 0.7rem;
+      line-height: 1.1;
+      color: white;
+      display: block;
+    }
+
+    .hero-lead {
+      display: block;
+      font-size: 1.7rem;
+      font-weight: 700;
+      margin-top: 1.2rem;
+      margin-bottom: 1.2rem;
+      color: rgba(255,255,255,0.95);
+      text-align: left;
     }
 
     .hero-subtitle {
-      font-size: 1.2rem;
-      margin: 0 auto 2rem;
+      font-size: 1.25rem;
+      margin: 0 auto 2.2rem auto;
       font-weight: 400;
       opacity: 0.9;
       max-width: 600px;
-      color: rgba(255,255,255,0.95) !important;
+      color: rgba(255,255,255,0.92);
+      text-align: left;
     }
 
     .hero-buttons {
       display: flex;
       gap: 1.5rem;
-      margin-top: 2rem;
+      margin-top: 2.5rem;
       flex-wrap: wrap;
     }
 
-/* ✅ STATS SECTION - EXACTO COMO ACTIONS */
+    .hero-image {
+      flex: 1;
+      position: relative;
+      display: block;
+      align-self: flex-start;
+      margin-top: 3.5rem;
+    }
+
+    .hero-image img {
+      width: 100%;
+      max-width: 520px;
+      border-radius: 20px;
+      box-shadow: 0 24px 48px rgba(0,0,0,0.18);
+      transform: rotate(-2deg);
+      transition: transform 0.3s ease;
+      margin-top: 0;
+    }
+
+    /* --- HERO TABLET & MOBILE --- */
+    @media (max-width: 1024px) {
+      .hero-content {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding-top: 2.5rem;
+        padding-bottom: 1.5rem;
+        width: 100%;
+        text-align: center;
+      }
+      .hero-title {
+        font-size: 2.3rem;
+        font-weight: 900;
+        max-width: 98vw;
+        width: 98vw;
+        text-align: center;
+        margin: 0 auto 1.2rem auto;
+        letter-spacing: -1px;
+        line-height: 1.1;
+        color: white;
+        display: block;
+        padding-left: 2vw;
+        padding-right: 2vw;
+      }
+      .hero-lead {
+        font-size: 6rem;
+        font-weight: 500;
+        margin: 0 auto 1.2rem auto;
+        max-width: 90vw;
+        color: rgba(255,255,255,0.95);
+        text-align: center;
+        padding-left: 4vw;
+        padding-right: 4vw;
+        display: block;
+      }
+      .hero-subtitle {
+        font-size: 1rem;
+        margin: 0 auto 2rem auto;
+        max-width: 90vw;
+        color: rgba(255,255,255,0.92);
+        text-align: center;
+        padding-left: 4vw;
+        padding-right: 4vw;
+      }
+      .hero-image {
+        display: block;
+        margin: 0 auto;
+        max-width: 95vw;
+        align-self: center;
+        margin-top: 0;
+      }
+      .hero-image img {
+        max-width: 100vw;
+        width: 100%;
+        min-width: 0;
+        border-radius: 12px;
+        margin-top: 0;
+      }
+    }
+
+    /* ✅ STATS SECTION - EXACTO COMO ACTIONS */
 .live-stats {
   padding: 4rem 2rem;
   background: linear-gradient(to bottom, #f8fafc, #ffffff);
@@ -535,10 +607,12 @@
     }
 
     .preview-image {
-      height: 150px;
+      height: 200px;
       background-size: cover;
       background-position: center;
       position: relative;
+      border-radius: 16px; /* Igual que .action-image img */
+      overflow: hidden;
     }
 
     .preview-content {
@@ -657,26 +731,26 @@
     }
 
     .ranking-grid {
-      display: grid;
-      grid-template-columns: 2fr 1fr;
-      gap: 3rem;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
       max-width: 1200px;
       margin: 0 auto;
     }
 
     .top-members {
-      background: white;
-      border-radius: 16px;
-      padding: 2rem;
-      box-shadow: 0 5px 20px rgba(0,0,0,0.05);
+      width: 100%;
+      max-width: 600px;
+      margin: 0 auto;
     }
 
     .member-item {
       display: flex;
       align-items: center;
-      gap: 1rem;
+      gap: 1.2rem;
       padding: 1rem 0;
       border-bottom: 1px solid #e2e8f0;
+      margin-left: 0;
     }
 
     .member-item:last-child {
@@ -692,26 +766,7 @@
       justify-content: center;
       font-weight: 700;
       font-size: 1.1rem;
-    }
-
-    .member-rank.gold {
-      background: var(--gold);
-      color: white;
-    }
-
-    .member-rank.silver {
-      background: #c0c0c0;
-      color: white;
-    }
-
-    .member-rank.bronze {
-      background: #cd7f32;
-      color: white;
-    }
-
-    .member-rank.other {
-      background: var(--gray);
-      color: var(--dark);
+      margin-right: 0.5rem;
     }
 
     .member-avatar {
@@ -725,12 +780,17 @@
 
     .member-info {
       flex: 1;
+      min-width: 0;
     }
 
     .member-name {
       font-weight: 700;
       color: var(--dark);
       margin-bottom: 0.25rem;
+      font-size: 1rem;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
 
     .member-level {
@@ -743,11 +803,14 @@
       color: var(--primary);
       font-weight: 700;
       font-size: 1.1rem;
+      min-width: 80px;
     }
 
     .ranking-stats {
-      display: grid;
+      display: flex;
+      flex-direction: column;
       gap: 1.5rem;
+      margin-top: 2.5rem;
     }
 
     .ranking-stat-card {
@@ -756,6 +819,8 @@
       border-radius: 16px;
       box-shadow: 0 5px 20px rgba(0,0,0,0.05);
       text-align: center;
+      margin-bottom: 1.2rem;
+      border: 1px solid #e2e8f0;
     }
 
     .ranking-stat-icon {
@@ -769,23 +834,8 @@
       font-size: 1.5rem;
     }
 
-    .ranking-stat-icon.donations {
-      background: rgba(74, 111, 165, 0.1);
-      color: var(--primary);
-    }
-
-    .ranking-stat-icon.volunteer {
-      background: rgba(79, 195, 161, 0.1);
-      color: var(--accent);
-    }
-
-    .ranking-stat-icon.challenges {
-      background: rgba(245, 158, 66, 0.1);
-      color: var(--warning);
-    }
-
     .ranking-stat-number {
-      font-size: 1.8rem;
+      font-size: 1.7rem;
       font-weight: 900;
       color: var(--primary);
       margin-bottom: 0.5rem;
@@ -793,7 +843,7 @@
 
     .ranking-stat-label {
       color: #64748b;
-      font-size: 0.9rem;
+      font-size: 0.95rem;
       font-weight: 600;
     }
 
@@ -830,247 +880,377 @@
       flex-wrap: wrap;
     }
 
-    /* ✅ RESPONSIVE CORREGIDO */
-    @media (min-width: 768px) {
+    /* --- MOBILE RESPONSIVE --- */
+    @media (max-width: 900px) {
+      .main-container,
+      .live-stats,
+      .actions-section,
+      .preview-section,
+      .testimonials-section,
+      .ranking-section,
+      .cta-section {
+        padding-left: 0.5rem !important;
+        padding-right: 0.5rem !important;
+      }
       .hero {
-        padding: 6rem 2rem;
+        padding: 2.5rem 0.5rem 3rem 0.5rem !important;
       }
       .hero-container {
-        text-align: left;
-      }
-      .hero-content {
-        padding: 3rem 0;
-      }
-      .hero-image {
-        display: block;
-      }
-      .hero h1 {
-        font-size: 3.2rem;
-      }
-      .hero-subtitle {
-        font-size: 1.3rem;
-        margin: 0 0 2rem;
-      }
-      
-      /* ✅ TESTIMONIALS Y PREVIEW RESPONSIVE */
-      .testimonials-grid {
-        grid-template-columns: repeat(2, 1fr);
-      }
-      
-      .preview-grid {
-        grid-template-columns: repeat(2, 1fr);
-      }
-    }
-
-    @media (min-width: 1024px) {
-      .testimonials-grid {
-        grid-template-columns: repeat(3, 1fr);
-      }
-      
-      .preview-grid {
-        grid-template-columns: repeat(3, 1fr);
-      }
-    }
-
-    @media (max-width: 768px) {
-      .hero-buttons {
-        justify-content: center;
-      }
-
-      .ranking-grid {
-        grid-template-columns: 1fr;
-        gap: 2rem;
-      }
-      
-      /* ✅ ACTIONS RESPONSIVE */
-      .actions-grid {
-        grid-template-columns: 1fr;
+        flex-direction: column;
         gap: 1.5rem;
       }
-      
-      .action-card {
-        margin: 0 auto;
-        max-width: 400px;
+      .hero-content {
+        padding: 1rem 0;
+        text-align: center;
       }
-      
-      /* ✅ TESTIMONIALS RESPONSIVE */
-      .testimonials-grid {
-        grid-template-columns: 1fr;
-      }
-      
-      .testimonial-card {
-        max-width: 400px;
+      .hero-image {
+        display: block !important;
         margin: 0 auto;
+        max-width: 90vw;
+      }
+      .hero-image img {
+        max-width: 100vw;
+        width: 100%;
+        min-width: 0;
+      }
+      .hero h1 {
+        font-size: 1.7rem !important;
+      }
+      .hero-title {
+        font-size: 3.2rem; /* Más grande para el saludo principal */
+        font-weight: 900;
+        margin-bottom: 1.2rem;
+        line-height: 1.1;
+        color: white !important;
+        display: block;
+      }
+
+      .hero-title .hero-lead {
+        display: block;
+        font-size: 1.5rem; /* Más pequeño que el principal, pero más grande que el subtítulo */
+        font-weight: 500;
+        margin-top: 0.7rem;
+        color: rgba(255,255,255,0.95);
+      }  
+      .hero-subtitle {
+        font-size: 1.1rem; /* Un poco más pequeño que antes */
+        margin: 0 auto 2rem;
+        font-weight: 400;
+        opacity: 0.9;
+        max-width: 600px;
+        color: rgba(255,255,255,0.92) !important;
+      }
+      .hero-buttons {
+        flex-direction: column;
+        gap: 1rem;
+        align-items: center;
+      }
+      .section-header h2 {
+        font-size: 1.2rem;
+      }
+      .section-header p {
+        font-size: 0.97rem;
       }
     }
-
+    @media (max-width: 768px) {
+      .hero-container {
+        flex-direction: column;
+      }
+      .hero-title {
+        order: 1;
+      }
+      .hero-image {
+        order: 2;
+        margin-top: 1rem;
+      }
+      .hero-lead {
+        order: 3;
+      }
+      .hero-subtitle {
+        order: 4;
+      }
+      .hero-buttons {
+        order: 5;
+      }
+    }
     @media (max-width: 480px) {
       .hero h1 {
-        font-size: 2.2rem !important;
+        font-size: 1.1rem !important;
       }
-      
       .hero-subtitle {
+        font-size: 0.9rem !important;
+      }
+      .section-header h2 {
         font-size: 1rem !important;
       }
-      
-      .section-header h2 {
-        font-size: 1.8rem;
-      }
-      
       .preview-tabs {
-        flex-wrap: wrap;
-        gap: 0.5rem;
+        flex-direction: column;
+        gap: 0.3rem;
+        padding: 0 0.2rem 0.7rem 0.2rem;
       }
-      
       .tab-btn {
-        font-size: 0.8rem;
-        padding: 0.5rem 1rem;
+        font-size: 0.85rem !important;
+        padding: 0.5rem 0.7rem !important;
+      }
+      .preview-section,
+      .testimonials-section,
+      .actions-section,
+      .ranking-section,
+      .cta-section {
+        padding: 1rem 0.2rem !important;
+      }
+      .preview-card,
+      .action-card,
+      .testimonial-card {
+        padding: 0.7rem !important;
+      }
+      .preview-title,
+      .action-title {
+        font-size: 0.97rem !important;
+      }
+      .preview-description,
+      .action-description {
+        font-size: 0.9rem !important;
+      }
+      .cta-title {
+        font-size: 1rem !important;
+      }
+      .cta-description {
+        font-size: 0.9rem !important;
       }
     }
-
-    /* ✅ ANIMACIONES */
-    @keyframes float {
-      0%, 100% { transform: translateY(0); }
-      50% { transform: translateY(-10px); }
-    }
-
-    .floating {
-      animation: float 4s ease-in-out infinite;
-    }
-
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(20px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-
-    .animate-fade {
-      animation: fadeIn 0.8s ease-out forwards;
-    }
-
-    .delay-1 { animation-delay: 0.2s; }
-    .delay-2 { animation-delay: 0.4s; }
-    .delay-3 { animation-delay: 0.6s; }
-    .delay-4 { animation-delay: 0.8s; }
-    .delay-5 { animation-delay: 1s; }
-
-    .loading-skeleton {
-      background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
-      background-size: 200% 100%;
-      animation: loading 1.5s infinite;
-      border-radius: 16px;
-      height: 200px;
-    }
-
-    @keyframes loading {
-      0% { background-position: 200% 0; }
-      100% { background-position: -200% 0; }
-    }
-
-    /* ✅ PREVIEW GRID - 3 columnas en desktop CORREGIDO */
-    .preview-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-      gap: 1.5rem;
-      max-width: 1000px;
-      margin: 0 auto;
-    }
-
-    @media (min-width: 768px) {
-      .preview-grid {
-        grid-template-columns: repeat(2, 1fr);
-      }
-    }
-
-    @media (min-width: 1024px) {
-      .preview-grid {
-        grid-template-columns: repeat(3, 1fr); /* ✅ 3 columnas en desktop */
-      }
-    }
-
-    /* ✅ MENÚ HAMBURGUESA - COMPLETAMENTE OCULTO POR DEFECTO */
-.mobile-menu {
-  display: none !important;
-  opacity: 0;
-  visibility: hidden;
-  transform: translateX(-100%);
-  transition: all 0.3s ease;
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100vh;
-  background: white;
-  z-index: 9999;
-  padding: 2rem;
-  box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+    @media (max-width: 600px) {
+  .hero-lead {
+    font-size: 1rem !important;
+    text-align: center !important;
+    max-width: 90vw !important;
+    margin: 0 auto 1rem auto !important;
+    padding-left: 4vw;
+    padding-right: 4vw;
+    color: rgba(255,255,255,0.95) !important;
+    display: block;
+  }
 }
 
-.mobile-menu.active {
-  display: block !important;
-  opacity: 1;
-  visibility: visible;
-  transform: translateX(0);
-}
-
-.hamburger-btn {
-  display: none;
-  background: none;
-  border: none;
-  cursor: pointer;
-  padding: 0.5rem;
-  color: var(--primary);
-  font-size: 1.2rem;
-}
-
-/* ✅ RESPONSIVE CORREGIDO - Solo mostrar hamburguesa cuando sea necesario */
+/* --- AJUSTES PARA MÓVIL EN INDEX.NJK --- */
 @media (max-width: 768px) {
-  .hamburger-btn {
+  .hero h1 {
+    font-size: 3rem !important;
+    margin-bottom: 0.8rem !important;
+    min-height: unset !important; /* Elimina el min-height forzado */
+    line-height: 1.22 !important;
+    text-align: center !important;
+    margin-top: 2.3rem !important;
+    margin-bottom: 0.7rem !important;
+    font-weight: 900 !important;
+    letter-spacing: -1px;
+    max-width: 98vw;
+  }
+  .hero-subtitle {
+    font-size: 1rem !important;
+    margin: 0 auto 2rem auto !important;
+    max-width: 90vw !important;
+    color: rgba(255,255,255,0.92) !important;
+    text-align: center !important;
+    padding-left: 4vw;
+    padding-right: 4vw;
+  }
+  .hero-buttons {
+    margin-top: 1.2rem !important;
+    flex-direction: column !important;
+    gap: 1rem !important;
+    align-items: center !important;
+    width: 100% !important;
+  }
+  .hero-content {
+     display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-top: 2.5rem !important;
+    padding-bottom: 1.5rem !important;
+    width: 100%;
+  }
+  .hero-image {
     display: block !important;
+    margin: 0 auto !important;
+    max-width: 95vw !important;
   }
-  
-  .nav-links {
-    display: none !important;
+  .hero-image img {
+    max-width: 100vw !important;
+    width: 100% !important;
+    min-width: 0 !important;
+    border-radius: 12px !important;
   }
-  
-  /* ✅ ASEGURAR que el menú NO se vea hasta activarse */
-  .mobile-menu {
-    left: -100% !important; /* ✅ Fuera de pantalla */
+  .hero-title {
+    font-size: 2.3rem !important;
+    font-weight: 900 !important;
+    max-width: 98vw !important;
+    width: 98vw !important;
+    text-align: center !important;
+    margin: 0 auto 1.2rem auto !important;
+    letter-spacing: -1px;
+    line-height: 1.1 !important;
+    color: white !important;
+    display: block;
+    padding-left: 2vw;
+    padding-right: 2vw;
   }
-  
-  .mobile-menu.active {
-    left: 0 !important; /* ✅ Solo aparece cuando está activo */
+
+  .hero-lead {
+    font-size: 1.6rem !important;
+    font-weight: 600;
+    line-height: 1.3 !important;
+    margin: 1.2rem auto 1.6rem auto !important;
+    max-width: 90vw !important;
+    color: rgba(255,255,255,0.95);
+    text-align: center !important;
+    padding-left: 4vw;
+    padding-right: 4vw;
+    display: block;
+  }  
+}
+
+/* --- ELIMINA overflow-x y max-width de los contenedores principales --- */
+/* NO pongas estos estilos en .main-container, .hero, .hero-container, .live-stats, .actions-section, .preview-section, .testimonials-section, .ranking-section, .cta-section */
+
+/* --- SI USAS HEADER/MENÚ FIJO EN MÓVIL, AJUSTA EL PADDING --- */
+@media (max-width: 600px) {
+  .main-container,
+  .hero,
+  .live-stats,
+  .actions-section,
+  .preview-section,
+  .testimonials-section,
+  .ranking-section,
+  .cta-section {
+    padding-top: 60px !important;    /* Altura del header fijo */
+    padding-bottom: 56px !important; /* Altura del menú inferior fijo */
+    /* Elimina max-width y overflow-x aquí */
   }
 }
 
-@media (max-width: 480px) {
-  /* ✅ FORZAR ocultación en móviles muy pequeños */
-  .mobile-menu:not(.active) {
-    display: none !important;
-    opacity: 0 !important;
-    visibility: hidden !important;
-    left: -100% !important;
+/* --- AJUSTE DE GRID Y TARJETAS EN ACTIVIDAD RECIENTE --- */
+.preview-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr); /* 3 columnas en desktop */
+  gap: 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 2rem;
+}
+
+@media (max-width: 900px) {
+  .preview-grid {
+    grid-template-columns: 1fr !important; /* 1 columna en móvil/tablet */
+    gap: 1rem !important;
+    max-width: 98vw;
+    padding: 0 0.5rem;
   }
 }
+
+/* --- AJUSTE DE IMAGEN EN TARJETAS DE ACTIVIDAD RECIENTE --- */
+.preview-image {
+  height: 200px; /* Igual que .action-image */
+  background-size: cover;
+  background-position: center;
+  position: relative;
+  border-radius: 16px; /* Igual que .action-image img */
+  overflow: hidden;
+}
+
+@media (max-width: 900px) {
+  .preview-image {
+    height: 160px !important;
+    border-radius: 12px !important;
+  }
+}
+
+/* --- OPCIONAL: SI QUIERES QUE EL CONTENIDO NUNCA SE DESBORDE EN MÓVIL --- */
+@media (max-width: 600px) {
+  .main-container,
+  .hero,
+  .live-stats,
+  .actions-section,
+  .preview-section,
+  .testimonials-section,
+  .ranking-section,
+  .cta-section {
+     width: 100% !important;
+     box-sizing: border-box;
+  }
+}
+
+/* --- SI TIENES MENÚ INFERIOR FIJO, AGREGA ESTE BLOQUE EN TU layout.njk --- */
+/*
+<nav class="mobile-bottom-nav">
+  <a href="/" aria-label="Inicio"><i class="fas fa-home"></i></a>
+  <a href="/actions" aria-label="Acciones"><i class="fas fa-hands-helping"></i></a>
+  <a href="/ranking" aria-label="Ranking"><i class="fas fa-trophy"></i></a>
+  <a href="/profile" aria-label="Perfil"><i class="fas fa-user"></i></a>
+</nav>
+*/
+
+/* --- MENÚ INFERIOR FIJO EN MÓVIL --- */
+@media (max-width: 600px) {
+  .mobile-bottom-nav {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100vw;
+    z-index: 1000;
+    background: white;
+    box-shadow: 0 -2px 8px rgba(0,0,0,0.08);
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    height: 56px;
+    border-top: 1px solid #e2e8f0;
+  }
+  body {
+    padding-bottom: 56px !important;
+  }
+}
+
+/* --- HEADER FIJO EN MÓVIL (SI LO USAS) --- */
+@media (max-width: 600px) {
+  header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    z-index: 1000;
+    background: linear-gradient(135deg, var(--primary, #4a6fa5), var(--primary-dark, #166088));
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  }
+}
+
+/* --- AJUSTE FINAL: NO height: 100vh en ningún contenedor principal --- */
+/* Si tienes height: 100vh en .main-container, .hero, etc, elimínalo. Permite que el contenido crezca verticalmente. */
   </style>
 {% endblock %}
 
 {% block content %}
-  <!-- ✅ Hero Section sin "Ver acciones" -->
+  <!-- HERO NUEVO -->
   <section class="hero">
     <div class="hero-container">
       <div class="hero-content">
-        <h1 class="animate-fade">¡Transforma tu solidaridad en impacto real!</h1>
-        <p class="hero-subtitle animate-fade delay-1">Únete a miles de personas que están cambiando el mundo a través de acciones concretas. Gana puntos, supera retos y forma parte de comunidades que marcan la diferencia.</p>
-        
-        <div class="hero-buttons animate-fade delay-2">
-          <a href="/register" class="btn btn-accent">
-            <i class="fas fa-rocket"></i> Empieza ahora
-          </a>
-        </div>
-      </div>
-      
+  <h1 class="animate-fade hero-title">
+    ¡Bienvenidos a Solidarity!
+  </h1>
+  <p class="hero-lead animate-fade delay-1">
+    La mejor plataforma del mundo para visibilizar tus acciones, voluntariados y comunidades y crear impacto social real.
+  </p>
+  <p class="hero-subtitle animate-fade delay-2">
+    Recibe donaciones compartiendo tus causas, crea comunidades, reta a tus amigos a realizar tareas solidarias y multiplica el alcance de tus ideas. ¡Convierte tu proyecto en una oportunidad real!
+  </p>
+  <div class="hero-buttons animate-fade delay-3">
+    <a href="/register" class="btn btn-accent">
+      <i class="fas fa-rocket"></i> Empieza a crear gratis
+    </a>
+  </div>
+</div>
       <div class="hero-image floating">
-        <img src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&w=600&h=400&q=80" alt="Equipo colaborando en proyecto solidario" class="animate-fade delay-2">
+        <img src="img/portada.jpg" alt="Portada Solidarity" class="animate-fade delay-2">
       </div>
     </div>
   </section>
@@ -1079,7 +1259,7 @@
   <section class="live-stats">
     <div class="section-header">
       <h2>Impacto en Tiempo Real</h2>
-      <p>Estos números crecen cada día gracias a nuestra comunidad</p>
+      <p>Estos números crecen cada día gracias a creadores como tú</p>
     </div>
     
     <div class="stats-grid">
@@ -1106,28 +1286,29 @@
     </div>
   </section>
 
-  <!-- ✅ Actions Section -->
+  <!-- ACTIONS NUEVO -->
   <section class="actions-section" id="actions">
     <div class="section-header">
-      <h2>Elige cómo quieres impactar</h2>
-      <p>Diferentes formas de contribuir, todas generan cambios positivos</p>
+      <h2>Elige cómo quieres crear impacto positivo y solidario</h2>
+      <p>Utiliza Solidarity para lanzar tus propias iniciativas, atraer apoyo y obtener beneficios como creador</p>
     </div>
-    
     <div class="actions-grid">
-      <!-- 1. Causas - AZUL PRINCIPAL -->
+      <!-- 1. Causas -->
       <div class="action-card animate-fade">
         <div class="action-image">
           <img src="https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?auto=format&fit=crop&w=600&q=80" alt="Niños sonriendo en proyecto educativo">
           <div class="action-badge">
-            <i class="fas fa-star"></i> +10 pts/€
+            <i class="fas fa-star"></i> +10 pts/€ 
           </div>
         </div>
         <div class="action-content">
           <h3 class="action-title">
             <div class="action-icon"><i class="fas fa-hand-holding-heart"></i></div> 
-            Causas Solidarias
+            Crea tu Causa Solidaria
           </h3>
-          <p class="action-description">Apoya proyectos verificados con objetivos claros. Cada donación suma puntos y avances medibles hacia la meta.</p>
+          <p class="action-description">
+            Lanza tu propio proyecto, recibe donaciones y visibilidad. Gestiona el avance, motiva a tu comunidad y demuestra el impacto de tu iniciativa.
+          </p>
           <div class="action-stats">
             <div class="stat-item-action">
               <i class="fas fa-map-marker-alt"></i> 58 países
@@ -1137,12 +1318,11 @@
             </div>
           </div>
           <a href="/causes" class="action-button btn-primary">
-            <i class="fas fa-search"></i> Explorar causas
+            <i class="fas fa-search"></i> Ver causas
           </a>
         </div>
       </div>
-      
-      <!-- 2. Tareas - AZUL VERDOSO/TEAL -->
+      <!-- 2. Tareas -->
       <div class="action-card animate-fade delay-1">
         <div class="action-image">
           <img src="https://images.unsplash.com/photo-1582213782179-e0d53f98f2ca?auto=format&fit=crop&w=800&q=80" alt="Equipo trabajando en proyecto solidario">
@@ -1153,9 +1333,11 @@
         <div class="action-content">
           <h3 class="action-title">
             <div class="action-icon teal"><i class="fas fa-tasks"></i></div>
-            Tareas de Impacto
+            Publica Tareas de Impacto
           </h3>
-          <p class="action-description">Completa micro-acciones específicas que ayudan a organizaciones reales. Tareas verificadas y medibles.</p>
+          <p class="action-description">
+            Sube micro-tareas para tu causa o proyecto, consigue ayuda de la comunidad y recompensa la colaboración con puntos y visibilidad.
+          </p>
           <div class="action-stats">
             <div class="stat-item-action">
               <i class="fas fa-check-circle"></i> 2,340 completadas
@@ -1165,12 +1347,11 @@
             </div>
           </div>
           <a href="/tasks" class="action-button btn-teal">
-            <i class="fas fa-play"></i> Empezar tareas
+            <i class="fas fa-search"></i> Ver tareas
           </a>
         </div>
       </div>
-      
-      <!-- 3. Retos - NARANJA -->
+      <!-- 3. Retos -->
       <div class="action-card animate-fade delay-2">
         <div class="action-image">
           <img src="https://images.unsplash.com/photo-1552664730-d307ca884978?auto=format&fit=crop&w=600&q=80" alt="Personas celebrando logros en equipo">
@@ -1181,9 +1362,11 @@
         <div class="action-content">
           <h3 class="action-title">
             <div class="action-icon challenge"><i class="fas fa-trophy"></i></div> 
-            Retos Colaborativos
+            Lanza un Reto Colaborativo
           </h3>
-          <p class="action-description">Únete a desafíos colectivos con objetivos específicos. Compite sanamente y multiplica tu impacto.</p>
+          <p class="action-description">
+            Crea desafíos para movilizar a otros, sumar participantes y lograr objetivos colectivos. Gana reconocimiento y haz crecer tu red.
+          </p>
           <div class="action-stats">
             <div class="stat-item-action">
               <i class="fas fa-users"></i> 1,892 participantes
@@ -1193,12 +1376,11 @@
             </div>
           </div>
           <a href="/challenges" class="action-button btn-warning">
-            <i class="fas fa-flag-checkered"></i> Ver retos
+            <i class="fas fa-search"></i> Ver retos
           </a>
         </div>
       </div>
-
-      <!-- 4. Voluntariados - VERDE -->
+      <!-- 4. Voluntariados -->
       <div class="action-card animate-fade delay-3">
         <div class="action-image">
           <img src="https://images.unsplash.com/photo-1469571486292-0ba58a3f068b?auto=format&fit=crop&w=600&q=80" alt="Voluntarios ayudando en comunidad">
@@ -1209,9 +1391,11 @@
         <div class="action-content">
           <h3 class="action-title">
             <div class="action-icon volunteer"><i class="fas fa-hands-helping"></i></div> 
-            Voluntariados
+            Organiza Voluntariados
           </h3>
-          <p class="action-description">Conecta con oportunidades presenciales o remotas que necesitan tus habilidades específicas.</p>
+          <p class="action-description">
+            Publica oportunidades para que otros se unan a tu causa, recluta voluntarios y gestiona la colaboración de forma sencilla y transparente.
+          </p>
           <div class="action-stats">
             <div class="stat-item-action">
               <i class="fas fa-clock"></i> 2,840 horas
@@ -1221,12 +1405,11 @@
             </div>
           </div>
           <a href="/volunteering" class="action-button btn-accent">
-            <i class="fas fa-search"></i> Buscar voluntariados
+            <i class="fas fa-search"></i> Ver voluntariados
           </a>
         </div>
       </div>
-
-      <!-- 5. Comunidades - PÚRPURA -->
+      <!-- 5. Comunidades -->
       <div class="action-card animate-fade delay-4">
         <div class="action-image">
           <img src="https://images.unsplash.com/photo-1517486808906-6ca8b3f04846?auto=format&fit=crop&w=800&q=80" alt="Comunidad diversa colaborando">
@@ -1237,9 +1420,11 @@
         <div class="action-content">
           <h3 class="action-title">
             <div class="action-icon purple"><i class="fas fa-users"></i></div>
-            Comunidades
+            Forma tu Comunidad
           </h3>
-          <p class="action-description">Únete a equipos que comparten tus intereses y multiplica tu impacto colaborando.</p>
+          <p class="action-description">
+            Agrupa personas con tus mismos intereses, organiza actividades y retos, y haz crecer tu propio espacio de impacto dentro de Solidarity.
+          </p>
           <div class="action-stats">
             <div class="stat-item-action">
               <i class="fas fa-users"></i> 34 equipos
@@ -1249,12 +1434,11 @@
             </div>
           </div>
           <a href="/teams" class="action-button btn-purple">
-            <i class="fas fa-search"></i> Explorar comunidades
+            <i class="fas fa-search"></i> Ver comunidades
           </a>
         </div>
       </div>
-
-      <!-- 6. Ranking - DORADO -->
+      <!-- 6. Ranking -->
       <div class="action-card animate-fade delay-5">
         <div class="action-image">
           <img src="https://images.unsplash.com/photo-1521737604893-d14cc237f11d?auto=format&fit=crop&w=800&q=80" alt="Personas celebrando éxitos">
@@ -1265,9 +1449,11 @@
         <div class="action-content">
           <h3 class="action-title">
             <div class="action-icon ranking"><i class="fas fa-chart-line"></i></div>
-            Ranking Global
+            Sube en el Ranking
           </h3>
-          <p class="action-description">Compite con usuarios de todo el mundo. Sube de nivel y gana badges únicos.</p>
+          <p class="action-description">
+            Gana puntos y visibilidad creando causas, tareas y retos. Compite con otros creadores y demuestra el alcance de tu impacto.
+          </p>
           <div class="action-stats">
             <div class="stat-item-action">
               <i class="fas fa-medal"></i> 1,247 usuarios
@@ -1288,7 +1474,7 @@
   <section class="preview-section">
     <div class="section-header">
       <h2>Actividad Reciente</h2>
-      <p>Descubre qué está pasando en la comunidad de Solidarity</p>
+      <p>Descubre las últimas causas, tareas y retos creados por usuarios como tú. Inspírate y empieza a construir tu propio impacto.</p>
     </div>
     
     <div class="preview-tabs">
@@ -1346,52 +1532,50 @@
   <section class="testimonials-section">
     <div class="section-header">
       <h2>Voces de nuestra Comunidad</h2>
-      <p>Descubre cómo Solidarity ha transformado la vida de nuestros usuarios</p>
+      <p>Historias de usuarios que han crecido y conseguido apoyo gracias a Solidarity</p>
     </div>
     
     <div class="testimonials-grid">
       <div class="testimonial-card animate-fade">
         <div class="testimonial-quote">
-          "Solidarity me ha permitido ver el impacto real de mis donaciones. Cada euro cuenta y puedo seguir exactamente cómo ayuda a las causas que me importan."
+          "Gracias a Solidarity pude lanzar mi propia causa y conseguir apoyo real. La plataforma me ayudó a organizar voluntarios y recibir donaciones fácilmente."
         </div>
         <div class="testimonial-author">
           <img src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?auto=format&fit=crop&w=200&q=80" alt="María González" class="testimonial-avatar">
           <div class="testimonial-info">
             <h4>María González</h4>
-            <p>Donante nivel Oro • 12,450 pts</p>
+            <p>Creadora de causa • 12,450 pts</p>
           </div>
         </div>
       </div>
-
       <div class="testimonial-card animate-fade delay-1">
         <div class="testimonial-quote">
-          "Los retos colaborativos son increíbles. He conocido personas fantásticas y juntos hemos logrado objetivos que parecían imposibles."
+          "Publicar tareas y retos me permitió atraer a más personas a mi proyecto. Ahora mi comunidad crece cada semana."
         </div>
         <div class="testimonial-author">
           <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=200&q=80" alt="Carlos Mendoza" class="testimonial-avatar">
           <div class="testimonial-info">
             <h4>Carlos Mendoza</h4>
-            <p>Voluntario activo • 8,920 pts</p>
+            <p>Líder de comunidad • 8,920 pts</p>
           </div>
         </div>
       </div>
-
       <div class="testimonial-card animate-fade delay-2">
         <div class="testimonial-quote">
-          "Formar parte de esta plataforma ha sido transformador. El sistema de puntos me motiva a seguir ayudando y veo cómo mi esfuerzo realmente cuenta."
+          "Solidarity me dio las herramientas para organizar voluntariados y sumar aliados a mi causa. ¡Ahora puedo dedicarme a lo que me apasiona y ayudar a otros!"
         </div>
         <div class="testimonial-author">
           <img src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=200&q=80" alt="Ana Rodríguez" class="testimonial-avatar">
           <div class="testimonial-info">
             <h4>Ana Rodríguez</h4>
-            <p>Líder de comunidad • 15,280 pts</p>
+            <p>Organizadora de voluntariado • 15,280 pts</p>
           </div>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- ✅ RANKING - Con avatars reales -->
+  <!-- RANKING igual -->
   <section class="ranking-section">
     <div class="section-header">
       <h2>Ranking de Impacto</h2>
@@ -1439,24 +1623,13 @@
             <div class="member-name">Pablo García</div>
             <div class="member-level">Nivel Plata</div>
           </div>
-          <div class="member-points">10,780 pts</div>
+          <div class="member-points">10,120 pts</div>
         </div>
 
-        <div class="member-item">
-          <div class="member-rank other">5</div>
-          <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=150&q=80" alt="Elena Ruiz" class="member-avatar">
-          <div class="member-info">
-            <div class="member-name">Elena Ruiz</div>
-            <div class="member-level">Nivel Plata</div>
-          </div>
-          <div class="member-points">9,650 pts</div>
-        </div>
-      </div>
-
-      <div class="ranking-stats">
+        <!-- Estadísticas globales del ranking, fuera de member-item -->
         <div class="ranking-stat-card">
           <div class="ranking-stat-icon donations">
-            <i class="fas fa-heart"></i>
+            <i class="fas fa-donate"></i>
           </div>
           <div class="ranking-stat-number">€48,290</div>
           <div class="ranking-stat-label">Donaciones del Top 10</div>
@@ -1481,17 +1654,19 @@
     </div>
   </section>
 
-  <!-- ✅ CTA Section -->
+  <!-- CTA NUEVO -->
   <section class="cta-section">
     <div style="max-width: 800px; margin: 0 auto;">
-      <h2 class="cta-title">¿Listo para unirte al movimiento?</h2>
-      <p class="cta-description">Regístrate ahora y comienza a ganar puntos, completar retos y conectar con una comunidad global de agentes de cambio.</p>
+      <h2 class="cta-title">¿Listo para lanzar tu proyecto?</h2>
+      <p class="cta-description">
+        Regístrate gratis y empieza a crear causas, tareas, retos o comunidades. Solidarity te da las herramientas para hacer crecer tu iniciativa y sumar aliados.
+      </p>
       <div class="cta-buttons">
         <a href="/register" class="btn btn-accent">
-          <i class="fas fa-user-plus"></i> Crear cuenta gratis
+          <i class="fas fa-user-plus"></i> Crear mi cuenta gratis
         </a>
         <a href="/login" class="btn btn-outline-white">
-          <i class="fas fa-sign-in-alt"></i> Iniciar sesión
+          <i class="fas fa-sign-in-alt"></i> Ya tengo cuenta
         </a>
       </div>
     </div>
@@ -1782,6 +1957,7 @@
       };
 
       return `
+       
         <div class="preview-card">
           <div class="preview-image" style="background-image: url('${getImageUrl()}')"></div>
           <div class="preview-content">
@@ -1857,6 +2033,7 @@
             window.showChallengeModal(id);
           } else {
             console.warn('Renderer de retos no disponible, redirigiendo...');
+           
             window.location.href = `/challenges/${id}`;
           }
           break;

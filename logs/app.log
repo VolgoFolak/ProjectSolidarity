@@ -1,0 +1,2618 @@
+[2025-08-05T18:56:21.397Z] 🚀 Servidor iniciado en http://localhost:3000
+[2025-08-05T19:15:09.217Z] 🚀 Servidor iniciado en http://localhost:3000
+[2025-08-05T20:44:22.033Z] 🚀 Servidor iniciado en http://localhost:3000
+[2025-08-05T20:48:56.801Z] 🚀 Servidor iniciado en http://localhost:3000
+[2025-08-05T20:49:32.629Z] 🚀 Servidor iniciado en http://localhost:3000
+[2025-08-05T20:51:19.733Z] 🚀 Servidor iniciado en http://localhost:3000
+[2025-08-05T20:53:43.237Z] 🚀 Servidor iniciado en http://localhost:3000
+[2025-08-05T20:54:48.791Z] 🚀 Servidor iniciado en http://localhost:3000
+[2025-08-08T17:19:37.177Z] 🚀 Servidor iniciado en http://localhost:3000
+[2025-08-08T17:22:32.990Z] 🚀 Servidor iniciado en http://localhost:3000
+[2025-08-08T17:27:07.868Z] 🚀 Servidor iniciado en http://localhost:3000
+[2025-08-08T17:35:23.972Z] 🚀 Servidor iniciado en http://localhost:3000
+[2025-08-08T17:36:19.991Z] 🚀 Servidor iniciado en http://localhost:3000
+[2025-08-08T17:37:18.614Z] 📝 GET / - Session ID: S5NjGaXCAl5oMKl0_GKBujFf7h0wi5no
+[2025-08-08T17:37:18.614Z] 🔍 Session User: No user
+[2025-08-08T17:37:27.998Z] 📝 GET / - Session ID: p4MJmQPlXtnSTFpuV5_4e0p3Rggiqvba
+[2025-08-08T17:37:27.998Z] 🔍 Session User: No user
+[2025-08-08T17:37:35.198Z] 📝 GET /.well-known/appspecific/com.chrome.devtools.json - Session ID: VYHSKGGEkS9lHQu4idcvX2nByCmP7_Zz
+[2025-08-08T17:37:35.198Z] 🔍 Session User: No user
+[2025-08-08T17:37:35.647Z] 📝 GET /js/lib/axios.min.js.map - Session ID: 7H2U7mVsSVIRdXzF7aHsJyWQ3dgDIygl
+[2025-08-08T17:37:35.647Z] 🔍 Session User: No user
+[2025-08-08T17:45:44.934Z] 🚀 Servidor iniciado en http://localhost:3000
+[2025-08-08T17:47:38.891Z] 🚀 Servidor iniciado en http://localhost:3000
+[2025-08-08T17:51:06.430Z] 🚀 Servidor iniciado en http://localhost:3000
+[2025-08-08T17:51:11.391Z] 📝 GET / - Session ID: zsSPgENpPTLZiLG_62zLRZum-UlA1Mb-
+[2025-08-08T17:51:11.392Z] 🔍 Session User: No user
+[2025-08-08T17:51:15.195Z] 📝 GET /api/check-session - Session ID: 35SDWF_z0WR5jpR0MTcUeMMKUgrL0Foe
+[2025-08-08T17:51:15.196Z] 🔍 Session User: No user
+[2025-08-08T17:51:25.693Z] 📝 GET /me - Session ID: wu4nCokdRBwZEE-xyZ8lcGq6C63RFMDv
+[2025-08-08T17:51:25.693Z] 🔍 Session User: No user
+[2025-08-08T17:51:26.910Z] 📝 GET /me - Session ID: 0noY8pwvdrQikC-Vt6vujqgS7CuLQ4hF
+[2025-08-08T17:51:26.912Z] 🔍 Session User: No user
+[2025-08-08T17:51:39.190Z] 📝 GET / - Session ID: NqBjuu257Hv2hPjUD3XCZofc_4-GP4yf
+[2025-08-08T17:51:39.191Z] 🔍 Session User: No user
+[2025-08-08T17:51:43.023Z] 📝 GET /login - Session ID: MHSDhOM1MeU8HMaTxYxnoZrbeAwEWh6n
+[2025-08-08T17:51:43.023Z] 🔍 Session User: No user
+[2025-08-08T17:51:51.990Z] 📝 GET /.well-known/appspecific/com.chrome.devtools.json - Session ID: DPILh6QTKh6-1k9QUkNjk_j_XgmOplrT
+[2025-08-08T17:51:51.993Z] 🔍 Session User: No user
+[2025-08-08T17:51:52.007Z] 📝 GET /js/lib/axios.min.js.map - Session ID: 5xnDKnquq27d2kLSagXiYcK9OuBN11Gx
+[2025-08-08T17:51:52.009Z] 🔍 Session User: No user
+[2025-08-08T17:56:38.470Z] 🚀 Servidor iniciado en http://localhost:3000
+[2025-08-08T17:57:14.464Z] 🚀 Servidor iniciado en http://localhost:3000
+[2025-08-08T17:57:17.792Z] 📝 GET / - Session ID: YEci9waQBaLTmyg12Uh9R_AiYMWY75YR
+[2025-08-08T17:57:17.792Z] 🔍 Session User: No user
+[2025-08-08T17:57:19.257Z] 📝 GET /api/check-session - Session ID: Jl52DwL91Mzex-2HC8hsJtJyxMggxuvm
+[2025-08-08T17:57:19.373Z] 🔍 Session User: No user
+[2025-08-08T17:57:25.359Z] 📝 GET / - Session ID: Kwo6KEi04MmMb_5V1mQ2sLM6WjKaJlBo
+[2025-08-08T17:57:25.361Z] 🔍 Session User: No user
+[2025-08-08T17:57:27.974Z] 📝 GET /login - Session ID: 4Vn5tPsDAnmTH3oT-ojsne5Nbb8KbSUa
+[2025-08-08T17:57:27.974Z] 🔍 Session User: No user
+[2025-08-08T17:57:31.342Z] 📝 POST /login-supabase - Session ID: QMBjmZOZ_aV3PWYvnmojThaJDi3cMRZC
+[2025-08-08T17:57:31.342Z] 🔍 Session User: No user
+[2025-08-08T17:57:36.079Z] 📝 GET /.well-known/appspecific/com.chrome.devtools.json - Session ID: dhNb2J88Pj5gQx21FIA3bSOJfRzHRiRw
+[2025-08-08T17:57:36.083Z] 🔍 Session User: No user
+[2025-08-08T17:57:36.426Z] 📝 GET /js/lib/axios.min.js.map - Session ID: NVC9yVKYlffrIEVkDr6V4Jd_Q1GrZdbw
+[2025-08-08T17:57:36.474Z] 🔍 Session User: No user
+[2025-08-08T18:20:23.947Z] 🚀 Servidor iniciado en http://localhost:3000
+[2025-08-08T18:20:28.825Z] 📝 GET / - Session ID: 9I2lm4rU49gD2yqz7_kAk6r3GrHvw1E4
+[2025-08-08T18:20:28.826Z] 🔍 Session User: No user
+[2025-08-08T18:20:30.709Z] 📝 GET /api/check-session - Session ID: PIbAJYLkR-O362CFk3U1gn1E1f1nqK3m
+[2025-08-08T18:20:30.726Z] 🔍 Session User: No user
+[2025-08-08T18:20:39.233Z] 📝 GET / - Session ID: NSn-BUomyCB-FGr7uLvrxcW3ZprNjVgJ
+[2025-08-08T18:20:39.234Z] 🔍 Session User: No user
+[2025-08-08T18:20:41.194Z] 📝 GET /login - Session ID: pskxJi0dIUY-kfGMwD2Vif6AkAGaF5tO
+[2025-08-08T18:20:41.195Z] 🔍 Session User: No user
+[2025-08-08T18:20:43.799Z] 📝 POST /login-supabase - Session ID: SJkEiOGf3i3sulGghjjFzMXKyLyvfxlS
+[2025-08-08T18:20:43.800Z] 🔍 Session User: No user
+[2025-08-08T18:20:48.040Z] 📝 GET /profile - Session ID: Nojr4Rf7OyJp_N-nXg3cvf8JLuU3LnWe
+[2025-08-08T18:20:48.041Z] 🔍 Session User: No user
+[2025-08-08T18:20:48.337Z] 📝 GET /api/check-session - Session ID: 4UXppCmwJBKwi_gBsn9zhZaQCH2VQ0sA
+[2025-08-08T18:20:48.378Z] 🔍 Session User: No user
+[2025-08-08T18:20:56.961Z] 📝 GET /img/cause-default.jpg - Session ID: 2QczjXjDmRevbM5h7fLwwVxfETn7x4Ye
+[2025-08-08T18:20:56.962Z] 🔍 Session User: No user
+[2025-08-08T18:20:58.470Z] 📝 GET /img/default-activity.jpg - Session ID: 80JMyj9q6vqaq5bX_eMZpheImzb-1fSS
+[2025-08-08T18:20:58.470Z] 🔍 Session User: No user
+[2025-08-08T18:20:58.619Z] 📝 GET /img/default-activity.jpg - Session ID: g053m83o1lPakqk6DBSzZdKZhcCautA1
+[2025-08-08T18:20:58.630Z] 🔍 Session User: No user
+[2025-08-08T18:20:58.829Z] 📝 GET /img/default-activity.jpg - Session ID: C7VN4zsXtvUhIz9hx6eRCfwJeqxEK48a
+[2025-08-08T18:20:58.835Z] 🔍 Session User: No user
+[2025-08-08T18:20:58.987Z] 📝 GET /img/default-activity.jpg - Session ID: kLljNKrJ7YQeyFGFuXbuCduZvIUakfa0
+[2025-08-08T18:20:58.989Z] 🔍 Session User: No user
+[2025-08-08T18:20:58.995Z] 📝 GET /img/default-activity.jpg - Session ID: 5jYlyQbZi3ZUsuqWP3QxVuDvd6Vv0MUJ
+[2025-08-08T18:20:58.995Z] 🔍 Session User: No user
+[2025-08-08T18:20:59.194Z] 📝 GET /img/default-activity.jpg - Session ID: cfBrhmmdV4kKt5JS4HYRFzYpsKFDSQ3V
+[2025-08-08T18:20:59.195Z] 🔍 Session User: No user
+[2025-08-08T18:20:59.208Z] 📝 GET /img/default-activity.jpg - Session ID: nuPTc0Onl6CKao7fEJocWn2-txp8UteF
+[2025-08-08T18:20:59.209Z] 🔍 Session User: No user
+[2025-08-08T18:20:59.424Z] 📝 GET /img/default-activity.jpg - Session ID: Exs-s42i13aDmuxvxuebRo242YCyIkpj
+[2025-08-08T18:20:59.428Z] 🔍 Session User: No user
+[2025-08-08T18:20:59.618Z] 📝 GET /img/default-activity.jpg - Session ID: MGzA5c4PwI8sp21KvofdCDCrtFhqLyYc
+[2025-08-08T18:20:59.619Z] 🔍 Session User: No user
+[2025-08-08T18:20:59.625Z] 📝 GET /img/default-activity.jpg - Session ID: 2mBKkR1IzGeoZa1fQ24s63mK8HXhgQje
+[2025-08-08T18:20:59.625Z] 🔍 Session User: No user
+[2025-08-08T18:20:59.814Z] 📝 GET /img/default-activity.jpg - Session ID: K9s1maTUgjmB1RytVgJG5WOognI3S6Lv
+[2025-08-08T18:20:59.817Z] 🔍 Session User: No user
+[2025-08-08T18:20:59.993Z] 📝 GET /img/default-activity.jpg - Session ID: 2AjaAfgKRPhFQ4T5wOTPalOeYNxYPnQR
+[2025-08-08T18:20:59.994Z] 🔍 Session User: No user
+[2025-08-08T18:21:00.238Z] 📝 GET /img/default-activity.jpg - Session ID: qbKtQW4u7-H8RHSIgrpsFmpJBa8Xx4Fa
+[2025-08-08T18:21:00.238Z] 🔍 Session User: No user
+[2025-08-08T18:21:00.246Z] 📝 GET /img/default-activity.jpg - Session ID: Z7kd4aGhtqtJbMQDS3fbSFZE6h0jrXnM
+[2025-08-08T18:21:00.260Z] 🔍 Session User: No user
+[2025-08-08T18:21:00.463Z] 📝 GET /img/default-activity.jpg - Session ID: vecqSULqaDxQiNn0RXgKZXIWUhjkEJm3
+[2025-08-08T18:21:00.464Z] 🔍 Session User: No user
+[2025-08-08T18:21:00.661Z] 📝 GET /img/default-activity.jpg - Session ID: Q49F1ShtVSIhI1G5ospbyZLFBuBpw-h7
+[2025-08-08T18:21:00.665Z] 🔍 Session User: No user
+[2025-08-08T18:21:00.870Z] 📝 GET /img/default-activity.jpg - Session ID: s-hp6zuK-bf2Rlms7_zuva_7UnnWwvRJ
+[2025-08-08T18:21:00.870Z] 🔍 Session User: No user
+[2025-08-08T18:21:01.049Z] 📝 GET /img/default-activity.jpg - Session ID: m-Qy2gYAugAzDK1l5tsepM7ryOZxtGs4
+[2025-08-08T18:21:01.049Z] 🔍 Session User: No user
+[2025-08-08T18:21:01.055Z] 📝 GET /img/default-activity.jpg - Session ID: TZJJR0z8MWFtXNKV1g7AoNs_Y53FpBP1
+[2025-08-08T18:21:01.056Z] 🔍 Session User: No user
+[2025-08-08T18:21:01.240Z] 📝 GET /img/default-activity.jpg - Session ID: FqjeSQ7-911DVR3dqRmf5Z0TwM00LpBa
+[2025-08-08T18:21:01.242Z] 🔍 Session User: No user
+[2025-08-08T18:21:01.464Z] 📝 GET /img/default-activity.jpg - Session ID: hMB0JCGUGjCby_y18rhfGcVq9p27ARqE
+[2025-08-08T18:21:01.465Z] 🔍 Session User: No user
+[2025-08-08T18:21:01.682Z] 📝 GET /img/default-activity.jpg - Session ID: WvwH8H0ow-Adn7Srx1GMghX8ND12jgp2
+[2025-08-08T18:21:01.686Z] 🔍 Session User: No user
+[2025-08-08T18:21:01.895Z] 📝 GET /img/default-activity.jpg - Session ID: MH7gd40WEFtAtPJuXqcyGIU6VR2Z6BWj
+[2025-08-08T18:21:01.900Z] 🔍 Session User: No user
+[2025-08-08T18:21:02.112Z] 📝 GET /img/default-activity.jpg - Session ID: OCkyHJM8hfY56UIZyvHL4dm-zv4qnARS
+[2025-08-08T18:21:02.112Z] 🔍 Session User: No user
+[2025-08-08T18:21:02.119Z] 📝 GET /img/default-activity.jpg - Session ID: F2LXRn51iYsd9p-OH8heLZopJ-PL83cf
+[2025-08-08T18:21:02.120Z] 🔍 Session User: No user
+[2025-08-08T18:21:02.398Z] 📝 GET /img/default-activity.jpg - Session ID: Rus6qs8ukGNVEtzOgoF-b7CAyioQkfM5
+[2025-08-08T18:21:02.399Z] 🔍 Session User: No user
+[2025-08-08T18:21:02.636Z] 📝 GET /img/default-activity.jpg - Session ID: RTNWEdcV2tv_B_GsB0kzOT826JIjDh_0
+[2025-08-08T18:21:02.637Z] 🔍 Session User: No user
+[2025-08-08T18:21:02.828Z] 📝 GET /img/default-activity.jpg - Session ID: 92_hDA0esxAdx9k24KNHQXtgQYG5if9f
+[2025-08-08T18:21:02.831Z] 🔍 Session User: No user
+[2025-08-08T18:21:02.840Z] 📝 GET /img/default-activity.jpg - Session ID: z0vJ8WGK8wOFAV1fnr_grEXGCBM4TREd
+[2025-08-08T18:21:02.841Z] 🔍 Session User: No user
+[2025-08-08T18:21:03.039Z] 📝 GET /img/default-activity.jpg - Session ID: lqUtMR8BU5BO9Q5eoHEbOhbulTim9dTx
+[2025-08-08T18:21:03.039Z] 🔍 Session User: No user
+[2025-08-08T18:21:03.239Z] 📝 GET /img/default-activity.jpg - Session ID: yJr_ayvd6fMWIiu-3aZJzeMxUYvFT96W
+[2025-08-08T18:21:03.240Z] 🔍 Session User: No user
+[2025-08-08T18:21:03.454Z] 📝 GET /img/default-activity.jpg - Session ID: _6sdNDNgY_c2XOo5qhyWMW2OVz5edvkp
+[2025-08-08T18:21:03.454Z] 🔍 Session User: No user
+[2025-08-08T18:21:03.658Z] 📝 GET /img/default-activity.jpg - Session ID: 9HbMaxfbYd3kKajmQc4fJnnRD98w4SaV
+[2025-08-08T18:21:03.659Z] 🔍 Session User: No user
+[2025-08-08T18:21:03.851Z] 📝 GET /img/default-activity.jpg - Session ID: o2XAMNaXJ_frWxsBHag1X5U07nd3wS46
+[2025-08-08T18:21:03.851Z] 🔍 Session User: No user
+[2025-08-08T18:21:03.858Z] 📝 GET /img/default-activity.jpg - Session ID: ce3cxP1TKAKX-28ItTPCMF_sx49v0Fbr
+[2025-08-08T18:21:03.859Z] 🔍 Session User: No user
+[2025-08-08T18:21:04.044Z] 📝 GET /img/default-activity.jpg - Session ID: jRMPySguj-iJHBDRTYwZ_vdBXOQ3yuSJ
+[2025-08-08T18:21:04.047Z] 🔍 Session User: No user
+[2025-08-08T18:21:04.222Z] 📝 GET /img/default-activity.jpg - Session ID: GI6wOfqfWqLgZsoD4Ed8T6A9DgTrnqxa
+[2025-08-08T18:21:04.223Z] 🔍 Session User: No user
+[2025-08-08T18:21:04.482Z] 📝 GET /me - Session ID: mM56EpailequY7WsSPkmv5x3ixkAea_n
+[2025-08-08T18:21:04.482Z] 🔍 Session User: No user
+[2025-08-08T18:21:04.486Z] 📝 GET /img/default-activity.jpg - Session ID: aPbAfxFUuXCjZm98fQqHpl5j7rYZQlE7
+[2025-08-08T18:21:04.487Z] 🔍 Session User: No user
+[2025-08-08T18:21:04.685Z] 📝 GET /img/default-activity.jpg - Session ID: f9EU6CrqYeLqdYwnKfEQ4ggyg66KLsX1
+[2025-08-08T18:21:04.686Z] 🔍 Session User: No user
+[2025-08-08T18:21:04.717Z] 📝 GET /img/default-activity.jpg - Session ID: bq9TjjNENgDWKvo4PTZmAwv57-BwZbKd
+[2025-08-08T18:21:04.720Z] 🔍 Session User: No user
+[2025-08-08T18:21:05.231Z] 📝 GET /img/default-activity.jpg - Session ID: oP4-OlhxMzGKZUD6xqR7fm79xG4eJ94P
+[2025-08-08T18:21:05.232Z] 🔍 Session User: No user
+[2025-08-08T18:21:05.239Z] 📝 GET /img/default-activity.jpg - Session ID: 8tRrExeo1pfWBCY2VJa-KGjN42G82Rrh
+[2025-08-08T18:21:05.245Z] 🔍 Session User: No user
+[2025-08-08T18:21:05.437Z] 📝 GET /img/default-activity.jpg - Session ID: OsrFEzKRc2fyDj2gJ6ezZOZHmxTG3SB-
+[2025-08-08T18:21:05.438Z] 🔍 Session User: No user
+[2025-08-08T18:21:05.447Z] 📝 GET /img/default-activity.jpg - Session ID: QZERhWqUuJQY9f0UeP8G31f5VT5mgy6L
+[2025-08-08T18:21:05.449Z] 🔍 Session User: No user
+[2025-08-08T18:21:05.636Z] 📝 GET /img/default-activity.jpg - Session ID: M6O1TvUa12WaxMpz_gEIbbkmW9bYe722
+[2025-08-08T18:21:05.637Z] 🔍 Session User: No user
+[2025-08-08T18:21:05.657Z] 📝 GET /img/default-activity.jpg - Session ID: QnPlv2yiAWuzaloWMKXqkUcAcp2ruU6n
+[2025-08-08T18:21:05.662Z] 🔍 Session User: No user
+[2025-08-08T18:21:05.958Z] 📝 GET /me - Session ID: YHBjc-O7B-LFEadGdJHoF8ovPOpFVUKm
+[2025-08-08T18:21:05.960Z] 🔍 Session User: No user
+[2025-08-08T18:21:05.964Z] 📝 GET /img/default-activity.jpg - Session ID: 6DUfX6DuFVaP5-sTqxbEQvMCXiktqKTc
+[2025-08-08T18:21:05.974Z] 🔍 Session User: No user
+[2025-08-08T18:22:01.423Z] 📝 POST /api/session/keep-alive - Session ID: aT3FEsUObJ5X3pcqwYdni5H5zbzULS7p
+[2025-08-08T18:22:01.423Z] 🔍 Session User: No user
+[2025-08-08T18:23:47.890Z] 🚀 Servidor iniciado en http://localhost:3000
+[2025-08-08T18:23:52.954Z] 📝 GET / - Session ID: akAPyCbsPCvfY1JDDZjodq_ngCjG1l1q
+[2025-08-08T18:23:52.979Z] 🔍 Session User: No user
+[2025-08-08T18:23:55.692Z] 📝 GET /api/check-session - Session ID: uXOjoUR9hMt8eaQVi9vzTr6_U3_mVy8I
+[2025-08-08T18:23:55.693Z] 🔍 Session User: No user
+[2025-08-08T18:23:57.924Z] 📝 GET /login - Session ID: Y0eRzd3HbPRnn4NAPMMtTcj97Ld_d4vL
+[2025-08-08T18:23:57.926Z] 🔍 Session User: No user
+[2025-08-08T18:23:59.823Z] 📝 GET /api/check-session - Session ID: YQmy0EQZM3hLkijXCD-R_7L5Db2FBolr
+[2025-08-08T18:23:59.825Z] 🔍 Session User: No user
+[2025-08-08T18:24:02.108Z] 📝 POST /login-supabase - Session ID: M0N3CFnXDm8w435yplf3EkWiw5CRqnKC
+[2025-08-08T18:24:02.108Z] 🔍 Session User: No user
+[2025-08-08T18:24:11.571Z] 📝 GET /.well-known/appspecific/com.chrome.devtools.json - Session ID: s8KIleCfkx95O8swZFlVJuOmHxLnHRmB
+[2025-08-08T18:24:11.580Z] 🔍 Session User: No user
+[2025-08-08T18:24:11.703Z] 📝 GET /js/lib/axios.min.js.map - Session ID: 2yMuQDgwnHGxLWoi833EEoZ1KojpmLxU
+[2025-08-08T18:24:11.748Z] 🔍 Session User: No user
+[2025-08-08T18:26:36.895Z] 🚀 Servidor iniciado en http://localhost:3000
+[2025-08-08T18:26:41.838Z] 📝 GET / - Session ID: yh_VVxLoE2_q9EJ_fnE5Y2FIMj1vsXLg
+[2025-08-08T18:26:41.844Z] 🔍 Session User: No user
+[2025-08-08T18:26:43.061Z] 📝 GET /api/check-session - Session ID: sTYMovHIfro8Sn6XoXfog4tFtbOEEXSK
+[2025-08-08T18:26:43.074Z] 🔍 Session User: No user
+[2025-08-08T18:26:49.694Z] 📝 GET / - Session ID: coZ26u2mUReg2U7cfoP82FOt-iAYkiVE
+[2025-08-08T18:26:49.695Z] 🔍 Session User: No user
+[2025-08-08T18:26:50.767Z] 📝 GET /api/check-session - Session ID: pkZTaqAo3nwd_X4yeThCsf91j0nuPD98
+[2025-08-08T18:26:50.805Z] 🔍 Session User: No user
+[2025-08-08T18:26:52.185Z] 📝 GET /images/favicon.ico - Session ID: OxywcuYqqhF0DBs0axtM7AsT8O-CreX8
+[2025-08-08T18:26:52.185Z] 🔍 Session User: No user
+[2025-08-08T18:26:59.470Z] 📝 GET / - Session ID: i2TwxQ0tSejNF-PDzTNAAlN07sGqfyxj
+[2025-08-08T18:26:59.471Z] 🔍 Session User: No user
+[2025-08-08T18:27:03.861Z] 📝 GET /login - Session ID: n6Di8zGksqi4CRYsRg2k78cMetUfbGYz
+[2025-08-08T18:27:03.861Z] 🔍 Session User: No user
+[2025-08-08T18:27:06.710Z] 📝 POST /login-supabase - Session ID: VC_AALFA75hghGEa6g6jJFvHqXVDBo2V
+[2025-08-08T18:27:06.711Z] 🔍 Session User: No user
+[2025-08-08T18:27:11.474Z] 📝 GET /.well-known/appspecific/com.chrome.devtools.json - Session ID: eP-8fNEOScAF-MQzTw-gMQEOJSSAz9K0
+[2025-08-08T18:27:11.494Z] 🔍 Session User: No user
+[2025-08-08T18:27:11.759Z] 📝 GET /js/lib/axios.min.js.map - Session ID: JOI4oLrnBev19pMYPGTfI6k6KNrE6LON
+[2025-08-08T18:27:11.759Z] 🔍 Session User: No user
+[2025-08-08T18:27:36.422Z] 📝 POST /api/session/keep-alive - Session ID: CDEuZyfWzQr0CoKifyqZBFFMsps_w1jZ
+[2025-08-08T18:27:36.422Z] 🔍 Session User: No user
+[2025-08-08T18:28:59.962Z] 🚀 Servidor iniciado en http://localhost:3000
+[2025-08-08T18:29:03.590Z] 📝 GET / - Session ID: NtTRJmpHFFl8Zo5qx0En-Yl-I2WF70Pp
+[2025-08-08T18:29:03.593Z] 🔍 Session User: No user
+[2025-08-08T18:29:06.337Z] 📝 GET /api/check-session - Session ID: hDpJ4UHWHNfaJgRx0SIlyMMoMApvk6zd
+[2025-08-08T18:29:06.340Z] 🔍 Session User: No user
+[2025-08-08T18:29:16.743Z] 📝 GET / - Session ID: 6ftu0f8p_qUx5GzTjiq1tC9GKfVTmRel
+[2025-08-08T18:29:16.744Z] 🔍 Session User: No user
+[2025-08-08T18:29:19.012Z] 📝 GET /login - Session ID: ORSBXWC6-_ptpxyCMQaSNkGVbAC93ztt
+[2025-08-08T18:29:19.012Z] 🔍 Session User: No user
+[2025-08-08T18:29:21.882Z] 📝 POST /login-supabase - Session ID: rEXPxLOdfztxqR9Dk3dcTqIROGzxLhoG
+[2025-08-08T18:29:21.882Z] 🔍 Session User: No user
+[2025-08-08T18:36:35.162Z] 🚀 Servidor iniciado en http://localhost:3000
+[2025-08-08T18:36:38.002Z] 📝 GET / - Session ID: R2JGXjYHd0-8k4R7x-CQ1_xPzG07F9nD
+[2025-08-08T18:36:38.009Z] 🔍 Session User: No user
+[2025-08-08T18:36:39.670Z] 📝 GET /api/check-session - Session ID: WqQCcpEOIgoWgNiYRElg5E-UTPlndYx9
+[2025-08-08T18:36:39.690Z] 🔍 Session User: No user
+[2025-08-08T18:38:59.290Z] 📝 GET / - Session ID: pHSrg7jwRkLEjJHo-jKx9FZf6T_DosZl
+[2025-08-08T18:38:59.306Z] 🔍 Session User: No user
+[2025-08-08T18:39:05.219Z] 📝 GET /login - Session ID: uQ8OEzdI_X6xRNyQd-9rzqauJbQF066E
+[2025-08-08T18:39:05.232Z] 🔍 Session User: No user
+[2025-08-08T18:39:09.290Z] 📝 POST /login-supabase - Session ID: LjSfNS53wDZuciIWvB5Ly3mAavjG4Uwh
+[2025-08-08T18:39:09.291Z] 🔍 Session User: No user
+[2025-08-08T18:39:16.869Z] 📝 GET /.well-known/appspecific/com.chrome.devtools.json - Session ID: jRj8T2BaNN0gbzBAHq8JpELQ3dx25goC
+[2025-08-08T18:39:16.870Z] 🔍 Session User: No user
+[2025-08-08T18:39:17.261Z] 📝 GET /js/lib/axios.min.js.map - Session ID: s1HPx6-zJ2rnEtketk1ypLFrBT9Uv4ez
+[2025-08-08T18:39:17.262Z] 🔍 Session User: No user
+[2025-08-08T18:48:36.440Z] 🚀 Servidor iniciado en http://localhost:3000
+[2025-08-08T18:48:39.738Z] 📝 GET / - Session ID: o5y6ysfUbd9bQPazT40HMuezZdrTrkjL
+[2025-08-08T18:48:39.922Z] 🔍 Session User: No user
+[2025-08-08T18:48:45.421Z] 📝 GET /api/check-session - Session ID: 4299dkuXiOhr5yOI_1-ty3nuKRLeKZvK
+[2025-08-08T18:48:45.508Z] 🔍 Session User: No user
+[2025-08-08T18:54:57.682Z] 🚀 Servidor iniciado en http://localhost:3000
+[2025-08-08T18:55:17.063Z] 📝 GET / - Session ID: nQCRxu5Rs4gFTeHv8vpltx0eRMvy77Vh
+[2025-08-08T18:55:17.211Z] 🔍 Session User: No user
+[2025-08-08T18:55:19.265Z] 📝 GET /api/check-session - Session ID: BWIc5sEUcaKpTM3DKHr97IFHNrQEfyJ1
+[2025-08-08T18:55:19.265Z] 🔍 Session User: No user
+[2025-08-08T18:55:37.269Z] 📝 GET / - Session ID: SrUA3kjJiz9MDMJr56nEL-hz-yEZpTCo
+[2025-08-08T18:55:37.270Z] 🔍 Session User: No user
+[2025-08-08T18:55:39.947Z] 📝 GET /login - Session ID: 8Kdh0pk8PEwHrJWTKjQtktdq3HXMfrJz
+[2025-08-08T18:55:39.948Z] 🔍 Session User: No user
+[2025-08-08T18:55:42.642Z] 📝 POST /login-supabase - Session ID: HVgOsOnjFpSOY3aU6T1-oOgmWlaWHU_c
+[2025-08-08T18:55:42.642Z] 🔍 Session User: No user
+[2025-08-08T18:55:48.599Z] 📝 GET /.well-known/appspecific/com.chrome.devtools.json - Session ID: M7DypJRKQAdZJE7P_dXVEE6qCiJ4qJhg
+[2025-08-08T18:55:48.890Z] 🔍 Session User: No user
+[2025-08-08T18:55:49.197Z] 📝 GET /js/lib/axios.min.js.map - Session ID: L2WS_g60TpHy8jKbe3fLJfzHpRkMjJct
+[2025-08-08T18:55:49.197Z] 🔍 Session User: No user
+[2025-08-08T18:57:11.602Z] 📝 POST /api/session/keep-alive - Session ID: -75d27kzGm6cE-CADmMvw0fkH1C4jeno
+[2025-08-08T18:57:11.610Z] 🔍 Session User: No user
+[2025-08-08T18:59:22.870Z] 📝 POST /api/session/keep-alive - Session ID: Iix2nU8Y1f_FCX5TNX69YD2eBkUDAPcB
+[2025-08-08T18:59:22.872Z] 🔍 Session User: No user
+[2025-08-08T19:02:42.957Z] 🚀 Servidor iniciado en http://localhost:3000
+[2025-08-08T19:03:32.967Z] 📝 GET / - Session ID: AmFS2qrVN9SZGoHtnYOnURrA7iTSxAok
+[2025-08-08T19:03:32.978Z] 🔍 Session User: No user
+[2025-08-08T19:03:35.218Z] 📝 GET /api/check-session - Session ID: boKf5o88vgoNuRGwM7Hq1zka0TRzK0X1
+[2025-08-08T19:03:35.241Z] 🔍 Session User: No user
+[2025-08-08T19:03:37.390Z] 📝 GET /login - Session ID: tGPpk4tKIKTKFrBqK8Q5LGZsXPMoOXvF
+[2025-08-08T19:03:37.390Z] 🔍 Session User: No user
+[2025-08-08T19:03:41.289Z] 📝 GET /api/check-session - Session ID: yUf577dBcFt3V8TH1BE4K3FRt5_4Krqg
+[2025-08-08T19:03:41.291Z] 🔍 Session User: No user
+[2025-08-08T19:03:45.311Z] 📝 POST /login-supabase - Session ID: 4TU9P8PLXkRPEGu96DJg7gU2uqSjivMW
+[2025-08-08T19:03:45.312Z] 🔍 Session User: No user
+[2025-08-08T19:05:27.554Z] 🚀 Servidor iniciado en http://localhost:3000
+[2025-08-08T19:05:31.318Z] 📝 GET / - Session ID: 8R1-4m55YXJ2sqXJ5vhPX8xvGcX9n2wd
+[2025-08-08T19:05:31.338Z] 🔍 Session User: No user
+[2025-08-08T19:05:32.372Z] 📝 GET /api/check-session - Session ID: 3wHLY-s-LEgHVjWI2B8JsIgSUKhuYjVf
+[2025-08-08T19:05:32.423Z] 🔍 Session User: No user
+[2025-08-08T19:05:48.416Z] 📝 GET / - Session ID: STgO_BxqSvOyA3vjhNF6_kg47bHKcszE
+[2025-08-08T19:05:48.416Z] 🔍 Session User: No user
+[2025-08-08T19:05:51.508Z] 📝 GET /login - Session ID: 6M4jUkOsAR5qkDwCJpPSsPFNR7e6azo6
+[2025-08-08T19:05:51.508Z] 🔍 Session User: No user
+[2025-08-08T19:05:55.214Z] 📝 POST /login-supabase - Session ID: nVEuXsjltQ9xjqMyTAUSAVJV7SzL0P9I
+[2025-08-08T19:05:55.216Z] 🔍 Session User: No user
+[2025-08-08T19:07:29.349Z] 📝 GET /.well-known/appspecific/com.chrome.devtools.json - Session ID: LpzKpU1dd2s2Wf4BYKz5DkC_fs3xAGqm
+[2025-08-08T19:07:29.358Z] 🔍 Session User: No user
+[2025-08-08T19:07:29.699Z] 📝 GET /js/lib/axios.min.js.map - Session ID: QuZ-vMfZFpDRHIJGemBRw77Lvajb_sCI
+[2025-08-08T19:07:29.700Z] 🔍 Session User: No user
+[2025-08-08T19:07:45.482Z] 📝 POST /login-supabase - Session ID: Ox2oK23VM1Ty9JYxa-pNQeII844oztFo
+[2025-08-08T19:07:45.483Z] 🔍 Session User: No user
+[2025-08-08T19:07:48.584Z] 📝 GET /profile - Session ID: SQQbfOgLK0YF7Vn503GgnEbyc-69N7af
+[2025-08-08T19:07:48.586Z] 🔍 Session User: No user
+[2025-08-08T19:07:48.889Z] 📝 GET /.well-known/appspecific/com.chrome.devtools.json - Session ID: 9mBonctUpyeGSW-hqTQTdSnKDMytkOUt
+[2025-08-08T19:07:48.955Z] 🔍 Session User: No user
+[2025-08-08T19:07:49.543Z] 📝 GET /js/lib/axios.min.js.map - Session ID: 9QjKnuAXCd1bWbq79_P3UZb8T37YoL-8
+[2025-08-08T19:07:49.581Z] 🔍 Session User: No user
+[2025-08-08T19:07:49.634Z] 📝 GET /api/check-session - Session ID: G7lYh8dV4BrzK8xL25V9hlO3t9YzYl8l
+[2025-08-08T19:07:49.666Z] 🔍 Session User: No user
+[2025-08-08T19:07:56.768Z] 📝 GET /img/cause-default.jpg - Session ID: I0fFPYTP0g3RHgvzKNGq8n9N2MEtDKHT
+[2025-08-08T19:07:56.771Z] 🔍 Session User: No user
+[2025-08-08T19:07:57.421Z] 📝 GET /img/default-activity.jpg - Session ID: rr8bvVw2hHYoGE0pVr4g5Yvg9LoirvTf
+[2025-08-08T19:07:57.424Z] 🔍 Session User: No user
+[2025-08-08T19:07:57.456Z] 📝 GET /img/default-activity.jpg - Session ID: Yc1lyKUjhHdxyI112Gq3yfOKf1LnphsC
+[2025-08-08T19:07:57.461Z] 🔍 Session User: No user
+[2025-08-08T19:07:57.719Z] 📝 GET /img/default-activity.jpg - Session ID: 4b-WXrtwwu4TzwH3mfUxQg6lQd9J2Q97
+[2025-08-08T19:07:57.722Z] 🔍 Session User: No user
+[2025-08-08T19:07:58.026Z] 📝 GET /img/default-activity.jpg - Session ID: qM7EIxwN97RVDmsfLzfFhb7J4UhBKOjJ
+[2025-08-08T19:07:58.026Z] 🔍 Session User: No user
+[2025-08-08T19:07:58.277Z] 📝 GET /img/default-activity.jpg - Session ID: upF6sQMfZg2EKnlIkOI884j4eIOG1bmD
+[2025-08-08T19:07:58.279Z] 🔍 Session User: No user
+[2025-08-08T19:07:58.320Z] 📝 GET /img/default-activity.jpg - Session ID: o3kXqiVTfzcEV3LQicU1Z7QpghJ_c15V
+[2025-08-08T19:07:58.320Z] 🔍 Session User: No user
+[2025-08-08T19:07:58.562Z] 📝 GET /img/default-activity.jpg - Session ID: jTd8sR22mlNch8djtXdNL26zyMNNWcHc
+[2025-08-08T19:07:58.567Z] 🔍 Session User: No user
+[2025-08-08T19:07:58.845Z] 📝 GET /img/default-activity.jpg - Session ID: 3eUxPwakLrIpanmA_cSVz9qjjEvurMBI
+[2025-08-08T19:07:58.847Z] 🔍 Session User: No user
+[2025-08-08T19:07:59.138Z] 📝 GET /img/default-activity.jpg - Session ID: dVJRMscdovMHlwIbKLA2yWV6p8H73NzZ
+[2025-08-08T19:07:59.139Z] 🔍 Session User: No user
+[2025-08-08T19:07:59.375Z] 📝 GET /img/default-activity.jpg - Session ID: vU2gD2c7N7p2rkxfb5DLBnydZoXrQ9Mq
+[2025-08-08T19:07:59.375Z] 🔍 Session User: No user
+[2025-08-08T19:07:59.617Z] 📝 GET /img/default-activity.jpg - Session ID: _sneE2oKrmBhks6oykzXCBitQ09vBoHx
+[2025-08-08T19:07:59.618Z] 🔍 Session User: No user
+[2025-08-08T19:07:59.860Z] 📝 GET /img/default-activity.jpg - Session ID: UjyGOnbSJhH12Q9ksYXOOtwQb08l8u3N
+[2025-08-08T19:07:59.861Z] 🔍 Session User: No user
+[2025-08-08T19:08:00.151Z] 📝 GET /img/default-activity.jpg - Session ID: Tr6VodVGgk8Mfu4Xt8Kzq-M_z05vmZNz
+[2025-08-08T19:08:00.155Z] 🔍 Session User: No user
+[2025-08-08T19:08:00.387Z] 📝 GET /img/default-activity.jpg - Session ID: pFZtRtXbfvmZT3rDph_2t-EHROp4htrC
+[2025-08-08T19:08:00.390Z] 🔍 Session User: No user
+[2025-08-08T19:08:00.627Z] 📝 GET /img/default-activity.jpg - Session ID: LRH3CE66ZBzQ1tLhX2EKOPgrQU_PwyL0
+[2025-08-08T19:08:00.630Z] 🔍 Session User: No user
+[2025-08-08T19:08:00.876Z] 📝 GET /img/default-activity.jpg - Session ID: gOJYRXOdySIrU4mTDWkhwB_PxLk8BGF7
+[2025-08-08T19:08:00.878Z] 🔍 Session User: No user
+[2025-08-08T19:08:01.115Z] 📝 GET /img/default-activity.jpg - Session ID: MJJq96ZETrgSMBL7tIltFLhMhEFLpti-
+[2025-08-08T19:08:01.116Z] 🔍 Session User: No user
+[2025-08-08T19:08:01.135Z] 📝 GET /img/default-activity.jpg - Session ID: qRaTgfaIeHkYuwpopBtHaWBlMM51PlnW
+[2025-08-08T19:08:01.137Z] 🔍 Session User: No user
+[2025-08-08T19:08:01.424Z] 📝 GET /img/default-activity.jpg - Session ID: Ur_9Exb-S9vLz_ovyhX2YVp068kswpzd
+[2025-08-08T19:08:01.424Z] 🔍 Session User: No user
+[2025-08-08T19:08:01.686Z] 📝 GET /img/default-activity.jpg - Session ID: y5pALTq7tGsNIKN6RdD94XKN34EztUOA
+[2025-08-08T19:08:01.686Z] 🔍 Session User: No user
+[2025-08-08T19:08:01.695Z] 📝 GET /img/default-activity.jpg - Session ID: HMRZzm2g9qJHKCUh1COzI3x6Q8XKVzPb
+[2025-08-08T19:08:01.696Z] 🔍 Session User: No user
+[2025-08-08T19:08:01.974Z] 📝 GET /img/default-activity.jpg - Session ID: G-8Z0XdSXKOBSxqiqW3D5HBfkhzJk2vC
+[2025-08-08T19:08:01.975Z] 🔍 Session User: No user
+[2025-08-08T19:08:02.224Z] 📝 GET /img/default-activity.jpg - Session ID: wtHvVXrXO1dNcDiurvv7wYvWs60nCv4F
+[2025-08-08T19:08:02.224Z] 🔍 Session User: No user
+[2025-08-08T19:08:02.467Z] 📝 GET /img/default-activity.jpg - Session ID: 8mqMbn0TzCVDTrOmfI5VJhJ7iQIb87f-
+[2025-08-08T19:08:02.468Z] 🔍 Session User: No user
+[2025-08-08T19:08:02.483Z] 📝 GET /img/default-activity.jpg - Session ID: 01aQJm-BP5tESJI9Wo9PBuOjn4bSTZS5
+[2025-08-08T19:08:02.487Z] 🔍 Session User: No user
+[2025-08-08T19:08:02.512Z] 📝 GET /img/default-activity.jpg - Session ID: n_MtM7hFMxXD1w85c_vR_nl5CqjiKkb8
+[2025-08-08T19:08:02.512Z] 🔍 Session User: No user
+[2025-08-08T19:08:02.539Z] 📝 GET /img/default-activity.jpg - Session ID: ZLAhHD2ALlrplpHdsz-NuIs5ju95Z2hW
+[2025-08-08T19:08:02.547Z] 🔍 Session User: No user
+[2025-08-08T19:08:02.822Z] 📝 GET /img/default-activity.jpg - Session ID: X0GcAH4oqVM0H8WdXllBJ3Qc1SOk_e00
+[2025-08-08T19:08:02.824Z] 🔍 Session User: No user
+[2025-08-08T19:08:03.076Z] 📝 GET /img/default-activity.jpg - Session ID: KpprUiLHiovA4mjdUQHsfjwbIQnU9obh
+[2025-08-08T19:08:03.078Z] 🔍 Session User: No user
+[2025-08-08T19:08:03.331Z] 📝 GET /img/default-activity.jpg - Session ID: _WJNpFGuMpHDlrLCzcvU8cORpuV13n1C
+[2025-08-08T19:08:03.332Z] 🔍 Session User: No user
+[2025-08-08T19:08:03.648Z] 📝 GET /img/default-activity.jpg - Session ID: y1b9nUUIC_apt4BDoO2LBuTXVktg8CWs
+[2025-08-08T19:08:03.648Z] 🔍 Session User: No user
+[2025-08-08T19:08:03.684Z] 📝 GET /img/default-activity.jpg - Session ID: Wqz72a5Cw2iKGop_EJOLQarElCLfyyEm
+[2025-08-08T19:08:03.688Z] 🔍 Session User: No user
+[2025-08-08T19:08:03.898Z] 📝 GET /img/default-activity.jpg - Session ID: BzuSVCg9xfcx_pU9XKqcqh6KOmSWny5Q
+[2025-08-08T19:08:03.899Z] 🔍 Session User: No user
+[2025-08-08T19:08:04.102Z] 📝 GET /img/default-activity.jpg - Session ID: eHSsSH0FPezqvVKn0yKKOlgqkJPGm9CU
+[2025-08-08T19:08:04.103Z] 🔍 Session User: No user
+[2025-08-08T19:08:04.320Z] 📝 GET /img/default-activity.jpg - Session ID: -_65w9RXtH9xeajEs_PFLThLAodo7mw2
+[2025-08-08T19:08:04.320Z] 🔍 Session User: No user
+[2025-08-08T19:08:04.516Z] 📝 GET /img/default-activity.jpg - Session ID: sAhBDHRufqxjUG-fZdQ7Na1KdPRWAbmc
+[2025-08-08T19:08:04.517Z] 🔍 Session User: No user
+[2025-08-08T19:08:04.713Z] 📝 GET /img/default-activity.jpg - Session ID: xl-hyq9xQTCnmK0fw0-anuomfHIhtvcn
+[2025-08-08T19:08:04.714Z] 🔍 Session User: No user
+[2025-08-08T19:08:04.894Z] 📝 GET /img/default-activity.jpg - Session ID: iiV1_Qs_5PLFNKw8QsYwvGm1A7ToLq6L
+[2025-08-08T19:08:04.895Z] 🔍 Session User: No user
+[2025-08-08T19:08:05.264Z] 📝 GET /img/default-activity.jpg - Session ID: qCOygHzqeWLYaY7XvBmxlH8tSiH26kOv
+[2025-08-08T19:08:05.266Z] 🔍 Session User: No user
+[2025-08-08T19:08:05.902Z] 📝 GET /img/default-activity.jpg - Session ID: cpuZGiBusgIt-WO3RY5XImss1ZVX98la
+[2025-08-08T19:08:05.902Z] 🔍 Session User: No user
+[2025-08-08T19:08:06.108Z] 📝 GET /img/default-activity.jpg - Session ID: IUG50Yf38vGIjJ2FVQqU3GWe4lccG6ta
+[2025-08-08T19:08:06.109Z] 🔍 Session User: No user
+[2025-08-08T19:08:06.429Z] 📝 GET /img/default-activity.jpg - Session ID: kTESpfifGA_EIjL5bKqTOpdwepFhzEGB
+[2025-08-08T19:08:06.430Z] 🔍 Session User: No user
+[2025-08-08T19:08:06.440Z] 📝 GET /img/default-activity.jpg - Session ID: d4XmWxv7ZAj3fBjXWFAmcAEJY0TO-USc
+[2025-08-08T19:08:06.444Z] 🔍 Session User: No user
+[2025-08-08T19:08:06.459Z] 📝 GET /img/default-activity.jpg - Session ID: -EfJpVYB5PR9GBQ1CVZMyNLJbpEJuT5Y
+[2025-08-08T19:08:06.461Z] 🔍 Session User: No user
+[2025-08-08T19:08:06.699Z] 📝 GET /img/default-activity.jpg - Session ID: -FZ8piyHiYdWwFddEycnPlflB8nTf2fs
+[2025-08-08T19:08:06.700Z] 🔍 Session User: No user
+[2025-08-08T19:08:06.886Z] 📝 GET /img/default-activity.jpg - Session ID: UbSaT4FL41akMqmLFlehFi5GZcuCoYIp
+[2025-08-08T19:08:06.887Z] 🔍 Session User: No user
+[2025-08-08T19:08:07.164Z] 📝 GET /takeaction - Session ID: OsVi7UwjFEJCeCEW19f1syn3EjRWYIjD
+[2025-08-08T19:08:07.165Z] 🔍 Session User: No user
+[2025-08-08T19:08:07.189Z] 📝 GET /img/default-activity.jpg - Session ID: Gb-mKNvuQ3fTyIMjjDXmvi1z9m_5FOI5
+[2025-08-08T19:08:07.198Z] 🔍 Session User: No user
+[2025-08-08T19:08:07.538Z] 📝 GET /api/check-session - Session ID: 4Cdbh7QoiQ7PDNBZP3wnHoMNnYBoQJxG
+[2025-08-08T19:08:07.548Z] 🔍 Session User: No user
+[2025-08-08T19:08:15.905Z] 📝 GET /me - Session ID: m_hEQ5LGfmfnnCmM7s-scaLB8oO_6xuD
+[2025-08-08T19:08:15.905Z] 🔍 Session User: No user
+[2025-08-08T19:08:16.392Z] 📝 GET /me - Session ID: kJjsWdTX0Av8-828-WuizTlzWmEFQ33r
+[2025-08-08T19:08:16.392Z] 🔍 Session User: No user
+[2025-08-08T19:08:16.591Z] 📝 GET /favicon.ico - Session ID: FpKR6AYnVhvABciISggU8PoM4f8Wj5UG
+[2025-08-08T19:08:16.592Z] 🔍 Session User: No user
+[2025-08-08T19:08:59.159Z] 📝 GET /login - Session ID: JM_6nbcOR8lBuTjxReYwo4e7S7UHW2xD
+[2025-08-08T19:08:59.193Z] 🔍 Session User: No user
+[2025-08-08T19:08:59.434Z] 📝 GET /api/check-session - Session ID: 9xuit5Q7_ksfqD5D_cr-WGI22VnzgmyZ
+[2025-08-08T19:08:59.439Z] 🔍 Session User: No user
+[2025-08-08T19:09:02.919Z] 📝 POST /login-supabase - Session ID: 9O9lhUwI-MqYuF7mIkVkYnS6LZ8QwKpY
+[2025-08-08T19:09:02.920Z] 🔍 Session User: No user
+[2025-08-08T19:09:05.894Z] 📝 GET /profile - Session ID: KOlp-EfWWcBQzc5XaYSAIhH1uV8eYDuB
+[2025-08-08T19:09:05.895Z] 🔍 Session User: No user
+[2025-08-08T19:09:06.168Z] 📝 GET /api/check-session - Session ID: gE7ZcCrC0ZtgDeMgiP1HuydzF_ITMKZB
+[2025-08-08T19:09:06.169Z] 🔍 Session User: No user
+[2025-08-08T19:09:14.883Z] 📝 GET /img/cause-default.jpg - Session ID: 5MopuBuG5r8dKbx9lxFuZIftaDekr7gR
+[2025-08-08T19:09:14.884Z] 🔍 Session User: No user
+[2025-08-08T19:09:15.692Z] 📝 GET /img/default-activity.jpg - Session ID: 6ibAjLeFajUW7u74LJ6u0xvPWK1umJuy
+[2025-08-08T19:09:15.694Z] 🔍 Session User: No user
+[2025-08-08T19:09:15.732Z] 📝 GET /img/default-activity.jpg - Session ID: 14_8AT0I3HUlny1S5olF0QJH6DnlhAn7
+[2025-08-08T19:09:15.735Z] 🔍 Session User: No user
+[2025-08-08T19:09:15.992Z] 📝 GET /img/default-activity.jpg - Session ID: Mi7ELvMiGXaOFg8scKHrL8TdEQ_sAgSY
+[2025-08-08T19:09:15.992Z] 🔍 Session User: No user
+[2025-08-08T19:09:16.202Z] 📝 GET /img/default-activity.jpg - Session ID: 2BBSeyG9FXXyk838vU9NQmJeVm7Kc0ae
+[2025-08-08T19:09:16.202Z] 🔍 Session User: No user
+[2025-08-08T19:09:16.427Z] 📝 GET /img/default-activity.jpg - Session ID: MiAhf1SZjP_VXrUBIXCBRvVHV9uJZs4p
+[2025-08-08T19:09:16.427Z] 🔍 Session User: No user
+[2025-08-08T19:09:16.634Z] 📝 GET /img/default-activity.jpg - Session ID: 3BBYhBxm-B7xi3bRiT_TK_cnKCRPWBxh
+[2025-08-08T19:09:16.634Z] 🔍 Session User: No user
+[2025-08-08T19:09:16.838Z] 📝 GET /img/default-activity.jpg - Session ID: MmI8MIqC2DNryq_kX9mX_Pv9z1SYLWmX
+[2025-08-08T19:09:16.839Z] 🔍 Session User: No user
+[2025-08-08T19:09:17.039Z] 📝 GET /img/default-activity.jpg - Session ID: ymcJmYhiO4skJwNJQgwtujnKRSKABs3z
+[2025-08-08T19:09:17.039Z] 🔍 Session User: No user
+[2025-08-08T19:09:17.234Z] 📝 GET /img/default-activity.jpg - Session ID: mMhhWPBLlwrR0i7N4rYIgn_0o8oXpysp
+[2025-08-08T19:09:17.234Z] 🔍 Session User: No user
+[2025-08-08T19:09:17.422Z] 📝 GET /img/default-activity.jpg - Session ID: 8DhpC5tEDPOf1AZo_hysIo3Nqbu5tAw_
+[2025-08-08T19:09:17.422Z] 🔍 Session User: No user
+[2025-08-08T19:09:17.620Z] 📝 GET /img/default-activity.jpg - Session ID: 9EiBp51nnXm-yuMbP7e3I5d6EoFj6lcQ
+[2025-08-08T19:09:17.620Z] 🔍 Session User: No user
+[2025-08-08T19:09:17.808Z] 📝 GET /img/default-activity.jpg - Session ID: SPYPcqnp0fMrnN1xU9rV7aJAUENqtwVL
+[2025-08-08T19:09:17.809Z] 🔍 Session User: No user
+[2025-08-08T19:09:18.022Z] 📝 GET /img/default-activity.jpg - Session ID: PRwfI8HsSOY-n1CXlhxnR8Mqx2fVq8FV
+[2025-08-08T19:09:18.023Z] 🔍 Session User: No user
+[2025-08-08T19:09:18.256Z] 📝 GET /img/default-activity.jpg - Session ID: ZlDvUEOvibFBivlVrM4Ibe6h-Sj4zfpi
+[2025-08-08T19:09:18.256Z] 🔍 Session User: No user
+[2025-08-08T19:09:18.481Z] 📝 GET /img/default-activity.jpg - Session ID: xd-Elh-6XOd33CRSP32dg7r0wM5S6wQU
+[2025-08-08T19:09:18.481Z] 🔍 Session User: No user
+[2025-08-08T19:09:18.678Z] 📝 GET /img/default-activity.jpg - Session ID: mLeuQApwMFYn9ogKRHyg--c5lqCJeTCR
+[2025-08-08T19:09:18.679Z] 🔍 Session User: No user
+[2025-08-08T19:09:18.871Z] 📝 GET /img/default-activity.jpg - Session ID: d56o3wJ2wuar_5QVWqNTjoCv8ExJVMnm
+[2025-08-08T19:09:18.872Z] 🔍 Session User: No user
+[2025-08-08T19:09:19.085Z] 📝 GET /img/default-activity.jpg - Session ID: cYrr4SeHrN9vSlBK90HgfvsPoXtd7Dlu
+[2025-08-08T19:09:19.086Z] 🔍 Session User: No user
+[2025-08-08T19:09:19.283Z] 📝 GET /img/default-activity.jpg - Session ID: GJYcWI1uJQMmtPT2RriQ7ysSq-xV2bCt
+[2025-08-08T19:09:19.284Z] 🔍 Session User: No user
+[2025-08-08T19:09:19.490Z] 📝 GET /img/default-activity.jpg - Session ID: 4tLAbPlnyBWfqx2P6DJsvHL8HbRtiaX7
+[2025-08-08T19:09:19.490Z] 🔍 Session User: No user
+[2025-08-08T19:09:19.688Z] 📝 GET /img/default-activity.jpg - Session ID: Lgg_bJKOl61sMWD-ElGZrsMt0Ze41srA
+[2025-08-08T19:09:19.688Z] 🔍 Session User: No user
+[2025-08-08T19:09:19.934Z] 📝 GET /img/default-activity.jpg - Session ID: dVhyUVjjPD5TSCgVKAxI2k2QcbjUnJfX
+[2025-08-08T19:09:19.934Z] 🔍 Session User: No user
+[2025-08-08T19:09:20.148Z] 📝 GET /img/default-activity.jpg - Session ID: Q0HLi1T83aImyL_7E7iiyH6Kw-gUwoNX
+[2025-08-08T19:09:20.162Z] 🔍 Session User: No user
+[2025-08-08T19:09:20.347Z] 📝 GET /img/default-activity.jpg - Session ID: VctnbF1y6gH6bAzfBGXDRZfLOaZt0Pmn
+[2025-08-08T19:09:20.347Z] 🔍 Session User: No user
+[2025-08-08T19:09:20.569Z] 📝 GET /img/default-activity.jpg - Session ID: Ji8SLciF86Cdo73KtpBY1pYusb-PoODf
+[2025-08-08T19:09:20.569Z] 🔍 Session User: No user
+[2025-08-08T19:09:20.758Z] 📝 GET /img/default-activity.jpg - Session ID: pv9upj7dJnMxPmHSOapByfComVelEd9H
+[2025-08-08T19:09:20.759Z] 🔍 Session User: No user
+[2025-08-08T19:09:20.957Z] 📝 GET /img/default-activity.jpg - Session ID: ynFLLCfyUZ1kNP0WI8zxDz1Ot2yGdPw9
+[2025-08-08T19:09:20.957Z] 🔍 Session User: No user
+[2025-08-08T19:09:21.164Z] 📝 GET /img/default-activity.jpg - Session ID: gsC9I48xnGm_8Fsg8EIvcTfC63-4bEtl
+[2025-08-08T19:09:21.164Z] 🔍 Session User: No user
+[2025-08-08T19:09:21.367Z] 📝 GET /img/default-activity.jpg - Session ID: SELT3xjoE8f_aPaN_hqaoe_8z0kQ8fYj
+[2025-08-08T19:09:21.367Z] 🔍 Session User: No user
+[2025-08-08T19:09:21.560Z] 📝 GET /img/default-activity.jpg - Session ID: slL9WFFirIcl-cdpXC23iue1vmivbLIi
+[2025-08-08T19:09:21.561Z] 🔍 Session User: No user
+[2025-08-08T19:09:21.760Z] 📝 GET /img/default-activity.jpg - Session ID: aRJ4qCkaOiqaAmOWGPsepMrxv21xHzh_
+[2025-08-08T19:09:21.760Z] 🔍 Session User: No user
+[2025-08-08T19:09:21.957Z] 📝 GET /img/default-activity.jpg - Session ID: IIWmm3Ds5F__9j-jMP00IUWVjBvtoWQB
+[2025-08-08T19:09:21.957Z] 🔍 Session User: No user
+[2025-08-08T19:09:22.162Z] 📝 GET /img/default-activity.jpg - Session ID: wjVN6WMju9gQ07cM-qnBApPKeSbwAHt2
+[2025-08-08T19:09:22.162Z] 🔍 Session User: No user
+[2025-08-08T19:09:22.357Z] 📝 GET /img/default-activity.jpg - Session ID: zMKBg4Kyd6lvHO0kDbTRiMW-MKMUOoqF
+[2025-08-08T19:09:22.358Z] 🔍 Session User: No user
+[2025-08-08T19:09:22.562Z] 📝 GET /img/default-activity.jpg - Session ID: -ONz1edjV5HuKNUPAKJHRlKlATLK-kKV
+[2025-08-08T19:09:22.562Z] 🔍 Session User: No user
+[2025-08-08T19:09:22.755Z] 📝 GET /img/default-activity.jpg - Session ID: 0D12AsOpgRtY11YWm_0s6kUqoZVDW6JI
+[2025-08-08T19:09:22.756Z] 🔍 Session User: No user
+[2025-08-08T19:09:22.949Z] 📝 GET /img/default-activity.jpg - Session ID: fFDNGGxtJcgVNZNYpzTjQGINJ_HVAg6C
+[2025-08-08T19:09:22.949Z] 🔍 Session User: No user
+[2025-08-08T19:09:23.140Z] 📝 GET /img/default-activity.jpg - Session ID: Haf6bGyzBniTi5H4hxp5tW-fjf2f7oTl
+[2025-08-08T19:09:23.142Z] 🔍 Session User: No user
+[2025-08-08T19:09:23.348Z] 📝 GET /img/default-activity.jpg - Session ID: ieH4mAIv9Z_NY6SFUcmvwU5HRaa60nNd
+[2025-08-08T19:09:23.348Z] 🔍 Session User: No user
+[2025-08-08T19:09:23.588Z] 📝 GET /img/default-activity.jpg - Session ID: 9E4_45UwzY8FZ1D_X36Csa1psv7MIcyN
+[2025-08-08T19:09:23.589Z] 🔍 Session User: No user
+[2025-08-08T19:09:23.802Z] 📝 GET /img/default-activity.jpg - Session ID: GAy6k1nz3nW1D4hWtu3T0StuzBuBzkSl
+[2025-08-08T19:09:23.802Z] 🔍 Session User: No user
+[2025-08-08T19:09:23.993Z] 📝 GET /img/default-activity.jpg - Session ID: jLF3jVjY95RvfYhfauV28Aehtzv6vdj2
+[2025-08-08T19:09:23.993Z] 🔍 Session User: No user
+[2025-08-08T19:09:24.199Z] 📝 GET /img/default-activity.jpg - Session ID: RWc9cAhTl_3VMLckInS9o19dYI_LFQQa
+[2025-08-08T19:09:24.199Z] 🔍 Session User: No user
+[2025-08-08T19:09:24.405Z] 📝 GET /img/default-activity.jpg - Session ID: jYBYfdxrR0ysrVK2BOtiM5r0vAt1bxfA
+[2025-08-08T19:09:24.406Z] 🔍 Session User: No user
+[2025-08-08T19:09:24.602Z] 📝 GET /img/default-activity.jpg - Session ID: CyJ6YwzX5Y0KgNEVcNW7518BNBLXk9Iq
+[2025-08-08T19:09:24.603Z] 🔍 Session User: No user
+[2025-08-08T19:09:24.795Z] 📝 GET /img/default-activity.jpg - Session ID: ECmxAfxVaLhJ8KpzyuvB2R2E39TWvJQy
+[2025-08-08T19:09:24.795Z] 🔍 Session User: No user
+[2025-08-08T19:09:24.993Z] 📝 GET /img/default-activity.jpg - Session ID: Klp5M7UHRnYMih-cgjh8Gadl_dUcOZN1
+[2025-08-08T19:09:24.993Z] 🔍 Session User: No user
+[2025-08-08T19:09:25.195Z] 📝 GET /img/default-activity.jpg - Session ID: UnveIB4eldTeGa4FJoBkT_i3ATPT3n_s
+[2025-08-08T19:09:25.195Z] 🔍 Session User: No user
+[2025-08-08T19:09:25.396Z] 📝 GET /img/default-activity.jpg - Session ID: fc_2Wv7vJR3PvsVt19Z7HM27aHyr1M21
+[2025-08-08T19:09:25.397Z] 🔍 Session User: No user
+[2025-08-08T19:09:25.593Z] 📝 GET /img/default-activity.jpg - Session ID: lJp5xd5VxE_r9HNvUcTH28SoPdDvasI1
+[2025-08-08T19:09:25.594Z] 🔍 Session User: No user
+[2025-08-08T19:09:25.793Z] 📝 GET /img/default-activity.jpg - Session ID: W_oDO5OXGWVhL6WFWqUQHzAGasi1Apdl
+[2025-08-08T19:09:25.794Z] 🔍 Session User: No user
+[2025-08-08T19:09:25.996Z] 📝 GET /img/default-activity.jpg - Session ID: tqYl4yQChPO7UcgFse5GKcWyI__X3JTH
+[2025-08-08T19:09:25.996Z] 🔍 Session User: No user
+[2025-08-08T19:09:26.218Z] 📝 GET /img/default-activity.jpg - Session ID: iMEY4oplpXMUBVcDJpWwSWIxp-J4P3FO
+[2025-08-08T19:09:26.218Z] 🔍 Session User: No user
+[2025-08-08T19:09:26.438Z] 📝 GET /img/default-activity.jpg - Session ID: RAlYIhcuMhE8kSUuGdToidmu8R9O-0jn
+[2025-08-08T19:09:26.439Z] 🔍 Session User: No user
+[2025-08-08T19:09:26.662Z] 📝 GET /img/default-activity.jpg - Session ID: wQc3KjSWQcKwDeVlplgbiKi_WQSA3zeQ
+[2025-08-08T19:09:26.663Z] 🔍 Session User: No user
+[2025-08-08T19:09:26.852Z] 📝 GET /img/default-activity.jpg - Session ID: rz73FuBhUiPdm5pAhAww7-ah0Nqg4Wkh
+[2025-08-08T19:09:26.852Z] 🔍 Session User: No user
+[2025-08-08T19:09:27.051Z] 📝 GET /img/default-activity.jpg - Session ID: OKwNpQ2Xd6CYAmXPub_yEz_UcX2CzLdx
+[2025-08-08T19:09:27.052Z] 🔍 Session User: No user
+[2025-08-08T19:09:27.261Z] 📝 GET /img/default-activity.jpg - Session ID: UkowjYXxVWirgMTkP0Pfbcq-z0Xsj1sY
+[2025-08-08T19:09:27.261Z] 🔍 Session User: No user
+[2025-08-08T19:09:27.473Z] 📝 GET /img/default-activity.jpg - Session ID: UnI5LH9tRewHov0ClX46enjhpD794vBZ
+[2025-08-08T19:09:27.474Z] 🔍 Session User: No user
+[2025-08-08T19:09:27.684Z] 📝 GET /img/default-activity.jpg - Session ID: dVxDEDQV3eA1bJV9k5mpeN3d1mNMW8sv
+[2025-08-08T19:09:27.684Z] 🔍 Session User: No user
+[2025-08-08T19:09:27.895Z] 📝 GET /img/default-activity.jpg - Session ID: MI_MjIU0S2Ra1O-NqDxJIG59gVkT_Gxd
+[2025-08-08T19:09:27.895Z] 🔍 Session User: No user
+[2025-08-08T19:09:28.104Z] 📝 GET /img/default-activity.jpg - Session ID: adLrGIWVtUQsK4mZLI5rKCjovk0pKN4o
+[2025-08-08T19:09:28.104Z] 🔍 Session User: No user
+[2025-08-08T19:09:28.319Z] 📝 GET /img/default-activity.jpg - Session ID: omLzFZPgyFL10iWkA2B4yWje-C-i2_L3
+[2025-08-08T19:09:28.319Z] 🔍 Session User: No user
+[2025-08-08T19:09:28.533Z] 📝 GET /img/default-activity.jpg - Session ID: fYeH4D2VkggpT0qm53XZqSZbVk91lkC5
+[2025-08-08T19:09:28.535Z] 🔍 Session User: No user
+[2025-08-08T19:09:28.767Z] 📝 GET /img/default-activity.jpg - Session ID: 8YLrsghLzoFo5BRgOh0fGwIelRkmwhbN
+[2025-08-08T19:09:28.767Z] 🔍 Session User: No user
+[2025-08-08T19:09:28.966Z] 📝 GET /img/default-activity.jpg - Session ID: _XBtV99Ap12b9fjh8y00mpiWjEnktHCt
+[2025-08-08T19:09:28.967Z] 🔍 Session User: No user
+[2025-08-08T19:09:29.158Z] 📝 GET /img/default-activity.jpg - Session ID: STqd9ioEu2FoTRx2O95yENLcIHZ38Flh
+[2025-08-08T19:09:29.159Z] 🔍 Session User: No user
+[2025-08-08T19:09:29.348Z] 📝 GET /img/default-activity.jpg - Session ID: tyvWJ_3W6rDOxssfF8y5hXA9uqLdcHLk
+[2025-08-08T19:09:29.349Z] 🔍 Session User: No user
+[2025-08-08T19:09:29.714Z] 📝 GET /img/default-activity.jpg - Session ID: 0NRWnbF6-znrjtZI5eBCOFaYD-TNUK2c
+[2025-08-08T19:09:29.715Z] 🔍 Session User: No user
+[2025-08-08T19:09:29.957Z] 📝 GET /img/default-activity.jpg - Session ID: xpfK6D5KsOnCBu00BdF5Eb4I_Y78A5Vy
+[2025-08-08T19:09:29.958Z] 🔍 Session User: No user
+[2025-08-08T19:09:30.183Z] 📝 GET /img/default-activity.jpg - Session ID: 5HLPx_QHx4WoBLAYCnWYRF-Qf2mfEHF4
+[2025-08-08T19:09:30.184Z] 🔍 Session User: No user
+[2025-08-08T19:09:30.372Z] 📝 GET /img/default-activity.jpg - Session ID: Qesxaunyf6ke28kaopti1js1P3U2iX1F
+[2025-08-08T19:09:30.373Z] 🔍 Session User: No user
+[2025-08-08T19:09:30.562Z] 📝 GET /img/default-activity.jpg - Session ID: vXsXXMYmRn9O-W1F9uSaEl5hxx6HeRMO
+[2025-08-08T19:09:30.562Z] 🔍 Session User: No user
+[2025-08-08T19:09:30.771Z] 📝 GET /img/default-activity.jpg - Session ID: eMDfwwehPd6GIgtTB6uSwbRXtD4MVo9v
+[2025-08-08T19:09:30.771Z] 🔍 Session User: No user
+[2025-08-08T19:09:30.969Z] 📝 GET /img/default-activity.jpg - Session ID: kjdz8W0QaDVhURoUagbJM6eROMG39fZy
+[2025-08-08T19:09:30.969Z] 🔍 Session User: No user
+[2025-08-08T19:09:31.171Z] 📝 GET /img/default-activity.jpg - Session ID: zP_BCDX8QzpzjET21Cq_wIKRW7qPH73f
+[2025-08-08T19:09:31.171Z] 🔍 Session User: No user
+[2025-08-08T19:09:31.377Z] 📝 GET /img/default-activity.jpg - Session ID: xcf5caJQaBdCULkot81yxIGDyWy1vzgN
+[2025-08-08T19:09:31.377Z] 🔍 Session User: No user
+[2025-08-08T19:09:31.583Z] 📝 GET /img/default-activity.jpg - Session ID: wgh8qM0oagVypMDz37Gi9L_fmSiuv0dd
+[2025-08-08T19:09:31.583Z] 🔍 Session User: No user
+[2025-08-08T19:09:31.786Z] 📝 GET /img/default-activity.jpg - Session ID: Qewv24WfrD6Uxs1T3x00zjCiuKMK5u1t
+[2025-08-08T19:09:31.786Z] 🔍 Session User: No user
+[2025-08-08T19:09:32.025Z] 📝 GET /img/default-activity.jpg - Session ID: wJo4sD3ZCF1HaaxdGx-qoNzpPZOXmOpU
+[2025-08-08T19:09:32.025Z] 🔍 Session User: No user
+[2025-08-08T19:09:32.261Z] 📝 GET /img/default-activity.jpg - Session ID: iJy8Shf9hKW6C94FgK7ENAzsgAoIsf-4
+[2025-08-08T19:09:32.262Z] 🔍 Session User: No user
+[2025-08-08T19:09:32.458Z] 📝 GET /img/default-activity.jpg - Session ID: p0gTjDLH8UkCQVpKAAeWEYX7SlY7GrfX
+[2025-08-08T19:09:32.459Z] 🔍 Session User: No user
+[2025-08-08T19:09:32.659Z] 📝 GET /img/default-activity.jpg - Session ID: QXT5NLEijr3l_nTQshdTF6UbdgxBWcBl
+[2025-08-08T19:09:32.660Z] 🔍 Session User: No user
+[2025-08-08T19:09:32.858Z] 📝 GET /img/default-activity.jpg - Session ID: RlTB5uw-Iymv7hUN8Q7h16HAHbqPMQc-
+[2025-08-08T19:09:32.858Z] 🔍 Session User: No user
+[2025-08-08T19:09:33.054Z] 📝 GET /img/default-activity.jpg - Session ID: muFVpHk3BT5riNFG2XTx_okk_-bkBfNf
+[2025-08-08T19:09:33.055Z] 🔍 Session User: No user
+[2025-08-08T19:09:33.255Z] 📝 GET /img/default-activity.jpg - Session ID: Ra0s4f7WUS5IzT2bmbnZIraskEQOjT72
+[2025-08-08T19:09:33.255Z] 🔍 Session User: No user
+[2025-08-08T19:09:33.467Z] 📝 GET /img/default-activity.jpg - Session ID: fFLJ8I-zqkGOc1LtyWqlG5Q7ReshpjU4
+[2025-08-08T19:09:33.467Z] 🔍 Session User: No user
+[2025-08-08T19:09:33.657Z] 📝 GET /img/default-activity.jpg - Session ID: eOnXlG3758YzXwM1ahgvrfYd8JnzquPJ
+[2025-08-08T19:09:33.658Z] 🔍 Session User: No user
+[2025-08-08T19:09:33.865Z] 📝 GET /img/default-activity.jpg - Session ID: 8bkZaSYaf8GlRKl8ulKqRjvLp-FUveYd
+[2025-08-08T19:09:33.865Z] 🔍 Session User: No user
+[2025-08-08T19:09:34.073Z] 📝 GET /img/default-activity.jpg - Session ID: _5d5MJQ5ltwGTFIrFVM1D5z38fMRWbVi
+[2025-08-08T19:09:34.073Z] 🔍 Session User: No user
+[2025-08-08T19:09:34.280Z] 📝 GET /img/default-activity.jpg - Session ID: KDV-2XmrjaZmXYsEZqtAPWsDQlxIlFpX
+[2025-08-08T19:09:34.293Z] 🔍 Session User: No user
+[2025-08-08T19:09:34.494Z] 📝 GET /img/default-activity.jpg - Session ID: bwKxJd_nlQTPYT6mh6VuF1sBEUTJy1ga
+[2025-08-08T19:09:34.495Z] 🔍 Session User: No user
+[2025-08-08T19:09:34.698Z] 📝 GET /img/default-activity.jpg - Session ID: P0kzO65_uy1iZyAfCNR77IzgpFF_INGa
+[2025-08-08T19:09:34.698Z] 🔍 Session User: No user
+[2025-08-08T19:09:34.909Z] 📝 GET /img/default-activity.jpg - Session ID: 7lfWu4q-4MnT7NNaukoqLv2kX5Vw2397
+[2025-08-08T19:09:34.909Z] 🔍 Session User: No user
+[2025-08-08T19:09:35.146Z] 📝 GET /img/default-activity.jpg - Session ID: Ma8dSOISNZCZJy4zzzDOi8LM2VEhX7F3
+[2025-08-08T19:09:35.148Z] 🔍 Session User: No user
+[2025-08-08T19:09:35.388Z] 📝 GET /img/default-activity.jpg - Session ID: OBNj0qAtCeQpF-cUov7MACESULw_E9pO
+[2025-08-08T19:09:35.388Z] 🔍 Session User: No user
+[2025-08-08T19:09:35.591Z] 📝 GET /img/default-activity.jpg - Session ID: J6vgemlt4y2-_ULIT9q92QBb_k7IUPnu
+[2025-08-08T19:09:35.592Z] 🔍 Session User: No user
+[2025-08-08T19:09:35.802Z] 📝 GET /img/default-activity.jpg - Session ID: fb85eZjSvo3UtT4vxfkJK8l7zigONATF
+[2025-08-08T19:09:35.802Z] 🔍 Session User: No user
+[2025-08-08T19:09:36.020Z] 📝 GET /img/default-activity.jpg - Session ID: itytYsWNPa8QoBgrUxW-KU2s8-gh5ZhH
+[2025-08-08T19:09:36.021Z] 🔍 Session User: No user
+[2025-08-08T19:09:36.242Z] 📝 GET /img/default-activity.jpg - Session ID: YpccLqrow2a6eH8FiKNxNZtqUkelmAWY
+[2025-08-08T19:09:36.242Z] 🔍 Session User: No user
+[2025-08-08T19:09:36.847Z] 📝 GET /img/default-activity.jpg - Session ID: cIC2vZsnVfvs5ZYO-_wvfaY027H1iDrv
+[2025-08-08T19:09:36.936Z] 🔍 Session User: No user
+[2025-08-08T19:09:37.216Z] 📝 GET /img/default-activity.jpg - Session ID: hnq4VJpj56ZZ5hNPFyDHAf-aZnJmI-Jd
+[2025-08-08T19:09:37.218Z] 🔍 Session User: No user
+[2025-08-08T19:09:37.234Z] 📝 GET /img/default-activity.jpg - Session ID: lOMMZq3vThm-2jdX8lST8rhEc7J8lH-y
+[2025-08-08T19:09:37.235Z] 🔍 Session User: No user
+[2025-08-08T19:09:37.462Z] 📝 GET /img/default-activity.jpg - Session ID: _1DmKS90J9nZ_9yRytQy-aGz_LM4bzD_
+[2025-08-08T19:09:37.463Z] 🔍 Session User: No user
+[2025-08-08T19:09:37.687Z] 📝 GET /img/default-activity.jpg - Session ID: h98PyoNTSKdrbalUNrpbk3Zj141V0nbl
+[2025-08-08T19:09:37.687Z] 🔍 Session User: No user
+[2025-08-08T19:09:37.902Z] 📝 GET /img/default-activity.jpg - Session ID: W2s73_W3NvVaDbljEoT71BTxWD38FM2E
+[2025-08-08T19:09:37.902Z] 🔍 Session User: No user
+[2025-08-08T19:09:38.121Z] 📝 GET /img/default-activity.jpg - Session ID: o713oQogLqm-Ja-JADHVj9yNuepduHws
+[2025-08-08T19:09:38.121Z] 🔍 Session User: No user
+[2025-08-08T19:09:38.320Z] 📝 GET /img/default-activity.jpg - Session ID: 71SQgieUD3jAZGmTJ9GZPfY8a5au1A_S
+[2025-08-08T19:09:38.321Z] 🔍 Session User: No user
+[2025-08-08T19:09:38.514Z] 📝 GET /img/default-activity.jpg - Session ID: inCdz6yzip0kaOjDBKSjxjitwYV1Dw1S
+[2025-08-08T19:09:38.515Z] 🔍 Session User: No user
+[2025-08-08T19:09:38.721Z] 📝 GET /img/default-activity.jpg - Session ID: SXuQ4meBCFkOCNsd4aYls2L0hs_rCEkQ
+[2025-08-08T19:09:38.722Z] 🔍 Session User: No user
+[2025-08-08T19:09:38.918Z] 📝 GET /img/default-activity.jpg - Session ID: Pa25kGa2DAvpnlvqbwrU-Tk0grdxmIJJ
+[2025-08-08T19:09:38.921Z] 🔍 Session User: No user
+[2025-08-08T19:09:39.115Z] 📝 GET /img/default-activity.jpg - Session ID: zNgi7doywHFnfvKfbMLYTJehqFKQbcgP
+[2025-08-08T19:09:39.115Z] 🔍 Session User: No user
+[2025-08-08T19:09:39.392Z] 📝 GET /img/default-activity.jpg - Session ID: 4ShRnDxnsB61thPK8VlrOPi0UiC-UYpR
+[2025-08-08T19:09:39.392Z] 🔍 Session User: No user
+[2025-08-08T19:09:39.401Z] 📝 GET /img/default-activity.jpg - Session ID: qvpDr7LjyZ7PTCvapKk6kHE6UA-usMU7
+[2025-08-08T19:09:39.413Z] 🔍 Session User: No user
+[2025-08-08T19:09:39.633Z] 📝 GET /img/default-activity.jpg - Session ID: rcJaprpchj8x9VgJeK8Lb1JGpAIUvdqq
+[2025-08-08T19:09:39.635Z] 🔍 Session User: No user
+[2025-08-08T19:09:40.229Z] 📝 GET /.well-known/appspecific/com.chrome.devtools.json - Session ID: UVIEGQVFwqPB82ZranZ9LRifn1vES4Ua
+[2025-08-08T19:09:40.246Z] 🔍 Session User: No user
+[2025-08-08T19:09:40.592Z] 📝 GET /js/lib/axios.min.js.map - Session ID: qu01oTPeCtfmBoiXHBkMUFAO87E9q9o2
+[2025-08-08T19:09:40.598Z] 🔍 Session User: No user
+[2025-08-08T19:09:40.623Z] 📝 GET /img/default-activity.jpg - Session ID: vrrTGPTXt1jPwRteDo59psIv7h0FGB1l
+[2025-08-08T19:09:40.631Z] 🔍 Session User: No user
+[2025-08-08T19:09:40.652Z] 📝 GET /img/default-activity.jpg - Session ID: tWJVzQKKJuwzaXG-jqUOIUTNP0N71GdG
+[2025-08-08T19:09:40.672Z] 🔍 Session User: No user
+[2025-08-08T19:09:40.971Z] 📝 GET /img/default-activity.jpg - Session ID: -3lU_ZvOGUbjQDBsMWDif3kv90STRFCN
+[2025-08-08T19:09:40.979Z] 🔍 Session User: No user
+[2025-08-08T19:09:41.031Z] 📝 GET /img/default-activity.jpg - Session ID: hiKKv0VAarNxmUl4hsO-hjjr1yQp9OpA
+[2025-08-08T19:09:41.031Z] 🔍 Session User: No user
+[2025-08-08T19:09:41.510Z] 📝 GET /img/default-activity.jpg - Session ID: VfNetqJuwSg-NY9D8tDRzm0xyPih1D-p
+[2025-08-08T19:09:41.528Z] 🔍 Session User: No user
+[2025-08-08T19:09:41.915Z] 📝 GET /img/default-activity.jpg - Session ID: SsBpa-NvcPOsjeuqbaMpstftl7xxP1H7
+[2025-08-08T19:09:41.922Z] 🔍 Session User: No user
+[2025-08-08T19:09:41.941Z] 📝 GET /img/default-activity.jpg - Session ID: RccUCKB76yrEdoFyXlJ2XCTLxMOiz96j
+[2025-08-08T19:09:41.942Z] 🔍 Session User: No user
+[2025-08-08T19:09:41.958Z] 📝 GET /img/default-activity.jpg - Session ID: fJK5olpScCkEIBU8AyiCM_DwFC11TWbr
+[2025-08-08T19:09:41.961Z] 🔍 Session User: No user
+[2025-08-08T19:09:42.418Z] 📝 GET /img/default-activity.jpg - Session ID: 551UZcDMM2L_cYpw6PAGv2n6yv2UPa5w
+[2025-08-08T19:09:42.418Z] 🔍 Session User: No user
+[2025-08-08T19:09:42.673Z] 📝 GET /img/default-activity.jpg - Session ID: 2wZR3-qrRAX1Q4gqQhw4SwNa367lq6zf
+[2025-08-08T19:09:42.674Z] 🔍 Session User: No user
+[2025-08-08T19:09:42.692Z] 📝 GET /img/default-activity.jpg - Session ID: IVXk763Xd2-P55scad1VwYD2suZ01lAs
+[2025-08-08T19:09:42.694Z] 🔍 Session User: No user
+[2025-08-08T19:09:42.720Z] 📝 GET /img/default-activity.jpg - Session ID: Zt26pD86nmLAGZtCfx4596u0F24qImpG
+[2025-08-08T19:09:42.730Z] 🔍 Session User: No user
+[2025-08-08T19:09:42.998Z] 📝 GET /img/default-activity.jpg - Session ID: geb9U2CqSTgITaYseN-AGdIl8JrtSeBo
+[2025-08-08T19:09:42.999Z] 🔍 Session User: No user
+[2025-08-08T19:09:43.165Z] 📝 GET /img/default-activity.jpg - Session ID: 83ih3dEn6Wj2Sffl2OaOpQrP9-BrXVg3
+[2025-08-08T19:09:43.166Z] 🔍 Session User: No user
+[2025-08-08T19:09:43.327Z] 📝 GET /img/default-activity.jpg - Session ID: wmTjB7o1WSSwkKdOxQiHcS5it0nsZGZa
+[2025-08-08T19:09:43.328Z] 🔍 Session User: No user
+[2025-08-08T19:09:43.603Z] 📝 GET /img/default-activity.jpg - Session ID: GrJx6gUvhkvm71zoy1wajfIh76fjd8Gq
+[2025-08-08T19:09:43.604Z] 🔍 Session User: No user
+[2025-08-08T19:09:43.654Z] 📝 GET /img/default-activity.jpg - Session ID: 4g89JvBfSHt7KQrxM4XNnkMyoEkzH6hu
+[2025-08-08T19:09:43.661Z] 🔍 Session User: No user
+[2025-08-08T19:09:43.686Z] 📝 GET /img/default-activity.jpg - Session ID: f0pC3PsCmT8k3lLQ4O5B6zQkf8E5tHcW
+[2025-08-08T19:09:43.690Z] 🔍 Session User: No user
+[2025-08-08T19:09:44.025Z] 📝 GET /img/default-activity.jpg - Session ID: yZPf2GG2vrAq0ItWrH46yR6kPbD9Gw4D
+[2025-08-08T19:09:44.034Z] 🔍 Session User: No user
+[2025-08-08T19:09:44.075Z] 📝 GET /img/default-activity.jpg - Session ID: TQmVtqe0h03gJsSvr9gVdpp42PvyPJbT
+[2025-08-08T19:09:44.095Z] 🔍 Session User: No user
+[2025-08-08T19:09:44.451Z] 📝 GET /img/default-activity.jpg - Session ID: 3R3iNh8U5q-CfjXFRe_REX2JJBDnebNY
+[2025-08-08T19:09:44.452Z] 🔍 Session User: No user
+[2025-08-08T19:09:44.699Z] 📝 GET /img/default-activity.jpg - Session ID: vR86Tulyaq3p1-eI3-3K4UGthbLX-j9D
+[2025-08-08T19:09:44.699Z] 🔍 Session User: No user
+[2025-08-08T19:09:44.936Z] 📝 GET /img/default-activity.jpg - Session ID: 9ebjuG6_ggGNDE2NHv1rDiMkKgnnSgbZ
+[2025-08-08T19:09:44.937Z] 🔍 Session User: No user
+[2025-08-08T19:09:45.428Z] 📝 GET /img/default-activity.jpg - Session ID: g4YQxGvUORCD5IrM_nVyl2yMGEosu56F
+[2025-08-08T19:09:45.432Z] 🔍 Session User: No user
+[2025-08-08T19:09:45.680Z] 📝 GET /img/default-activity.jpg - Session ID: 6gcefQcykfXxj4ApyhIGS6rU9TdfY2Gj
+[2025-08-08T19:09:45.682Z] 🔍 Session User: No user
+[2025-08-08T19:09:45.693Z] 📝 GET /img/default-activity.jpg - Session ID: Th_KzrAUESlZNj_OBqfByzE4MpywFhTv
+[2025-08-08T19:09:45.706Z] 🔍 Session User: No user
+[2025-08-08T19:09:46.087Z] 📝 GET /img/default-activity.jpg - Session ID: Q7NgmJNrN_OQkAPinow1jjtHXufRjc-3
+[2025-08-08T19:09:46.087Z] 🔍 Session User: No user
+[2025-08-08T19:09:46.102Z] 📝 GET /img/default-activity.jpg - Session ID: L1UJ_BmE1ntsbxEqxMSxIIptL_YWXEPs
+[2025-08-08T19:09:46.106Z] 🔍 Session User: No user
+[2025-08-08T19:09:46.144Z] 📝 GET /img/default-activity.jpg - Session ID: OH0bybSaFsuV2SyXJXjXuI8SFKIsMmy4
+[2025-08-08T19:09:46.154Z] 🔍 Session User: No user
+[2025-08-08T19:09:46.561Z] 📝 GET /img/default-activity.jpg - Session ID: WJJyT9xfKWuVshPcDlhF3mIQU7idOr7V
+[2025-08-08T19:09:46.563Z] 🔍 Session User: No user
+[2025-08-08T19:09:46.574Z] 📝 GET /img/default-activity.jpg - Session ID: cIY4IbCRe73omrapByXQk_urdLnJGMVo
+[2025-08-08T19:09:46.575Z] 🔍 Session User: No user
+[2025-08-08T19:09:46.833Z] 📝 GET /img/default-activity.jpg - Session ID: HbZxXrHlHc_iUlELJJQWXhhi0KSBRxb-
+[2025-08-08T19:09:46.836Z] 🔍 Session User: No user
+[2025-08-08T19:09:46.846Z] 📝 GET /img/default-activity.jpg - Session ID: 09C5aMz8Ru0QV2ddKLfu-uBd4v123zy1
+[2025-08-08T19:09:46.851Z] 🔍 Session User: No user
+[2025-08-08T19:09:47.265Z] 📝 GET /img/default-activity.jpg - Session ID: Jhz9hwW9vBbCWiHVvL1zjICRnDrd_5IY
+[2025-08-08T19:09:47.273Z] 🔍 Session User: No user
+[2025-08-08T19:09:47.653Z] 📝 GET /img/default-activity.jpg - Session ID: jrZywT3edDs2t8S1pxK6m7V-A2ittikI
+[2025-08-08T19:09:47.653Z] 🔍 Session User: No user
+[2025-08-08T19:09:47.664Z] 📝 GET /img/default-activity.jpg - Session ID: eMRWXxA21MyIhN6OWPslTvzgKBHVNQd2
+[2025-08-08T19:09:47.672Z] 🔍 Session User: No user
+[2025-08-08T19:09:47.708Z] 📝 GET /img/default-activity.jpg - Session ID: aSTB-q65MUSRBYfn4AntPiOr-aaz6pgp
+[2025-08-08T19:09:47.719Z] 🔍 Session User: No user
+[2025-08-08T19:09:47.779Z] 📝 GET /img/default-activity.jpg - Session ID: EwL64Vt-EsEx-o0n2secpI5CNfFt7hih
+[2025-08-08T19:09:47.785Z] 🔍 Session User: No user
+[2025-08-08T19:09:48.067Z] 📝 GET /img/default-activity.jpg - Session ID: 3l0jkiumeeEDZJUeBf1A_MjcHG2Hj7mP
+[2025-08-08T19:09:48.068Z] 🔍 Session User: No user
+[2025-08-08T19:09:48.313Z] 📝 GET /img/default-activity.jpg - Session ID: WBDMvI4yE52o7KJtUG-949Kssub1bBgB
+[2025-08-08T19:09:48.315Z] 🔍 Session User: No user
+[2025-08-08T19:09:48.652Z] 📝 GET /img/default-activity.jpg - Session ID: EPmm_vLlsc8nYZSSUf0awepZHSiQ_2XO
+[2025-08-08T19:09:48.653Z] 🔍 Session User: No user
+[2025-08-08T19:09:48.665Z] 📝 GET /img/default-activity.jpg - Session ID: SniajGlpO4QkoRX52jjixaICYteYIUDK
+[2025-08-08T19:09:48.668Z] 🔍 Session User: No user
+[2025-08-08T19:09:48.697Z] 📝 GET /img/default-activity.jpg - Session ID: 9ntWm44cWr2eyMZJDQhyC7DEoJpCYuRx
+[2025-08-08T19:09:48.702Z] 🔍 Session User: No user
+[2025-08-08T19:09:48.733Z] 📝 GET /img/default-activity.jpg - Session ID: 2ISsS34xjiFn_KJjcr8qjIqLo3CbQw_8
+[2025-08-08T19:09:48.737Z] 🔍 Session User: No user
+[2025-08-08T19:09:49.010Z] 📝 GET /img/default-activity.jpg - Session ID: FNxbg3S8Xl4Vljtl1j04aQnwdrMGFOF4
+[2025-08-08T19:09:49.012Z] 🔍 Session User: No user
+[2025-08-08T19:09:49.262Z] 📝 GET /img/default-activity.jpg - Session ID: T_xU6n_72_zmgoOvKrxkb5x7hJ-5vh3q
+[2025-08-08T19:09:49.266Z] 🔍 Session User: No user
+[2025-08-08T19:09:49.506Z] 📝 GET /img/default-activity.jpg - Session ID: F7fh9uZ9aIZXjJezfx8G29u03ok3kwod
+[2025-08-08T19:09:49.509Z] 🔍 Session User: No user
+[2025-08-08T19:09:49.766Z] 📝 GET /img/default-activity.jpg - Session ID: bkrJqarJ__WTwBTCdapexUHNwslePyU6
+[2025-08-08T19:09:49.767Z] 🔍 Session User: No user
+[2025-08-08T19:09:49.788Z] 📝 GET /img/default-activity.jpg - Session ID: lJ4XHxQz7g2MC3ioqtHVzBZMDibz2TGE
+[2025-08-08T19:09:49.790Z] 🔍 Session User: No user
+[2025-08-08T19:09:50.033Z] 📝 GET /img/default-activity.jpg - Session ID: UXZ2yMRNJfBJ8yY6Mwv-jR_g2s_vCv09
+[2025-08-08T19:09:50.036Z] 🔍 Session User: No user
+[2025-08-08T19:09:50.280Z] 📝 GET /img/default-activity.jpg - Session ID: ASpZwXnAnVm7Jl21NxVT0c-YKQVrpQzh
+[2025-08-08T19:09:50.281Z] 🔍 Session User: No user
+[2025-08-08T19:09:50.290Z] 📝 GET /img/default-activity.jpg - Session ID: sas57aU8NdgmtAsfNJGc5nk3sOqHEFJp
+[2025-08-08T19:09:50.291Z] 🔍 Session User: No user
+[2025-08-08T19:09:50.307Z] 📝 GET /img/default-activity.jpg - Session ID: s8yuahu4wxyTB4bPpZbPhj-rq_vJlQHR
+[2025-08-08T19:09:50.311Z] 🔍 Session User: No user
+[2025-08-08T19:09:50.331Z] 📝 GET /img/default-activity.jpg - Session ID: Hnr1r367puh1EUMHIcupA0CfkeAdqaga
+[2025-08-08T19:09:50.349Z] 🔍 Session User: No user
+[2025-08-08T19:09:50.439Z] 📝 GET /img/default-activity.jpg - Session ID: C9yEYu_l_XPMF1cxcRm7gTC5ukr5ZHXG
+[2025-08-08T19:09:50.444Z] 🔍 Session User: No user
+[2025-08-08T19:09:50.489Z] 📝 GET /img/default-activity.jpg - Session ID: Gcz94tMZlMx03FUxRAldKmLretIDUYYC
+[2025-08-08T19:09:50.494Z] 🔍 Session User: No user
+[2025-08-08T19:09:50.762Z] 📝 GET /img/default-activity.jpg - Session ID: JS1jFtLw-Ucyozg6TiaEbJTX1Z_H8DRA
+[2025-08-08T19:09:50.762Z] 🔍 Session User: No user
+[2025-08-08T19:09:51.010Z] 📝 GET /img/default-activity.jpg - Session ID: EsGf4wMhi3AJBC25ZVqK7i27WTWBR8aj
+[2025-08-08T19:09:51.020Z] 🔍 Session User: No user
+[2025-08-08T19:09:51.266Z] 📝 GET /img/default-activity.jpg - Session ID: jfuG21VXix8btBOpMFGZQx8PEGDgTE1Y
+[2025-08-08T19:09:51.270Z] 🔍 Session User: No user
+[2025-08-08T19:09:51.287Z] 📝 GET /img/default-activity.jpg - Session ID: lCz7-fRWBU6KoAZ17MiZ5TL1G1Wi7WqW
+[2025-08-08T19:09:51.291Z] 🔍 Session User: No user
+[2025-08-08T19:09:51.554Z] 📝 GET /img/default-activity.jpg - Session ID: VZVgeGHAzy7BC1Z0xEMeR2FebOqfi7xI
+[2025-08-08T19:09:51.555Z] 🔍 Session User: No user
+[2025-08-08T19:09:51.808Z] 📝 GET /img/default-activity.jpg - Session ID: W2HZbCPd4xqJQvN9wCG_1QjWBc0N7psR
+[2025-08-08T19:09:51.814Z] 🔍 Session User: No user
+[2025-08-08T19:09:52.053Z] 📝 GET /img/default-activity.jpg - Session ID: eimiyuTzektfNChJB4D5fL_Q5eCDQA9b
+[2025-08-08T19:09:52.054Z] 🔍 Session User: No user
+[2025-08-08T19:09:52.317Z] 📝 GET /img/default-activity.jpg - Session ID: ikq6GnEV-WRjpCKp3OdKt3Ug7apkAAA5
+[2025-08-08T19:09:52.317Z] 🔍 Session User: No user
+[2025-08-08T19:09:52.334Z] 📝 GET /img/default-activity.jpg - Session ID: Zdrjl1XtdVd0Xx5Ez5MBaHa8VTq-64FV
+[2025-08-08T19:09:52.337Z] 🔍 Session User: No user
+[2025-08-08T19:09:52.579Z] 📝 GET /img/default-activity.jpg - Session ID: mbPbPIPdyRaTBz7uNANyayvdwWkXxsrk
+[2025-08-08T19:09:52.580Z] 🔍 Session User: No user
+[2025-08-08T19:09:52.831Z] 📝 GET /img/default-activity.jpg - Session ID: tmz0AcyLOw9Pk3F9JUSMhNS4Sx4Wgblt
+[2025-08-08T19:09:52.848Z] 🔍 Session User: No user
+[2025-08-08T19:09:53.119Z] 📝 GET /img/default-activity.jpg - Session ID: FTp63XEJi9lcxPd64GaHCfekduGo5kKp
+[2025-08-08T19:09:53.121Z] 🔍 Session User: No user
+[2025-08-08T19:09:53.390Z] 📝 GET /img/default-activity.jpg - Session ID: 11N_mh8Rz8JuSRSRGu_R5x6tAg2Cguca
+[2025-08-08T19:09:53.393Z] 🔍 Session User: No user
+[2025-08-08T19:09:53.403Z] 📝 GET /img/default-activity.jpg - Session ID: Kh6gs9F4YpFMoi-heG8tK6oVvgbUBU-p
+[2025-08-08T19:09:53.403Z] 🔍 Session User: No user
+[2025-08-08T19:09:53.873Z] 📝 GET /img/default-activity.jpg - Session ID: ShBDFFX6C1Vi3DIpDBOFpm0YYWlj0Skj
+[2025-08-08T19:09:53.877Z] 🔍 Session User: No user
+[2025-08-08T19:09:54.180Z] 📝 GET /img/default-activity.jpg - Session ID: qB2qB1i0V-3hr_TWreAzgD9rwwrgk6e9
+[2025-08-08T19:09:54.182Z] 🔍 Session User: No user
+[2025-08-08T19:09:54.507Z] 📝 GET /img/default-activity.jpg - Session ID: ofLSrmf-xaysBLa1o8dKRhfxs0aiimDY
+[2025-08-08T19:09:54.513Z] 🔍 Session User: No user
+[2025-08-08T19:09:54.526Z] 📝 GET /img/default-activity.jpg - Session ID: HKfHbJpnLQhv1EcmeI35nB7l_emR3zkJ
+[2025-08-08T19:09:54.532Z] 🔍 Session User: No user
+[2025-08-08T19:09:54.859Z] 📝 GET /img/default-activity.jpg - Session ID: x_7PwxOg51dF8vqTS0UAq1rlDaWFmTrj
+[2025-08-08T19:09:54.860Z] 🔍 Session User: No user
+[2025-08-08T19:09:55.149Z] 📝 GET /img/default-activity.jpg - Session ID: UH9G-guK6jWPOrkDQuYAMiWzMwPq6W9u
+[2025-08-08T19:09:55.151Z] 🔍 Session User: No user
+[2025-08-08T19:09:55.490Z] 📝 GET /img/default-activity.jpg - Session ID: In_snCcNACZNgtM3sUJSqvgEZ30qrYG2
+[2025-08-08T19:09:55.499Z] 🔍 Session User: No user
+[2025-08-08T19:09:55.778Z] 📝 GET /img/default-activity.jpg - Session ID: dmzQY4x1lP1SAQvAm9zEdvh2inCY6FwK
+[2025-08-08T19:09:55.779Z] 🔍 Session User: No user
+[2025-08-08T19:09:55.810Z] 📝 GET /img/default-activity.jpg - Session ID: -nd_lzuAZ4WmF3Euod94cPyPWwTZdRcV
+[2025-08-08T19:09:55.816Z] 🔍 Session User: No user
+[2025-08-08T19:09:56.081Z] 📝 GET /img/default-activity.jpg - Session ID: Iv5cmfqCRyZhOd2v_8iP7wpRIWUE5b7X
+[2025-08-08T19:09:56.081Z] 🔍 Session User: No user
+[2025-08-08T19:09:56.397Z] 📝 GET /img/default-activity.jpg - Session ID: qmN6ltolOJiQ3SHyYGD4XZZbRX69g9PM
+[2025-08-08T19:09:56.405Z] 🔍 Session User: No user
+[2025-08-08T19:09:56.659Z] 📝 GET /img/default-activity.jpg - Session ID: XlNarRND41jj3utl-rhNjIIoTMNffZNH
+[2025-08-08T19:09:56.662Z] 🔍 Session User: No user
+[2025-08-08T19:09:56.982Z] 📝 GET /img/default-activity.jpg - Session ID: KOcP0efayJGA_AdHmzpAil7VInNrsqtR
+[2025-08-08T19:09:57.005Z] 🔍 Session User: No user
+[2025-08-08T19:09:57.024Z] 📝 GET /img/default-activity.jpg - Session ID: vMWLuNw6ahTJAEuM1yWsTF4kY8Fl2r1t
+[2025-08-08T19:09:57.027Z] 🔍 Session User: No user
+[2025-08-08T19:09:57.089Z] 📝 GET /img/default-activity.jpg - Session ID: vTWgrKs1jSzKzyccSP4-jP1OqGVAhaTf
+[2025-08-08T19:09:57.105Z] 🔍 Session User: No user
+[2025-08-08T19:09:57.170Z] 📝 GET /img/default-activity.jpg - Session ID: eNPzKS7MlciHdoe3mJJBj4_JN5E9ugzf
+[2025-08-08T19:09:57.182Z] 🔍 Session User: No user
+[2025-08-08T19:09:57.279Z] 📝 GET /img/default-activity.jpg - Session ID: L8RC_3dAoJRnm3k8jCA5QOv8FMcMiHpH
+[2025-08-08T19:09:57.280Z] 🔍 Session User: No user
+[2025-08-08T19:09:57.314Z] 📝 GET /img/default-activity.jpg - Session ID: zc42BHE-kNoqaMV_FW3A7xj7UELM3rMg
+[2025-08-08T19:09:57.315Z] 🔍 Session User: No user
+[2025-08-08T19:09:57.374Z] 📝 GET /img/default-activity.jpg - Session ID: CFKj3srmsN_p-XXJbQSzjbWCt0Zdthiy
+[2025-08-08T19:09:57.375Z] 🔍 Session User: No user
+[2025-08-08T19:09:57.630Z] 📝 GET /img/default-activity.jpg - Session ID: 8gFZudRFFUQU7HViKpeS0czzJB1pZDbw
+[2025-08-08T19:09:57.631Z] 🔍 Session User: No user
+[2025-08-08T19:09:57.870Z] 📝 GET /img/default-activity.jpg - Session ID: EJWaAGt-UfNiRsfcyI2gZ2eW6jFda5AL
+[2025-08-08T19:09:57.874Z] 🔍 Session User: No user
+[2025-08-08T19:09:58.123Z] 📝 GET /img/default-activity.jpg - Session ID: 9mKcBLRIJpTnqH8dK4w2QljCmdmyzLE7
+[2025-08-08T19:09:58.123Z] 🔍 Session User: No user
+[2025-08-08T19:09:58.146Z] 📝 GET /img/default-activity.jpg - Session ID: LCqEZlejd6k7qz1s96mdj9RIOV1xTQ66
+[2025-08-08T19:09:58.148Z] 🔍 Session User: No user
+[2025-08-08T19:09:58.439Z] 📝 GET /img/default-activity.jpg - Session ID: nm17GTkYvB339S0GmUb74mM1svGGdVTO
+[2025-08-08T19:09:58.443Z] 🔍 Session User: No user
+[2025-08-08T19:09:58.712Z] 📝 GET /img/default-activity.jpg - Session ID: SOHMhLudr0bPNmw2S6lG0kowhxzGaP61
+[2025-08-08T19:09:58.713Z] 🔍 Session User: No user
+[2025-08-08T19:09:59.218Z] 📝 GET /img/default-activity.jpg - Session ID: y1kdDKFVlPAkA9RvYgDyuzcnP9O4zK3t
+[2025-08-08T19:09:59.220Z] 🔍 Session User: No user
+[2025-08-08T19:09:59.242Z] 📝 GET /img/default-activity.jpg - Session ID: e_WgSIRPYdDE1P0PeGr041XhO5AlaUfz
+[2025-08-08T19:09:59.255Z] 🔍 Session User: No user
+[2025-08-08T19:09:59.753Z] 📝 GET /img/default-activity.jpg - Session ID: _bi9lOVKjMYiPGELmd4O2-K9k-oHWjtf
+[2025-08-08T19:09:59.759Z] 🔍 Session User: No user
+[2025-08-08T19:09:59.774Z] 📝 GET /img/default-activity.jpg - Session ID: apPubN_uHMzFgsRZ3GI-7Iaej3JcFpyr
+[2025-08-08T19:09:59.793Z] 🔍 Session User: No user
+[2025-08-08T19:09:59.816Z] 📝 GET /img/default-activity.jpg - Session ID: pdkXTZBnszTnH5JT0gSZLz34qxLkUYXg
+[2025-08-08T19:09:59.818Z] 🔍 Session User: No user
+[2025-08-08T19:09:59.902Z] 📝 GET /img/default-activity.jpg - Session ID: OfeXBUuCo-QxzQrRcOWAdjYOn4VGORa5
+[2025-08-08T19:09:59.903Z] 🔍 Session User: No user
+[2025-08-08T19:10:00.177Z] 📝 GET /img/default-activity.jpg - Session ID: lTrfRrXrb6y2ARp7GIwQJsfo-LOiKrrf
+[2025-08-08T19:10:00.177Z] 🔍 Session User: No user
+[2025-08-08T19:10:00.491Z] 📝 GET /img/default-activity.jpg - Session ID: RkkAj9NI2XOqkhP-4BH_MWWpVm9Ww1PO
+[2025-08-08T19:10:00.493Z] 🔍 Session User: No user
+[2025-08-08T19:10:00.507Z] 📝 GET /img/default-activity.jpg - Session ID: w8t3yNRlGGYYfyPynT00c3uJccGaonAI
+[2025-08-08T19:10:00.509Z] 🔍 Session User: No user
+[2025-08-08T19:10:00.794Z] 📝 GET /img/default-activity.jpg - Session ID: _3Oa-35CwhrlY4ili4_BnXAlHVTOpYS3
+[2025-08-08T19:10:00.795Z] 🔍 Session User: No user
+[2025-08-08T19:10:01.093Z] 📝 GET /img/default-activity.jpg - Session ID: sJImuSYpo0dtpoW1HP2NpYlLH-Qi_VAh
+[2025-08-08T19:10:01.093Z] 🔍 Session User: No user
+[2025-08-08T19:10:01.342Z] 📝 GET /img/default-activity.jpg - Session ID: v4d5KqkGitX4O6QQ5r4ugGnVFrtBc4X9
+[2025-08-08T19:10:01.343Z] 🔍 Session User: No user
+[2025-08-08T19:10:01.618Z] 📝 GET /img/default-activity.jpg - Session ID: D9J8AK4vjp9DLjT_gzMlnl4FDyYOCbWb
+[2025-08-08T19:10:01.623Z] 🔍 Session User: No user
+[2025-08-08T19:10:01.874Z] 📝 GET /img/default-activity.jpg - Session ID: oGnfp2h1j2rzConTM5JDvqZep9uEGT0m
+[2025-08-08T19:10:01.875Z] 🔍 Session User: No user
+[2025-08-08T19:10:01.982Z] 📝 GET /img/default-activity.jpg - Session ID: wqivSITstTMYYZw_-Feen9Neep1c45OQ
+[2025-08-08T19:10:01.983Z] 🔍 Session User: No user
+[2025-08-08T19:10:02.356Z] 📝 GET /img/default-activity.jpg - Session ID: ZkMX-ss67gZ3Zh1P1NWnEl-O9s1EIZtP
+[2025-08-08T19:10:02.360Z] 🔍 Session User: No user
+[2025-08-08T19:10:02.704Z] 📝 GET /img/default-activity.jpg - Session ID: C_Kc-LHoVQUYtb0OQ9ut6HNSG4unTIm1
+[2025-08-08T19:10:02.704Z] 🔍 Session User: No user
+[2025-08-08T19:10:02.819Z] 📝 GET /img/default-activity.jpg - Session ID: 6hOPQdH3ZI7gJ-eiD3IlETjioD2M3gQe
+[2025-08-08T19:10:02.875Z] 🔍 Session User: No user
+[2025-08-08T19:10:03.285Z] 📝 GET /img/default-activity.jpg - Session ID: fHrCanicw9hwamnSbTnElLVrz-Yutg5g
+[2025-08-08T19:10:03.285Z] 🔍 Session User: No user
+[2025-08-08T19:10:03.294Z] 📝 GET /img/default-activity.jpg - Session ID: C8CR7vq70Fn-rmOfQPaUin9gDG_s36YO
+[2025-08-08T19:10:03.303Z] 🔍 Session User: No user
+[2025-08-08T19:10:03.590Z] 📝 GET /img/default-activity.jpg - Session ID: fL_VtYdjmdsWM2Dj3TwGlWNBBwu4Cfag
+[2025-08-08T19:10:03.591Z] 🔍 Session User: No user
+[2025-08-08T19:10:03.898Z] 📝 GET /img/default-activity.jpg - Session ID: 8x3u_0c2NZBowjeNcST0gmSu5w6MD1aM
+[2025-08-08T19:10:03.904Z] 🔍 Session User: No user
+[2025-08-08T19:10:04.170Z] 📝 GET /img/default-activity.jpg - Session ID: 9jYRO-XcGPIbMmWw_hLR0RrwIM-JVZo7
+[2025-08-08T19:10:04.170Z] 🔍 Session User: No user
+[2025-08-08T19:10:04.535Z] 📝 GET /img/default-activity.jpg - Session ID: 7WYJVZcNmerIQWTXhJr5DL16RYb70mud
+[2025-08-08T19:10:04.536Z] 🔍 Session User: No user
+[2025-08-08T19:10:04.853Z] 📝 GET /img/default-activity.jpg - Session ID: UGcl4n1ZRb8Oa5u7gCtfUGJUD5SM8T-7
+[2025-08-08T19:10:04.853Z] 🔍 Session User: No user
+[2025-08-08T19:10:04.886Z] 📝 GET /img/default-activity.jpg - Session ID: Q7zvUci4x1OfN_lU2Q1D3mZTdHHSwP8P
+[2025-08-08T19:10:04.898Z] 🔍 Session User: No user
+[2025-08-08T19:10:05.220Z] 📝 GET /img/default-activity.jpg - Session ID: XPoFxzzNvM8epm44ftP61vZJzFCc2ma8
+[2025-08-08T19:10:05.221Z] 🔍 Session User: No user
+[2025-08-08T19:10:05.240Z] 📝 GET /img/default-activity.jpg - Session ID: xUZYnNHqnXLFu_aqd108ZhJopOQZfm69
+[2025-08-08T19:10:05.252Z] 🔍 Session User: No user
+[2025-08-08T19:10:05.580Z] 📝 GET /img/default-activity.jpg - Session ID: KnKiMlBoFrv-SV94pQiyHmvf74CqJV39
+[2025-08-08T19:10:05.582Z] 🔍 Session User: No user
+[2025-08-08T19:10:05.632Z] 📝 GET /img/default-activity.jpg - Session ID: UOK7wEjOovyyYNlvNuJhGH_MfKfhqh7V
+[2025-08-08T19:10:05.633Z] 🔍 Session User: No user
+[2025-08-08T19:10:05.647Z] 📝 GET /img/default-activity.jpg - Session ID: NYAtOcFLpaPyZadQV2-9DYNg3CbAjGDV
+[2025-08-08T19:10:05.655Z] 🔍 Session User: No user
+[2025-08-08T19:10:05.988Z] 📝 GET /img/default-activity.jpg - Session ID: k61-Oy_IvT074BwKiiJI71sCc00mPC8P
+[2025-08-08T19:10:05.999Z] 🔍 Session User: No user
+[2025-08-08T19:10:06.011Z] 📝 GET /img/default-activity.jpg - Session ID: B16rA2glYrCfVtVzephfj6FMbe62cGbC
+[2025-08-08T19:10:06.020Z] 🔍 Session User: No user
+[2025-08-08T19:10:06.052Z] 📝 GET /img/default-activity.jpg - Session ID: iJcx_Kko5FfZHaTukMn2DNK71AnW5kV6
+[2025-08-08T19:10:06.053Z] 🔍 Session User: No user
+[2025-08-08T19:10:06.079Z] 📝 GET /img/default-activity.jpg - Session ID: gtrztmPaj_eCdXH9sXhzvbC_FvnJDZ1b
+[2025-08-08T19:10:06.080Z] 🔍 Session User: No user
+[2025-08-08T19:10:06.538Z] 📝 GET /img/default-activity.jpg - Session ID: 0vYz4Ptzk2XIQz0fUwRAYUUPXsDT0AB2
+[2025-08-08T19:10:06.579Z] 🔍 Session User: No user
+[2025-08-08T19:10:06.774Z] 📝 GET /img/default-activity.jpg - Session ID: 0YspyrGk79PN3Lqc7_-fXFwX1u96ze04
+[2025-08-08T19:10:06.781Z] 🔍 Session User: No user
+[2025-08-08T19:10:06.814Z] 📝 GET /img/default-activity.jpg - Session ID: fBedf8mbJEKytnpPCnd6cPV2iREhwshC
+[2025-08-08T19:10:06.816Z] 🔍 Session User: No user
+[2025-08-08T19:10:06.832Z] 📝 GET /img/default-activity.jpg - Session ID: ikj4o0cSXFGjD5A0vjg_30Yrp_eYwzdk
+[2025-08-08T19:10:06.834Z] 🔍 Session User: No user
+[2025-08-08T19:10:07.132Z] 📝 GET /img/default-activity.jpg - Session ID: 1G0Tv1Iy_S_bBR7OMKCaaiZqT8Cy37ZG
+[2025-08-08T19:10:07.136Z] 🔍 Session User: No user
+[2025-08-08T19:10:07.159Z] 📝 GET /img/default-activity.jpg - Session ID: ZGV6TlO1nWfNdPYtMTrcZGVk5Y8kzwan
+[2025-08-08T19:10:07.168Z] 🔍 Session User: No user
+[2025-08-08T19:10:07.484Z] 📝 GET /img/default-activity.jpg - Session ID: OWGmCam-ZC5_iAfuOG3w93UoZbFvBDra
+[2025-08-08T19:10:07.484Z] 🔍 Session User: No user
+[2025-08-08T19:10:07.537Z] 📝 GET /img/default-activity.jpg - Session ID: QMpB4-257iuqDHXWh79R5rdUMqZW-EHj
+[2025-08-08T19:10:07.554Z] 🔍 Session User: No user
+[2025-08-08T19:10:07.937Z] 📝 GET /img/default-activity.jpg - Session ID: kJdMSw5ugcYpb0TcaG8o6lWBh6F3S82I
+[2025-08-08T19:10:07.937Z] 🔍 Session User: No user
+[2025-08-08T19:10:07.951Z] 📝 GET /img/default-activity.jpg - Session ID: DEKE2BKyUnOFMluFqVW_VafPZFp_Olba
+[2025-08-08T19:10:07.969Z] 🔍 Session User: No user
+[2025-08-08T19:10:08.340Z] 📝 GET /img/default-activity.jpg - Session ID: wqBoR_vmqY4oSwqSxrNmplCcrJFafyBr
+[2025-08-08T19:10:08.342Z] 🔍 Session User: No user
+[2025-08-08T19:10:08.959Z] 📝 GET /img/default-activity.jpg - Session ID: 5_3fuXuLTfAyinK0yJNTJWu7D04ZVnMs
+[2025-08-08T19:10:08.963Z] 🔍 Session User: No user
+[2025-08-08T19:10:09.318Z] 📝 GET /img/default-activity.jpg - Session ID: RQ8jEzztjlcYYp-jfe9Y6IDjoSG96akL
+[2025-08-08T19:10:09.319Z] 🔍 Session User: No user
+[2025-08-08T19:10:09.630Z] 📝 GET /img/default-activity.jpg - Session ID: Euzbq41TtPE38MLaVTS59Fy2NGKrgK7e
+[2025-08-08T19:10:09.631Z] 🔍 Session User: No user
+[2025-08-08T19:10:09.642Z] 📝 GET /img/default-activity.jpg - Session ID: ryfnPIayVdSg0tPbDneecE8EDmr5_i_-
+[2025-08-08T19:10:09.664Z] 🔍 Session User: No user
+[2025-08-08T19:10:09.967Z] 📝 GET /img/default-activity.jpg - Session ID: V0xZM4P3lphuvKBv2AVMeoGGOzfqu--d
+[2025-08-08T19:10:09.982Z] 🔍 Session User: No user
+[2025-08-08T19:10:09.997Z] 📝 GET /img/default-activity.jpg - Session ID: mO4irv0xKSbLcK-U4fWrxgZ_JblbwmVl
+[2025-08-08T19:10:09.997Z] 🔍 Session User: No user
+[2025-08-08T19:10:10.029Z] 📝 GET /img/default-activity.jpg - Session ID: 8WLZxHZFtgLbzvWLosqG7r6xUDoqYOTG
+[2025-08-08T19:10:10.032Z] 🔍 Session User: No user
+[2025-08-08T19:10:10.046Z] 📝 GET /img/default-activity.jpg - Session ID: UnJLYCfQ9jzT3dsowBxBEpC_ldvz4y-r
+[2025-08-08T19:10:10.047Z] 🔍 Session User: No user
+[2025-08-08T19:10:10.064Z] 📝 GET /img/default-activity.jpg - Session ID: -3RVPoVsJxScIytpZp2BzTfkByL4iAV-
+[2025-08-08T19:10:10.075Z] 🔍 Session User: No user
+[2025-08-08T19:10:10.403Z] 📝 GET /img/default-activity.jpg - Session ID: ikgERI7WzAI08PkqvhQdpW0g8-Zee2Df
+[2025-08-08T19:10:10.410Z] 🔍 Session User: No user
+[2025-08-08T19:10:10.667Z] 📝 GET /img/default-activity.jpg - Session ID: agC4ODNxakbUjZt4DzXkbK0nXjWLYxFn
+[2025-08-08T19:10:10.669Z] 🔍 Session User: No user
+[2025-08-08T19:10:10.899Z] 📝 GET /img/default-activity.jpg - Session ID: wbiGyfsUCquSzS4GYqwzHVJONJbW6VJJ
+[2025-08-08T19:10:10.905Z] 🔍 Session User: No user
+[2025-08-08T19:10:10.916Z] 📝 GET /img/default-activity.jpg - Session ID: 9lvSSzgvXdghXqH_ciI0TOQ2APqIzZjN
+[2025-08-08T19:10:10.916Z] 🔍 Session User: No user
+[2025-08-08T19:10:10.933Z] 📝 GET /img/default-activity.jpg - Session ID: G4QCl5pNRCSjZ9t0XT-YCK2q32vySwrI
+[2025-08-08T19:10:10.934Z] 🔍 Session User: No user
+[2025-08-08T19:10:10.958Z] 📝 GET /img/default-activity.jpg - Session ID: d4j16NSKO2DFSrTK0qpgfZ9r54C6umVK
+[2025-08-08T19:10:10.966Z] 🔍 Session User: No user
+[2025-08-08T19:10:11.229Z] 📝 GET /img/default-activity.jpg - Session ID: Yr28FOF4yE45C9GEAPXjQR9PkbLktO9i
+[2025-08-08T19:10:11.230Z] 🔍 Session User: No user
+[2025-08-08T19:10:11.244Z] 📝 GET /img/default-activity.jpg - Session ID: tCsL4uA-yHkySxv3CVNFw41jqXTZ2B7O
+[2025-08-08T19:10:11.249Z] 🔍 Session User: No user
+[2025-08-08T19:10:11.581Z] 📝 GET /img/default-activity.jpg - Session ID: RQG_MNSbzC6OTZkreHS6F0XYQVhWdWNg
+[2025-08-08T19:10:11.582Z] 🔍 Session User: No user
+[2025-08-08T19:10:11.918Z] 📝 GET /img/default-activity.jpg - Session ID: OzZ8Yee1107W_wglIUGnntTbiGPGgnnQ
+[2025-08-08T19:10:11.919Z] 🔍 Session User: No user
+[2025-08-08T19:10:11.927Z] 📝 GET /img/default-activity.jpg - Session ID: y9KXqTNAUvMBjaQlmdjU8fh-6zQLpSF8
+[2025-08-08T19:10:11.928Z] 🔍 Session User: No user
+[2025-08-08T19:10:12.165Z] 📝 GET /img/default-activity.jpg - Session ID: x1TLlumilKFzr4NBmS0YcwBQxAZHWFtD
+[2025-08-08T19:10:12.166Z] 🔍 Session User: No user
+[2025-08-08T19:10:12.396Z] 📝 GET /img/default-activity.jpg - Session ID: pI5p1gnO37wMxgb2kCVdJd0y6XZpjd6K
+[2025-08-08T19:10:12.396Z] 🔍 Session User: No user
+[2025-08-08T19:10:12.628Z] 📝 GET /img/default-activity.jpg - Session ID: 0xAm4r_wmUPdZHqM7MfPlgRSHLuzmVzo
+[2025-08-08T19:10:12.628Z] 🔍 Session User: No user
+[2025-08-08T19:10:12.882Z] 📝 GET /img/default-activity.jpg - Session ID: om-rDXS_X_2lW0BAWIVk_mXybSEkEgcD
+[2025-08-08T19:10:12.888Z] 🔍 Session User: No user
+[2025-08-08T19:10:13.123Z] 📝 GET /img/default-activity.jpg - Session ID: HY2Q-E8edKnJoj-WWjO6RVX5-yiBGUZ7
+[2025-08-08T19:10:13.124Z] 🔍 Session User: No user
+[2025-08-08T19:10:13.135Z] 📝 GET /img/default-activity.jpg - Session ID: rTybDSHL2wQeU5IhvYdtmA1BuzZXCiiP
+[2025-08-08T19:10:13.141Z] 🔍 Session User: No user
+[2025-08-08T19:10:13.399Z] 📝 GET /img/default-activity.jpg - Session ID: PikbpoWX_mS4_OHW8jqVuBHB-7Z7F_hj
+[2025-08-08T19:10:13.399Z] 🔍 Session User: No user
+[2025-08-08T19:10:13.636Z] 📝 GET /img/default-activity.jpg - Session ID: aHh98xDysUxMPJ7VasvZf7g2XEsyP8rn
+[2025-08-08T19:10:13.636Z] 🔍 Session User: No user
+[2025-08-08T19:10:13.946Z] 📝 GET /img/default-activity.jpg - Session ID: I4-F5GBaldf4D1EMPukyr3h2NJ9bXgd_
+[2025-08-08T19:10:13.946Z] 🔍 Session User: No user
+[2025-08-08T19:10:14.294Z] 📝 GET /img/default-activity.jpg - Session ID: dFfhSKaMYZkFR0zEcZp-6FXllSqcbv4z
+[2025-08-08T19:10:14.298Z] 🔍 Session User: No user
+[2025-08-08T19:10:14.590Z] 📝 GET /img/default-activity.jpg - Session ID: UGABgdRLo2mbSwM9PsBUmge80bFaB50W
+[2025-08-08T19:10:14.591Z] 🔍 Session User: No user
+[2025-08-08T19:10:14.602Z] 📝 GET /img/default-activity.jpg - Session ID: rVJxaaP0VDC-j8i3eHij8ZcE2PvEtKTi
+[2025-08-08T19:10:14.604Z] 🔍 Session User: No user
+[2025-08-08T19:10:14.873Z] 📝 GET /img/default-activity.jpg - Session ID: JHWiwP9ZV5RnP21OqO0jO5NSrm12zS6h
+[2025-08-08T19:10:14.876Z] 🔍 Session User: No user
+[2025-08-08T19:10:15.139Z] 📝 GET /img/default-activity.jpg - Session ID: WbCLRppQZ_mcDSz1cLA1GxzP-MGSwt-o
+[2025-08-08T19:10:15.142Z] 🔍 Session User: No user
+[2025-08-08T19:10:15.390Z] 📝 GET /img/default-activity.jpg - Session ID: pCMoTvIYX2rsKM26no9WGKIVzf4lk3Oe
+[2025-08-08T19:10:15.408Z] 🔍 Session User: No user
+[2025-08-08T19:10:15.460Z] 📝 GET /img/default-activity.jpg - Session ID: 88GT6IlvOofEQNALK8lZqqcmIpbKGr9k
+[2025-08-08T19:10:15.695Z] 🔍 Session User: No user
+[2025-08-08T19:10:15.985Z] 📝 GET /img/default-activity.jpg - Session ID: Oesx8-qLtQgEtBT8DKdhr7aSorCjbxGF
+[2025-08-08T19:10:16.019Z] 🔍 Session User: No user
+[2025-08-08T19:10:16.251Z] 📝 GET /img/default-activity.jpg - Session ID: 4pkxQt9JwxgJaxjsmH2hrGhIzlsxGjyT
+[2025-08-08T19:10:16.254Z] 🔍 Session User: No user
+[2025-08-08T19:10:16.493Z] 📝 GET /img/default-activity.jpg - Session ID: hDUquotBD7DGMDRAf1W9VwfqKB4TFlYX
+[2025-08-08T19:10:16.494Z] 🔍 Session User: No user
+[2025-08-08T19:10:16.510Z] 📝 GET /img/default-activity.jpg - Session ID: wYNIYD2OryGanV_L2nICf0fOOJDRHsrL
+[2025-08-08T19:10:16.517Z] 🔍 Session User: No user
+[2025-08-08T19:10:16.756Z] 📝 GET /img/default-activity.jpg - Session ID: pL6x16cV9N3_lvv1TMMMm_Uat2s_gm0-
+[2025-08-08T19:10:16.760Z] 🔍 Session User: No user
+[2025-08-08T19:10:17.014Z] 📝 GET /img/default-activity.jpg - Session ID: nHAgxelnonyur1iN7zGi4KOVAUhW1TLT
+[2025-08-08T19:10:17.020Z] 🔍 Session User: No user
+[2025-08-08T19:10:17.040Z] 📝 GET /img/default-activity.jpg - Session ID: Pop_XJjRkuntEymynmjTEJv51UPMPjxg
+[2025-08-08T19:10:17.043Z] 🔍 Session User: No user
+[2025-08-08T19:10:17.065Z] 📝 GET /img/default-activity.jpg - Session ID: QqgE-h9hDdbOVKZlN3u7v1yv3IxW9Yjl
+[2025-08-08T19:10:17.067Z] 🔍 Session User: No user
+[2025-08-08T19:10:17.343Z] 📝 GET /img/default-activity.jpg - Session ID: zob4je6ejverX2-FOVYc4cO3sE5QRRfE
+[2025-08-08T19:10:17.345Z] 🔍 Session User: No user
+[2025-08-08T19:10:17.586Z] 📝 GET /img/default-activity.jpg - Session ID: rOv-hpAletbl44asxO7txDssBJerdue8
+[2025-08-08T19:10:17.598Z] 🔍 Session User: No user
+[2025-08-08T19:10:17.838Z] 📝 GET /img/default-activity.jpg - Session ID: MK-Tbgnmx3M1x3WTSuHCr5hhyHQU7GZf
+[2025-08-08T19:10:17.838Z] 🔍 Session User: No user
+[2025-08-08T19:10:18.071Z] 📝 GET /img/default-activity.jpg - Session ID: KvAHVz2pbjUKe4y068e3xZLcqKKVMukC
+[2025-08-08T19:10:18.072Z] 🔍 Session User: No user
+[2025-08-08T19:10:18.340Z] 📝 GET /img/default-activity.jpg - Session ID: 0DZtXC52xIY3ORUKkM9HoXtu0OFDFn4q
+[2025-08-08T19:10:18.340Z] 🔍 Session User: No user
+[2025-08-08T19:10:18.608Z] 📝 GET /img/default-activity.jpg - Session ID: fsCQylnFHL5v0nqPjKvO-1-NKR7C8dKR
+[2025-08-08T19:10:18.609Z] 🔍 Session User: No user
+[2025-08-08T19:10:18.865Z] 📝 GET /img/default-activity.jpg - Session ID: LBL6pvG_lrW6sVBqZuAvRMzevDdPgucq
+[2025-08-08T19:10:18.866Z] 🔍 Session User: No user
+[2025-08-08T19:10:18.890Z] 📝 GET /img/default-activity.jpg - Session ID: MF7B1uRkZQcOoSjA02zCyApyEqSg7vCL
+[2025-08-08T19:10:18.890Z] 🔍 Session User: No user
+[2025-08-08T19:10:19.146Z] 📝 GET /img/default-activity.jpg - Session ID: 4y0OYdFuKC9QznMtHH_SeA-Gd1zdbcYu
+[2025-08-08T19:10:19.154Z] 🔍 Session User: No user
+[2025-08-08T19:10:19.417Z] 📝 GET /me - Session ID: h8FByYkfYqvHfQOylxDfk3dtlBQpP-uI
+[2025-08-08T19:10:19.424Z] 🔍 Session User: No user
+[2025-08-08T19:10:19.433Z] 📝 GET /img/default-activity.jpg - Session ID: eCSsXZTAz2ObTimPehPFPsHwthG2BhbW
+[2025-08-08T19:10:19.450Z] 🔍 Session User: No user
+[2025-08-08T19:10:19.747Z] 📝 GET /.well-known/appspecific/com.chrome.devtools.json - Session ID: CX9y-0qUZDj9jNtoLAl1iNlEShWgtSIU
+[2025-08-08T19:10:19.748Z] 🔍 Session User: No user
+[2025-08-08T19:12:30.972Z] 🚀 Servidor iniciado en http://localhost:3000
+[2025-08-08T19:12:33.893Z] 📝 GET / - Session ID: 3R3pzUqQQ0gYGdLDgas9EOtdeWrzqhvf
+[2025-08-08T19:12:33.922Z] 🔍 Session User: No user
+[2025-08-08T19:12:35.519Z] 📝 GET /api/check-session - Session ID: -QXoiHxHmIVWJA7mZ5YhJAoSTJOlDZH3
+[2025-08-08T19:12:35.529Z] 🔍 Session User: No user
+[2025-08-08T19:12:37.496Z] 📝 GET /login - Session ID: Hx-easiBcA7DgPzjWmsw3BNWkhNUC219
+[2025-08-08T19:12:37.497Z] 🔍 Session User: No user
+[2025-08-08T19:12:37.771Z] 📝 GET /api/check-session - Session ID: eXthWnMr3E9Lm0R7TPNFTie9NKa_pYmN
+[2025-08-08T19:12:37.818Z] 🔍 Session User: No user
+[2025-08-08T19:12:41.915Z] 📝 POST /login-supabase - Session ID: AaZdiWOBkhDRuLoxfJafhoXJsvGHHMe9
+[2025-08-08T19:12:41.916Z] 🔍 Session User: No user
+[2025-08-08T19:12:45.561Z] 📝 GET /profile - Session ID: d2nTMDgrgiCTedOfrrsuHr1_waXIUeNn
+[2025-08-08T19:12:45.562Z] 🔍 Session User: No user
+[2025-08-08T19:12:46.176Z] 📝 GET /api/check-session - Session ID: j6L7LN3TGlzmItYVjbnkY6HopPVFaLKo
+[2025-08-08T19:12:46.191Z] 🔍 Session User: No user
+[2025-08-08T19:12:51.313Z] 📝 GET /takeaction - Session ID: 430PrpMlVmbIzmGtiezQqCsJQSijC1Af
+[2025-08-08T19:12:51.313Z] 🔍 Session User: No user
+[2025-08-08T19:12:51.581Z] 📝 GET /api/check-session - Session ID: ZQGAcBNOk530B5DuMESFesvt_5Dh4qJ6
+[2025-08-08T19:12:51.581Z] 🔍 Session User: No user
+[2025-08-08T19:12:56.826Z] 📝 GET /me - Session ID: iMncOkVvqoF01Xc5pGtn3JbtfbuKvB6x
+[2025-08-08T19:12:56.847Z] 🔍 Session User: No user
+[2025-08-08T19:12:58.131Z] 📝 GET /me - Session ID: Bb8CfF3vOmlWy9wKmbCssKDFE5UCA2Ry
+[2025-08-08T19:12:58.132Z] 🔍 Session User: No user
+[2025-08-08T19:17:54.716Z] 🚀 Servidor iniciado en http://localhost:3000
+[2025-08-08T19:17:58.503Z] 📝 GET / - Session ID: C-fllVieomBGM9wZu4X3184KenlZMb4W
+[2025-08-08T19:17:58.521Z] 🔍 Session User: No user
+[2025-08-08T19:17:59.701Z] 📝 GET /api/check-session - Session ID: sSohD-JY6CQLlhr6Is70TOAZauvTROLj
+[2025-08-08T19:17:59.740Z] 🔍 Session User: No user
+[2025-08-08T19:18:02.279Z] 📝 GET /login - Session ID: hPWRvuF876k1TNWG2kN7ohQLljwR7rGU
+[2025-08-08T19:18:02.280Z] 🔍 Session User: No user
+[2025-08-08T19:18:02.697Z] 📝 GET /api/check-session - Session ID: 0Z1ysAEKD5GJ24stfyMBgOtk38uY0LMi
+[2025-08-08T19:18:02.698Z] 🔍 Session User: No user
+[2025-08-08T19:18:06.041Z] 📝 POST /login-supabase - Session ID: i8Pcf62XuX5lNf8huXS2VNsC841efiph
+[2025-08-08T19:18:06.042Z] 🔍 Session User: No user
+[2025-08-08T19:18:09.152Z] 📝 GET /profile - Session ID: bmyjK-ru5he3hCKi4FIF0HLrj9G7iJKx
+[2025-08-08T19:18:09.153Z] 🔍 Session User: No user
+[2025-08-08T19:18:09.522Z] 📝 GET /api/check-session - Session ID: 7NRd1Pe3aItmuDG4KpksuSAqW090N7-e
+[2025-08-08T19:18:09.523Z] 🔍 Session User: No user
+[2025-08-08T19:18:15.797Z] 📝 GET /me - Session ID: nFjqtw93vactkbDf3Ys-RDeS8haFNH_2
+[2025-08-08T19:18:15.801Z] 🔍 Session User: No user
+[2025-08-08T19:18:17.115Z] 📝 GET /img/cause-default.jpg - Session ID: tfxHE4jGcZur65HWtCQ2I3CUh9al03B7
+[2025-08-08T19:18:17.131Z] 🔍 Session User: No user
+[2025-08-08T19:18:17.358Z] 📝 GET /me - Session ID: I4tYPuFZw-0QFcscxM2Rsyg6XxkrhLRm
+[2025-08-08T19:18:17.406Z] 🔍 Session User: No user
+[2025-08-08T19:22:14.187Z] 🚀 Servidor iniciado en http://localhost:3000
+[2025-08-08T19:22:16.406Z] ✅ Conexión exitosa a PostgreSQL: [object Object]
+[2025-08-08T19:26:03.954Z] 🚀 Servidor iniciado en http://localhost:3000
+[2025-08-08T19:26:05.779Z] ✅ Conexión exitosa a PostgreSQL: [object Object]
+[2025-08-08T19:26:49.545Z] 📝 GET / - Session ID: Wv4e_GD4iyjSiAfchsKVpq-UXHu4SGt2
+[2025-08-08T19:26:49.546Z] 🔍 Session User: No user
+[2025-08-08T19:26:50.729Z] 📝 GET /api/check-session - Session ID: YTno_FNG4UZmRmBr4NC-slF-KD9AbNeb
+[2025-08-08T19:26:50.761Z] 🔍 Session User: No user
+[2025-08-08T19:27:08.620Z] 📝 GET / - Session ID: oAecz1iKP08-ftmyYdBbmz1FXMNOiTmr
+[2025-08-08T19:27:08.620Z] 🔍 Session User: No user
+[2025-08-08T19:27:45.051Z] 📝 GET /login - Session ID: jb63UVKi3iMCdsLkCjim2rAAGwN94Wla
+[2025-08-08T19:27:45.054Z] 🔍 Session User: No user
+[2025-08-08T19:27:47.866Z] 📝 POST /login-supabase - Session ID: ANe0sqZ-qF_ixk7peqlrOGYqGckpiP9v
+[2025-08-08T19:27:47.866Z] 🔍 Session User: No user
+[2025-08-08T19:27:50.960Z] 📝 GET /profile - Session ID: P5rWZpFpgyDsPXJ203WDp-rDwNY7FEum
+[2025-08-08T19:27:50.961Z] 🔍 Session User: No user
+[2025-08-08T19:27:51.511Z] 📝 GET /api/check-session - Session ID: aT3rE9xGvSn4J_QTOr41RerRc4TmSbtr
+[2025-08-08T19:27:51.512Z] 🔍 Session User: No user
+[2025-08-08T19:28:02.046Z] 📝 GET /img/cause-default.jpg - Session ID: uEpWLvcSjG16mLrx8QLeC_FqtPtO5yH7
+[2025-08-08T19:28:02.046Z] 🔍 Session User: No user
+[2025-08-08T19:34:54.968Z] 🚀 Servidor iniciado en http://localhost:3000
+[2025-08-08T19:34:56.520Z] ✅ Conexión exitosa a PostgreSQL: [object Object]
+[2025-08-08T19:35:59.237Z] 📝 GET / - Session ID: WHsHgJqRXkMd7snQRyIgyHOFo5nEPQhw
+[2025-08-08T19:35:59.240Z] 🔍 Session User: No user
+[2025-08-08T19:36:00.458Z] 📝 GET /api/check-session - Session ID: xJSiLO8jdztRSPgTocLZzkWcbQT9i--b
+[2025-08-08T19:36:00.517Z] 🔍 Session User: No user
+[2025-08-08T19:36:13.285Z] 📝 GET / - Session ID: XD93_-KxiqmnW7HYrayxhNUo6_lgN1Ii
+[2025-08-08T19:36:13.285Z] 🔍 Session User: No user
+[2025-08-08T19:36:20.000Z] 📝 GET /login - Session ID: zm9CeZwmPKLzffEfvc_2wZfQjmw8Gji6
+[2025-08-08T19:36:20.000Z] 🔍 Session User: No user
+[2025-08-08T19:36:25.040Z] 📝 POST /login-supabase - Session ID: pgDdVfemsZVyN1htrdYS-Ow_dw9h9OhM
+[2025-08-08T19:36:25.040Z] 🔍 Session User: No user
+[2025-08-08T19:36:28.601Z] 📝 GET /profile - Session ID: o8L2JkNxTg-p4fo0QjrIiea-ELVb5DH-
+[2025-08-08T19:36:28.602Z] 🔍 Session User: No user
+[2025-08-08T19:36:28.929Z] 📝 GET /api/check-session - Session ID: 61674Ukmat1qiuBor8VlTXyC8AQWBgg0
+[2025-08-08T19:36:28.970Z] 🔍 Session User: No user
+[2025-08-08T19:36:36.088Z] 📝 GET /me - Session ID: AlYH45897S3q5Kp_8cNeI6XMRGngITKM
+[2025-08-08T19:36:36.089Z] 🔍 Session User: No user
+[2025-08-08T19:36:36.761Z] 📝 GET /me - Session ID: 5qFoJQ6BAkKdvIElXe0ZGabjtk7T0mwg
+[2025-08-08T19:36:36.761Z] 🔍 Session User: No user
+[2025-08-08T19:37:21.152Z] 📝 GET /takeaction - Session ID: NteBBm_qzmThAKRgO96oJpIyfFjv_pef
+[2025-08-08T19:37:21.152Z] 🔍 Session User: No user
+[2025-08-08T19:37:21.453Z] 📝 GET /api/check-session - Session ID: vQy7iNSdj709Mt4VJ_XIsBZK9l3kUsgK
+[2025-08-08T19:37:21.462Z] 🔍 Session User: No user
+[2025-08-08T19:37:23.023Z] 📝 GET /login - Session ID: t9Ym9vA0prR7I730PArDrmKmQakC8f4l
+[2025-08-08T19:37:23.023Z] 🔍 Session User: No user
+[2025-08-08T19:37:23.349Z] 📝 GET /api/check-session - Session ID: 37PJuU4mbVNGSHca-W5OTBea2Rot01hR
+[2025-08-08T19:37:23.349Z] 🔍 Session User: No user
+[2025-08-08T19:37:27.365Z] 📝 POST /login-supabase - Session ID: MGWNqPJvrNbX9ibg0KCK-TCGBD1PJDHx
+[2025-08-08T19:37:27.366Z] 🔍 Session User: No user
+[2025-08-08T19:37:27.480Z] 📝 GET /.well-known/appspecific/com.chrome.devtools.json - Session ID: Kp5JjKPdG8zgt9eEYGxEiVCNBBWTR2U9
+[2025-08-08T19:37:27.481Z] 🔍 Session User: No user
+[2025-08-08T19:37:27.826Z] 📝 GET /js/lib/axios.min.js.map - Session ID: L4nUl4a3qhhpNUhCWEbqnUg9rKjk0Eem
+[2025-08-08T19:37:27.827Z] 🔍 Session User: No user
+[2025-08-08T19:37:30.273Z] 📝 GET /profile - Session ID: drwt6O1mMcD-ljx6fpeX7ptUW7F_UJe2
+[2025-08-08T19:37:30.273Z] 🔍 Session User: No user
+[2025-08-08T19:37:30.496Z] 📝 GET /.well-known/appspecific/com.chrome.devtools.json - Session ID: aiVE9_yA7qc03XQDPivojDUZPABwCMCH
+[2025-08-08T19:37:30.590Z] 🔍 Session User: No user
+[2025-08-08T19:37:30.995Z] 📝 GET /js/lib/axios.min.js.map - Session ID: ZIiOaQQis1aRmL2VoNI5armKxkl67jiJ
+[2025-08-08T19:37:31.005Z] 🔍 Session User: No user
+[2025-08-08T19:37:31.115Z] 📝 GET /api/check-session - Session ID: gOz8a2LmisSw2ZwdV6VMp0OM_K6ibkdA
+[2025-08-08T19:37:31.117Z] 🔍 Session User: No user
+[2025-08-08T19:37:40.206Z] 📝 GET /img/cause-default.jpg - Session ID: 07A-Dv120W1O9mHlLJLJyj4t5e0kYpoW
+[2025-08-08T19:37:40.281Z] 🔍 Session User: No user
+[2025-08-08T19:41:45.945Z] 📝 POST /api/session/keep-alive - Session ID: kK2dN0jh1rGVtPP117Z4J-y5gytkMICx
+[2025-08-08T19:41:45.970Z] 🔍 Session User: No user
+[2025-08-08T19:43:47.492Z] 🚀 Servidor iniciado en http://localhost:3000
+[2025-08-08T19:43:49.396Z] ✅ Conexión exitosa a PostgreSQL: [object Object]
+[2025-08-08T19:43:55.162Z] 📝 GET / - Session ID: K9rOTacbK8YFvLGnZoSjhtKpxo8RZQBw
+[2025-08-08T19:43:55.165Z] 🔍 Session User: No user
+[2025-08-08T19:43:56.892Z] 📝 GET /api/check-session - Session ID: hJjsylR8FvFpCHdUqWM8cAyckWaCGLrD
+[2025-08-08T19:43:56.904Z] 🔍 Session User: No user
+[2025-08-08T19:44:29.627Z] 🚀 Servidor iniciado en http://localhost:3000
+[2025-08-08T19:44:31.392Z] ✅ Conexión exitosa a PostgreSQL: [object Object]
+[2025-08-08T19:51:04.317Z] 🚀 Servidor iniciado en http://localhost:3000
+[2025-08-08T19:51:06.216Z] ✅ Conexión exitosa a PostgreSQL: [object Object]
+[2025-08-08T19:51:10.292Z] 📝 GET / - Session ID: _pRBOIF0_oXhPjEK7H48KG8Go5BPgOzW
+[2025-08-08T19:51:10.340Z] 🔍 Session User: No user
+[2025-08-08T19:51:11.942Z] 📝 GET /api/check-session - Session ID: OAj42fQSFcPf6wJvdUT-dV5ip361uMT5
+[2025-08-08T19:51:11.946Z] 🔍 Session User: No user
+[2025-08-08T19:51:18.449Z] 📝 GET / - Session ID: HBTFbwtjrOXg_h8jUcMuwDdegXWh-RGi
+[2025-08-08T19:51:18.450Z] 🔍 Session User: No user
+[2025-08-08T19:51:22.612Z] 📝 GET /login - Session ID: _q_DJyQz1rxf0O4p3XSJYGwEXJv5Gvfg
+[2025-08-08T19:51:22.613Z] 🔍 Session User: No user
+[2025-08-08T19:51:25.306Z] 📝 POST /login-supabase - Session ID: BRY-2NRfharrp46t3xlvegJ_rO1J-tDf
+[2025-08-08T19:51:25.306Z] 🔍 Session User: No user
+[2025-08-08T19:51:28.586Z] 📝 GET /profile - Session ID: 7cePlJAfzRgyWYw-o_g5Hh4Nw5waUeXj
+[2025-08-08T19:51:28.586Z] 🔍 Session User: No user
+[2025-08-08T19:51:29.089Z] 📝 GET /api/check-session - Session ID: rIUvHjvNrJMqixCpHENBcxAdhoT1JICg
+[2025-08-08T19:51:29.089Z] 🔍 Session User: No user
+[2025-08-08T19:51:34.833Z] 📝 GET /.well-known/appspecific/com.chrome.devtools.json - Session ID: IsztycH3vtWF8OlXlq1USKoF16CeO6g1
+[2025-08-08T19:51:34.861Z] 🔍 Session User: No user
+[2025-08-08T19:51:35.699Z] 📝 GET /js/lib/axios.min.js.map - Session ID: 0xqa4Ll4IXZ-5as_wBb1DNaIj2vvcww9
+[2025-08-08T19:51:35.726Z] 🔍 Session User: No user
+[2025-08-08T19:51:39.852Z] 📝 GET /img/cause-default.jpg - Session ID: 8r6BqADTw_drauvOBBwJYFopGS_a5gJp
+[2025-08-08T19:51:39.859Z] 🔍 Session User: No user
+[2025-08-08T19:58:23.943Z] 📝 POST /api/session/keep-alive - Session ID: 2IglOy6800_u3B4wpEXE_eT4cFoiWVrJ
+[2025-08-08T19:58:23.953Z] 🔍 Session User: No user
+[2025-08-08T20:12:40.966Z] 🚀 Servidor iniciado en http://localhost:3000
+[2025-08-08T20:12:57.687Z] 🚀 Servidor iniciado en http://localhost:3000
+[2025-08-08T20:12:59.387Z] ✅ PostgreSQL connection successful
+[2025-08-08T20:13:34.925Z] 📝 GET / - Session ID: ULVnF3wcMz2IoK68pSa2jZ4HYk_v5wIs
+[2025-08-08T20:13:34.932Z] 🔍 Session User: No user
+[2025-08-08T20:13:41.737Z] 📝 GET /api/check-session - Session ID: z8NBcSA-LmU2w3UawWZjOgvYSgbqFqQN
+[2025-08-08T20:13:41.772Z] 🔍 Session User: No user
+[2025-08-08T20:13:51.977Z] 📝 GET / - Session ID: fIUJ60saBdoLFaOLSzmSC-7w3K8MuDul
+[2025-08-08T20:13:51.978Z] 🔍 Session User: No user
+[2025-08-08T20:14:00.060Z] 📝 GET /login - Session ID: AHqLYvGmI6PKzCWPI6PWgH4IUHwp8Be6
+[2025-08-08T20:14:00.061Z] 🔍 Session User: No user
+[2025-08-08T20:14:06.092Z] 📝 POST /login-supabase - Session ID: kuN491EJmDQVtm_K4UJtMsAdtdM4Ek6Y
+[2025-08-08T20:14:06.093Z] 🔍 Session User: No user
+[2025-08-08T20:14:09.813Z] 📝 GET /profile - Session ID: p09tEbajTCVG1UnWd49cBHPAxCjh_6yf
+[2025-08-08T20:14:09.815Z] 🔍 Session User: No user
+[2025-08-08T20:14:10.499Z] 📝 GET /api/check-session - Session ID: nnJBIFYt16EnyQBt76lf8urAI8ZNrDn0
+[2025-08-08T20:14:10.515Z] 🔍 Session User: No user
+[2025-08-08T20:14:17.080Z] 📝 GET /img/cause-default.jpg - Session ID: D_xs6ta0it7v3A7IjS9diitn8DthRDko
+[2025-08-08T20:14:17.080Z] 🔍 Session User: No user
+[2025-08-08T20:14:31.186Z] 📝 GET /takeaction - Session ID: rHjgrXOxC4XwDRmcTIaLsFlRO98n-PEk
+[2025-08-08T20:14:31.186Z] 🔍 Session User: No user
+[2025-08-08T20:14:31.654Z] 📝 GET /api/check-session - Session ID: r5n7pI5x3Jz_YN53ISImCkZFjXPI0PJH
+[2025-08-08T20:14:31.669Z] 🔍 Session User: No user
+[2025-08-08T20:14:39.042Z] 📝 GET /.well-known/appspecific/com.chrome.devtools.json - Session ID: Tqd19olribV5mZ8VNLW_EfDppEyKMqy3
+[2025-08-08T20:14:39.059Z] 🔍 Session User: No user
+[2025-08-08T20:14:39.656Z] 📝 GET /js/lib/axios.min.js.map - Session ID: O3CNLSr9hkOzIVpG82jAKxw4TZX2ZFk_
+[2025-08-08T20:14:39.661Z] 🔍 Session User: No user
+[2025-08-08T20:14:51.831Z] 📝 GET /api/check-session - Session ID: snIEL7PP1BxSyrfjha4PfMYmRCrwb2Iz
+[2025-08-08T20:14:51.833Z] 🔍 Session User: No user
+[2025-08-08T20:19:37.005Z] 🚀 Servidor iniciado en http://localhost:3000
+[2025-08-08T20:19:38.783Z] ✅ PostgreSQL connection successful
+[2025-08-08T20:19:44.496Z] 📝 GET / - Session ID: bscTxQGXPJbGsVmKGmE7dJOyL-Uud97P
+[2025-08-08T20:19:44.542Z] 🔍 Session User: No user
+[2025-08-08T20:19:49.863Z] 📝 GET /api/check-session - Session ID: uM0fCDcJXRl4iNKshDfs5StKuQGU5jdc
+[2025-08-08T20:19:49.898Z] 🔍 Session User: No user
+[2025-08-08T20:19:49.908Z] 📝 GET /api/check-session - Session ID: uM0fCDcJXRl4iNKshDfs5StKuQGU5jdc
+[2025-08-08T20:19:50.035Z] 🔍 Session User: No user
+[2025-08-08T20:19:51.724Z] 📝 GET /login - Session ID: fQcZo0SBgTgtZd8CFGYshw3H26-ZFINH
+[2025-08-08T20:19:51.733Z] 🔍 Session User: No user
+[2025-08-08T20:19:52.664Z] 📝 GET /api/check-session - Session ID: 4sk3CTtF3QS1brAUFGgTX7t07ny3M2Ci
+[2025-08-08T20:19:52.693Z] 🔍 Session User: No user
+[2025-08-08T20:19:52.694Z] 📝 GET /api/check-session - Session ID: 4sk3CTtF3QS1brAUFGgTX7t07ny3M2Ci
+[2025-08-08T20:19:52.697Z] 🔍 Session User: No user
+[2025-08-08T20:19:57.524Z] 📝 POST /login-supabase - Session ID: 0ieuFmrSMmQGAv1oPnZcdcCTySx8Fgps
+[2025-08-08T20:19:57.525Z] 🔍 Session User: No user
+[2025-08-08T20:20:00.938Z] 📝 GET /profile - Session ID: hewmXqmVWNeTowuzkB78ZGHT0Kvz25Xf
+[2025-08-08T20:20:00.939Z] 🔍 Session User: No user
+[2025-08-08T20:20:02.048Z] 📝 GET /api/check-session - Session ID: IzzrCxv8wzCgbWCNf99ytkjNzZ0KrcZG
+[2025-08-08T20:20:02.048Z] 🔍 Session User: No user
+[2025-08-08T20:20:02.049Z] 📝 GET /api/check-session - Session ID: IzzrCxv8wzCgbWCNf99ytkjNzZ0KrcZG
+[2025-08-08T20:20:02.049Z] 🔍 Session User: No user
+[2025-08-08T20:20:10.126Z] 📝 GET /.well-known/appspecific/com.chrome.devtools.json - Session ID: bqhu-WJATA8l1sgv5DVCQ3BfvIfDhbub
+[2025-08-08T20:20:10.163Z] 🔍 Session User: No user
+[2025-08-08T20:20:10.695Z] 📝 GET /js/lib/axios.min.js.map - Session ID: 8PvdFClWp4YbVz2xoa6_TzkNnlJ7wpqH
+[2025-08-08T20:20:10.696Z] 🔍 Session User: No user
+[2025-08-08T20:20:10.931Z] 📝 GET /img/cause-default.jpg - Session ID: sJUYC6c8seH2wNdzRWE2dJ-3NzBCkJxC
+[2025-08-08T20:20:11.098Z] 🔍 Session User: No user
+[2025-08-08T20:25:24.835Z] 🚀 Servidor iniciado en http://localhost:3000
+[2025-08-08T20:25:26.416Z] ✅ PostgreSQL connection successful
+[2025-08-08T20:25:33.282Z] 📝 GET / - Session ID: _Oj3QKX9gps7MnBfPFvxeS6sElFCBOG4
+[2025-08-08T20:25:33.283Z] 🔍 Session User: No user
+[2025-08-08T20:25:39.657Z] 📝 GET / - Session ID: C2bfjz_McowWCJW82bDYDb1uoFCdDM27
+[2025-08-08T20:25:39.658Z] 🔍 Session User: No user
+[2025-08-08T20:25:41.215Z] 📝 GET / - Session ID: Pok6mChVlz1syYD1UjHpaPNJBMQODvN9
+[2025-08-08T20:25:41.215Z] 🔍 Session User: No user
+[2025-08-08T20:25:42.717Z] 📝 GET / - Session ID: dkMz09O7JYzXYCMCpXFPvqcCBDlWElBD
+[2025-08-08T20:25:42.718Z] 🔍 Session User: No user
+[2025-08-08T20:25:44.417Z] 📝 GET / - Session ID: cmuD9L9PBClZUBl26H04mzCWp0UcNuDu
+[2025-08-08T20:25:44.427Z] 🔍 Session User: No user
+[2025-08-08T20:25:44.854Z] 📝 GET / - Session ID: V75aBADnkzPJSfv7BV2mBMHrtXCkRqtO
+[2025-08-08T20:25:44.854Z] 🔍 Session User: No user
+[2025-08-08T20:25:45.362Z] 📝 GET / - Session ID: oxPV3bXhfNdUpDhdzabfmXjRtn9MVyNb
+[2025-08-08T20:25:45.363Z] 🔍 Session User: No user
+[2025-08-08T20:25:46.701Z] 📝 GET / - Session ID: kCD6JNxsjie6DAJ4qOGhSddtt6QVDn2p
+[2025-08-08T20:25:46.702Z] 🔍 Session User: No user
+[2025-08-08T20:25:47.363Z] 📝 GET / - Session ID: GSEcDSWTu1iT6GLujY5igdqwVESdiZh9
+[2025-08-08T20:25:47.363Z] 🔍 Session User: No user
+[2025-08-08T20:25:47.939Z] 📝 GET / - Session ID: SZPcNN4uZahCiAKjc8k-WPZ43QGKn7Cx
+[2025-08-08T20:25:47.939Z] 🔍 Session User: No user
+[2025-08-08T20:25:48.519Z] 📝 GET / - Session ID: Dsu7654p9b8S4jhzAbqHY2cHLIbGHo_o
+[2025-08-08T20:25:48.519Z] 🔍 Session User: No user
+[2025-08-08T20:25:48.981Z] 📝 GET / - Session ID: 4ZKhQJ4DU5-AoqSpJ8k0rglgUudl2HTL
+[2025-08-08T20:25:48.982Z] 🔍 Session User: No user
+[2025-08-08T20:25:49.389Z] 📝 GET / - Session ID: ficLVeufns5ZytJbBLQFnwt3OrqdKw21
+[2025-08-08T20:25:49.389Z] 🔍 Session User: No user
+[2025-08-08T20:25:49.691Z] 📝 GET / - Session ID: x7z55jS-gpr1SFMLtwmtPEd6kA9pku8y
+[2025-08-08T20:25:49.692Z] 🔍 Session User: No user
+[2025-08-08T20:25:49.907Z] 📝 GET / - Session ID: xhK1M80VejG8nFKMPj3PQ7IBKhV4vbP7
+[2025-08-08T20:25:49.907Z] 🔍 Session User: No user
+[2025-08-08T20:25:50.259Z] 📝 GET / - Session ID: hFnzYU1Il5P841rE-ncdbN01wUNF3D8K
+[2025-08-08T20:25:50.259Z] 🔍 Session User: No user
+[2025-08-08T20:25:50.452Z] 📝 GET / - Session ID: yAT6pkAsNyxV56VIe8Xj2O-o947PJp8b
+[2025-08-08T20:25:50.452Z] 🔍 Session User: No user
+[2025-08-08T20:25:50.627Z] 📝 GET / - Session ID: 5vcBv2SSkiz3ZlirfHVUnwkETrzjQxS3
+[2025-08-08T20:25:50.628Z] 🔍 Session User: No user
+[2025-08-08T20:25:50.804Z] 📝 GET / - Session ID: 4BQsFYJdTqiRMAWOaaOXY2y8mlFTQTE7
+[2025-08-08T20:25:50.804Z] 🔍 Session User: No user
+[2025-08-08T20:25:50.987Z] 📝 GET / - Session ID: 3uqrfDHDSjRc0BUR-Mfkbd0NW3QokXl-
+[2025-08-08T20:25:50.987Z] 🔍 Session User: No user
+[2025-08-08T20:25:51.355Z] 📝 GET / - Session ID: DYaj8ij9JWWftLAH0sma7xyyuWb7YHcW
+[2025-08-08T20:25:51.356Z] 🔍 Session User: No user
+[2025-08-08T20:25:51.538Z] 📝 GET / - Session ID: _o6DMy8fnx2XqoRkLHumvWOM1iqylslS
+[2025-08-08T20:25:51.539Z] 🔍 Session User: No user
+[2025-08-08T20:25:51.738Z] 📝 GET / - Session ID: 66xHNe_3ztMcYcpMRbkpo1oFA_dipFJN
+[2025-08-08T20:25:51.738Z] 🔍 Session User: No user
+[2025-08-08T20:25:52.170Z] 📝 GET / - Session ID: HCCIMSqFDnV5bdONfi6dLo_JGI8DvvdV
+[2025-08-08T20:25:52.171Z] 🔍 Session User: No user
+[2025-08-08T20:25:52.389Z] 📝 GET / - Session ID: sr0JLQfQKXBEnHSxG0ZTUmonOJRyLQ4E
+[2025-08-08T20:25:52.389Z] 🔍 Session User: No user
+[2025-08-08T20:25:52.602Z] 📝 GET / - Session ID: PA-ApQps4tq-FkcTnXD3XsDW8ltLvyW1
+[2025-08-08T20:25:52.603Z] 🔍 Session User: No user
+[2025-08-08T20:25:52.788Z] 📝 GET / - Session ID: UyLXgkva24Tz5F9YYAjNWX5f0dYlX2U6
+[2025-08-08T20:25:52.788Z] 🔍 Session User: No user
+[2025-08-08T20:25:52.979Z] 📝 GET / - Session ID: mXSsmuUIzHR7Ca0KiGND9fUrfBvGCjGz
+[2025-08-08T20:25:52.979Z] 🔍 Session User: No user
+[2025-08-08T20:25:53.187Z] 📝 GET / - Session ID: -H5xoFBTTyZEx4iVAr7JYV0RmG4lzNjw
+[2025-08-08T20:25:53.187Z] 🔍 Session User: No user
+[2025-08-08T20:25:53.379Z] 📝 GET / - Session ID: mdc2QcdZRGgK1d5utmUecMiiK_XkUXgk
+[2025-08-08T20:25:53.380Z] 🔍 Session User: No user
+[2025-08-08T20:26:50.989Z] 🚀 Servidor iniciado en http://localhost:3000
+[2025-08-08T20:26:52.389Z] ✅ PostgreSQL connection successful
+[2025-08-08T20:27:16.927Z] 📝 GET / - Session ID: XaELd7auolbNhBv6wBkQJe4EUlm4hLUv
+[2025-08-08T20:27:16.997Z] 🔍 Session User: No user
+[2025-08-08T20:27:19.144Z] 📝 GET /api/check-session - Session ID: wrgHPkdPvEG0pxli4bnx5Dp-d1dVUTBn
+[2025-08-08T20:27:19.145Z] 🔍 Session User: No user
+[2025-08-08T20:27:19.147Z] 📝 GET /api/check-session - Session ID: wrgHPkdPvEG0pxli4bnx5Dp-d1dVUTBn
+[2025-08-08T20:27:19.148Z] 🔍 Session User: No user
+[2025-08-08T20:29:00.080Z] 🚀 Servidor iniciado en http://localhost:3000
+[2025-08-08T20:29:13.123Z] 🚀 Servidor iniciado en http://localhost:3000
+[2025-08-08T20:29:14.484Z] ✅ PostgreSQL connection successful
+[2025-08-08T20:29:21.081Z] 📝 GET / - Session ID: Z9pZXY9KnuD5eJdmr3V5GqRRFzDrFkV1
+[2025-08-08T20:29:21.117Z] 🔍 Session User: No user
+[2025-08-08T20:29:22.539Z] 📝 GET /api/check-session - Session ID: XN8RJ7lyWEEG17zIfDa5LMkbGIgDhw54
+[2025-08-08T20:29:22.633Z] 🔍 Session User: No user
+[2025-08-08T20:29:22.650Z] 📝 GET /api/check-session - Session ID: XN8RJ7lyWEEG17zIfDa5LMkbGIgDhw54
+[2025-08-08T20:29:22.650Z] 🔍 Session User: No user
+[2025-08-08T20:29:30.635Z] 📝 GET / - Session ID: qp-py8Bc3IkvQ8ZqEp2Swz-2ccbaMfqv
+[2025-08-08T20:29:30.635Z] 🔍 Session User: No user
+[2025-08-08T20:29:32.544Z] 📝 GET /login - Session ID: dQrdsgxl16oFOLpsis0CsochgtDWa19E
+[2025-08-08T20:29:32.544Z] 🔍 Session User: No user
+[2025-08-08T20:29:34.881Z] 📝 POST /login-supabase - Session ID: VBzosAJETuz1lT8MKr0qQdAL5Vh4qtn4
+[2025-08-08T20:29:34.881Z] 🔍 Session User: No user
+[2025-08-08T20:29:37.603Z] 📝 GET /profile - Session ID: Mlv_WPvopZyu-MXRCG7xMqkIDuoEr4IL
+[2025-08-08T20:29:37.604Z] 🔍 Session User: No user
+[2025-08-08T20:29:37.914Z] 📝 GET /api/check-session - Session ID: YcVPVzTSs1C0xR6YIgrdglrWjpBkhiLP
+[2025-08-08T20:29:37.915Z] 🔍 Session User: No user
+[2025-08-08T20:29:37.915Z] 📝 GET /api/check-session - Session ID: YcVPVzTSs1C0xR6YIgrdglrWjpBkhiLP
+[2025-08-08T20:29:37.916Z] 🔍 Session User: No user
+[2025-08-08T20:29:44.524Z] 📝 GET /me - Session ID: nX3nYsFCA6nZJEMjNLzcm2QGdAl_pUbw
+[2025-08-08T20:29:44.525Z] 🔍 Session User: No user
+[2025-08-08T20:29:45.720Z] 📝 GET /img/cause-default.jpg - Session ID: x5UwcJ4EL56sfKZSQmS1jojNiSzf6l9u
+[2025-08-08T20:29:45.720Z] 🔍 Session User: No user
+[2025-08-08T20:29:45.829Z] 📝 GET /me - Session ID: Wzhsxxpu50DTXkpFLa3HHbWCH6ZLbXEe
+[2025-08-08T20:29:45.830Z] 🔍 Session User: No user
+[2025-08-08T20:30:19.181Z] 📝 GET /api/check-session - Session ID: cxLv40ipmYUeXSkwu4LQ6-EoxyriUA5e
+[2025-08-08T20:30:19.181Z] 🔍 Session User: No user
+[2025-08-08T20:30:19.182Z] 📝 GET /api/check-session - Session ID: cxLv40ipmYUeXSkwu4LQ6-EoxyriUA5e
+[2025-08-08T20:30:19.182Z] 🔍 Session User: No user
+[2025-08-08T20:30:22.652Z] 📝 GET /.well-known/appspecific/com.chrome.devtools.json - Session ID: br2vDJgTWr1nnx2NEZWdHLzKPCbU_qap
+[2025-08-08T20:30:22.653Z] 🔍 Session User: No user
+[2025-08-08T20:30:22.915Z] 📝 GET /js/lib/axios.min.js.map - Session ID: gPyvlpA22DLxr8nmHm7b50G_lVFGKM3l
+[2025-08-08T20:30:22.916Z] 🔍 Session User: No user
+[2025-08-08T20:30:25.768Z] 📝 GET /img/cause-default.jpg - Session ID: 0NC4inLpeSBIzIQ7MqmV2ALFHB5QDSm4
+[2025-08-08T20:30:25.769Z] 🔍 Session User: No user
+[2025-08-08T20:33:09.349Z] 🚀 Servidor iniciado en http://localhost:3000
+[2025-08-08T20:33:10.996Z] ✅ PostgreSQL connection successful
+[2025-08-08T20:33:14.677Z] 📝 GET / - Session ID: 6c6X8G8siKPfnkYDGS33q6rfx4aYxKIM
+[2025-08-08T20:33:14.691Z] 🔍 Session User: No user
+[2025-08-08T20:36:41.123Z] 🚀 Servidor iniciado en http://localhost:3000
+[2025-08-08T20:36:42.590Z] ✅ PostgreSQL connection successful
+[2025-08-08T20:36:44.001Z] 📝 GET / - Session ID: 5sqPjSk_159uexV7QW8yEjgtOk13BR5S
+[2025-08-08T20:36:44.004Z] 🔍 Session User: No user
+[2025-08-08T20:37:11.968Z] 🚀 Servidor iniciado en http://localhost:3000
+[2025-08-08T20:37:13.415Z] ✅ PostgreSQL connection successful
+[2025-08-08T20:37:17.481Z] 📝 GET / - Session ID: WBG-eN52E_4alav7jTFd61-6SRLwVonf
+[2025-08-08T20:37:17.512Z] 🔍 Session User: No user
+[2025-08-08T20:37:32.101Z] 🚀 Servidor iniciado en http://localhost:3000
+[2025-08-08T20:37:33.463Z] ✅ PostgreSQL connection successful
+[2025-08-08T20:37:37.526Z] 📝 GET / - Session ID: kawO8BdsHWxIwy-pfgatuG4grCZubnoh
+[2025-08-08T20:37:37.565Z] 🔍 Session User: No user
+[2025-08-08T20:37:38.854Z] 📝 GET /api/check-session - Session ID: PHDAuNLvvCJA4OjOrdPMvnaclV0XPaX6
+[2025-08-08T20:37:38.855Z] 🔍 Session User: No user
+[2025-08-08T20:37:38.857Z] 📝 GET /api/check-session - Session ID: PHDAuNLvvCJA4OjOrdPMvnaclV0XPaX6
+[2025-08-08T20:37:38.859Z] 🔍 Session User: No user
+[2025-08-08T20:37:44.937Z] 📝 GET / - Session ID: ZRRrY1clM94soEOIzVBM73m4o60niMMl
+[2025-08-08T20:37:44.937Z] 🔍 Session User: No user
+[2025-08-08T20:37:46.816Z] 📝 GET /login - Session ID: CrMXf6FRsY51h1jysfS8_QijCVALlljg
+[2025-08-08T20:37:46.816Z] 🔍 Session User: No user
+[2025-08-08T20:37:48.914Z] 📝 POST /login-supabase - Session ID: pCu49sd8kHhdLNpSi3SEb8xUSwSMuGKN
+[2025-08-08T20:37:48.922Z] 🔍 Session User: No user
+[2025-08-08T20:37:51.995Z] 📝 GET /profile - Session ID: 2Kb3RRpN9Qzxgxav3EyKNXvN4sdK3Eoj
+[2025-08-08T20:37:51.996Z] 🔍 Session User: No user
+[2025-08-08T20:37:52.407Z] 📝 GET /api/check-session - Session ID: -KmJgomq3VgyE62tlHMw-F2bcxdcsgkV
+[2025-08-08T20:37:52.422Z] 🔍 Session User: No user
+[2025-08-08T20:37:52.429Z] 📝 GET /api/check-session - Session ID: -KmJgomq3VgyE62tlHMw-F2bcxdcsgkV
+[2025-08-08T20:37:52.441Z] 🔍 Session User: No user
+[2025-08-08T20:37:54.410Z] 📝 GET /.well-known/appspecific/com.chrome.devtools.json - Session ID: 2_VT0Bm7b5HEx6WQoh1WQiUCPq-AgZgO
+[2025-08-08T20:37:54.436Z] 🔍 Session User: No user
+[2025-08-08T20:37:55.059Z] 📝 GET /js/lib/axios.min.js.map - Session ID: yMzrPYYVOg-Z_3lMJif6bCb6pTV68uE4
+[2025-08-08T20:37:55.059Z] 🔍 Session User: No user
+[2025-08-08T20:38:00.647Z] 📝 GET /img/cause-default.jpg - Session ID: QRr2kbIhHCax6tf5LG8ILppkxdtUqGgf
+[2025-08-08T20:38:00.650Z] 🔍 Session User: No user
+[2025-08-08T20:44:06.951Z] 🚀 Servidor iniciado en http://localhost:3000
+[2025-08-08T20:44:08.498Z] ✅ PostgreSQL connection successful
+[2025-08-08T20:44:12.169Z] 📝 GET / - Session ID: hfpSPhaUTgEiGLLHzdpJIaqEk39tmEQG
+[2025-08-08T20:44:12.177Z] 🔍 Session User: No user
+[2025-08-08T20:47:23.373Z] 🚀 Servidor iniciado en http://localhost:3000
+[2025-08-08T20:47:24.896Z] ✅ PostgreSQL connection successful
+[2025-08-08T20:47:28.402Z] 📝 GET / - Session ID: y9dtKxgTj_huIrKvPPTXiCW0KyG9S_jE
+[2025-08-08T20:47:28.414Z] 🔍 Session User: No user
+[2025-08-08T20:47:29.952Z] 📝 GET /api/check-session - Session ID: p01kCu9VPJwUegeo20_rV519PQ1yZm9t
+[2025-08-08T20:47:29.958Z] 🔍 Session User: No user
+[2025-08-08T20:47:30.029Z] 🔍 Check session called: No user
+[2025-08-08T20:47:39.084Z] 📝 GET / - Session ID: 1MDbl8AdPMvXsPMu5zfVl-K1uZDvWnzB
+[2025-08-08T20:47:39.121Z] 🔍 Session User: No user
+[2025-08-08T20:47:41.206Z] 📝 GET /login - Session ID: 3sLJ_upuAsJ8n2BhJaP8a2c6f6m8qJg0
+[2025-08-08T20:47:41.214Z] 🔍 Session User: No user
+[2025-08-08T20:47:43.811Z] 📝 POST /login-supabase - Session ID: IwRXwOm2Bj2UfKeBvrkuynEq3y3b3rHJ
+[2025-08-08T20:47:43.812Z] 🔍 Session User: No user
+[2025-08-08T20:47:43.812Z] 🔐 Login attempt with token: true
+[2025-08-08T20:47:44.978Z] ✅ User saved to session: d98c3559-215c-48e2-84a9-de811b86bf2f
+[2025-08-08T20:47:45.015Z] 📝 GET /profile - Session ID: f9T3QXctNvOAL8HIaPbCtKRSPpzVxKdL
+[2025-08-08T20:47:45.015Z] 🔍 Session User: No user
+[2025-08-08T20:47:45.317Z] 📝 GET /api/check-session - Session ID: GcFvgOpG4FoMelJZZOOcjm0_WBcvNtT1
+[2025-08-08T20:47:45.347Z] 🔍 Session User: No user
+[2025-08-08T20:47:45.349Z] 🔍 Check session called: No user
+[2025-08-08T20:47:51.603Z] 📝 GET /img/cause-default.jpg - Session ID: TTZHfKucKPkIQH4kWHA0Zox6vBvu-RP3
+[2025-08-08T20:47:51.603Z] 🔍 Session User: No user
+[2025-08-08T20:48:00.322Z] 📝 GET /me - Session ID: 8X9T4z42qlVB4hEuCazxjU-HujHfivGp
+[2025-08-08T20:48:00.322Z] 🔍 Session User: No user
+[2025-08-08T20:48:01.666Z] 📝 GET /me - Session ID: -XsuFY206ZnfEyzUXrHdGwVOlgTrkMrN
+[2025-08-08T20:48:01.667Z] 🔍 Session User: No user
+[2025-08-08T20:48:19.395Z] 📝 GET /.well-known/appspecific/com.chrome.devtools.json - Session ID: rcU3rNL0fFC1XsUbCmnmBwkBZfEo27Bl
+[2025-08-08T20:48:19.497Z] 🔍 Session User: No user
+[2025-08-08T20:48:19.707Z] 📝 GET /js/lib/axios.min.js.map - Session ID: 4bl0Zv5sgys7_l6YmO964PkQK72R_8vb
+[2025-08-08T20:48:19.708Z] 🔍 Session User: No user
+[2025-08-08T20:48:25.644Z] 📝 GET /img/cause-default.jpg - Session ID: Mp0uiDasz4RavJ2lAAXuW4BjDjds43jg
+[2025-08-08T20:48:25.661Z] 🔍 Session User: No user
+[2025-08-08T20:48:33.765Z] 📝 GET /login - Session ID: MFUj4HJhVLDF1Zk9T8gqfr1v0rxqN5aM
+[2025-08-08T20:48:33.766Z] 🔍 Session User: No user
+[2025-08-08T20:48:33.906Z] 📝 GET /.well-known/appspecific/com.chrome.devtools.json - Session ID: P0OWUJ-tc-SKw_asAeOqaqOeXvjSIIad
+[2025-08-08T20:48:33.967Z] 🔍 Session User: No user
+[2025-08-08T20:48:34.302Z] 📝 GET /js/lib/axios.min.js.map - Session ID: 56WssAZ_qhJGkxumraD2Me1-Xhffk81w
+[2025-08-08T20:48:34.303Z] 🔍 Session User: No user
+[2025-08-08T20:48:38.156Z] 📝 POST /login-supabase - Session ID: oI1okVll5xpBairR2UVJiUSdY4WLcYjp
+[2025-08-08T20:48:38.161Z] 🔍 Session User: No user
+[2025-08-08T20:48:38.163Z] 🔐 Login attempt with token: true
+[2025-08-08T20:48:38.700Z] ✅ User saved to session: d98c3559-215c-48e2-84a9-de811b86bf2f
+[2025-08-08T20:48:38.740Z] 📝 GET /profile - Session ID: K-eex1_qkOL7uxQ4xFLmvKUD49BNPZOb
+[2025-08-08T20:48:38.740Z] 🔍 Session User: No user
+[2025-08-08T20:48:38.831Z] 📝 GET /.well-known/appspecific/com.chrome.devtools.json - Session ID: 3LWV3iWQwFBV2pZfk1MMD0AJTJaq_tCg
+[2025-08-08T20:48:38.850Z] 🔍 Session User: No user
+[2025-08-08T20:48:39.217Z] 📝 GET /js/lib/axios.min.js.map - Session ID: _y4-7tDbcz0sB-LjrsPLdW5cFjBDfVx-
+[2025-08-08T20:48:39.232Z] 🔍 Session User: No user
+[2025-08-08T20:48:39.321Z] 📝 GET /api/check-session - Session ID: YpdsNmyT-lUrx_1L6Dc-ekkBYG5BGSZv
+[2025-08-08T20:48:39.321Z] 🔍 Session User: No user
+[2025-08-08T20:48:39.321Z] 🔍 Check session called: No user
+[2025-08-08T20:48:44.575Z] 📝 GET /img/cause-default.jpg - Session ID: W4ta4CQAD-YZY-BXR3SDda4HIb9alQiR
+[2025-08-08T20:48:44.597Z] 🔍 Session User: No user
+[2025-08-08T20:57:19.584Z] 🚀 Servidor iniciado en http://localhost:3000
+[2025-08-08T20:57:33.218Z] 🚀 Servidor iniciado en http://localhost:3000
+[2025-08-08T20:59:00.620Z] 🚀 Servidor iniciado en http://localhost:3000
+[2025-08-08T20:59:02.636Z] ✅ PostgreSQL/Supabase connection successful
+[2025-08-08T20:59:25.087Z] 📝 GET / - Session ID: neMtPeOaXK06UmN0gtETH_IKat2fXwcG
+[2025-08-08T20:59:25.111Z] 🔍 Session User: No user
+[2025-08-08T20:59:27.529Z] 📝 GET /api/check-session - Session ID: W29m0vhX-FBowj5TrWAnbnZ8xjNPiNxC
+[2025-08-08T20:59:27.549Z] 🔍 Session User: No user
+[2025-08-08T20:59:27.551Z] 🔍 Check session called: No user
+[2025-08-08T20:59:35.688Z] 📝 GET / - Session ID: tmRVEx3IxTj1vdhbqMBAXc-uverPFOkD
+[2025-08-08T20:59:35.689Z] 🔍 Session User: No user
+[2025-08-08T20:59:38.233Z] 📝 GET /login - Session ID: A3vyIayjvjJz4jSCilYz-q5UMpHypS4f
+[2025-08-08T20:59:38.233Z] 🔍 Session User: No user
+[2025-08-08T20:59:44.557Z] 📝 POST /login-supabase - Session ID: pRu9BEmaugfi0ECpb9cKhFoYpVAPfdFY
+[2025-08-08T20:59:44.557Z] 🔍 Session User: No user
+[2025-08-08T20:59:44.558Z] 🔐 Login attempt with token: true
+[2025-08-08T20:59:45.701Z] ✅ User saved to session: d98c3559-215c-48e2-84a9-de811b86bf2f
+[2025-08-08T20:59:46.043Z] 📝 GET /profile - Session ID: pRu9BEmaugfi0ECpb9cKhFoYpVAPfdFY
+[2025-08-08T20:59:46.043Z] 🔍 Session User: volgofolak
+[2025-08-08T20:59:47.353Z] 📝 GET /api/check-session - Session ID: pRu9BEmaugfi0ECpb9cKhFoYpVAPfdFY
+[2025-08-08T20:59:47.354Z] 🔍 Session User: volgofolak
+[2025-08-08T20:59:47.354Z] 🔍 Check session called: User found
+[2025-08-08T20:59:48.022Z] 📝 POST /api/session/keep-alive - Session ID: pRu9BEmaugfi0ECpb9cKhFoYpVAPfdFY
+[2025-08-08T20:59:48.023Z] 🔍 Session User: volgofolak
+[2025-08-08T20:59:54.152Z] 📝 GET /img/cause-default.jpg - Session ID: pRu9BEmaugfi0ECpb9cKhFoYpVAPfdFY
+[2025-08-08T20:59:54.152Z] 🔍 Session User: volgofolak
+[2025-08-08T21:00:05.515Z] 📝 GET /me - Session ID: pRu9BEmaugfi0ECpb9cKhFoYpVAPfdFY
+[2025-08-08T21:00:05.516Z] 🔍 Session User: volgofolak
+[2025-08-08T21:01:22.416Z] 📝 POST /api/session/keep-alive - Session ID: pRu9BEmaugfi0ECpb9cKhFoYpVAPfdFY
+[2025-08-08T21:01:22.416Z] 🔍 Session User: volgofolak
+[2025-08-08T21:01:35.655Z] 📝 POST /api/session/keep-alive - Session ID: pRu9BEmaugfi0ECpb9cKhFoYpVAPfdFY
+[2025-08-08T21:01:35.657Z] 🔍 Session User: volgofolak
+[2025-08-08T21:01:36.826Z] 📝 GET /causes - Session ID: pRu9BEmaugfi0ECpb9cKhFoYpVAPfdFY
+[2025-08-08T21:01:36.826Z] 🔍 Session User: volgofolak
+[2025-08-08T21:01:37.762Z] 📝 GET /api/check-session - Session ID: pRu9BEmaugfi0ECpb9cKhFoYpVAPfdFY
+[2025-08-08T21:01:37.784Z] 🔍 Session User: volgofolak
+[2025-08-08T21:01:37.785Z] 🔍 Check session called: User found
+[2025-08-08T21:01:38.435Z] 📝 POST /api/session/keep-alive - Session ID: pRu9BEmaugfi0ECpb9cKhFoYpVAPfdFY
+[2025-08-08T21:01:38.481Z] 🔍 Session User: volgofolak
+[2025-08-08T21:01:38.551Z] 📝 GET /api/stripe/status - Session ID: pRu9BEmaugfi0ECpb9cKhFoYpVAPfdFY
+[2025-08-08T21:01:38.551Z] 🔍 Session User: volgofolak
+[2025-08-08T21:01:38.558Z] 📝 GET /me - Session ID: pRu9BEmaugfi0ECpb9cKhFoYpVAPfdFY
+[2025-08-08T21:01:38.560Z] 🔍 Session User: volgofolak
+[2025-08-08T21:01:38.567Z] 📝 GET /api/causes - Session ID: pRu9BEmaugfi0ECpb9cKhFoYpVAPfdFY
+[2025-08-08T21:01:38.577Z] 🔍 Session User: volgofolak
+[2025-08-08T21:01:46.632Z] 📝 GET /tasks - Session ID: pRu9BEmaugfi0ECpb9cKhFoYpVAPfdFY
+[2025-08-08T21:01:46.632Z] 🔍 Session User: volgofolak
+[2025-08-08T21:01:46.834Z] 📝 GET /js/share-system.js - Session ID: pRu9BEmaugfi0ECpb9cKhFoYpVAPfdFY
+[2025-08-08T21:01:46.842Z] 🔍 Session User: volgofolak
+[2025-08-08T21:01:46.897Z] 📝 GET /api/check-session - Session ID: pRu9BEmaugfi0ECpb9cKhFoYpVAPfdFY
+[2025-08-08T21:01:46.912Z] 🔍 Session User: volgofolak
+[2025-08-08T21:01:46.913Z] 🔍 Check session called: User found
+[2025-08-08T21:01:47.713Z] 📝 POST /api/session/keep-alive - Session ID: pRu9BEmaugfi0ECpb9cKhFoYpVAPfdFY
+[2025-08-08T21:01:47.724Z] 🔍 Session User: volgofolak
+[2025-08-08T21:01:56.961Z] 📝 GET /takeaction - Session ID: pRu9BEmaugfi0ECpb9cKhFoYpVAPfdFY
+[2025-08-08T21:01:56.962Z] 🔍 Session User: volgofolak
+[2025-08-08T21:01:58.079Z] 📝 GET /api/check-session - Session ID: pRu9BEmaugfi0ECpb9cKhFoYpVAPfdFY
+[2025-08-08T21:01:58.083Z] 🔍 Session User: volgofolak
+[2025-08-08T21:01:58.085Z] 🔍 Check session called: User found
+[2025-08-08T21:01:58.329Z] 📝 POST /api/session/keep-alive - Session ID: pRu9BEmaugfi0ECpb9cKhFoYpVAPfdFY
+[2025-08-08T21:01:58.342Z] 🔍 Session User: volgofolak
+[2025-08-08T21:02:00.496Z] 📝 GET /causes - Session ID: pRu9BEmaugfi0ECpb9cKhFoYpVAPfdFY
+[2025-08-08T21:02:00.496Z] 🔍 Session User: volgofolak
+[2025-08-08T21:02:01.724Z] 📝 GET /api/check-session - Session ID: pRu9BEmaugfi0ECpb9cKhFoYpVAPfdFY
+[2025-08-08T21:02:01.727Z] 🔍 Session User: volgofolak
+[2025-08-08T21:02:01.727Z] 🔍 Check session called: User found
+[2025-08-08T21:02:02.066Z] 📝 GET /me - Session ID: pRu9BEmaugfi0ECpb9cKhFoYpVAPfdFY
+[2025-08-08T21:02:02.071Z] 🔍 Session User: volgofolak
+[2025-08-08T21:02:02.079Z] 📝 POST /api/session/keep-alive - Session ID: pRu9BEmaugfi0ECpb9cKhFoYpVAPfdFY
+[2025-08-08T21:02:02.084Z] 🔍 Session User: volgofolak
+[2025-08-08T21:02:02.094Z] 📝 GET /api/stripe/status - Session ID: pRu9BEmaugfi0ECpb9cKhFoYpVAPfdFY
+[2025-08-08T21:02:02.096Z] 🔍 Session User: volgofolak
+[2025-08-08T21:02:02.105Z] 📝 GET /api/causes - Session ID: pRu9BEmaugfi0ECpb9cKhFoYpVAPfdFY
+[2025-08-08T21:02:02.111Z] 🔍 Session User: volgofolak
+[2025-08-08T21:02:56.908Z] 📝 GET /challenges - Session ID: pRu9BEmaugfi0ECpb9cKhFoYpVAPfdFY
+[2025-08-08T21:02:56.908Z] 🔍 Session User: volgofolak
+[2025-08-08T21:02:57.041Z] 📝 GET /js/modules/share-system.js - Session ID: pRu9BEmaugfi0ECpb9cKhFoYpVAPfdFY
+[2025-08-08T21:02:57.080Z] 🔍 Session User: volgofolak
+[2025-08-08T21:02:57.120Z] 📝 GET /api/check-session - Session ID: pRu9BEmaugfi0ECpb9cKhFoYpVAPfdFY
+[2025-08-08T21:02:57.131Z] 🔍 Session User: volgofolak
+[2025-08-08T21:02:57.133Z] 🔍 Check session called: User found
+[2025-08-08T21:02:57.168Z] 📝 GET /js/modules/supabase-config.js - Session ID: pRu9BEmaugfi0ECpb9cKhFoYpVAPfdFY
+[2025-08-08T21:02:57.170Z] 🔍 Session User: volgofolak
+[2025-08-08T21:02:58.959Z] 📝 POST /api/session/keep-alive - Session ID: pRu9BEmaugfi0ECpb9cKhFoYpVAPfdFY
+[2025-08-08T21:02:58.966Z] 🔍 Session User: volgofolak
+[2025-08-08T21:03:06.685Z] 📝 GET /tasks - Session ID: pRu9BEmaugfi0ECpb9cKhFoYpVAPfdFY
+[2025-08-08T21:03:06.685Z] 🔍 Session User: volgofolak
+[2025-08-08T21:03:06.861Z] 📝 GET /js/share-system.js - Session ID: pRu9BEmaugfi0ECpb9cKhFoYpVAPfdFY
+[2025-08-08T21:03:06.862Z] 🔍 Session User: volgofolak
+[2025-08-08T21:03:06.921Z] 📝 GET /api/check-session - Session ID: pRu9BEmaugfi0ECpb9cKhFoYpVAPfdFY
+[2025-08-08T21:03:06.928Z] 🔍 Session User: volgofolak
+[2025-08-08T21:03:06.957Z] 🔍 Check session called: User found
+[2025-08-08T21:03:07.656Z] 📝 POST /api/session/keep-alive - Session ID: pRu9BEmaugfi0ECpb9cKhFoYpVAPfdFY
+[2025-08-08T21:03:07.659Z] 🔍 Session User: volgofolak
+[2025-08-08T21:03:24.871Z] 📝 GET /causes - Session ID: pRu9BEmaugfi0ECpb9cKhFoYpVAPfdFY
+[2025-08-08T21:03:24.872Z] 🔍 Session User: volgofolak
+[2025-08-08T21:03:25.230Z] 📝 GET /api/check-session - Session ID: pRu9BEmaugfi0ECpb9cKhFoYpVAPfdFY
+[2025-08-08T21:03:25.231Z] 🔍 Session User: volgofolak
+[2025-08-08T21:03:25.232Z] 🔍 Check session called: User found
+[2025-08-08T21:03:26.350Z] 📝 GET /me - Session ID: pRu9BEmaugfi0ECpb9cKhFoYpVAPfdFY
+[2025-08-08T21:03:26.354Z] 🔍 Session User: volgofolak
+[2025-08-08T21:03:26.362Z] 📝 POST /api/session/keep-alive - Session ID: pRu9BEmaugfi0ECpb9cKhFoYpVAPfdFY
+[2025-08-08T21:03:26.363Z] 🔍 Session User: volgofolak
+[2025-08-08T21:03:26.380Z] 📝 GET /api/stripe/status - Session ID: pRu9BEmaugfi0ECpb9cKhFoYpVAPfdFY
+[2025-08-08T21:03:26.387Z] 🔍 Session User: volgofolak
+[2025-08-08T21:03:26.402Z] 📝 GET /api/causes - Session ID: pRu9BEmaugfi0ECpb9cKhFoYpVAPfdFY
+[2025-08-08T21:03:26.402Z] 🔍 Session User: volgofolak
+[2025-08-08T21:03:30.375Z] 📝 GET /.well-known/appspecific/com.chrome.devtools.json - Session ID: pRu9BEmaugfi0ECpb9cKhFoYpVAPfdFY
+[2025-08-08T21:03:30.378Z] 🔍 Session User: volgofolak
+[2025-08-08T21:03:30.965Z] 📝 GET /js/lib/axios.min.js.map - Session ID: pRu9BEmaugfi0ECpb9cKhFoYpVAPfdFY
+[2025-08-08T21:03:30.981Z] 🔍 Session User: volgofolak
+[2025-08-08T21:06:59.816Z] 🚀 Servidor iniciado en http://localhost:3000
+[2025-08-08T21:07:01.667Z] ✅ PostgreSQL/Supabase connection successful
+[2025-08-08T21:07:08.741Z] 📝 GET / - Session ID: 0HcwmhyJp1dHUA4Ia0ZhtrZGggLDmnpK
+[2025-08-08T21:07:08.754Z] 🔍 Session User: No user
+[2025-08-08T21:07:10.404Z] 📝 GET /api/check-session - Session ID: L9RFVBhOXF3PvReHlmwq2AaBVVPh4Vtb
+[2025-08-08T21:07:10.454Z] 🔍 Session User: No user
+[2025-08-08T21:07:10.456Z] 🔍 Check session called: No user
+[2025-08-08T21:07:11.876Z] 📝 GET /causes - Session ID: YvCFBo8O9VyHMF8fygftdMe1q5oYnshg
+[2025-08-08T21:07:11.877Z] 🔍 Session User: No user
+[2025-08-08T21:07:13.234Z] 📝 GET /me - Session ID: 2NiQyD1ItEZ6GM--1maPch-Ab0sCUwdJ
+[2025-08-08T21:07:13.234Z] 🔍 Session User: No user
+[2025-08-08T21:07:13.351Z] 📝 GET /api/causes - Session ID: BsBm5VAScMqmUvU1Lnw1NC7VyvIWQmVF
+[2025-08-08T21:07:13.351Z] 🔍 Session User: No user
+[2025-08-08T21:07:22.139Z] 📝 GET /api/check-session - Session ID: CYwg6A4IITr0Y64i5s-OZlwYtcCshpaX
+[2025-08-08T21:07:22.142Z] 🔍 Session User: No user
+[2025-08-08T21:07:22.143Z] 🔍 Check session called: No user
+[2025-08-08T21:08:01.993Z] 📝 GET /login - Session ID: b0Bs5stqyaQzWNMhINxkIc1XXumDsVMZ
+[2025-08-08T21:08:01.996Z] 🔍 Session User: No user
+[2025-08-08T21:08:02.502Z] 📝 GET /api/check-session - Session ID: Du8XtgULXx2kl5DeW1g2PrL9BtTWI5ln
+[2025-08-08T21:08:02.527Z] 🔍 Session User: No user
+[2025-08-08T21:08:02.528Z] 🔍 Check session called: No user
+[2025-08-08T21:08:05.982Z] 📝 POST /login-supabase - Session ID: 23nNaEjQofFEg6lA0bZU6pFMfF3P7dty
+[2025-08-08T21:08:05.983Z] 🔍 Session User: No user
+[2025-08-08T21:08:05.984Z] 🔐 Login attempt with token: true
+[2025-08-08T21:08:06.640Z] ✅ User saved to session: d98c3559-215c-48e2-84a9-de811b86bf2f
+[2025-08-08T21:08:06.679Z] 📝 GET /profile - Session ID: 23nNaEjQofFEg6lA0bZU6pFMfF3P7dty
+[2025-08-08T21:08:06.682Z] 🔍 Session User: volgofolak
+[2025-08-08T21:08:07.371Z] 📝 GET /api/check-session - Session ID: 23nNaEjQofFEg6lA0bZU6pFMfF3P7dty
+[2025-08-08T21:08:07.371Z] 🔍 Session User: volgofolak
+[2025-08-08T21:08:07.372Z] 🔍 Check session called: User found
+[2025-08-08T21:08:07.741Z] 📝 POST /api/session/keep-alive - Session ID: 23nNaEjQofFEg6lA0bZU6pFMfF3P7dty
+[2025-08-08T21:08:07.759Z] 🔍 Session User: volgofolak
+[2025-08-08T21:08:12.718Z] 📝 GET /challenges - Session ID: 23nNaEjQofFEg6lA0bZU6pFMfF3P7dty
+[2025-08-08T21:08:12.721Z] 🔍 Session User: volgofolak
+[2025-08-08T21:08:12.984Z] 📝 GET /js/modules/share-system.js - Session ID: 23nNaEjQofFEg6lA0bZU6pFMfF3P7dty
+[2025-08-08T21:08:12.996Z] 🔍 Session User: volgofolak
+[2025-08-08T21:08:13.021Z] 📝 GET /js/modules/supabase-config.js - Session ID: 23nNaEjQofFEg6lA0bZU6pFMfF3P7dty
+[2025-08-08T21:08:13.055Z] 🔍 Session User: volgofolak
+[2025-08-08T21:08:13.102Z] 📝 GET /api/check-session - Session ID: 23nNaEjQofFEg6lA0bZU6pFMfF3P7dty
+[2025-08-08T21:08:13.132Z] 🔍 Session User: volgofolak
+[2025-08-08T21:08:13.134Z] 🔍 Check session called: User found
+[2025-08-08T21:08:14.299Z] 📝 POST /api/session/keep-alive - Session ID: 23nNaEjQofFEg6lA0bZU6pFMfF3P7dty
+[2025-08-08T21:08:14.342Z] 🔍 Session User: volgofolak
+[2025-08-08T21:08:26.419Z] 📝 POST /api/session/keep-alive - Session ID: 23nNaEjQofFEg6lA0bZU6pFMfF3P7dty
+[2025-08-08T21:08:26.419Z] 🔍 Session User: volgofolak
+[2025-08-08T21:08:31.425Z] 📝 POST /api/session/keep-alive - Session ID: 23nNaEjQofFEg6lA0bZU6pFMfF3P7dty
+[2025-08-08T21:08:31.426Z] 🔍 Session User: volgofolak
+[2025-08-08T21:08:33.452Z] 📝 GET /.well-known/appspecific/com.chrome.devtools.json - Session ID: 23nNaEjQofFEg6lA0bZU6pFMfF3P7dty
+[2025-08-08T21:08:33.467Z] 🔍 Session User: volgofolak
+[2025-08-08T21:08:33.811Z] 📝 GET /js/lib/axios.min.js.map - Session ID: 23nNaEjQofFEg6lA0bZU6pFMfF3P7dty
+[2025-08-08T21:08:33.815Z] 🔍 Session User: volgofolak
+[2025-08-08T21:10:34.155Z] 📝 GET /volunteering - Session ID: 23nNaEjQofFEg6lA0bZU6pFMfF3P7dty
+[2025-08-08T21:10:34.163Z] 🔍 Session User: volgofolak
+[2025-08-08T21:10:34.683Z] 📝 GET /js/modules/share-system.js - Session ID: 23nNaEjQofFEg6lA0bZU6pFMfF3P7dty
+[2025-08-08T21:10:34.687Z] 🔍 Session User: volgofolak
+[2025-08-08T21:10:34.821Z] 📝 GET /api/check-session - Session ID: 23nNaEjQofFEg6lA0bZU6pFMfF3P7dty
+[2025-08-08T21:10:34.844Z] 🔍 Session User: volgofolak
+[2025-08-08T21:10:34.845Z] 🔍 Check session called: User found
+[2025-08-08T21:10:35.970Z] 📝 POST /api/session/keep-alive - Session ID: 23nNaEjQofFEg6lA0bZU6pFMfF3P7dty
+[2025-08-08T21:10:36.046Z] 🔍 Session User: volgofolak
+[2025-08-08T21:10:43.691Z] 📝 GET /teams - Session ID: 23nNaEjQofFEg6lA0bZU6pFMfF3P7dty
+[2025-08-08T21:10:43.702Z] 🔍 Session User: volgofolak
+[2025-08-08T21:10:44.038Z] 📝 GET /api/check-session - Session ID: 23nNaEjQofFEg6lA0bZU6pFMfF3P7dty
+[2025-08-08T21:10:44.053Z] 🔍 Session User: volgofolak
+[2025-08-08T21:10:44.054Z] 🔍 Check session called: User found
+[2025-08-08T21:10:44.794Z] 📝 POST /api/session/keep-alive - Session ID: 23nNaEjQofFEg6lA0bZU6pFMfF3P7dty
+[2025-08-08T21:10:44.803Z] 🔍 Session User: volgofolak
+[2025-08-08T21:10:50.517Z] 📝 GET /login - Session ID: 23nNaEjQofFEg6lA0bZU6pFMfF3P7dty
+[2025-08-08T21:10:50.518Z] 🔍 Session User: volgofolak
+[2025-08-08T21:10:50.870Z] 📝 GET /api/check-session - Session ID: 23nNaEjQofFEg6lA0bZU6pFMfF3P7dty
+[2025-08-08T21:10:50.898Z] 🔍 Session User: volgofolak
+[2025-08-08T21:10:50.901Z] 🔍 Check session called: User found
+[2025-08-08T21:10:51.735Z] 📝 POST /api/session/keep-alive - Session ID: 23nNaEjQofFEg6lA0bZU6pFMfF3P7dty
+[2025-08-08T21:10:51.752Z] 🔍 Session User: volgofolak
+[2025-08-08T21:10:53.357Z] 📝 POST /login-supabase - Session ID: 23nNaEjQofFEg6lA0bZU6pFMfF3P7dty
+[2025-08-08T21:10:53.358Z] 🔍 Session User: volgofolak
+[2025-08-08T21:10:53.358Z] 🔐 Login attempt with token: true
+[2025-08-08T21:10:54.327Z] ✅ User saved to session: d98c3559-215c-48e2-84a9-de811b86bf2f
+[2025-08-08T21:10:54.365Z] 📝 GET /profile - Session ID: 23nNaEjQofFEg6lA0bZU6pFMfF3P7dty
+[2025-08-08T21:10:54.371Z] 🔍 Session User: volgofolak
+[2025-08-08T21:10:54.779Z] 📝 GET /api/check-session - Session ID: 23nNaEjQofFEg6lA0bZU6pFMfF3P7dty
+[2025-08-08T21:10:54.779Z] 🔍 Session User: volgofolak
+[2025-08-08T21:10:54.780Z] 🔍 Check session called: User found
+[2025-08-08T21:10:55.407Z] 📝 POST /api/session/keep-alive - Session ID: 23nNaEjQofFEg6lA0bZU6pFMfF3P7dty
+[2025-08-08T21:10:55.411Z] 🔍 Session User: volgofolak
+[2025-08-08T21:10:57.091Z] 📝 GET /teams - Session ID: 23nNaEjQofFEg6lA0bZU6pFMfF3P7dty
+[2025-08-08T21:10:57.092Z] 🔍 Session User: volgofolak
+[2025-08-08T21:10:57.329Z] 📝 GET /api/check-session - Session ID: 23nNaEjQofFEg6lA0bZU6pFMfF3P7dty
+[2025-08-08T21:10:57.330Z] 🔍 Session User: volgofolak
+[2025-08-08T21:10:57.334Z] 🔍 Check session called: User found
+[2025-08-08T21:10:58.259Z] 📝 POST /api/session/keep-alive - Session ID: 23nNaEjQofFEg6lA0bZU6pFMfF3P7dty
+[2025-08-08T21:10:58.270Z] 🔍 Session User: volgofolak
+[2025-08-08T21:11:01.483Z] 📝 GET /challenges - Session ID: 23nNaEjQofFEg6lA0bZU6pFMfF3P7dty
+[2025-08-08T21:11:01.484Z] 🔍 Session User: volgofolak
+[2025-08-08T21:11:01.775Z] 📝 GET /api/check-session - Session ID: 23nNaEjQofFEg6lA0bZU6pFMfF3P7dty
+[2025-08-08T21:11:01.785Z] 🔍 Session User: volgofolak
+[2025-08-08T21:11:01.786Z] 🔍 Check session called: User found
+[2025-08-08T21:11:01.815Z] 📝 GET /js/modules/supabase-config.js - Session ID: 23nNaEjQofFEg6lA0bZU6pFMfF3P7dty
+[2025-08-08T21:11:01.817Z] 🔍 Session User: volgofolak
+[2025-08-08T21:11:01.822Z] 📝 GET /js/modules/share-system.js - Session ID: 23nNaEjQofFEg6lA0bZU6pFMfF3P7dty
+[2025-08-08T21:11:01.831Z] 🔍 Session User: volgofolak
+[2025-08-08T21:11:02.584Z] 📝 POST /api/session/keep-alive - Session ID: 23nNaEjQofFEg6lA0bZU6pFMfF3P7dty
+[2025-08-08T21:11:02.585Z] 🔍 Session User: volgofolak
+[2025-08-08T21:11:05.914Z] 📝 GET /volunteering - Session ID: 23nNaEjQofFEg6lA0bZU6pFMfF3P7dty
+[2025-08-08T21:11:05.915Z] 🔍 Session User: volgofolak
+[2025-08-08T21:11:06.332Z] 📝 GET /js/modules/share-system.js - Session ID: 23nNaEjQofFEg6lA0bZU6pFMfF3P7dty
+[2025-08-08T21:11:06.332Z] 🔍 Session User: volgofolak
+[2025-08-08T21:11:06.930Z] 📝 POST /api/session/keep-alive - Session ID: 23nNaEjQofFEg6lA0bZU6pFMfF3P7dty
+[2025-08-08T21:11:06.933Z] 🔍 Session User: volgofolak
+[2025-08-08T21:11:07.256Z] 📝 GET /api/check-session - Session ID: 23nNaEjQofFEg6lA0bZU6pFMfF3P7dty
+[2025-08-08T21:11:07.257Z] 🔍 Session User: volgofolak
+[2025-08-08T21:11:07.257Z] 🔍 Check session called: User found
+[2025-08-08T21:11:09.107Z] 📝 GET /tasks - Session ID: 23nNaEjQofFEg6lA0bZU6pFMfF3P7dty
+[2025-08-08T21:11:09.108Z] 🔍 Session User: volgofolak
+[2025-08-08T21:11:09.276Z] 📝 GET /js/share-system.js - Session ID: 23nNaEjQofFEg6lA0bZU6pFMfF3P7dty
+[2025-08-08T21:11:09.276Z] 🔍 Session User: volgofolak
+[2025-08-08T21:11:09.331Z] 📝 GET /api/check-session - Session ID: 23nNaEjQofFEg6lA0bZU6pFMfF3P7dty
+[2025-08-08T21:11:09.369Z] 🔍 Session User: volgofolak
+[2025-08-08T21:11:09.376Z] 🔍 Check session called: User found
+[2025-08-08T21:11:10.130Z] 📝 POST /api/session/keep-alive - Session ID: 23nNaEjQofFEg6lA0bZU6pFMfF3P7dty
+[2025-08-08T21:11:10.131Z] 🔍 Session User: volgofolak
+[2025-08-08T21:11:31.212Z] 📝 GET /takeaction - Session ID: 23nNaEjQofFEg6lA0bZU6pFMfF3P7dty
+[2025-08-08T21:11:31.213Z] 🔍 Session User: volgofolak
+[2025-08-08T21:11:32.696Z] 📝 GET /causes - Session ID: 23nNaEjQofFEg6lA0bZU6pFMfF3P7dty
+[2025-08-08T21:11:32.698Z] 🔍 Session User: volgofolak
+[2025-08-08T21:11:33.270Z] 📝 GET /api/check-session - Session ID: 23nNaEjQofFEg6lA0bZU6pFMfF3P7dty
+[2025-08-08T21:11:33.283Z] 🔍 Session User: volgofolak
+[2025-08-08T21:11:33.284Z] 🔍 Check session called: User found
+[2025-08-08T21:11:34.398Z] 📝 POST /api/session/keep-alive - Session ID: 23nNaEjQofFEg6lA0bZU6pFMfF3P7dty
+[2025-08-08T21:11:34.402Z] 🔍 Session User: volgofolak
+[2025-08-08T21:11:34.429Z] 📝 GET /api/causes - Session ID: 23nNaEjQofFEg6lA0bZU6pFMfF3P7dty
+[2025-08-08T21:11:34.486Z] 🔍 Session User: volgofolak
+[2025-08-08T21:11:34.533Z] 📝 GET /me - Session ID: 23nNaEjQofFEg6lA0bZU6pFMfF3P7dty
+[2025-08-08T21:11:34.554Z] 🔍 Session User: volgofolak
+[2025-08-08T21:11:34.571Z] 📝 GET /api/stripe/status - Session ID: 23nNaEjQofFEg6lA0bZU6pFMfF3P7dty
+[2025-08-08T21:11:34.583Z] 🔍 Session User: volgofolak
+[2025-08-08T21:11:39.431Z] 📝 GET /me - Session ID: 23nNaEjQofFEg6lA0bZU6pFMfF3P7dty
+[2025-08-08T21:11:39.432Z] 🔍 Session User: volgofolak
+[2025-08-08T21:13:26.664Z] 📝 POST /api/session/keep-alive - Session ID: 23nNaEjQofFEg6lA0bZU6pFMfF3P7dty
+[2025-08-08T21:13:26.670Z] 🔍 Session User: volgofolak
+[2025-08-08T21:16:13.616Z] 📝 POST /api/session/keep-alive - Session ID: 23nNaEjQofFEg6lA0bZU6pFMfF3P7dty
+[2025-08-08T21:16:13.638Z] 🔍 Session User: volgofolak
+[2025-08-08T21:16:28.529Z] 📝 POST /api/session/keep-alive - Session ID: 23nNaEjQofFEg6lA0bZU6pFMfF3P7dty
+[2025-08-08T21:16:28.555Z] 🔍 Session User: volgofolak
+[2025-08-08T21:16:36.507Z] 📝 POST /api/session/keep-alive - Session ID: 23nNaEjQofFEg6lA0bZU6pFMfF3P7dty
+[2025-08-08T21:16:36.529Z] 🔍 Session User: volgofolak
+[2025-08-08T21:16:42.960Z] 📝 GET /causes - Session ID: 23nNaEjQofFEg6lA0bZU6pFMfF3P7dty
+[2025-08-08T21:16:42.978Z] 🔍 Session User: volgofolak
+[2025-08-08T21:16:43.281Z] 📝 GET /api/check-session - Session ID: 23nNaEjQofFEg6lA0bZU6pFMfF3P7dty
+[2025-08-08T21:16:43.298Z] 🔍 Session User: volgofolak
+[2025-08-08T21:16:43.299Z] 🔍 Check session called: User found
+[2025-08-08T21:16:44.080Z] 📝 POST /api/session/keep-alive - Session ID: 23nNaEjQofFEg6lA0bZU6pFMfF3P7dty
+[2025-08-08T21:16:44.120Z] 🔍 Session User: volgofolak
+[2025-08-08T21:16:44.140Z] 📝 GET /api/causes - Session ID: 23nNaEjQofFEg6lA0bZU6pFMfF3P7dty
+[2025-08-08T21:16:44.154Z] 🔍 Session User: volgofolak
+[2025-08-08T21:16:44.175Z] 📝 GET /api/stripe/status - Session ID: 23nNaEjQofFEg6lA0bZU6pFMfF3P7dty
+[2025-08-08T21:16:44.176Z] 🔍 Session User: volgofolak
+[2025-08-08T21:16:44.187Z] 📝 GET /me - Session ID: 23nNaEjQofFEg6lA0bZU6pFMfF3P7dty
+[2025-08-08T21:16:44.188Z] 🔍 Session User: volgofolak
+[2025-08-08T21:17:00.709Z] 📝 GET /login - Session ID: 23nNaEjQofFEg6lA0bZU6pFMfF3P7dty
+[2025-08-08T21:17:00.709Z] 🔍 Session User: volgofolak
+[2025-08-08T21:17:00.924Z] 📝 GET /api/check-session - Session ID: 23nNaEjQofFEg6lA0bZU6pFMfF3P7dty
+[2025-08-08T21:17:00.934Z] 🔍 Session User: volgofolak
+[2025-08-08T21:17:00.936Z] 🔍 Check session called: User found
+[2025-08-08T21:17:01.625Z] 📝 POST /api/session/keep-alive - Session ID: 23nNaEjQofFEg6lA0bZU6pFMfF3P7dty
+[2025-08-08T21:17:01.628Z] 🔍 Session User: volgofolak
+[2025-08-08T21:17:03.323Z] 📝 POST /login-supabase - Session ID: 23nNaEjQofFEg6lA0bZU6pFMfF3P7dty
+[2025-08-08T21:17:03.325Z] 🔍 Session User: volgofolak
+[2025-08-08T21:17:03.325Z] 🔐 Login attempt with token: true
+[2025-08-08T21:17:03.865Z] ✅ User saved to session: d98c3559-215c-48e2-84a9-de811b86bf2f
+[2025-08-08T21:17:03.925Z] 📝 GET /profile - Session ID: 23nNaEjQofFEg6lA0bZU6pFMfF3P7dty
+[2025-08-08T21:17:03.934Z] 🔍 Session User: volgofolak
+[2025-08-08T21:17:06.104Z] 📝 POST /api/session/keep-alive - Session ID: 23nNaEjQofFEg6lA0bZU6pFMfF3P7dty
+[2025-08-08T21:17:06.179Z] 🔍 Session User: volgofolak
+[2025-08-08T21:17:06.520Z] 📝 GET /api/check-session - Session ID: 23nNaEjQofFEg6lA0bZU6pFMfF3P7dty
+[2025-08-08T21:17:06.520Z] 🔍 Session User: volgofolak
+[2025-08-08T21:17:06.521Z] 🔍 Check session called: User found
+[2025-08-08T21:17:14.197Z] 📝 GET /causes - Session ID: 23nNaEjQofFEg6lA0bZU6pFMfF3P7dty
+[2025-08-08T21:17:14.197Z] 🔍 Session User: volgofolak
+[2025-08-08T21:17:14.467Z] 📝 GET /api/check-session - Session ID: 23nNaEjQofFEg6lA0bZU6pFMfF3P7dty
+[2025-08-08T21:17:14.471Z] 🔍 Session User: volgofolak
+[2025-08-08T21:17:14.471Z] 🔍 Check session called: User found
+[2025-08-08T21:17:15.196Z] 📝 POST /api/session/keep-alive - Session ID: 23nNaEjQofFEg6lA0bZU6pFMfF3P7dty
+[2025-08-08T21:17:15.213Z] 🔍 Session User: volgofolak
+[2025-08-08T21:17:15.235Z] 📝 GET /api/stripe/status - Session ID: 23nNaEjQofFEg6lA0bZU6pFMfF3P7dty
+[2025-08-08T21:17:15.235Z] 🔍 Session User: volgofolak
+[2025-08-08T21:17:15.241Z] 📝 GET /api/causes - Session ID: 23nNaEjQofFEg6lA0bZU6pFMfF3P7dty
+[2025-08-08T21:17:15.245Z] 🔍 Session User: volgofolak
+[2025-08-08T21:17:15.255Z] 📝 GET /me - Session ID: 23nNaEjQofFEg6lA0bZU6pFMfF3P7dty
+[2025-08-08T21:17:15.262Z] 🔍 Session User: volgofolak
+[2025-08-08T21:17:32.360Z] 📝 GET /login - Session ID: 23nNaEjQofFEg6lA0bZU6pFMfF3P7dty
+[2025-08-08T21:17:32.361Z] 🔍 Session User: volgofolak
+[2025-08-08T21:17:32.693Z] 📝 GET /api/check-session - Session ID: 23nNaEjQofFEg6lA0bZU6pFMfF3P7dty
+[2025-08-08T21:17:32.694Z] 🔍 Session User: volgofolak
+[2025-08-08T21:17:32.694Z] 🔍 Check session called: User found
+[2025-08-08T21:17:33.373Z] 📝 POST /api/session/keep-alive - Session ID: 23nNaEjQofFEg6lA0bZU6pFMfF3P7dty
+[2025-08-08T21:17:33.374Z] 🔍 Session User: volgofolak
+[2025-08-08T21:17:35.850Z] 📝 POST /login-supabase - Session ID: 23nNaEjQofFEg6lA0bZU6pFMfF3P7dty
+[2025-08-08T21:17:35.851Z] 🔍 Session User: volgofolak
+[2025-08-08T21:17:35.852Z] 🔐 Login attempt with token: true
+[2025-08-08T21:17:36.463Z] ✅ User saved to session: d98c3559-215c-48e2-84a9-de811b86bf2f
+[2025-08-08T21:17:36.499Z] 📝 GET /profile - Session ID: 23nNaEjQofFEg6lA0bZU6pFMfF3P7dty
+[2025-08-08T21:17:36.499Z] 🔍 Session User: volgofolak
+[2025-08-08T21:17:37.314Z] 📝 GET /api/check-session - Session ID: 23nNaEjQofFEg6lA0bZU6pFMfF3P7dty
+[2025-08-08T21:17:37.315Z] 🔍 Session User: volgofolak
+[2025-08-08T21:17:37.316Z] 🔍 Check session called: User found
+[2025-08-08T21:17:38.563Z] 📝 POST /api/session/keep-alive - Session ID: 23nNaEjQofFEg6lA0bZU6pFMfF3P7dty
+[2025-08-08T21:17:38.566Z] 🔍 Session User: volgofolak
+[2025-08-08T21:17:43.728Z] 📝 GET /takeaction - Session ID: 23nNaEjQofFEg6lA0bZU6pFMfF3P7dty
+[2025-08-08T21:17:43.729Z] 🔍 Session User: volgofolak
+[2025-08-08T21:17:44.056Z] 📝 GET /api/check-session - Session ID: 23nNaEjQofFEg6lA0bZU6pFMfF3P7dty
+[2025-08-08T21:17:44.060Z] 🔍 Session User: volgofolak
+[2025-08-08T21:17:44.060Z] 🔍 Check session called: User found
+[2025-08-08T21:17:44.674Z] 📝 POST /api/session/keep-alive - Session ID: 23nNaEjQofFEg6lA0bZU6pFMfF3P7dty
+[2025-08-08T21:17:44.675Z] 🔍 Session User: volgofolak
+[2025-08-08T21:17:48.818Z] 📝 GET /causes - Session ID: 23nNaEjQofFEg6lA0bZU6pFMfF3P7dty
+[2025-08-08T21:17:48.823Z] 🔍 Session User: volgofolak
+[2025-08-08T21:17:49.038Z] 📝 GET /api/check-session - Session ID: 23nNaEjQofFEg6lA0bZU6pFMfF3P7dty
+[2025-08-08T21:17:49.039Z] 🔍 Session User: volgofolak
+[2025-08-08T21:17:49.040Z] 🔍 Check session called: User found
+[2025-08-08T21:17:49.803Z] 📝 POST /api/session/keep-alive - Session ID: 23nNaEjQofFEg6lA0bZU6pFMfF3P7dty
+[2025-08-08T21:17:49.819Z] 🔍 Session User: volgofolak
+[2025-08-08T21:17:49.831Z] 📝 GET /api/stripe/status - Session ID: 23nNaEjQofFEg6lA0bZU6pFMfF3P7dty
+[2025-08-08T21:17:49.834Z] 🔍 Session User: volgofolak
+[2025-08-08T21:17:49.927Z] 📝 GET /api/causes - Session ID: 23nNaEjQofFEg6lA0bZU6pFMfF3P7dty
+[2025-08-08T21:17:49.927Z] 🔍 Session User: volgofolak
+[2025-08-08T21:17:50.074Z] 📝 GET /me - Session ID: 23nNaEjQofFEg6lA0bZU6pFMfF3P7dty
+[2025-08-08T21:17:50.074Z] 🔍 Session User: volgofolak
+[2025-08-08T21:18:00.742Z] 📝 GET /tasks - Session ID: 23nNaEjQofFEg6lA0bZU6pFMfF3P7dty
+[2025-08-08T21:18:00.743Z] 🔍 Session User: volgofolak
+[2025-08-08T21:18:00.914Z] 📝 GET /js/share-system.js - Session ID: 23nNaEjQofFEg6lA0bZU6pFMfF3P7dty
+[2025-08-08T21:18:00.916Z] 🔍 Session User: volgofolak
+[2025-08-08T21:18:01.030Z] 📝 GET /api/check-session - Session ID: 23nNaEjQofFEg6lA0bZU6pFMfF3P7dty
+[2025-08-08T21:18:01.032Z] 🔍 Session User: volgofolak
+[2025-08-08T21:18:01.033Z] 🔍 Check session called: User found
+[2025-08-08T21:18:01.709Z] 📝 POST /api/session/keep-alive - Session ID: 23nNaEjQofFEg6lA0bZU6pFMfF3P7dty
+[2025-08-08T21:18:01.726Z] 🔍 Session User: volgofolak
+[2025-08-08T21:18:21.339Z] 📝 GET /causes - Session ID: 23nNaEjQofFEg6lA0bZU6pFMfF3P7dty
+[2025-08-08T21:18:21.340Z] 🔍 Session User: volgofolak
+[2025-08-08T21:18:21.757Z] 📝 GET /api/check-session - Session ID: 23nNaEjQofFEg6lA0bZU6pFMfF3P7dty
+[2025-08-08T21:18:21.765Z] 🔍 Session User: volgofolak
+[2025-08-08T21:18:21.767Z] 🔍 Check session called: User found
+[2025-08-08T21:18:22.772Z] 📝 POST /api/session/keep-alive - Session ID: 23nNaEjQofFEg6lA0bZU6pFMfF3P7dty
+[2025-08-08T21:18:22.811Z] 🔍 Session User: volgofolak
+[2025-08-08T21:18:22.825Z] 📝 GET /api/stripe/status - Session ID: 23nNaEjQofFEg6lA0bZU6pFMfF3P7dty
+[2025-08-08T21:18:22.842Z] 🔍 Session User: volgofolak
+[2025-08-08T21:18:22.847Z] 📝 GET /api/causes - Session ID: 23nNaEjQofFEg6lA0bZU6pFMfF3P7dty
+[2025-08-08T21:18:22.848Z] 🔍 Session User: volgofolak
+[2025-08-08T21:18:22.856Z] 📝 GET /me - Session ID: 23nNaEjQofFEg6lA0bZU6pFMfF3P7dty
+[2025-08-08T21:18:22.865Z] 🔍 Session User: volgofolak
+[2025-08-08T21:18:26.617Z] 📝 POST /api/session/keep-alive - Session ID: 23nNaEjQofFEg6lA0bZU6pFMfF3P7dty
+[2025-08-08T21:18:26.618Z] 🔍 Session User: volgofolak
+[2025-08-08T21:23:25.441Z] 📝 POST /api/session/keep-alive - Session ID: 23nNaEjQofFEg6lA0bZU6pFMfF3P7dty
+[2025-08-08T21:23:25.455Z] 🔍 Session User: volgofolak
+[2025-08-08T21:23:26.469Z] 📝 POST /api/session/keep-alive - Session ID: 23nNaEjQofFEg6lA0bZU6pFMfF3P7dty
+[2025-08-08T21:23:26.469Z] 🔍 Session User: volgofolak
+[2025-08-08T21:23:48.339Z] 🚀 Servidor iniciado en http://localhost:3000
+[2025-08-08T21:23:49.303Z] ✅ PostgreSQL/Supabase connection successful
+[2025-08-08T21:23:54.596Z] 📝 GET / - Session ID: yG7VViWBCxeoPmFYZ_6OPKl-ejCDRBLe
+[2025-08-08T21:23:54.598Z] 🔍 Session User: No user
+[2025-08-08T21:23:56.352Z] 📝 GET /api/check-session - Session ID: A3fYOTQVikZ4EeZJPw6h7D0zdW7dtnwB
+[2025-08-08T21:23:56.383Z] 🔍 Session User: No user
+[2025-08-08T21:23:56.455Z] 🔍 Check session called: No user
+[2025-08-08T21:24:07.510Z] 📝 GET /causes - Session ID: 1WxQedcLa7SCDmYxg1VS4iQVfrpcfOgV
+[2025-08-08T21:24:07.511Z] 🔍 Session User: No user
+[2025-08-08T21:24:07.975Z] 📝 GET /api/check-session - Session ID: _I7gMjV2JrGc9MLqUbE0u_yXwFNVr155
+[2025-08-08T21:24:08.047Z] 🔍 Session User: No user
+[2025-08-08T21:24:08.055Z] 🔍 Check session called: No user
+[2025-08-08T21:24:08.644Z] 📝 GET /api/causes - Session ID: S6cv0LFnj4nmslUqC5zrZX2eI5iY95Tg
+[2025-08-08T21:24:08.681Z] 🔍 Session User: No user
+[2025-08-08T21:24:08.785Z] 📝 GET /me - Session ID: 2mQcspx2rzVLukv9x2iME80XnuYj9b2q
+[2025-08-08T21:24:08.786Z] 🔍 Session User: No user
+[2025-08-08T21:24:22.823Z] 📝 GET /challenges - Session ID: N24-_SmcQnruvuH7k6bglVzyT1yXQ2MQ
+[2025-08-08T21:24:22.823Z] 🔍 Session User: No user
+[2025-08-08T21:24:23.054Z] 📝 GET /js/modules/supabase-config.js - Session ID: xY-FvmkAs1dCySJdtwV2iaG7G4qDqDIc
+[2025-08-08T21:24:23.060Z] 🔍 Session User: No user
+[2025-08-08T21:24:23.073Z] 📝 GET /js/modules/share-system.js - Session ID: eUeIhhjCeqP_H11fac153_atVy-fN5Fu
+[2025-08-08T21:24:23.086Z] 🔍 Session User: No user
+[2025-08-08T21:24:23.355Z] 📝 GET /api/check-session - Session ID: gMtRCOtv_GgEblMEIbEh-ecyP5zWs1gj
+[2025-08-08T21:24:23.364Z] 🔍 Session User: No user
+[2025-08-08T21:24:23.365Z] 🔍 Check session called: No user
+[2025-08-08T21:24:30.972Z] 📝 GET /volunteering - Session ID: L98xKZl56ttx9ecN4VhVs_TGxxV2OWxJ
+[2025-08-08T21:24:30.973Z] 🔍 Session User: No user
+[2025-08-08T21:24:31.909Z] 📝 GET /js/modules/share-system.js - Session ID: iSjxBhpyuebiSBGA6Z0DWuzBpj-t08I8
+[2025-08-08T21:24:31.954Z] 🔍 Session User: No user
+[2025-08-08T21:24:31.972Z] 📝 GET /api/check-session - Session ID: Bdn3l-E5m-IpsEaFAHaK6vjCZfNpEvl3
+[2025-08-08T21:24:32.019Z] 🔍 Session User: No user
+[2025-08-08T21:24:32.019Z] 🔍 Check session called: No user
+[2025-08-08T21:24:38.246Z] 📝 GET /teams - Session ID: IPH44ArDmtx0tFJe2w8cuIi3AvIttAS2
+[2025-08-08T21:24:38.247Z] 🔍 Session User: No user
+[2025-08-08T21:24:38.538Z] 📝 GET /api/check-session - Session ID: M_jUa_Hh4gXTlWX01ICzlNJLCB2ZXk4D
+[2025-08-08T21:24:38.570Z] 🔍 Session User: No user
+[2025-08-08T21:24:38.575Z] 🔍 Check session called: No user
+[2025-08-08T21:24:42.826Z] 📝 GET /login - Session ID: v7yr61M7gkclf7COeCVrhRv2ovIOEwNg
+[2025-08-08T21:24:42.828Z] 🔍 Session User: No user
+[2025-08-08T21:24:43.085Z] 📝 GET /api/check-session - Session ID: vvORPjHPfCsqGe_i_jHaydecPCrB1YGa
+[2025-08-08T21:24:43.111Z] 🔍 Session User: No user
+[2025-08-08T21:24:43.119Z] 🔍 Check session called: No user
+[2025-08-08T21:24:45.801Z] 📝 POST /login-supabase - Session ID: q752YnRLFcspHJJNSIrYqwmhBq5sbHqh
+[2025-08-08T21:24:45.801Z] 🔍 Session User: No user
+[2025-08-08T21:24:45.803Z] 🔐 Login attempt with token: true
+[2025-08-08T21:24:46.360Z] ✅ User saved to session: d98c3559-215c-48e2-84a9-de811b86bf2f
+[2025-08-08T21:24:46.406Z] 📝 GET /profile - Session ID: q752YnRLFcspHJJNSIrYqwmhBq5sbHqh
+[2025-08-08T21:24:46.412Z] 🔍 Session User: volgofolak
+[2025-08-08T21:24:47.231Z] 📝 GET /api/check-session - Session ID: q752YnRLFcspHJJNSIrYqwmhBq5sbHqh
+[2025-08-08T21:24:47.232Z] 🔍 Session User: volgofolak
+[2025-08-08T21:24:47.232Z] 🔍 Check session called: User found
+[2025-08-08T21:24:47.542Z] 📝 POST /api/session/keep-alive - Session ID: q752YnRLFcspHJJNSIrYqwmhBq5sbHqh
+[2025-08-08T21:24:47.563Z] 🔍 Session User: volgofolak
+[2025-08-08T21:24:52.018Z] 📝 GET /maps - Session ID: q752YnRLFcspHJJNSIrYqwmhBq5sbHqh
+[2025-08-08T21:24:52.024Z] 🔍 Session User: volgofolak
+[2025-08-08T21:24:52.289Z] 📝 GET /api/check-session - Session ID: q752YnRLFcspHJJNSIrYqwmhBq5sbHqh
+[2025-08-08T21:24:52.310Z] 🔍 Session User: volgofolak
+[2025-08-08T21:24:52.312Z] 🔍 Check session called: User found
+[2025-08-08T21:24:53.109Z] 📝 POST /api/session/keep-alive - Session ID: q752YnRLFcspHJJNSIrYqwmhBq5sbHqh
+[2025-08-08T21:24:53.109Z] 🔍 Session User: volgofolak
+[2025-08-08T21:24:57.267Z] 📝 GET /ranking - Session ID: q752YnRLFcspHJJNSIrYqwmhBq5sbHqh
+[2025-08-08T21:24:57.267Z] 🔍 Session User: volgofolak
+[2025-08-08T21:24:57.569Z] 📝 GET /api/check-session - Session ID: q752YnRLFcspHJJNSIrYqwmhBq5sbHqh
+[2025-08-08T21:24:57.574Z] 🔍 Session User: volgofolak
+[2025-08-08T21:24:57.575Z] 🔍 Check session called: User found
+[2025-08-08T21:24:58.364Z] 📝 POST /api/session/keep-alive - Session ID: q752YnRLFcspHJJNSIrYqwmhBq5sbHqh
+[2025-08-08T21:24:58.379Z] 🔍 Session User: volgofolak
+[2025-08-08T21:25:02.877Z] 📝 GET /teams - Session ID: q752YnRLFcspHJJNSIrYqwmhBq5sbHqh
+[2025-08-08T21:25:02.889Z] 🔍 Session User: volgofolak
+[2025-08-08T21:25:03.156Z] 📝 GET /api/check-session - Session ID: q752YnRLFcspHJJNSIrYqwmhBq5sbHqh
+[2025-08-08T21:25:03.161Z] 🔍 Session User: volgofolak
+[2025-08-08T21:25:03.163Z] 🔍 Check session called: User found
+[2025-08-08T21:25:03.939Z] 📝 POST /api/session/keep-alive - Session ID: q752YnRLFcspHJJNSIrYqwmhBq5sbHqh
+[2025-08-08T21:25:03.941Z] 🔍 Session User: volgofolak
+[2025-08-08T21:25:11.992Z] 📝 GET /maps - Session ID: q752YnRLFcspHJJNSIrYqwmhBq5sbHqh
+[2025-08-08T21:25:11.993Z] 🔍 Session User: volgofolak
+[2025-08-08T21:25:13.323Z] 📝 POST /api/session/keep-alive - Session ID: q752YnRLFcspHJJNSIrYqwmhBq5sbHqh
+[2025-08-08T21:25:13.333Z] 🔍 Session User: volgofolak
+[2025-08-08T21:25:13.850Z] 📝 GET /api/check-session - Session ID: q752YnRLFcspHJJNSIrYqwmhBq5sbHqh
+[2025-08-08T21:25:13.853Z] 🔍 Session User: volgofolak
+[2025-08-08T21:25:13.856Z] 🔍 Check session called: User found
+[2025-08-08T21:25:17.523Z] 📝 GET /tasks - Session ID: q752YnRLFcspHJJNSIrYqwmhBq5sbHqh
+[2025-08-08T21:25:17.524Z] 🔍 Session User: volgofolak
+[2025-08-08T21:25:17.827Z] 📝 GET /js/share-system.js - Session ID: q752YnRLFcspHJJNSIrYqwmhBq5sbHqh
+[2025-08-08T21:25:17.928Z] 🔍 Session User: volgofolak
+[2025-08-08T21:25:17.963Z] 📝 GET /api/check-session - Session ID: q752YnRLFcspHJJNSIrYqwmhBq5sbHqh
+[2025-08-08T21:25:17.997Z] 🔍 Session User: volgofolak
+[2025-08-08T21:25:18.008Z] 🔍 Check session called: User found
+[2025-08-08T21:25:18.627Z] 📝 POST /api/session/keep-alive - Session ID: q752YnRLFcspHJJNSIrYqwmhBq5sbHqh
+[2025-08-08T21:25:18.637Z] 🔍 Session User: volgofolak
+[2025-08-08T21:25:50.496Z] 📝 GET /causes - Session ID: q752YnRLFcspHJJNSIrYqwmhBq5sbHqh
+[2025-08-08T21:25:50.501Z] 🔍 Session User: volgofolak
+[2025-08-08T21:25:50.862Z] 📝 GET /api/check-session - Session ID: q752YnRLFcspHJJNSIrYqwmhBq5sbHqh
+[2025-08-08T21:25:50.865Z] 🔍 Session User: volgofolak
+[2025-08-08T21:25:50.879Z] 🔍 Check session called: User found
+[2025-08-08T21:25:53.009Z] 📝 POST /api/session/keep-alive - Session ID: q752YnRLFcspHJJNSIrYqwmhBq5sbHqh
+[2025-08-08T21:25:53.081Z] 🔍 Session User: volgofolak
+[2025-08-08T21:25:53.625Z] 📝 GET /me - Session ID: q752YnRLFcspHJJNSIrYqwmhBq5sbHqh
+[2025-08-08T21:25:53.626Z] 🔍 Session User: volgofolak
+[2025-08-08T21:25:53.629Z] 📝 GET /api/causes - Session ID: q752YnRLFcspHJJNSIrYqwmhBq5sbHqh
+[2025-08-08T21:25:53.629Z] 🔍 Session User: volgofolak
+[2025-08-08T21:25:53.639Z] 📝 GET /api/stripe/status - Session ID: q752YnRLFcspHJJNSIrYqwmhBq5sbHqh
+[2025-08-08T21:25:53.642Z] 🔍 Session User: volgofolak
+[2025-08-08T21:25:56.299Z] 📝 GET /.well-known/appspecific/com.chrome.devtools.json - Session ID: q752YnRLFcspHJJNSIrYqwmhBq5sbHqh
+[2025-08-08T21:25:56.337Z] 🔍 Session User: volgofolak
+[2025-08-08T21:25:57.189Z] 📝 GET /js/lib/axios.min.js.map - Session ID: q752YnRLFcspHJJNSIrYqwmhBq5sbHqh
+[2025-08-08T21:25:57.237Z] 🔍 Session User: volgofolak
+[2025-08-08T21:26:37.027Z] 📝 GET /.well-known/appspecific/com.chrome.devtools.json - Session ID: q752YnRLFcspHJJNSIrYqwmhBq5sbHqh
+[2025-08-08T21:26:37.049Z] 🔍 Session User: volgofolak
+[2025-08-08T21:26:37.109Z] 📝 GET /js/lib/axios.min.js.map - Session ID: q752YnRLFcspHJJNSIrYqwmhBq5sbHqh
+[2025-08-08T21:26:37.328Z] 🔍 Session User: volgofolak
+[2025-08-08T21:28:23.842Z] 📝 POST /api/session/keep-alive - Session ID: q752YnRLFcspHJJNSIrYqwmhBq5sbHqh
+[2025-08-08T21:28:23.843Z] 🔍 Session User: volgofolak
+[2025-08-08T21:28:26.419Z] 📝 POST /api/session/keep-alive - Session ID: q752YnRLFcspHJJNSIrYqwmhBq5sbHqh
+[2025-08-08T21:28:26.421Z] 🔍 Session User: volgofolak
+[2025-08-08T21:28:40.271Z] 🚀 Servidor iniciado en http://localhost:3000
+[2025-08-08T21:28:41.287Z] ✅ PostgreSQL/Supabase connection successful
+[2025-08-08T21:28:49.950Z] 📝 GET / - Session ID: j7xJ7wFWzgWUIXLtyb3ain81bS1MCPmM
+[2025-08-08T21:28:49.976Z] 🔍 Session User: No user
+[2025-08-08T21:28:51.974Z] 📝 GET /api/check-session - Session ID: SGp0q1Fl46blpKyVus9kkaocbd131req
+[2025-08-08T21:28:52.089Z] 🔍 Session User: No user
+[2025-08-08T21:28:52.139Z] 🔍 Check session called: No user
+[2025-08-08T21:29:00.742Z] 📝 GET /causes - Session ID: zdpVvtumSvYBn0MM7buoaDZMHV1Xw2HM
+[2025-08-08T21:29:00.796Z] 🔍 Session User: No user
+[2025-08-08T21:29:02.434Z] 📝 GET /api/causes - Session ID: wcW5Jb0ACc6FUM6kHoGir2Xm6M5YZx24
+[2025-08-08T21:29:02.463Z] 🔍 Session User: No user
+[2025-08-08T21:29:02.519Z] 📝 GET /me - Session ID: FQXBdtFuuuzPbaGhTuOlCmOXDZG21khK
+[2025-08-08T21:29:02.533Z] 🔍 Session User: No user
+[2025-08-08T21:29:11.329Z] 📝 GET /.well-known/appspecific/com.chrome.devtools.json - Session ID: 3SE_0JzSxjIVyPYcjjdvCDpqU_lX3-no
+[2025-08-08T21:29:11.421Z] 🔍 Session User: No user
+[2025-08-08T21:29:12.233Z] 📝 GET /js/lib/axios.min.js.map - Session ID: eEhUzDqnLYEl2Dx0kufW6ngpn6PanhOq
+[2025-08-08T21:29:12.252Z] 🔍 Session User: No user
+[2025-08-08T21:29:19.307Z] 📝 GET /api/check-session - Session ID: D8Ai6YZw9t_-DyMoaNrvoWGfR0uiWrJ9
+[2025-08-08T21:29:19.310Z] 🔍 Session User: No user
+[2025-08-08T21:29:19.313Z] 🔍 Check session called: No user
+[2025-08-08T21:30:53.471Z] 📝 POST /api/session/keep-alive - Session ID: 6eg5ryRW-b0RatE7JJJAoGz8AXEQrpzq
+[2025-08-08T21:30:53.472Z] 🔍 Session User: No user
+[2025-08-08T21:33:23.424Z] 📝 POST /api/session/keep-alive - Session ID: I5pQXaEvinmtQ8tlBW608nD8t3rDt0sn
+[2025-08-08T21:33:23.427Z] 🔍 Session User: No user
+[2025-08-08T21:33:26.426Z] 📝 POST /api/session/keep-alive - Session ID: ykVHY7gp1bRZa0we-_odBEKYf8KW2akP
+[2025-08-08T21:33:26.426Z] 🔍 Session User: No user
+[2025-08-08T21:33:57.397Z] 📝 POST /api/session/keep-alive - Session ID: 8ZoGd2L7SYu2I6esHMUf9OeHcggRWrmD
+[2025-08-08T21:33:57.398Z] 🔍 Session User: No user
+[2025-08-08T21:35:06.416Z] 🚀 Servidor iniciado en http://localhost:3000
+[2025-08-08T21:35:07.520Z] ✅ PostgreSQL/Supabase connection successful
+[2025-08-08T21:35:10.914Z] 📝 GET / - Session ID: x1PaqhLaH1uSSLloh3TWvGX_Y4U_mkU5
+[2025-08-08T21:35:10.959Z] 🔍 Session User: No user
+[2025-08-08T21:35:12.853Z] 📝 GET /api/check-session - Session ID: HNORIzDVyrOiN6yKYzu4i1CXWtrMjahh
+[2025-08-08T21:35:12.858Z] 🔍 Session User: No user
+[2025-08-08T21:35:12.861Z] 🔍 Check session called: No user
+[2025-08-08T21:35:14.132Z] 📝 GET /causes - Session ID: QEj3togr66NNNKLz-FcTZpB_5Ebe4FHY
+[2025-08-08T21:35:14.132Z] 🔍 Session User: No user
+[2025-08-08T21:35:14.558Z] 📝 GET /api/check-session - Session ID: 2kUtVgaMVWz_kkLsTyBwAYV3GHM6-yjV
+[2025-08-08T21:35:14.567Z] 🔍 Session User: No user
+[2025-08-08T21:35:14.567Z] 🔍 Check session called: No user
+[2025-08-08T21:35:23.741Z] 📝 GET /causes - Session ID: rsVWWUDnB_mqDdiqIjVNnS01zWCwOvTj
+[2025-08-08T21:35:23.743Z] 🔍 Session User: No user
+[2025-08-08T21:35:29.512Z] 📝 GET /login - Session ID: kBJtRX6vbbeeeaqfTScFA6es59an2H8c
+[2025-08-08T21:35:29.512Z] 🔍 Session User: No user
+[2025-08-08T21:35:32.568Z] 📝 POST /login-supabase - Session ID: i12fLiOPJ59MEAiA6g6q_4QpI9W99S3_
+[2025-08-08T21:35:32.568Z] 🔍 Session User: No user
+[2025-08-08T21:35:32.569Z] 🔐 Login attempt with token: true
+[2025-08-08T21:35:33.187Z] ✅ User saved to session: d98c3559-215c-48e2-84a9-de811b86bf2f
+[2025-08-08T21:35:33.222Z] 📝 GET /profile - Session ID: i12fLiOPJ59MEAiA6g6q_4QpI9W99S3_
+[2025-08-08T21:35:33.222Z] 🔍 Session User: volgofolak
+[2025-08-08T21:35:34.019Z] 📝 GET /api/check-session - Session ID: i12fLiOPJ59MEAiA6g6q_4QpI9W99S3_
+[2025-08-08T21:35:34.020Z] 🔍 Session User: volgofolak
+[2025-08-08T21:35:34.020Z] 🔍 Check session called: User found
+[2025-08-08T21:35:34.348Z] 📝 POST /api/session/keep-alive - Session ID: i12fLiOPJ59MEAiA6g6q_4QpI9W99S3_
+[2025-08-08T21:35:34.349Z] 🔍 Session User: volgofolak
+[2025-08-08T21:35:38.988Z] 📝 GET /causes - Session ID: i12fLiOPJ59MEAiA6g6q_4QpI9W99S3_
+[2025-08-08T21:35:38.988Z] 🔍 Session User: volgofolak
+[2025-08-08T21:35:39.197Z] 📝 GET /api/check-session - Session ID: i12fLiOPJ59MEAiA6g6q_4QpI9W99S3_
+[2025-08-08T21:35:39.205Z] 🔍 Session User: volgofolak
+[2025-08-08T21:35:39.207Z] 🔍 Check session called: User found
+[2025-08-08T21:35:39.955Z] 📝 POST /api/session/keep-alive - Session ID: i12fLiOPJ59MEAiA6g6q_4QpI9W99S3_
+[2025-08-08T21:35:39.961Z] 🔍 Session User: volgofolak
+[2025-08-08T21:35:39.974Z] 📝 GET /api/stripe/status - Session ID: i12fLiOPJ59MEAiA6g6q_4QpI9W99S3_
+[2025-08-08T21:35:39.975Z] 🔍 Session User: volgofolak
+[2025-08-08T21:38:23.400Z] 📝 POST /api/session/keep-alive - Session ID: i12fLiOPJ59MEAiA6g6q_4QpI9W99S3_
+[2025-08-08T21:38:23.400Z] 🔍 Session User: volgofolak
+[2025-08-08T21:39:10.639Z] 🚀 Servidor iniciado en http://localhost:3000
+[2025-08-08T21:39:11.351Z] ✅ PostgreSQL/Supabase connection successful
+[2025-08-08T21:39:13.825Z] 📝 GET / - Session ID: pg3uTFHTDDRayJslAnlVtCQR9Ku0XTq_
+[2025-08-08T21:39:13.841Z] 🔍 Session User: No user
+[2025-08-08T21:39:14.911Z] 📝 POST /api/session/keep-alive - Session ID: Gr1kPNKrWqwTUZoHwmfDxtq50D1dVXih
+[2025-08-08T21:39:14.912Z] 🔍 Session User: No user
+[2025-08-08T21:39:15.186Z] 📝 GET /api/check-session - Session ID: AzpO9IDKP1xhND1uy7ChllcQBJ2slkBy
+[2025-08-08T21:39:15.220Z] 🔍 Session User: No user
+[2025-08-08T21:39:15.221Z] 🔍 Check session called: No user
+[2025-08-08T21:39:20.321Z] 📝 GET /causes - Session ID: Lx-0uLJMso6ITPJBurVchsXYAd7Wd_lQ
+[2025-08-08T21:39:20.322Z] 🔍 Session User: No user
+[2025-08-08T21:39:20.612Z] 📝 GET /api/check-session - Session ID: 8mRd52vaGkMSQ5R-kcNnp4BLNVUzrAUh
+[2025-08-08T21:39:20.623Z] 🔍 Session User: No user
+[2025-08-08T21:39:20.627Z] 🔍 Check session called: No user
+[2025-08-08T21:39:21.352Z] 📝 GET /me - Session ID: e5o3-62a0F2C0rP3QfaFKyekEIp5umdd
+[2025-08-08T21:39:21.352Z] 🔍 Session User: No user
+[2025-08-08T21:39:21.361Z] 📝 GET /api/causes - Session ID: QUfUzsUj8Vk0sn5kz1L5fglDduAsk27c
+[2025-08-08T21:39:21.362Z] 🔍 Session User: No user
+[2025-08-08T21:39:28.075Z] 📝 GET /me - Session ID: yEXTIurQDQJCJsszCpTn2zaS-CmjI52G
+[2025-08-08T21:39:28.076Z] 🔍 Session User: No user
+[2025-08-08T21:39:30.335Z] 📝 GET /login - Session ID: ZfEVwEfjOZxv-iUIgAHfGYr-wWrhgU-a
+[2025-08-08T21:39:30.336Z] 🔍 Session User: No user
+[2025-08-08T21:39:30.626Z] 📝 GET /api/check-session - Session ID: Ob3joNsIHWaz8fdvVzjoiUhlcfMNSbsf
+[2025-08-08T21:39:30.634Z] 🔍 Session User: No user
+[2025-08-08T21:39:30.635Z] 🔍 Check session called: No user
+[2025-08-08T21:39:33.397Z] 📝 POST /login-supabase - Session ID: -3v7Zual8o9dHTYYugE1fNhjrxRDK2r9
+[2025-08-08T21:39:33.397Z] 🔍 Session User: No user
+[2025-08-08T21:39:33.398Z] 🔐 Login attempt with token: true
+[2025-08-08T21:39:33.933Z] ✅ User saved to session: d98c3559-215c-48e2-84a9-de811b86bf2f
+[2025-08-08T21:39:33.987Z] 📝 GET /profile - Session ID: -3v7Zual8o9dHTYYugE1fNhjrxRDK2r9
+[2025-08-08T21:39:33.991Z] 🔍 Session User: volgofolak
+[2025-08-08T21:39:35.036Z] 📝 POST /api/session/keep-alive - Session ID: -3v7Zual8o9dHTYYugE1fNhjrxRDK2r9
+[2025-08-08T21:39:35.044Z] 🔍 Session User: volgofolak
+[2025-08-08T21:39:35.141Z] 📝 GET /api/check-session - Session ID: -3v7Zual8o9dHTYYugE1fNhjrxRDK2r9
+[2025-08-08T21:39:35.142Z] 🔍 Session User: volgofolak
+[2025-08-08T21:39:35.143Z] 🔍 Check session called: User found
+[2025-08-08T21:39:43.330Z] 📝 GET /me - Session ID: -3v7Zual8o9dHTYYugE1fNhjrxRDK2r9
+[2025-08-08T21:39:43.331Z] 🔍 Session User: volgofolak
+[2025-08-08T21:39:43.509Z] 📝 GET /img/cause-default.jpg - Session ID: -3v7Zual8o9dHTYYugE1fNhjrxRDK2r9
+[2025-08-08T21:39:43.514Z] 🔍 Session User: volgofolak
+[2025-08-08T21:39:47.598Z] 📝 POST /api/session/keep-alive - Session ID: -3v7Zual8o9dHTYYugE1fNhjrxRDK2r9
+[2025-08-08T21:39:47.617Z] 🔍 Session User: volgofolak
+[2025-08-08T21:39:48.622Z] 📝 GET /causes - Session ID: -3v7Zual8o9dHTYYugE1fNhjrxRDK2r9
+[2025-08-08T21:39:48.623Z] 🔍 Session User: volgofolak
+[2025-08-08T21:39:48.949Z] 📝 GET /api/check-session - Session ID: -3v7Zual8o9dHTYYugE1fNhjrxRDK2r9
+[2025-08-08T21:39:48.986Z] 🔍 Session User: volgofolak
+[2025-08-08T21:39:48.988Z] 🔍 Check session called: User found
+[2025-08-08T21:39:49.639Z] 📝 POST /api/session/keep-alive - Session ID: -3v7Zual8o9dHTYYugE1fNhjrxRDK2r9
+[2025-08-08T21:39:49.662Z] 🔍 Session User: volgofolak
+[2025-08-08T21:39:49.677Z] 📝 GET /api/stripe/status - Session ID: -3v7Zual8o9dHTYYugE1fNhjrxRDK2r9
+[2025-08-08T21:39:49.684Z] 🔍 Session User: volgofolak
+[2025-08-08T21:39:49.690Z] 📝 GET /me - Session ID: -3v7Zual8o9dHTYYugE1fNhjrxRDK2r9
+[2025-08-08T21:39:49.690Z] 🔍 Session User: volgofolak
+[2025-08-08T21:39:49.706Z] 📝 GET /api/causes - Session ID: -3v7Zual8o9dHTYYugE1fNhjrxRDK2r9
+[2025-08-08T21:39:49.707Z] 🔍 Session User: volgofolak
+[2025-08-08T21:39:53.417Z] 📝 GET /me - Session ID: -3v7Zual8o9dHTYYugE1fNhjrxRDK2r9
+[2025-08-08T21:39:53.417Z] 🔍 Session User: volgofolak
+[2025-08-08T21:39:53.435Z] 📝 GET /api/stripe/status - Session ID: -3v7Zual8o9dHTYYugE1fNhjrxRDK2r9
+[2025-08-08T21:39:53.436Z] 🔍 Session User: volgofolak
+[2025-08-08T21:39:53.773Z] 📝 POST /api/stripe/create-account - Session ID: -3v7Zual8o9dHTYYugE1fNhjrxRDK2r9
+[2025-08-08T21:39:53.773Z] 🔍 Session User: volgofolak
+[2025-08-08T21:39:58.567Z] 📝 GET /me - Session ID: -3v7Zual8o9dHTYYugE1fNhjrxRDK2r9
+[2025-08-08T21:39:58.568Z] 🔍 Session User: volgofolak
+[2025-08-08T21:39:58.586Z] 📝 GET /api/stripe/status - Session ID: -3v7Zual8o9dHTYYugE1fNhjrxRDK2r9
+[2025-08-08T21:39:58.586Z] 🔍 Session User: volgofolak
+[2025-08-08T21:39:59.172Z] 📝 POST /api/stripe/create-account - Session ID: -3v7Zual8o9dHTYYugE1fNhjrxRDK2r9
+[2025-08-08T21:39:59.172Z] 🔍 Session User: volgofolak
+[2025-08-08T21:40:02.153Z] 📝 GET /login - Session ID: -3v7Zual8o9dHTYYugE1fNhjrxRDK2r9
+[2025-08-08T21:40:02.153Z] 🔍 Session User: volgofolak
+[2025-08-08T21:40:02.381Z] 📝 GET /api/check-session - Session ID: -3v7Zual8o9dHTYYugE1fNhjrxRDK2r9
+[2025-08-08T21:40:02.389Z] 🔍 Session User: volgofolak
+[2025-08-08T21:40:02.390Z] 🔍 Check session called: User found
+[2025-08-08T21:40:03.096Z] 📝 POST /api/session/keep-alive - Session ID: -3v7Zual8o9dHTYYugE1fNhjrxRDK2r9
+[2025-08-08T21:40:03.102Z] 🔍 Session User: volgofolak
+[2025-08-08T21:40:04.896Z] 📝 POST /login-supabase - Session ID: -3v7Zual8o9dHTYYugE1fNhjrxRDK2r9
+[2025-08-08T21:40:04.898Z] 🔍 Session User: volgofolak
+[2025-08-08T21:40:04.899Z] 🔐 Login attempt with token: true
+[2025-08-08T21:40:05.421Z] 📝 GET /takeaction - Session ID: -3v7Zual8o9dHTYYugE1fNhjrxRDK2r9
+[2025-08-08T21:40:05.422Z] 🔍 Session User: volgofolak
+[2025-08-08T21:40:05.536Z] ✅ User saved to session: d98c3559-215c-48e2-84a9-de811b86bf2f
+[2025-08-08T21:40:06.522Z] 📝 POST /api/session/keep-alive - Session ID: -3v7Zual8o9dHTYYugE1fNhjrxRDK2r9
+[2025-08-08T21:40:06.530Z] 🔍 Session User: volgofolak
+[2025-08-08T21:40:06.657Z] 📝 GET /api/check-session - Session ID: -3v7Zual8o9dHTYYugE1fNhjrxRDK2r9
+[2025-08-08T21:40:06.658Z] 🔍 Session User: volgofolak
+[2025-08-08T21:40:06.659Z] 🔍 Check session called: User found
+[2025-08-08T21:40:07.936Z] 📝 GET /causes - Session ID: -3v7Zual8o9dHTYYugE1fNhjrxRDK2r9
+[2025-08-08T21:40:07.937Z] 🔍 Session User: volgofolak
+[2025-08-08T21:40:08.849Z] 📝 POST /api/session/keep-alive - Session ID: -3v7Zual8o9dHTYYugE1fNhjrxRDK2r9
+[2025-08-08T21:40:08.857Z] 🔍 Session User: volgofolak
+[2025-08-08T21:40:08.881Z] 📝 GET /api/stripe/status - Session ID: -3v7Zual8o9dHTYYugE1fNhjrxRDK2r9
+[2025-08-08T21:40:08.894Z] 🔍 Session User: volgofolak
+[2025-08-08T21:40:08.901Z] 📝 GET /me - Session ID: -3v7Zual8o9dHTYYugE1fNhjrxRDK2r9
+[2025-08-08T21:40:08.902Z] 🔍 Session User: volgofolak
+[2025-08-08T21:40:08.916Z] 📝 GET /api/causes - Session ID: -3v7Zual8o9dHTYYugE1fNhjrxRDK2r9
+[2025-08-08T21:40:08.916Z] 🔍 Session User: volgofolak
+[2025-08-08T21:40:09.399Z] 📝 GET /api/check-session - Session ID: -3v7Zual8o9dHTYYugE1fNhjrxRDK2r9
+[2025-08-08T21:40:09.399Z] 🔍 Session User: volgofolak
+[2025-08-08T21:40:09.400Z] 🔍 Check session called: User found
+[2025-08-08T21:40:14.144Z] 📝 GET /me - Session ID: -3v7Zual8o9dHTYYugE1fNhjrxRDK2r9
+[2025-08-08T21:40:14.144Z] 🔍 Session User: volgofolak
+[2025-08-08T21:40:14.160Z] 📝 GET /api/stripe/status - Session ID: -3v7Zual8o9dHTYYugE1fNhjrxRDK2r9
+[2025-08-08T21:40:14.166Z] 🔍 Session User: volgofolak
+[2025-08-08T21:40:14.719Z] 📝 POST /api/stripe/create-account - Session ID: -3v7Zual8o9dHTYYugE1fNhjrxRDK2r9
+[2025-08-08T21:40:14.719Z] 🔍 Session User: volgofolak
+[2025-08-08T21:40:18.830Z] 📝 GET /.well-known/appspecific/com.chrome.devtools.json - Session ID: -3v7Zual8o9dHTYYugE1fNhjrxRDK2r9
+[2025-08-08T21:40:18.831Z] 🔍 Session User: volgofolak
+[2025-08-08T21:40:19.215Z] 📝 GET /js/lib/axios.min.js.map - Session ID: -3v7Zual8o9dHTYYugE1fNhjrxRDK2r9
+[2025-08-08T21:40:19.217Z] 🔍 Session User: volgofolak
+[2025-08-08T21:40:40.405Z] 📝 POST /api/session/keep-alive - Session ID: -3v7Zual8o9dHTYYugE1fNhjrxRDK2r9
+[2025-08-08T21:40:40.406Z] 🔍 Session User: volgofolak
+[2025-08-08T21:40:45.775Z] 📝 GET /me - Session ID: -3v7Zual8o9dHTYYugE1fNhjrxRDK2r9
+[2025-08-08T21:40:45.775Z] 🔍 Session User: volgofolak
+[2025-08-08T21:40:45.793Z] 📝 GET /api/stripe/status - Session ID: -3v7Zual8o9dHTYYugE1fNhjrxRDK2r9
+[2025-08-08T21:40:45.793Z] 🔍 Session User: volgofolak
+[2025-08-08T21:40:46.359Z] 📝 POST /api/stripe/create-account - Session ID: -3v7Zual8o9dHTYYugE1fNhjrxRDK2r9
+[2025-08-08T21:40:46.359Z] 🔍 Session User: volgofolak
+[2025-08-08T21:41:03.745Z] 📝 GET /me - Session ID: -3v7Zual8o9dHTYYugE1fNhjrxRDK2r9
+[2025-08-08T21:41:03.745Z] 🔍 Session User: volgofolak
+[2025-08-08T21:41:07.008Z] 📝 POST /api/session/keep-alive - Session ID: -3v7Zual8o9dHTYYugE1fNhjrxRDK2r9
+[2025-08-08T21:41:07.015Z] 🔍 Session User: volgofolak
+[2025-08-08T21:41:07.196Z] 📝 GET /api/causes - Session ID: -3v7Zual8o9dHTYYugE1fNhjrxRDK2r9
+[2025-08-08T21:41:07.197Z] 🔍 Session User: volgofolak
+[2025-08-08T21:42:41.496Z] 🚀 Servidor iniciado en http://localhost:3000
+[2025-08-08T21:42:42.199Z] ✅ PostgreSQL/Supabase connection successful
+[2025-08-08T21:42:44.793Z] 📝 GET / - Session ID: bEf5IQFW_3XAmGpDn24vjb-jGW_ev_C0
+[2025-08-08T21:42:44.820Z] 🔍 Session User: No user
+[2025-08-08T21:42:45.776Z] 📝 GET /api/check-session - Session ID: 62euSHj52BcKZfalKYlRnEZi8h1i8jrQ
+[2025-08-08T21:42:45.780Z] 🔍 Session User: No user
+[2025-08-08T21:42:45.785Z] 🔍 Check session called: No user
+[2025-08-08T21:42:48.622Z] 📝 GET /causes - Session ID: LOP56VioTFn47n556CfNaOMGVhMAW24X
+[2025-08-08T21:42:48.622Z] 🔍 Session User: No user
+[2025-08-08T21:42:48.929Z] 📝 GET /api/check-session - Session ID: t77mLNS16T9Dk-JOBYZdm9K209SX6_Px
+[2025-08-08T21:42:48.969Z] 🔍 Session User: No user
+[2025-08-08T21:42:48.971Z] 🔍 Check session called: No user
+[2025-08-08T21:42:49.649Z] 📝 GET /me - Session ID: Lr2VMzzuzoVJUk3Stb9y-85kCtrE-ijp
+[2025-08-08T21:42:49.651Z] 🔍 Session User: No user
+[2025-08-08T21:42:49.654Z] 📝 GET /api/causes - Session ID: QUM9nGGIWZJ3FFYuUj32YfX6Vmeaxzs_
+[2025-08-08T21:42:49.656Z] 🔍 Session User: No user
+[2025-08-08T21:43:03.339Z] 📝 GET /login - Session ID: I-mwoR6xWjwwavw--P3ooyaMVom6zc1m
+[2025-08-08T21:43:03.339Z] 🔍 Session User: No user
+[2025-08-08T21:43:03.576Z] 📝 GET /api/check-session - Session ID: U6ByNB-UoQ6U4uEGuHFc9_sJ4R1LoZVx
+[2025-08-08T21:43:03.588Z] 🔍 Session User: No user
+[2025-08-08T21:43:03.589Z] 🔍 Check session called: No user
+[2025-08-08T21:43:06.097Z] 📝 POST /login-supabase - Session ID: HLlZ6kcYmt87fYSsrg1W6gSyMMd4DGGh
+[2025-08-08T21:43:06.098Z] 🔍 Session User: No user
+[2025-08-08T21:43:06.099Z] 🔐 Login attempt with token: true
+[2025-08-08T21:43:06.635Z] ✅ User saved to session: d98c3559-215c-48e2-84a9-de811b86bf2f
+[2025-08-08T21:43:06.683Z] 📝 GET /profile - Session ID: HLlZ6kcYmt87fYSsrg1W6gSyMMd4DGGh
+[2025-08-08T21:43:06.683Z] 🔍 Session User: volgofolak
+[2025-08-08T21:43:07.680Z] 📝 POST /api/session/keep-alive - Session ID: HLlZ6kcYmt87fYSsrg1W6gSyMMd4DGGh
+[2025-08-08T21:43:07.697Z] 🔍 Session User: volgofolak
+[2025-08-08T21:43:07.889Z] 📝 GET /api/check-session - Session ID: HLlZ6kcYmt87fYSsrg1W6gSyMMd4DGGh
+[2025-08-08T21:43:07.889Z] 🔍 Session User: volgofolak
+[2025-08-08T21:43:07.890Z] 🔍 Check session called: User found
+[2025-08-08T21:43:09.062Z] 📝 GET /causes - Session ID: HLlZ6kcYmt87fYSsrg1W6gSyMMd4DGGh
+[2025-08-08T21:43:09.062Z] 🔍 Session User: volgofolak
+[2025-08-08T21:43:10.020Z] 📝 POST /api/session/keep-alive - Session ID: HLlZ6kcYmt87fYSsrg1W6gSyMMd4DGGh
+[2025-08-08T21:43:10.043Z] 🔍 Session User: volgofolak
+[2025-08-08T21:43:10.053Z] 📝 GET /me - Session ID: HLlZ6kcYmt87fYSsrg1W6gSyMMd4DGGh
+[2025-08-08T21:43:10.060Z] 🔍 Session User: volgofolak
+[2025-08-08T21:43:10.063Z] 📝 GET /api/stripe/status - Session ID: HLlZ6kcYmt87fYSsrg1W6gSyMMd4DGGh
+[2025-08-08T21:43:10.080Z] 🔍 Session User: volgofolak
+[2025-08-08T21:43:10.095Z] 📝 GET /api/causes - Session ID: HLlZ6kcYmt87fYSsrg1W6gSyMMd4DGGh
+[2025-08-08T21:43:10.096Z] 🔍 Session User: volgofolak
+[2025-08-08T21:43:10.561Z] 📝 GET /api/check-session - Session ID: HLlZ6kcYmt87fYSsrg1W6gSyMMd4DGGh
+[2025-08-08T21:43:10.561Z] 🔍 Session User: volgofolak
+[2025-08-08T21:43:10.562Z] 🔍 Check session called: User found
+[2025-08-08T21:43:23.478Z] 📝 POST /api/session/keep-alive - Session ID: HLlZ6kcYmt87fYSsrg1W6gSyMMd4DGGh
+[2025-08-08T21:43:23.479Z] 🔍 Session User: volgofolak
+[2025-08-08T21:44:39.023Z] 🚀 Servidor iniciado en http://localhost:3000
+[2025-08-08T21:44:40.181Z] ✅ PostgreSQL/Supabase connection successful
+[2025-08-08T21:45:29.502Z] 📝 GET / - Session ID: oHpNOaOIcq_z-TjnCXX3Q1SoeXYSTtnO
+[2025-08-08T21:45:29.524Z] 🔍 Session User: No user
+[2025-08-08T21:45:31.592Z] 📝 GET /api/check-session - Session ID: _fpTErfk4VLtGvATtuLLj0rEbEP3Q1WF
+[2025-08-08T21:45:31.818Z] 🔍 Session User: No user
+[2025-08-08T21:45:31.821Z] 🔍 Check session called: No user
+[2025-08-08T21:45:34.910Z] 📝 GET /causes - Session ID: UcRCxtzFhBg1EgC1zqpJBvYoHL8xoFIZ
+[2025-08-08T21:45:34.910Z] 🔍 Session User: No user
+[2025-08-08T21:45:37.607Z] 📝 GET /api/check-session - Session ID: UwRCss7tumIzF87_0BBQFIVELyBYtpwL
+[2025-08-08T21:45:37.643Z] 🔍 Session User: No user
+[2025-08-08T21:45:37.648Z] 🔍 Check session called: No user
+[2025-08-08T21:45:38.230Z] 📝 GET /me - Session ID: XhJ8-yQilJZNnd35lqqvzpTfMqFYDQSL
+[2025-08-08T21:45:38.253Z] 🔍 Session User: No user
+[2025-08-08T21:45:38.272Z] 📝 GET /api/causes - Session ID: -xn-GtGdaYWj1PlMbHSnRK6pg0YqNJmA
+[2025-08-08T21:45:38.273Z] 🔍 Session User: No user
+[2025-08-08T21:45:39.020Z] 📝 GET /me - Session ID: ZkAlVnF4PcBLfFLv-pwYwyvTETQ_3Ijk
+[2025-08-08T21:45:39.184Z] 🔍 Session User: No user
+[2025-08-08T21:45:45.665Z] 📝 GET /login - Session ID: wPVWdj-42sNm0tloZS0wfVnrnsD5FrZP
+[2025-08-08T21:45:45.666Z] 🔍 Session User: No user
+[2025-08-08T21:45:46.102Z] 📝 GET /api/check-session - Session ID: NR9MbiEOTeJKKqiIKFzyk83SGDkiTzWY
+[2025-08-08T21:45:46.103Z] 🔍 Session User: No user
+[2025-08-08T21:45:46.103Z] 🔍 Check session called: No user
+[2025-08-08T21:46:43.472Z] 📝 GET /tasks - Session ID: LYfPorUiS14v7A181hxMRZTNVR8KpeDC
+[2025-08-08T21:46:43.473Z] 🔍 Session User: No user
+[2025-08-08T21:46:43.659Z] 📝 GET /js/share-system.js - Session ID: VZNNdQFtn68zyuNXPJkxLluZDoc41ZIe
+[2025-08-08T21:46:43.665Z] 🔍 Session User: No user
+[2025-08-08T21:46:43.712Z] 📝 GET /api/check-session - Session ID: tPutQi9kP1NpXdsr85ZU8_Bw6F3jn8EM
+[2025-08-08T21:46:43.727Z] 🔍 Session User: No user
+[2025-08-08T21:46:43.728Z] 🔍 Check session called: No user
+[2025-08-08T21:46:48.315Z] 📝 GET /challenges - Session ID: ULlMZM-sIcHFZGbvZ2e7TJJpjZBUQedh
+[2025-08-08T21:46:48.318Z] 🔍 Session User: No user
+[2025-08-08T21:46:48.600Z] 📝 GET /js/modules/supabase-config.js - Session ID: rxCOSh2t-Rg_orFpMAI_eggHsnkANC6Y
+[2025-08-08T21:46:48.607Z] 🔍 Session User: No user
+[2025-08-08T21:46:48.654Z] 📝 GET /js/modules/share-system.js - Session ID: B6SEgAnhZQ4k45LLG-fNczQ97TnypIk9
+[2025-08-08T21:46:48.669Z] 🔍 Session User: No user
+[2025-08-08T21:46:48.686Z] 📝 GET /api/check-session - Session ID: 64awTAdMOm9k0sqJryXth0F5yLSI1bWY
+[2025-08-08T21:46:48.727Z] 🔍 Session User: No user
+[2025-08-08T21:46:48.728Z] 🔍 Check session called: No user
+[2025-08-08T21:47:08.498Z] 📝 GET /takeaction - Session ID: 29tpF1QQ6lBN7Qui5503widm3Dk-Nx3a
+[2025-08-08T21:47:08.502Z] 🔍 Session User: No user
+[2025-08-08T21:47:08.770Z] 📝 GET /api/check-session - Session ID: Tt3cjD1tT5enOFTeWCsmmSEDhjAaicqa
+[2025-08-08T21:47:08.779Z] 🔍 Session User: No user
+[2025-08-08T21:47:08.780Z] 🔍 Check session called: No user
+[2025-08-08T21:47:11.392Z] 📝 GET /causes - Session ID: h_PuSjqOMf6-3UYj4YJgjWSvweJ3KPNI
+[2025-08-08T21:47:11.395Z] 🔍 Session User: No user
+[2025-08-08T21:47:11.551Z] 📝 GET /api/check-session - Session ID: LsRdUxynVA1VNTNbaTv5CyZztIwM9p_E
+[2025-08-08T21:47:11.554Z] 🔍 Session User: No user
+[2025-08-08T21:47:11.560Z] 🔍 Check session called: No user
+[2025-08-08T21:47:12.281Z] 📝 GET /me - Session ID: LkViJbrNWHpepo3GaDiwkqJciDUUK4M1
+[2025-08-08T21:47:12.281Z] 🔍 Session User: No user
+[2025-08-08T21:47:12.304Z] 📝 GET /api/causes - Session ID: 4CHES_afxj2RcwiQFgpdTW4beMR75CU5
+[2025-08-08T21:47:12.304Z] 🔍 Session User: No user
+[2025-08-08T21:47:14.910Z] 📝 GET /me - Session ID: 21REgg4ENWyIX8YYdzj8n6pjx1YprVrg
+[2025-08-08T21:47:14.911Z] 🔍 Session User: No user
+[2025-08-08T21:47:16.080Z] 📝 GET /me - Session ID: U-v8wPJWbUKzifyGUOnQMCabkcHaz4iN
+[2025-08-08T21:47:16.090Z] 🔍 Session User: No user
+[2025-08-08T21:47:20.715Z] 📝 GET /api/causes - Session ID: RC82Ff-PcQdPUa_hxTARaH20BR1Ca9wx
+[2025-08-08T21:47:20.716Z] 🔍 Session User: No user
+[2025-08-08T21:47:23.111Z] 📝 GET /login - Session ID: bt287EiBqkwDDzIzsrT4ah5-TR3JfPND
+[2025-08-08T21:47:23.112Z] 🔍 Session User: No user
+[2025-08-08T21:47:23.293Z] 📝 GET /api/check-session - Session ID: -Sni3dD5t3hHaa0nwK9aXeHPLKintbuN
+[2025-08-08T21:47:23.295Z] 🔍 Session User: No user
+[2025-08-08T21:47:23.297Z] 🔍 Check session called: No user
+[2025-08-08T21:47:28.433Z] 📝 POST /login-supabase - Session ID: GMQMPnNN0T8PBULKuNYlz_qMukmSb0EZ
+[2025-08-08T21:47:28.433Z] 🔍 Session User: No user
+[2025-08-08T21:47:28.434Z] 🔐 Login attempt with token: true
+[2025-08-08T21:47:29.164Z] ✅ User saved to session: d98c3559-215c-48e2-84a9-de811b86bf2f
+[2025-08-08T21:47:29.194Z] 📝 GET /profile - Session ID: GMQMPnNN0T8PBULKuNYlz_qMukmSb0EZ
+[2025-08-08T21:47:29.195Z] 🔍 Session User: volgofolak
+[2025-08-08T21:47:29.520Z] 📝 GET /api/check-session - Session ID: GMQMPnNN0T8PBULKuNYlz_qMukmSb0EZ
+[2025-08-08T21:47:29.521Z] 🔍 Session User: volgofolak
+[2025-08-08T21:47:29.522Z] 🔍 Check session called: User found
+[2025-08-08T21:47:30.205Z] 📝 POST /api/session/keep-alive - Session ID: GMQMPnNN0T8PBULKuNYlz_qMukmSb0EZ
+[2025-08-08T21:47:30.210Z] 🔍 Session User: volgofolak
+[2025-08-08T21:47:34.250Z] 📝 GET /me - Session ID: GMQMPnNN0T8PBULKuNYlz_qMukmSb0EZ
+[2025-08-08T21:47:34.251Z] 🔍 Session User: volgofolak
+[2025-08-08T21:47:35.034Z] 📝 GET /img/cause-default.jpg - Session ID: GMQMPnNN0T8PBULKuNYlz_qMukmSb0EZ
+[2025-08-08T21:47:35.039Z] 🔍 Session User: volgofolak
+[2025-08-08T21:47:38.190Z] 📝 POST /api/session/keep-alive - Session ID: GMQMPnNN0T8PBULKuNYlz_qMukmSb0EZ
+[2025-08-08T21:47:38.203Z] 🔍 Session User: volgofolak
+[2025-08-08T21:47:42.817Z] 📝 GET /ranking - Session ID: GMQMPnNN0T8PBULKuNYlz_qMukmSb0EZ
+[2025-08-08T21:47:42.818Z] 🔍 Session User: volgofolak
+[2025-08-08T21:47:43.234Z] 📝 GET /api/check-session - Session ID: GMQMPnNN0T8PBULKuNYlz_qMukmSb0EZ
+[2025-08-08T21:47:43.245Z] 🔍 Session User: volgofolak
+[2025-08-08T21:47:43.246Z] 🔍 Check session called: User found
+[2025-08-08T21:47:43.901Z] 📝 POST /api/session/keep-alive - Session ID: GMQMPnNN0T8PBULKuNYlz_qMukmSb0EZ
+[2025-08-08T21:47:43.901Z] 🔍 Session User: volgofolak
+[2025-08-08T21:47:47.102Z] 📝 GET /me - Session ID: GMQMPnNN0T8PBULKuNYlz_qMukmSb0EZ
+[2025-08-08T21:47:47.103Z] 🔍 Session User: volgofolak
+[2025-08-08T21:47:50.583Z] 📝 POST /api/session/keep-alive - Session ID: GMQMPnNN0T8PBULKuNYlz_qMukmSb0EZ
+[2025-08-08T21:47:50.586Z] 🔍 Session User: volgofolak
+[2025-08-08T21:47:51.976Z] 📝 GET /tasks - Session ID: GMQMPnNN0T8PBULKuNYlz_qMukmSb0EZ
+[2025-08-08T21:47:51.977Z] 🔍 Session User: volgofolak
+[2025-08-08T21:47:52.149Z] 📝 GET /js/share-system.js - Session ID: GMQMPnNN0T8PBULKuNYlz_qMukmSb0EZ
+[2025-08-08T21:47:52.169Z] 🔍 Session User: volgofolak
+[2025-08-08T21:47:52.224Z] 📝 GET /api/check-session - Session ID: GMQMPnNN0T8PBULKuNYlz_qMukmSb0EZ
+[2025-08-08T21:47:52.230Z] 🔍 Session User: volgofolak
+[2025-08-08T21:47:52.230Z] 🔍 Check session called: User found
+[2025-08-08T21:47:52.913Z] 📝 POST /api/session/keep-alive - Session ID: GMQMPnNN0T8PBULKuNYlz_qMukmSb0EZ
+[2025-08-08T21:47:52.935Z] 🔍 Session User: volgofolak
+[2025-08-08T21:47:57.401Z] 📝 GET /me - Session ID: GMQMPnNN0T8PBULKuNYlz_qMukmSb0EZ
+[2025-08-08T21:47:57.402Z] 🔍 Session User: volgofolak
+[2025-08-08T21:48:01.184Z] 📝 POST /api/session/keep-alive - Session ID: GMQMPnNN0T8PBULKuNYlz_qMukmSb0EZ
+[2025-08-08T21:48:01.203Z] 🔍 Session User: volgofolak
+[2025-08-08T21:48:07.425Z] 📝 GET /causes - Session ID: GMQMPnNN0T8PBULKuNYlz_qMukmSb0EZ
+[2025-08-08T21:48:07.425Z] 🔍 Session User: volgofolak
+[2025-08-08T21:48:07.659Z] 📝 GET /api/check-session - Session ID: GMQMPnNN0T8PBULKuNYlz_qMukmSb0EZ
+[2025-08-08T21:48:07.670Z] 🔍 Session User: volgofolak
+[2025-08-08T21:48:07.671Z] 🔍 Check session called: User found
+[2025-08-08T21:48:08.272Z] 📝 POST /api/session/keep-alive - Session ID: GMQMPnNN0T8PBULKuNYlz_qMukmSb0EZ
+[2025-08-08T21:48:08.284Z] 🔍 Session User: volgofolak
+[2025-08-08T21:48:08.303Z] 📝 GET /api/stripe/status - Session ID: GMQMPnNN0T8PBULKuNYlz_qMukmSb0EZ
+[2025-08-08T21:48:08.303Z] 🔍 Session User: volgofolak
+[2025-08-08T21:48:08.321Z] 📝 GET /me - Session ID: GMQMPnNN0T8PBULKuNYlz_qMukmSb0EZ
+[2025-08-08T21:48:08.321Z] 🔍 Session User: volgofolak
+[2025-08-08T21:48:08.333Z] 📝 GET /api/causes - Session ID: GMQMPnNN0T8PBULKuNYlz_qMukmSb0EZ
+[2025-08-08T21:48:08.333Z] 🔍 Session User: volgofolak
+[2025-08-08T21:48:11.954Z] 📝 GET /me - Session ID: GMQMPnNN0T8PBULKuNYlz_qMukmSb0EZ
+[2025-08-08T21:48:11.956Z] 🔍 Session User: volgofolak
+[2025-08-08T21:48:16.579Z] 📝 POST /api/session/keep-alive - Session ID: GMQMPnNN0T8PBULKuNYlz_qMukmSb0EZ
+[2025-08-08T21:48:16.585Z] 🔍 Session User: volgofolak
+[2025-08-08T21:48:16.614Z] 📝 GET /api/causes - Session ID: GMQMPnNN0T8PBULKuNYlz_qMukmSb0EZ
+[2025-08-08T21:48:16.614Z] 🔍 Session User: volgofolak
+[2025-08-08T21:48:23.418Z] 📝 GET /me - Session ID: GMQMPnNN0T8PBULKuNYlz_qMukmSb0EZ
+[2025-08-08T21:48:23.431Z] 🔍 Session User: volgofolak
+[2025-08-08T21:48:27.681Z] 📝 POST /api/session/keep-alive - Session ID: GMQMPnNN0T8PBULKuNYlz_qMukmSb0EZ
+[2025-08-08T21:48:27.685Z] 🔍 Session User: volgofolak
+[2025-08-08T21:48:27.716Z] 📝 GET /api/causes - Session ID: GMQMPnNN0T8PBULKuNYlz_qMukmSb0EZ
+[2025-08-08T21:48:27.716Z] 🔍 Session User: volgofolak
+[2025-08-08T21:48:45.202Z] 📝 GET /me - Session ID: GMQMPnNN0T8PBULKuNYlz_qMukmSb0EZ
+[2025-08-08T21:48:45.203Z] 🔍 Session User: volgofolak
+[2025-08-08T21:48:45.222Z] 📝 GET /api/stripe/status - Session ID: GMQMPnNN0T8PBULKuNYlz_qMukmSb0EZ
+[2025-08-08T21:48:45.223Z] 🔍 Session User: volgofolak
+[2025-08-08T21:48:45.780Z] 📝 POST /api/stripe/create-account - Session ID: GMQMPnNN0T8PBULKuNYlz_qMukmSb0EZ
+[2025-08-08T21:48:45.780Z] 🔍 Session User: volgofolak
+[2025-08-08T21:48:50.843Z] 📝 GET /.well-known/appspecific/com.chrome.devtools.json - Session ID: GMQMPnNN0T8PBULKuNYlz_qMukmSb0EZ
+[2025-08-08T21:48:50.849Z] 🔍 Session User: volgofolak
+[2025-08-08T21:48:51.093Z] 📝 GET /js/lib/axios.min.js.map - Session ID: GMQMPnNN0T8PBULKuNYlz_qMukmSb0EZ
+[2025-08-08T21:48:51.097Z] 🔍 Session User: volgofolak
+[2025-08-08T21:53:28.542Z] 📝 POST /api/session/keep-alive - Session ID: GMQMPnNN0T8PBULKuNYlz_qMukmSb0EZ
+[2025-08-08T21:53:28.550Z] 🔍 Session User: volgofolak
+[2025-08-08T21:56:53.932Z] 🚀 Servidor iniciado en http://localhost:3000
+[2025-08-08T21:56:54.981Z] ✅ PostgreSQL/Supabase connection successful
+[2025-08-08T21:56:58.313Z] 📝 GET / - Session ID: SW1LpG7EgvdFcgHABO16ur2oT5SvEHd4
+[2025-08-08T21:56:58.326Z] 🔍 Session User: No user
+[2025-08-08T21:56:59.600Z] 📝 GET /api/check-session - Session ID: hbG6fXr7nMwC_2QLz2wmuBW_JwvEKP9A
+[2025-08-08T21:56:59.614Z] 🔍 Session User: No user
+[2025-08-08T21:56:59.638Z] 🔍 Check session called: No user
+[2025-08-08T21:57:04.697Z] 📝 GET /causes - Session ID: lARBfGCb9NcebQSE3gaqu8EuE00gBEyY
+[2025-08-08T21:57:04.697Z] 🔍 Session User: No user
+[2025-08-08T21:57:05.041Z] 📝 GET /api/check-session - Session ID: QTvZRzEASj4ZvqCmSgbXHL_QJYPIfysX
+[2025-08-08T21:57:05.078Z] 🔍 Session User: No user
+[2025-08-08T21:57:05.129Z] 🔍 Check session called: No user
+[2025-08-08T21:57:05.755Z] 📝 GET /me - Session ID: F2MjvqTGjTuvhgQVEVo-A4nYcD11KGDW
+[2025-08-08T21:57:05.758Z] 🔍 Session User: No user
+[2025-08-08T21:57:05.776Z] 📝 GET /api/causes - Session ID: AJtgWM2Frj6lauu7bR6EY8VUuNZJCBzW
+[2025-08-08T21:57:05.776Z] 🔍 Session User: No user
+[2025-08-08T21:57:16.143Z] 📝 GET /me - Session ID: nv_UjsdB98muz3sWKn9ndvmnBd-qz4cP
+[2025-08-08T21:57:16.144Z] 🔍 Session User: No user
+[2025-08-08T21:57:17.762Z] 📝 GET /login - Session ID: ibjPY-KGG6BfxtI9YSV171mbeNoQADDl
+[2025-08-08T21:57:17.762Z] 🔍 Session User: No user
+[2025-08-08T21:57:18.066Z] 📝 GET /api/check-session - Session ID: qjprFHlAENe4Ul50UOSdH9P70wvGdRS7
+[2025-08-08T21:57:18.070Z] 🔍 Session User: No user
+[2025-08-08T21:57:18.074Z] 🔍 Check session called: No user
+[2025-08-08T21:57:21.223Z] 📝 POST /login-supabase - Session ID: G7a2aGQZ_0umwh2sADVpl5juG6wv5vKY
+[2025-08-08T21:57:21.224Z] 🔍 Session User: No user
+[2025-08-08T21:57:21.224Z] 🔐 Login attempt with token: true
+[2025-08-08T21:57:22.068Z] ✅ User saved to session: d98c3559-215c-48e2-84a9-de811b86bf2f
+[2025-08-08T21:57:22.108Z] 📝 GET /profile - Session ID: G7a2aGQZ_0umwh2sADVpl5juG6wv5vKY
+[2025-08-08T21:57:22.123Z] 🔍 Session User: VolgoFolak
+[2025-08-08T21:57:22.489Z] 📝 GET /api/check-session - Session ID: G7a2aGQZ_0umwh2sADVpl5juG6wv5vKY
+[2025-08-08T21:57:22.489Z] 🔍 Session User: VolgoFolak
+[2025-08-08T21:57:22.490Z] 🔍 Check session called: User found
+[2025-08-08T21:57:23.235Z] 📝 POST /api/session/keep-alive - Session ID: G7a2aGQZ_0umwh2sADVpl5juG6wv5vKY
+[2025-08-08T21:57:23.244Z] 🔍 Session User: VolgoFolak
+[2025-08-08T21:57:27.597Z] 📝 GET /img/cause-default.jpg - Session ID: G7a2aGQZ_0umwh2sADVpl5juG6wv5vKY
+[2025-08-08T21:57:27.597Z] 🔍 Session User: VolgoFolak
+[2025-08-08T21:57:33.591Z] 📝 GET /causes - Session ID: G7a2aGQZ_0umwh2sADVpl5juG6wv5vKY
+[2025-08-08T21:57:33.592Z] 🔍 Session User: VolgoFolak
+[2025-08-08T21:57:33.890Z] 📝 GET /api/check-session - Session ID: G7a2aGQZ_0umwh2sADVpl5juG6wv5vKY
+[2025-08-08T21:57:33.913Z] 🔍 Session User: VolgoFolak
+[2025-08-08T21:57:33.915Z] 🔍 Check session called: User found
+[2025-08-08T21:57:34.729Z] 📝 POST /api/session/keep-alive - Session ID: G7a2aGQZ_0umwh2sADVpl5juG6wv5vKY
+[2025-08-08T21:57:34.734Z] 🔍 Session User: VolgoFolak
+[2025-08-08T21:57:34.747Z] 📝 GET /api/stripe/status - Session ID: G7a2aGQZ_0umwh2sADVpl5juG6wv5vKY
+[2025-08-08T21:57:34.769Z] 🔍 Session User: VolgoFolak
+[2025-08-08T21:57:34.776Z] 📝 GET /me - Session ID: G7a2aGQZ_0umwh2sADVpl5juG6wv5vKY
+[2025-08-08T21:57:34.782Z] 🔍 Session User: VolgoFolak
+[2025-08-08T21:57:34.809Z] 📝 GET /api/causes - Session ID: G7a2aGQZ_0umwh2sADVpl5juG6wv5vKY
+[2025-08-08T21:57:34.810Z] 🔍 Session User: VolgoFolak
+[2025-08-08T21:57:41.870Z] 📝 GET /me - Session ID: G7a2aGQZ_0umwh2sADVpl5juG6wv5vKY
+[2025-08-08T21:57:41.871Z] 🔍 Session User: VolgoFolak
+[2025-08-08T21:57:41.898Z] 📝 GET /api/stripe/status - Session ID: G7a2aGQZ_0umwh2sADVpl5juG6wv5vKY
+[2025-08-08T21:57:41.900Z] 🔍 Session User: VolgoFolak
+[2025-08-08T21:57:42.579Z] 📝 POST /api/stripe/create-account - Session ID: G7a2aGQZ_0umwh2sADVpl5juG6wv5vKY
+[2025-08-08T21:57:42.589Z] 🔍 Session User: VolgoFolak
+[2025-08-08T21:58:28.396Z] 📝 POST /api/session/keep-alive - Session ID: G7a2aGQZ_0umwh2sADVpl5juG6wv5vKY
+[2025-08-08T21:58:28.396Z] 🔍 Session User: VolgoFolak
+[2025-08-08T22:01:46.335Z] 🚀 Servidor iniciado en http://localhost:3000
+[2025-08-08T22:01:47.366Z] ✅ PostgreSQL/Supabase connection successful
+[2025-08-08T22:01:50.203Z] 📝 GET / - Session ID: NCWR3k8CFlVbYtV7MZlLyl8Z-XmnFJXz
+[2025-08-08T22:01:50.208Z] 🔍 Session User: No user
+[2025-08-08T22:01:55.669Z] 📝 GET /api/check-session - Session ID: MvgOvIiwThgdoqz132Pv4Rz5XpVLs72J
+[2025-08-08T22:01:55.671Z] 🔍 Session User: No user
+[2025-08-08T22:01:55.673Z] 🔍 Check session called: No user
+[2025-08-08T22:01:59.395Z] 📝 GET /causes - Session ID: 5Aeot3uyuyjpZjNtuPAContHbf1dZn8T
+[2025-08-08T22:01:59.396Z] 🔍 Session User: No user
+[2025-08-08T22:01:59.761Z] 📝 GET /api/check-session - Session ID: qhwTFGe-tb72mwp41ChQmnNHD6OPgduj
+[2025-08-08T22:01:59.793Z] 🔍 Session User: No user
+[2025-08-08T22:01:59.794Z] 🔍 Check session called: No user
+[2025-08-08T22:02:00.737Z] 📝 GET /me - Session ID: qDyXGgc4EXpidqMm3KqIMjgFhDu3vt02
+[2025-08-08T22:02:00.750Z] 🔍 Session User: No user
+[2025-08-08T22:02:00.770Z] 📝 GET /api/causes - Session ID: v10dy2R-vQEEAWid3aOoh7Y_zU01TO3z
+[2025-08-08T22:02:00.771Z] 🔍 Session User: No user
+[2025-08-08T22:02:10.725Z] 📝 GET /tasks - Session ID: rmc6eJWFu3KFQO490CNJF3ToCVgdBggR
+[2025-08-08T22:02:10.726Z] 🔍 Session User: No user
+[2025-08-08T22:02:11.943Z] 📝 GET /js/share-system.js - Session ID: QE4ely2fhbJhBdcZVFmyNWYHpiKWw6Ak
+[2025-08-08T22:02:11.945Z] 🔍 Session User: No user
+[2025-08-08T22:02:12.353Z] 📝 GET /api/check-session - Session ID: 9U-Tch9jjXL4YSeAUJolIPJl3d8T6Pyz
+[2025-08-08T22:02:12.369Z] 🔍 Session User: No user
+[2025-08-08T22:02:12.370Z] 🔍 Check session called: No user
+[2025-08-08T22:02:23.229Z] 📝 GET /causes - Session ID: PGd1XSsZP3d2BwdwuMnb9nkFPFZb-D4b
+[2025-08-08T22:02:23.229Z] 🔍 Session User: No user
+[2025-08-08T22:02:23.540Z] 📝 GET /api/check-session - Session ID: l6c77-oBE64JjBzH3RyIVm6wQR4qGHAR
+[2025-08-08T22:02:23.541Z] 🔍 Session User: No user
+[2025-08-08T22:02:23.542Z] 🔍 Check session called: No user
+[2025-08-08T22:02:24.177Z] 📝 GET /me - Session ID: p4LdQ9raiC5gJeXDXf7r3XRCA7ONQA9Q
+[2025-08-08T22:02:24.183Z] 🔍 Session User: No user
+[2025-08-08T22:02:24.241Z] 📝 GET /api/causes - Session ID: wTXRShokSywA21Dql3Ow66blLSPzcGGc
+[2025-08-08T22:02:24.244Z] 🔍 Session User: No user
+[2025-08-08T22:02:28.870Z] 📝 GET /me - Session ID: l_AN6ajCG2OT9bMoAXRotYoDcZcy5_Pd
+[2025-08-08T22:02:28.871Z] 🔍 Session User: No user
+[2025-08-08T22:02:29.503Z] 📝 GET /me - Session ID: PgNBtW-W7-erksWLqggFrBfMA1dH2sjA
+[2025-08-08T22:02:29.509Z] 🔍 Session User: No user
+[2025-08-08T22:02:32.173Z] 📝 GET /api/causes - Session ID: B1BCZDR2F4ySkzKaNmedpng1YSeFtvsd
+[2025-08-08T22:02:32.173Z] 🔍 Session User: No user
+[2025-08-08T22:02:33.672Z] 📝 GET /me - Session ID: LsdgfX6_J0A_9rqmcSta656c2TuYlUEo
+[2025-08-08T22:02:33.674Z] 🔍 Session User: No user
+[2025-08-08T22:02:34.554Z] 📝 GET /login - Session ID: jzkeWKZ_cWW6X_Wfr-QL4NnQSbZ9XCBf
+[2025-08-08T22:02:34.555Z] 🔍 Session User: No user
+[2025-08-08T22:02:34.780Z] 📝 GET /api/check-session - Session ID: BMIGtRFf6GPEa4jwK9JD0VbA2myq6k0F
+[2025-08-08T22:02:34.786Z] 🔍 Session User: No user
+[2025-08-08T22:02:34.787Z] 🔍 Check session called: No user
+[2025-08-08T22:02:35.435Z] 📝 POST /api/session/keep-alive - Session ID: syaltxRo908ovDbPAQQZVkyfkEr3ijKG
+[2025-08-08T22:02:35.435Z] 🔍 Session User: No user
+[2025-08-08T22:02:37.067Z] 📝 POST /login-supabase - Session ID: zw-bQaJypoDlGHWDDun8t6G7Bbly5evN
+[2025-08-08T22:02:37.079Z] 🔍 Session User: No user
+[2025-08-08T22:02:37.082Z] 🔐 Login attempt with token: true
+[2025-08-08T22:02:37.956Z] ✅ User saved to session: d98c3559-215c-48e2-84a9-de811b86bf2f
+[2025-08-08T22:02:37.992Z] 📝 GET /profile - Session ID: zw-bQaJypoDlGHWDDun8t6G7Bbly5evN
+[2025-08-08T22:02:37.992Z] 🔍 Session User: VolgoFolak
+[2025-08-08T22:02:38.280Z] 📝 GET /api/check-session - Session ID: zw-bQaJypoDlGHWDDun8t6G7Bbly5evN
+[2025-08-08T22:02:38.281Z] 🔍 Session User: VolgoFolak
+[2025-08-08T22:02:38.283Z] 🔍 Check session called: User found
+[2025-08-08T22:02:39.013Z] 📝 POST /api/session/keep-alive - Session ID: zw-bQaJypoDlGHWDDun8t6G7Bbly5evN
+[2025-08-08T22:02:39.038Z] 🔍 Session User: VolgoFolak
+[2025-08-08T22:02:42.151Z] 📝 GET /causes - Session ID: zw-bQaJypoDlGHWDDun8t6G7Bbly5evN
+[2025-08-08T22:02:42.151Z] 🔍 Session User: VolgoFolak
+[2025-08-08T22:02:42.418Z] 📝 GET /api/check-session - Session ID: zw-bQaJypoDlGHWDDun8t6G7Bbly5evN
+[2025-08-08T22:02:42.422Z] 🔍 Session User: VolgoFolak
+[2025-08-08T22:02:42.422Z] 🔍 Check session called: User found
+[2025-08-08T22:02:43.131Z] 📝 POST /api/session/keep-alive - Session ID: zw-bQaJypoDlGHWDDun8t6G7Bbly5evN
+[2025-08-08T22:02:43.139Z] 🔍 Session User: VolgoFolak
+[2025-08-08T22:02:43.150Z] 📝 GET /api/stripe/status - Session ID: zw-bQaJypoDlGHWDDun8t6G7Bbly5evN
+[2025-08-08T22:02:43.151Z] 🔍 Session User: VolgoFolak
+[2025-08-08T22:02:43.157Z] 📝 GET /me - Session ID: zw-bQaJypoDlGHWDDun8t6G7Bbly5evN
+[2025-08-08T22:02:43.169Z] 🔍 Session User: VolgoFolak
+[2025-08-08T22:02:43.186Z] 📝 GET /api/causes - Session ID: zw-bQaJypoDlGHWDDun8t6G7Bbly5evN
+[2025-08-08T22:02:43.186Z] 🔍 Session User: VolgoFolak
+[2025-08-08T22:03:28.415Z] 📝 POST /api/session/keep-alive - Session ID: zw-bQaJypoDlGHWDDun8t6G7Bbly5evN
+[2025-08-08T22:03:28.416Z] 🔍 Session User: VolgoFolak
+[2025-08-08T22:05:17.447Z] 📝 GET /me - Session ID: zw-bQaJypoDlGHWDDun8t6G7Bbly5evN
+[2025-08-08T22:05:17.447Z] 🔍 Session User: VolgoFolak
+[2025-08-08T22:05:17.458Z] 📝 GET /api/stripe/status - Session ID: zw-bQaJypoDlGHWDDun8t6G7Bbly5evN
+[2025-08-08T22:05:17.458Z] 🔍 Session User: VolgoFolak
+[2025-08-08T22:05:18.224Z] 📝 POST /api/stripe/create-account - Session ID: zw-bQaJypoDlGHWDDun8t6G7Bbly5evN
+[2025-08-08T22:05:18.224Z] 🔍 Session User: VolgoFolak
+[2025-08-08T22:05:21.750Z] 📝 GET /.well-known/appspecific/com.chrome.devtools.json - Session ID: zw-bQaJypoDlGHWDDun8t6G7Bbly5evN
+[2025-08-08T22:05:21.763Z] 🔍 Session User: VolgoFolak
+[2025-08-08T22:05:22.196Z] 📝 GET /js/lib/axios.min.js.map - Session ID: zw-bQaJypoDlGHWDDun8t6G7Bbly5evN
+[2025-08-08T22:05:22.202Z] 🔍 Session User: VolgoFolak
+[2025-08-08T22:26:27.666Z] 🚀 Servidor iniciado en http://localhost:3000
+[2025-08-08T22:26:29.188Z] ✅ PostgreSQL/Supabase connection successful
+[2025-08-08T22:26:32.596Z] 📝 GET / - Session ID: nDRB9PqMzqc23aAxD8kUGBCvnipaKDqP
+[2025-08-08T22:26:32.599Z] 🔍 Session User: No user
+[2025-08-08T22:26:33.784Z] 📝 GET /api/check-session - Session ID: f5SszVOUXMRW62SXSrWSvIEnOAp3W_8_
+[2025-08-08T22:26:33.799Z] 🔍 Session User: No user
+[2025-08-08T22:26:33.825Z] 🔍 Check session called: No user
+[2025-08-08T22:26:36.496Z] 📝 GET /causes - Session ID: Rb99krC3v4uDMspTfW8bjoj9evFfl1sL
+[2025-08-08T22:26:36.507Z] 🔍 Session User: No user
+[2025-08-08T22:26:38.194Z] 📝 GET /api/check-session - Session ID: ki7fqqIRT2lE6FpDfBdUI0zmXo0UIwit
+[2025-08-08T22:26:38.195Z] 🔍 Session User: No user
+[2025-08-08T22:26:38.238Z] 🔍 Check session called: No user
+[2025-08-08T22:26:38.679Z] 📝 GET /me - Session ID: lxJoaroKw9csVpM4hmbwwXd8uIuwadUx
+[2025-08-08T22:26:38.680Z] 🔍 Session User: No user
+[2025-08-08T22:26:38.842Z] 📝 GET /api/causes - Session ID: 6wnypDL51-9gY8r9Q7FKdqpM0h6nDk6i
+[2025-08-08T22:26:38.843Z] 🔍 Session User: No user
+[2025-08-08T22:26:56.185Z] 📝 GET /.well-known/appspecific/com.chrome.devtools.json - Session ID: t_tqTUGK5PmfwAaUaJaE5L1bsei-1bZv
+[2025-08-08T22:26:56.191Z] 🔍 Session User: No user
+[2025-08-08T22:26:56.488Z] 📝 GET /js/lib/axios.min.js.map - Session ID: nuOBSbQNcqIoZTY9NpDZSduFHbBvodnp
+[2025-08-08T22:26:56.497Z] 🔍 Session User: No user
+[2025-08-08T22:28:21.619Z] 📝 GET /login - Session ID: RV1X7saChfcn-1wxVva2yobk9hwKfFKh
+[2025-08-08T22:28:21.629Z] 🔍 Session User: No user
+[2025-08-08T22:28:22.291Z] 📝 GET /api/check-session - Session ID: 0th_zFHpYCX_ucu3RDoiAgqpEF5rxfAz
+[2025-08-08T22:28:22.299Z] 🔍 Session User: No user
+[2025-08-08T22:28:22.300Z] 🔍 Check session called: No user
+[2025-08-08T22:28:26.447Z] 📝 POST /login-supabase - Session ID: g1zNJ9Jq6eYQ-qL4xqL5SfEQIDNWFUnA
+[2025-08-08T22:28:26.447Z] 🔍 Session User: No user
+[2025-08-08T22:28:26.449Z] 🔐 Login attempt with token: true
+[2025-08-08T22:28:27.621Z] ✅ User saved to session: d98c3559-215c-48e2-84a9-de811b86bf2f
+[2025-08-08T22:28:27.864Z] 📝 GET /profile - Session ID: g1zNJ9Jq6eYQ-qL4xqL5SfEQIDNWFUnA
+[2025-08-08T22:28:27.886Z] 🔍 Session User: VolgoFolak
+[2025-08-08T22:28:28.595Z] 📝 GET /api/check-session - Session ID: g1zNJ9Jq6eYQ-qL4xqL5SfEQIDNWFUnA
+[2025-08-08T22:28:28.701Z] 🔍 Session User: VolgoFolak
+[2025-08-08T22:28:28.702Z] 🔍 Check session called: User found
+[2025-08-08T22:28:29.482Z] 📝 POST /api/session/keep-alive - Session ID: g1zNJ9Jq6eYQ-qL4xqL5SfEQIDNWFUnA
+[2025-08-08T22:28:29.782Z] 🔍 Session User: VolgoFolak
+[2025-08-08T22:28:31.889Z] 📝 GET /causes - Session ID: g1zNJ9Jq6eYQ-qL4xqL5SfEQIDNWFUnA
+[2025-08-08T22:28:31.889Z] 🔍 Session User: VolgoFolak
+[2025-08-08T22:28:33.421Z] 📝 POST /api/session/keep-alive - Session ID: g1zNJ9Jq6eYQ-qL4xqL5SfEQIDNWFUnA
+[2025-08-08T22:28:33.470Z] 🔍 Session User: VolgoFolak
+[2025-08-08T22:28:33.519Z] 📝 GET /api/stripe/status - Session ID: g1zNJ9Jq6eYQ-qL4xqL5SfEQIDNWFUnA
+[2025-08-08T22:28:33.554Z] 🔍 Session User: VolgoFolak
+[2025-08-08T22:28:33.571Z] 📝 GET /me - Session ID: g1zNJ9Jq6eYQ-qL4xqL5SfEQIDNWFUnA
+[2025-08-08T22:28:33.572Z] 🔍 Session User: VolgoFolak
+[2025-08-08T22:28:33.613Z] 📝 GET /api/causes - Session ID: g1zNJ9Jq6eYQ-qL4xqL5SfEQIDNWFUnA
+[2025-08-08T22:28:33.634Z] 🔍 Session User: VolgoFolak
+[2025-08-08T22:28:33.950Z] 📝 GET /api/check-session - Session ID: g1zNJ9Jq6eYQ-qL4xqL5SfEQIDNWFUnA
+[2025-08-08T22:28:33.951Z] 🔍 Session User: VolgoFolak
+[2025-08-08T22:28:33.951Z] 🔍 Check session called: User found
+[2025-08-08T22:28:52.031Z] 📝 GET /api/stripe/status - Session ID: g1zNJ9Jq6eYQ-qL4xqL5SfEQIDNWFUnA
+[2025-08-08T22:28:52.031Z] 🔍 Session User: VolgoFolak
+[2025-08-08T22:28:59.630Z] 📝 POST /api/stripe/create-account - Session ID: g1zNJ9Jq6eYQ-qL4xqL5SfEQIDNWFUnA
+[2025-08-08T22:28:59.630Z] 🔍 Session User: VolgoFolak
+[2025-08-08T22:29:04.743Z] ✅ Nueva cuenta Stripe creada: acct_1RtymY2OjROEIBom
+[2025-08-08T22:29:09.810Z] 📝 POST /api/stripe/create-account - Session ID: g1zNJ9Jq6eYQ-qL4xqL5SfEQIDNWFUnA
+[2025-08-08T22:29:09.810Z] 🔍 Session User: VolgoFolak
+[2025-08-08T22:29:13.656Z] ✅ Nueva cuenta Stripe creada: acct_1RtymgRrjHDg7woa
+[2025-08-08T22:29:13.662Z] 📝 GET /.well-known/appspecific/com.chrome.devtools.json - Session ID: g1zNJ9Jq6eYQ-qL4xqL5SfEQIDNWFUnA
+[2025-08-08T22:29:13.672Z] 🔍 Session User: VolgoFolak
+[2025-08-08T22:29:13.942Z] 📝 GET /js/lib/axios.min.js.map - Session ID: g1zNJ9Jq6eYQ-qL4xqL5SfEQIDNWFUnA
+[2025-08-08T22:29:13.945Z] 🔍 Session User: VolgoFolak
+[2025-08-08T22:31:18.918Z] 🚀 Servidor iniciado en http://localhost:3000
+[2025-08-08T22:31:20.116Z] ✅ PostgreSQL/Supabase connection successful
+[2025-08-08T22:31:25.629Z] 📝 GET / - Session ID: cLk_lmdg4VzSm3q2vQ9vCckcAjIOG0NI
+[2025-08-08T22:31:25.649Z] 🔍 Session User: No user
+[2025-08-08T22:31:27.353Z] 📝 GET /api/check-session - Session ID: ko-eJHcdyIsmwRXAB6ikzcpArVQGeQ3j
+[2025-08-08T22:31:27.380Z] 🔍 Session User: No user
+[2025-08-08T22:31:27.391Z] 🔍 Check session called: No user
+[2025-08-08T22:31:30.237Z] 📝 GET /causes - Session ID: pF3J-RZaLEZ1ge8o4T0_EHpw8coU9KC6
+[2025-08-08T22:31:30.238Z] 🔍 Session User: No user
+[2025-08-08T22:31:30.656Z] 📝 GET /api/check-session - Session ID: 83a_oC1bZKIwd2oHAyi8cv6Pr8orvjLj
+[2025-08-08T22:31:30.676Z] 🔍 Session User: No user
+[2025-08-08T22:31:30.689Z] 🔍 Check session called: No user
+[2025-08-08T22:31:31.362Z] 📝 GET /me - Session ID: GSkQ7dnRG38nea_xz3w1GToSQEItVWxB
+[2025-08-08T22:31:31.383Z] 🔍 Session User: No user
+[2025-08-08T22:31:31.403Z] 📝 GET /api/causes - Session ID: IaF2DdYmEPe7wDIWbNQslE91BqsBF6YJ
+[2025-08-08T22:31:31.403Z] 🔍 Session User: No user
+[2025-08-08T22:31:39.944Z] 📝 GET /login - Session ID: mjWvXI-XGh9eIQPEfzowFvZcjHImu06u
+[2025-08-08T22:31:39.944Z] 🔍 Session User: No user
+[2025-08-08T22:31:40.231Z] 📝 GET /api/check-session - Session ID: Q-tbhPQq2Z_9vWjRtpa7RX1NLV0krvtu
+[2025-08-08T22:31:40.232Z] 🔍 Session User: No user
+[2025-08-08T22:31:40.233Z] 🔍 Check session called: No user
+[2025-08-08T22:31:42.449Z] 📝 POST /login-supabase - Session ID: Wo1WbImkD09ehitfHr3Bjp3GAds8qVW9
+[2025-08-08T22:31:42.449Z] 🔍 Session User: No user
+[2025-08-08T22:31:42.451Z] 🔐 Login attempt with token: true
+[2025-08-08T22:31:43.397Z] ✅ User saved to session: d98c3559-215c-48e2-84a9-de811b86bf2f
+[2025-08-08T22:31:43.441Z] 📝 GET /profile - Session ID: Wo1WbImkD09ehitfHr3Bjp3GAds8qVW9
+[2025-08-08T22:31:43.442Z] 🔍 Session User: VolgoFolak
+[2025-08-08T22:31:43.734Z] 📝 GET /api/check-session - Session ID: Wo1WbImkD09ehitfHr3Bjp3GAds8qVW9
+[2025-08-08T22:31:43.734Z] 🔍 Session User: VolgoFolak
+[2025-08-08T22:31:43.735Z] 🔍 Check session called: User found
+[2025-08-08T22:31:44.445Z] 📝 POST /api/session/keep-alive - Session ID: Wo1WbImkD09ehitfHr3Bjp3GAds8qVW9
+[2025-08-08T22:31:44.452Z] 🔍 Session User: VolgoFolak
+[2025-08-08T22:31:45.630Z] 📝 GET /causes - Session ID: Wo1WbImkD09ehitfHr3Bjp3GAds8qVW9
+[2025-08-08T22:31:45.631Z] 🔍 Session User: VolgoFolak
+[2025-08-08T22:31:45.836Z] 📝 GET /api/check-session - Session ID: Wo1WbImkD09ehitfHr3Bjp3GAds8qVW9
+[2025-08-08T22:31:45.844Z] 🔍 Session User: VolgoFolak
+[2025-08-08T22:31:45.845Z] 🔍 Check session called: User found
+[2025-08-08T22:31:46.769Z] 📝 POST /api/session/keep-alive - Session ID: Wo1WbImkD09ehitfHr3Bjp3GAds8qVW9
+[2025-08-08T22:31:46.798Z] 🔍 Session User: VolgoFolak
+[2025-08-08T22:31:46.821Z] 📝 GET /api/stripe/status - Session ID: Wo1WbImkD09ehitfHr3Bjp3GAds8qVW9
+[2025-08-08T22:31:46.831Z] 🔍 Session User: VolgoFolak
+[2025-08-08T22:31:46.842Z] 📝 GET /me - Session ID: Wo1WbImkD09ehitfHr3Bjp3GAds8qVW9
+[2025-08-08T22:31:46.855Z] 🔍 Session User: VolgoFolak
+[2025-08-08T22:31:46.868Z] 📝 GET /api/causes - Session ID: Wo1WbImkD09ehitfHr3Bjp3GAds8qVW9
+[2025-08-08T22:31:46.870Z] 🔍 Session User: VolgoFolak
+[2025-08-08T22:32:01.299Z] 📝 GET /api/stripe/status - Session ID: Wo1WbImkD09ehitfHr3Bjp3GAds8qVW9
+[2025-08-08T22:32:01.300Z] 🔍 Session User: VolgoFolak
+[2025-08-08T22:32:03.229Z] 📝 POST /api/stripe/create-account - Session ID: Wo1WbImkD09ehitfHr3Bjp3GAds8qVW9
+[2025-08-08T22:32:03.229Z] 🔍 Session User: VolgoFolak
+[2025-08-08T22:32:06.197Z] 📝 GET /.well-known/appspecific/com.chrome.devtools.json - Session ID: Wo1WbImkD09ehitfHr3Bjp3GAds8qVW9
+[2025-08-08T22:32:06.198Z] 🔍 Session User: VolgoFolak
+[2025-08-08T22:32:06.649Z] 📝 GET /js/lib/axios.min.js.map - Session ID: Wo1WbImkD09ehitfHr3Bjp3GAds8qVW9
+[2025-08-08T22:32:06.650Z] 🔍 Session User: VolgoFolak
+[2025-08-08T22:32:06.980Z] ✅ Nueva cuenta Stripe creada: acct_1RtypU2Kg9nrikat
+[2025-08-08T22:33:34.516Z] 📝 POST /api/session/keep-alive - Session ID: Wo1WbImkD09ehitfHr3Bjp3GAds8qVW9
+[2025-08-08T22:33:34.521Z] 🔍 Session User: VolgoFolak
+[2025-08-08T22:36:37.383Z] 🚀 Servidor iniciado en http://localhost:3000
+[2025-08-08T22:36:38.569Z] ✅ PostgreSQL/Supabase connection successful
+[2025-08-08T22:36:46.062Z] 📝 GET / - Session ID: qCIQZRVhs9-a2QjYfxeViOv1GZuBkaW3
+[2025-08-08T22:36:46.069Z] 🔍 Session User: No user
+[2025-08-08T22:36:47.769Z] 📝 POST /api/session/keep-alive - Session ID: 1cODOrBON73o46KXlvYuCkvDg_bUwumz
+[2025-08-08T22:36:47.847Z] 🔍 Session User: No user
+[2025-08-08T22:36:48.407Z] 📝 GET /api/check-session - Session ID: xhPnTzZToZPNJ1C_IwfcEf-7ymBYFm2_
+[2025-08-08T22:36:48.408Z] 🔍 Session User: No user
+[2025-08-08T22:36:48.409Z] 🔍 Check session called: No user
+[2025-08-08T22:36:49.115Z] 📝 GET /causes - Session ID: pnn38vsl4ZSEL_DZKo-VIL9rFq3oeD0S
+[2025-08-08T22:36:49.115Z] 🔍 Session User: No user
+[2025-08-08T22:36:50.764Z] 📝 GET /login - Session ID: MBONR6r56DEJY_xKSYzhWBR_LkitVW7Z
+[2025-08-08T22:36:50.765Z] 🔍 Session User: No user
+[2025-08-08T22:36:51.532Z] 📝 GET /api/check-session - Session ID: z44M123SHbTfwR9IXbG75CsCB1ndWVJo
+[2025-08-08T22:36:51.532Z] 🔍 Session User: No user
+[2025-08-08T22:36:51.533Z] 🔍 Check session called: No user
+[2025-08-08T22:36:54.366Z] 📝 POST /login-supabase - Session ID: pPdtQJrIedqYEv7TIFOkPm8lD0geLRKI
+[2025-08-08T22:36:54.366Z] 🔍 Session User: No user
+[2025-08-08T22:36:54.367Z] 🔐 Login attempt with token: true
+[2025-08-08T22:36:55.351Z] ✅ User saved to session: d98c3559-215c-48e2-84a9-de811b86bf2f
+[2025-08-08T22:36:58.816Z] 📝 GET /profile - Session ID: pPdtQJrIedqYEv7TIFOkPm8lD0geLRKI
+[2025-08-08T22:36:58.819Z] 🔍 Session User: VolgoFolak
+[2025-08-08T22:36:59.262Z] 📝 GET /api/check-session - Session ID: pPdtQJrIedqYEv7TIFOkPm8lD0geLRKI
+[2025-08-08T22:36:59.264Z] 🔍 Session User: VolgoFolak
+[2025-08-08T22:36:59.264Z] 🔍 Check session called: User found
+[2025-08-08T22:36:59.607Z] 📝 GET /causes - Session ID: pPdtQJrIedqYEv7TIFOkPm8lD0geLRKI
+[2025-08-08T22:36:59.608Z] 🔍 Session User: VolgoFolak
+[2025-08-08T22:37:00.092Z] 📝 GET /api/check-session - Session ID: pPdtQJrIedqYEv7TIFOkPm8lD0geLRKI
+[2025-08-08T22:37:00.093Z] 🔍 Session User: VolgoFolak
+[2025-08-08T22:37:00.094Z] 🔍 Check session called: User found
+[2025-08-08T22:37:00.788Z] 📝 POST /api/session/keep-alive - Session ID: pPdtQJrIedqYEv7TIFOkPm8lD0geLRKI
+[2025-08-08T22:37:00.794Z] 🔍 Session User: VolgoFolak
+[2025-08-08T22:37:00.805Z] 📝 GET /api/stripe/status - Session ID: pPdtQJrIedqYEv7TIFOkPm8lD0geLRKI
+[2025-08-08T22:37:00.808Z] 🔍 Session User: VolgoFolak
+[2025-08-08T22:37:00.818Z] 📝 GET /me - Session ID: pPdtQJrIedqYEv7TIFOkPm8lD0geLRKI
+[2025-08-08T22:37:00.823Z] 🔍 Session User: VolgoFolak
+[2025-08-08T22:37:00.839Z] 📝 GET /api/causes - Session ID: pPdtQJrIedqYEv7TIFOkPm8lD0geLRKI
+[2025-08-08T22:37:00.841Z] 🔍 Session User: VolgoFolak
+[2025-08-08T22:37:05.883Z] 📝 GET /api/stripe/status - Session ID: pPdtQJrIedqYEv7TIFOkPm8lD0geLRKI
+[2025-08-08T22:37:05.884Z] 🔍 Session User: VolgoFolak
+[2025-08-08T22:37:07.590Z] 📝 POST /api/stripe/create-account - Session ID: pPdtQJrIedqYEv7TIFOkPm8lD0geLRKI
+[2025-08-08T22:37:07.590Z] 🔍 Session User: VolgoFolak
+[2025-08-08T22:37:11.366Z] ✅ Nueva cuenta Stripe creada: acct_1RtyuO2NZYHXYiO2
+[2025-08-08T22:37:11.703Z] 🔗 URLs de redirección: [object Object]
+[2025-08-08T22:38:34.829Z] 📝 POST /api/session/keep-alive - Session ID: pPdtQJrIedqYEv7TIFOkPm8lD0geLRKI
+[2025-08-08T22:38:34.831Z] 🔍 Session User: VolgoFolak
+[2025-08-08T22:41:48.307Z] 📝 POST /api/session/keep-alive - Session ID: pPdtQJrIedqYEv7TIFOkPm8lD0geLRKI
+[2025-08-08T22:41:48.322Z] 🔍 Session User: VolgoFolak
+[2025-08-08T22:43:34.703Z] 📝 POST /api/session/keep-alive - Session ID: pPdtQJrIedqYEv7TIFOkPm8lD0geLRKI
+[2025-08-08T22:43:34.715Z] 🔍 Session User: VolgoFolak
+[2025-08-08T22:46:47.884Z] 📝 POST /api/session/keep-alive - Session ID: pPdtQJrIedqYEv7TIFOkPm8lD0geLRKI
+[2025-08-08T22:46:47.913Z] 🔍 Session User: VolgoFolak
+[2025-08-08T22:48:34.770Z] 📝 POST /api/session/keep-alive - Session ID: pPdtQJrIedqYEv7TIFOkPm8lD0geLRKI
+[2025-08-08T22:48:34.781Z] 🔍 Session User: VolgoFolak
+[2025-08-08T22:51:48.711Z] 📝 POST /api/session/keep-alive - Session ID: pPdtQJrIedqYEv7TIFOkPm8lD0geLRKI
+[2025-08-08T22:51:48.730Z] 🔍 Session User: VolgoFolak
+[2025-08-08T22:53:34.693Z] 📝 POST /api/session/keep-alive - Session ID: pPdtQJrIedqYEv7TIFOkPm8lD0geLRKI
+[2025-08-08T22:53:34.696Z] 🔍 Session User: VolgoFolak

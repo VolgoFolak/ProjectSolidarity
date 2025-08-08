@@ -36,4 +36,15 @@ document.getElementById('loginForm').addEventListener('submit', async function(e
   } else {
     window.location.href = '/profile';
   }
+
+  // Ejemplo para login.js
+  fetch('/login-supabase', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'X-CSRF-Token': window.csrfToken // <-- Agrega esto
+    },
+    credentials: 'include',
+    body: JSON.stringify({ token: session.access_token })
+  });
 });

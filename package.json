@@ -3,7 +3,12 @@
   "version": "1.0.0",
   "main": "app.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node app.js",
+    "dev": "NODE_ENV=development nodemon app.js",
+    "prod": "NODE_ENV=production node app.js",
+    "verify": "node -e \"console.log('✅ Node.js version:', process.version); console.log('✅ Environment variables loaded'); console.log('- DOMAIN:', process.env.DOMAIN); console.log('- NODE_ENV:', process.env.NODE_ENV);\"",
+    "init-prod": "node scripts/init-production.js",
+    "test": "npm run init-prod && npm start"
   },
   "keywords": [],
   "author": "",
@@ -11,16 +16,21 @@
   "dependencies": {
     "@supabase/supabase-js": "^2.50.0",
     "body-parser": "^2.2.0",
+    "compression": "^1.8.1",
+    "connect-pg-simple": "^10.0.0",
     "cookie-parser": "^1.4.7",
     "cors": "^2.8.5",
+    "csurf": "^1.11.0",
     "dotenv": "^16.5.0",
     "ejs": "^3.1.10",
     "express": "^5.1.0",
     "express-handlebars": "^8.0.3",
+    "express-rate-limit": "^8.0.1",
     "express-session": "^1.18.1",
+    "express-validator": "^7.2.1",
+    "helmet": "^7.2.0",
     "multer": "^1.4.5-lts.2",
     "nunjucks": "^3.2.4",
-    "path": "^0.12.7",
     "stripe": "^18.2.1"
   },
   "description": ""

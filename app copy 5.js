@@ -1344,24 +1344,8 @@ app.use((req, res) => {
 });
 
 // Iniciar servidor
-const server = app.listen(PORT, () => {
-  console.log(`🚀 Servidor iniciado en puerto ${PORT}`);
-  console.log(`🌍 Entorno: ${process.env.NODE_ENV}`);
-  console.log(`🔗 URL: ${process.env.DOMAIN || `http://localhost:${PORT}`}`);
-  
-  if (process.env.NODE_ENV === 'production') {
-    console.log('✅ Configuración de producción activa');
-    console.log('🔒 Cookies seguras habilitadas');
-    console.log('🌐 CORS configurado para project-solidarity.com');
-  }
-});
-
-// Manejo graceful de cierre
-process.on('SIGTERM', () => {
-  console.log('📡 SIGTERM recibido, cerrando servidor...');
-  server.close(() => {
-    console.log('✅ Servidor cerrado correctamente');
-  });
+app.listen(PORT, () => {
+  console.log(`🚀 Servidor iniciado en http://localhost:${PORT}`);
 });
 
 // Añadir después de las rutas de Stripe existentes:

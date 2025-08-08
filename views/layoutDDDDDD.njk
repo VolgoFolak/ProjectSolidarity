@@ -24,6 +24,7 @@
   
   <!-- Preload Critical Assets -->
   <link rel="preload" href="/css/style.css" as="style">
+  <link rel="preload" href="/js/app.js" as="script">
   <link rel="preload" href="/js/lib/axios.min.js" as="script">
   
   <!-- CSS -->
@@ -35,13 +36,14 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   
-  <!-- Google Analytics 4 -->
+  <!-- Google Analytics 4 - Configuración Mejorada -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-KLTQ612VGL"></script>
   <script>
     window.dataLayer = window.dataLayer || [];
     function gtag(){dataLayer.push(arguments);}
     gtag('js', new Date());
 
+    // Configuración para desarrollo y producción
     if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
       gtag('config', 'G-KLTQ612VGL', {
         send_page_view: false,
@@ -49,6 +51,7 @@
         transport_url: 'https://project-solidarity.com',
         anonymize_ip: true
       });
+      console.log('🔧 Google Analytics en modo debug para localhost');
     } else {
       gtag('config', 'G-KLTQ612VGL', {
         transport_url: 'https://project-solidarity.com',
@@ -62,6 +65,7 @@
       });
     }
 
+    // Datos extendidos del usuario
     gtag('set', {
       user_properties: {
         user_type: 'anonymous',
@@ -75,7 +79,6 @@
 </head>
 <body class="lang-{{ lang if lang else 'es' }} {% if user %}user-logged-in{% else %}user-anonymous{% endif %} {{ bodyClass if bodyClass }}">
   <!-- Session Data Storage -->
-  <!-- ✅ CORREGIR CREDENCIALES EXPUESTAS -->
   <div id="session-data" 
     data-user-id="{{ user.id if user else '' }}"
     data-user-type="{{ user.type if user else 'anonymous' }}"
@@ -86,7 +89,7 @@
     data-supabase-key="{{ env.SUPABASE_ANON_KEY if env.SUPABASE_ANON_KEY else '' }}"
     hidden
   ></div>
-
+  
   <!-- App Container -->
   <div id="app-container">
     <!-- Navbar -->
@@ -105,15 +108,15 @@
     <!-- Loading Overlay -->
     <div id="loading-overlay" class="loading-overlay">
       <div class="loading-spinner"></div>
-      <p class="loading-text">Cargando aplicación...</p>
+      <p class="loading-text" data-i18n="loading.message">Cargando aplicación...</p>
     </div>
     
     <!-- Session Expired Modal -->
     <div id="session-expired-modal" class="modal" style="display:none;">
       <div class="modal-content">
-        <h3>Sesión Expirada</h3>
-        <p>Tu sesión ha expirado por inactividad. Por favor inicia sesión nuevamente.</p>
-        <button id="session-relogin-btn" class="btn-primary">Volver al Login</button>
+        <h3 data-i18n="session.expired_title">Sesión Expirada</h3>
+        <p data-i18n="session.expired_message">Tu sesión ha expirado por inactividad. Por favor inicia sesión nuevamente.</p>
+        <button id="session-relogin-btn" class="btn-primary" data-i18n="session.return_login">Volver al Login</button>
       </div>
     </div>
     
@@ -126,98 +129,135 @@
         <span style="font-size:2.7rem; color:#2dd4bf; display:block; margin-bottom:1rem;">
           <i class="fas fa-fire"></i>
         </span>
-        <h2 style="color:#2dd4bf; font-weight:900; margin-bottom:0.7rem;">¡Bienvenido/a de nuevo!</h2>
-        <p style="color:#444; font-size:1.13rem;">
+        <h2 style="color:#2dd4bf; font-weight:900; margin-bottom:0.7rem;" data-i18n="welcome.title">¡Bienvenido/a de nuevo!</h2>
+        <p style="color:#444; font-size:1.13rem;" data-i18n="welcome.message">
           ¡Nos alegra verte en Solidarity!<br>
           <strong>Hoy es un gran día para ayudar, inspirar y transformar el mundo.</strong>
         </p>
-        <p style="color:#888; font-size:0.97rem; margin-top:1em;">
+        <p style="color:#888; font-size:0.97rem; margin-top:1em;" data-i18n="welcome.subtitle">
           ¿Listo/a para dejar tu huella positiva?<br>
           ¡Explora, conecta y actúa!
         </p>
         <button onclick="document.getElementById('welcomeModal').style.display='none';" 
-                style="margin-top:1.5rem; background:#2dd4bf; color:#fff; border:none; border-radius:8px; padding:0.8rem 1.7rem; font-size:1.1rem; font-weight:700; cursor:pointer;">
+                style="margin-top:1.5rem; background:#2dd4bf; color:#fff; border:none; border-radius:8px; padding:0.8rem 1.7rem; font-size:1.1rem; font-weight:700; cursor:pointer;" 
+                data-i18n="welcome.button">
           ¡Vamos allá!
         </button>
       </div>
     </div>
   </div>
 
-  <!-- ✅ SCRIPTS EN ORDEN CORRECTO -->
-  <!-- 1. Supabase PRIMERO -->
+  <!-- ✅ CORE SCRIPTS - ORDEN OPTIMIZADO -->
+  <!-- 1. Supabase primero -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  
-  <!-- 2. Axios -->
-  <script src="/js/lib/axios.min.js"></script>
-  
-  <!-- 3. Inicialización de Supabase y configuraciones -->
   <script>
-    // Variables globales
-    window.supabaseReady = false;
-    
-    // Función para mostrar notificaciones
+    // Inicialización segura de Supabase
+    document.addEventListener('DOMContentLoaded', () => {
+      const supabaseUrl = document.getElementById('session-data').dataset.supabaseUrl;
+      const supabaseKey = document.getElementById('session-data').dataset.supabaseKey;
+      
+      if (supabaseUrl && supabaseKey) {
+        try {
+          window.supabase = supabase.createClient(supabaseUrl, supabaseKey);
+          console.log('✅ Supabase initialized:', window.supabase);
+          
+          // Configura listener para cambios de autenticación
+          window.supabase.auth.onAuthStateChange((event, session) => {
+            console.log('🔑 Supabase auth state changed:', event, session);
+            document.dispatchEvent(new CustomEvent('supabaseAuthChange', { 
+              detail: { event, session } 
+            }));
+          });
+          
+          // Dispara evento cuando Supabase esté listo
+          document.dispatchEvent(new CustomEvent('supabaseReady'));
+        } catch (error) {
+          console.error('❌ Error initializing Supabase:', error);
+          showErrorNotification('Error de conexión. Por favor recarga la página.');
+        }
+      } else {
+        console.error('❌ Missing Supabase credentials');
+        showErrorNotification('Configuración incompleta. Contacta al soporte.');
+      }
+    });
+
+    // Función para mostrar notificaciones de error
     function showErrorNotification(message) {
       const notifications = document.getElementById('notifications');
       if (notifications) {
         const notification = document.createElement('div');
         notification.className = 'notification error';
-        notification.innerHTML = `<i class="fas fa-exclamation-circle"></i><span>${message}</span>`;
+        notification.innerHTML = `
+          <i class="fas fa-exclamation-circle"></i>
+          <span>${message}</span>
+        `;
         notifications.appendChild(notification);
         setTimeout(() => notification.remove(), 5000);
       } else {
-        console.error(message);
+        alert(message);
       }
     }
+  </script>
 
-    // Inicialización inmediata de Supabase
-    const supabaseUrl = document.getElementById('session-data')?.dataset.supabaseUrl;
-    const supabaseKey = document.getElementById('session-data')?.dataset.supabaseKey;
-    
-    if (supabaseUrl && supabaseKey && supabaseUrl !== '' && supabaseKey !== '') {
-      try {
-        window.supabase = supabase.createClient(supabaseUrl, supabaseKey);
-        window.supabaseReady = true;
-        console.log('✅ Supabase initialized:', window.supabase);
-        
-        // Configurar listener para cambios de autenticación
-        window.supabase.auth.onAuthStateChange((event, session) => {
-          console.log('🔑 Supabase auth state changed:', event);
-          document.dispatchEvent(new CustomEvent('supabaseAuthChange', { 
-            detail: { event, session } 
-          }));
-        });
-        
-        // Disparar evento cuando Supabase esté listo
-        document.dispatchEvent(new CustomEvent('supabaseReady'));
-      } catch (error) {
-        console.error('❌ Error initializing Supabase:', error);
-        showErrorNotification('Error de conexión. Por favor recarga la página.');
-      }
-    } else {
-      console.error('❌ Missing Supabase credentials');
-      showErrorNotification('Configuración incompleta. Contacta al soporte.');
-    }
-
+  <!-- 2. Axios para peticiones HTTP -->
+  <script src="/js/lib/axios.min.js"></script>
+  <script>
     // Configuración de Axios
-    if (typeof axios !== 'undefined') {
-      const csrfToken = document.getElementById('session-data')?.dataset.csrfToken;
+    document.addEventListener('DOMContentLoaded', () => {
+      const csrfToken = document.getElementById('session-data').dataset.csrfToken;
+      
+      // Configurar encabezados por defecto de Axios
+      axios.defaults.headers.common['X-CSRF-Token'] = csrfToken;
       axios.defaults.withCredentials = true;
-      axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
-      if (csrfToken) {
-        axios.defaults.headers.common['X-CSRF-Token'] = csrfToken;
-      }
-
-      // Interceptor para manejar errores
+      
+      // Interceptor para manejar respuestas de error globalmente
       axios.interceptors.response.use(
         response => response,
         error => {
-          if (error.response?.status === 401) {
-            document.getElementById('session-expired-modal').style.display = 'block';
+          if (error.response) {
+            // El servidor respondió con un código de estado fuera del rango de 2xx
+            console.error('Axios error response:', error.response);
+            
+            if (error.response.status === 401) {
+              // No autorizado - posible sesión expirada
+              document.getElementById('session-expired-modal').style.display = 'block';
+            } else {
+              // Otro tipo de error, mostrar notificación genérica
+              showErrorNotification('Error en la solicitud. Por favor intenta nuevamente.');
+            }
+          } else {
+            // El error no tiene respuesta (posiblemente un problema de red)
+            console.error('Axios error no response:', error);
+            showErrorNotification('Error de conexión. Por favor verifica tu conexión a Internet.');
           }
+          
           return Promise.reject(error);
         }
       );
-    }
+    });
+  </script>
+
+  <!-- 3. Sistema de traducciones -->
+  <script src="/js/i18n.js"></script>
+  <script>
+    document.addEventListener('i18nReady', () => {
+      translateElements();
+      
+      function translateElements() {
+        const elements = document.querySelectorAll('[data-i18n], [data-i18n-title]');
+        elements.forEach(el => {
+          const key = el.getAttribute('data-i18n') || el.getAttribute('data-i18n-title');
+          if (key && window.t) {
+            const translation = window.t(key);
+            if (el.hasAttribute('data-i18n-title')) {
+              el.setAttribute('title', translation);
+            } else {
+              el.textContent = translation;
+            }
+          }
+        });
+      }
+    });
   </script>
 
   <!-- 4. Session Manager -->
@@ -226,23 +266,26 @@
       constructor() {
         this.keepAliveInterval = null;
         this.inactivityTimeout = null;
-        this.maxInactivity = 30 * 60 * 1000;
-        this.keepAliveFrequency = 5 * 60 * 1000;
+        this.maxInactivity = 30 * 60 * 1000; // 30 minutos
+        this.keepAliveFrequency = 5 * 60 * 1000; // 5 minutos
         this.retryCount = 0;
         this.maxRetries = 3;
         
         this.initEventListeners();
         
-        if (document.getElementById('session-data')?.dataset.userId) {
+        // Iniciar monitoreo si hay usuario
+        if (document.getElementById('session-data').dataset.userId) {
           this.startSessionMonitoring();
         }
       }
       
       initEventListeners() {
+        // User activity detection
         ['click', 'mousemove', 'keypress', 'scroll', 'touchstart'].forEach(event => {
           document.addEventListener(event, this.resetInactivityTimer.bind(this), { passive: true });
         });
         
+        // Session expired button
         document.getElementById('session-relogin-btn')?.addEventListener('click', () => {
           window.location.href = '/login?return=' + encodeURIComponent(window.location.pathname);
         });
@@ -261,6 +304,7 @@
           this.sendKeepAlive();
         }, this.keepAliveFrequency);
         
+        // Initial ping
         this.sendKeepAlive();
       }
       
@@ -271,7 +315,7 @@
             credentials: 'include',
             headers: {
               'Content-Type': 'application/json',
-              'X-CSRF-Token': document.getElementById('session-data')?.dataset.csrfToken || ''
+              'X-CSRF-Token': document.getElementById('session-data').dataset.csrfToken || ''
             },
             body: JSON.stringify({
               currentPath: window.location.pathname,
@@ -282,7 +326,7 @@
           if (response.ok) {
             this.retryCount = 0;
             const data = await response.json();
-            console.log('🔄 Session keep-alive success');
+            console.log('🔄 Session keep-alive success', data);
           } else {
             this.handleSessionError();
           }
@@ -330,12 +374,12 @@
   <script>
     class StripeIntegration {
       static async initialize() {
-        const stripeKey = document.getElementById('session-data')?.dataset.stripeKey;
-        if (stripeKey && typeof Stripe !== 'undefined') {
+        const stripeKey = document.getElementById('session-data').dataset.stripeKey;
+        if (stripeKey) {
           window.stripe = Stripe(stripeKey);
           console.log('✅ Stripe initialized');
         } else {
-          console.warn('⚠️ Stripe key not found or Stripe not loaded');
+          console.warn('⚠️ Stripe key not found');
         }
       }
       
@@ -359,41 +403,53 @@
     }
   </script>
 
-  <!-- 6. Esperar a que todo esté listo antes de cargar componentes -->
+  <!-- 6. Componentes móviles -->
+  <script src="/js/components/mobile-bottom-nav.js"></script>
+  <script src="/js/components/mobile-hamburger-menu.js"></script>
+  <script src="/js/components/mobile-header.js"></script>
+  <script src="/js/components/mobile-avatar.js"></script>
+
+  <solidarity-bottom-nav></solidarity-bottom-nav>
+  <solidarity-mobile-header>
+    <solidarity-hamburger-menu slot="hamburger"></solidarity-hamburger-menu>
+    <solidarity-mobile-avatar slot="avatar"></solidarity-mobile-avatar>
+  </solidarity-mobile-header>
+
+  <!-- 7. Inicialización de la aplicación -->
   <script>
     document.addEventListener('DOMContentLoaded', async () => {
       try {
         // Mostrar loading
         document.getElementById('loading-overlay').style.display = 'flex';
         
-        // Esperar a Supabase
-        if (!window.supabaseReady) {
-          await new Promise((resolve) => {
-            document.addEventListener('supabaseReady', resolve, { once: true });
-          });
-        }
+        // 1. Esperar a que Supabase esté listo
+        await new Promise((resolve) => {
+          if (window.supabase) return resolve();
+          document.addEventListener('supabaseReady', resolve, { once: true });
+        });
         
-        // Inicializar Stripe
-        if (document.getElementById('session-data')?.dataset.stripeKey) {
+        // 2. Inicializar Stripe si está configurado
+        if (document.getElementById('session-data').dataset.stripeKey) {
           await StripeIntegration.initialize();
         }
         
-        // Iniciar Session Manager
+        // 3. Iniciar Session Manager
         window.sessionManager = new SessionManager();
         
-        // Verificar sesión del usuario
-        const userId = document.getElementById('session-data')?.dataset.userId;
-        if (userId && window.location.pathname.includes('/causes')) {
-          await StripeIntegration.verifyStripeStatus(userId);
+        // 4. Verificar sesión del usuario
+        const userId = document.getElementById('session-data').dataset.userId;
+        if (userId) {
+          // Verificar estado de Stripe si es relevante para la página
+          if (window.location.pathname.includes('/causes')) {
+            await StripeIntegration.verifyStripeStatus(userId);
+          }
+          
+          // Mostrar modal de bienvenida para primer login
+          const isFirstLogin = new URLSearchParams(window.location.search).has('firstLogin');
+          if (isFirstLogin) {
+            document.getElementById('welcomeModal').style.display = 'flex';
+          }
         }
-        
-        // Mostrar modal de bienvenida
-        const isFirstLogin = new URLSearchParams(window.location.search).has('firstLogin');
-        if (isFirstLogin) {
-          document.getElementById('welcomeModal').style.display = 'flex';
-        }
-        
-        console.log('✅ App initialization complete');
         
       } catch (error) {
         console.error('Initialization error:', error);
@@ -405,42 +461,9 @@
     });
   </script>
 
-  <!-- 7. Cargar componentes móviles DESPUÉS de la inicialización -->
-  <script>
-    // Cargar componentes móviles solo después de que Supabase esté listo
-    function loadMobileComponents() {
-      const scripts = [
-        '/js/components/mobile-header.js',
-        '/js/components/mobile-hamburger-menu.js',
-        '/js/components/mobile-avatar.js',
-        '/js/components/mobile-bottom-nav.js'
-      ];
-      
-      scripts.forEach(src => {
-        const script = document.createElement('script');
-        script.src = src;
-        script.onerror = () => console.warn(`Failed to load: ${src}`);
-        document.head.appendChild(script);
-      });
-    }
-
-    if (window.supabaseReady) {
-      loadMobileComponents();
-    } else {
-      document.addEventListener('supabaseReady', loadMobileComponents, { once: true });
-    }
-  </script>
-
-  <!-- 8. Otros scripts -->
-  <script src="/js/analytics.js"></script>
-  <script src="/js/auto-translate.js"></script>
-  <script src="/js/compartir.js"></script>
-  <script src="/js/navbar.js"></script>
-  <script src="/js/impactpoints.js"></script>
-
-  <!-- 9. Google Translate -->
+  <!-- 8. Google Translate (solo funcionalidad) -->
   <div id="google_translate_element" style="display:none;"></div>
-  <script>
+  <script type="text/javascript">
     function googleTranslateElementInit() {
       if (window.autoTranslate) {
         window.autoTranslate.init();
@@ -456,16 +479,19 @@
   </script>
   <script src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
 
-  <!-- Componentes móviles -->
-  <solidarity-bottom-nav></solidarity-bottom-nav>
-  <solidarity-mobile-header>
-    <solidarity-hamburger-menu slot="hamburger"></solidarity-hamburger-menu>
-    <solidarity-mobile-avatar slot="avatar"></solidarity-mobile-avatar>
-  </solidarity-mobile-header>
+  <!-- 9. Analytics y otros scripts -->
+  <script src="/js/analytics.js"></script>
+  <script src="/js/auto-translate.js"></script>
+  <script src="/js/compartir.js"></script>
+  <script src="/js/navbar.js"></script>
+  <script src="/js/impactpoints.js"></script>
+
+  <!-- 10. App Script principal -->
+  <script src="/js/app.js" defer></script>
 
   {% block scripts %}{% endblock %}
 
-  <!-- Estilos para notificaciones y loading -->
+  <!-- Estilos adicionales para notificaciones -->
   <style>
     .notifications-container {
       position: fixed;
@@ -548,7 +574,7 @@
       z-index: 9999;
     }
     
-     .modal-content {
+    .modal-content {
       background: white;
       padding: 2rem;
       border-radius: 10px;

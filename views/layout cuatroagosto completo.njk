@@ -75,7 +75,6 @@
 </head>
 <body class="lang-{{ lang if lang else 'es' }} {% if user %}user-logged-in{% else %}user-anonymous{% endif %} {{ bodyClass if bodyClass }}">
   <!-- Session Data Storage -->
-  <!-- ✅ CORREGIR CREDENCIALES EXPUESTAS -->
   <div id="session-data" 
     data-user-id="{{ user.id if user else '' }}"
     data-user-type="{{ user.type if user else 'anonymous' }}"
@@ -83,7 +82,7 @@
     data-csrf-token="{{ csrfToken }}"
     data-stripe-key="{{ env.STRIPE_PUBLISHABLE_KEY if env.STRIPE_PUBLISHABLE_KEY else '' }}"
     data-supabase-url="{{ env.SUPABASE_URL if env.SUPABASE_URL else '' }}"
-    data-supabase-key="{{ env.SUPABASE_ANON_KEY if env.SUPABASE_ANON_KEY else '' }}"
+    data-supabase-key="{{ env.SUPABASE_KEY if env.SUPABASE_KEY else '' }}"
     hidden
   ></div>
 
@@ -410,10 +409,10 @@
     // Cargar componentes móviles solo después de que Supabase esté listo
     function loadMobileComponents() {
       const scripts = [
-        '/js/components/mobile-header.js',
+        '/js/components/mobile-bottom-nav.js',
         '/js/components/mobile-hamburger-menu.js',
-        '/js/components/mobile-avatar.js',
-        '/js/components/mobile-bottom-nav.js'
+        '/js/components/mobile-header.js',
+        '/js/components/mobile-avatar.js'
       ];
       
       scripts.forEach(src => {

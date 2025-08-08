@@ -1,0 +1,548 @@
+<!DOCTYPE html>
+<html lang="{{ lang if lang else 'es' }}" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>{% block title %}Solidarity{% endblock %}</title>
+  <meta name="description" content="Platform for social impact through collective action">
+  
+  <!-- SEO Meta Tags -->
+  <meta property="og:title" content="Solidarity - Create Social Impact">
+  <meta property="og:description" content="Join our platform to support causes, volunteer, and make a difference">
+  <meta property="og:image" content="https://project-solidarity.com/img/social-share.jpg">
+  <meta property="og:url" content="https://project-solidarity.com">
+  <meta property="og:type" content="website">
+  <meta name="twitter:card" content="summary_large_image">
+  
+  <!-- Favicon -->
+  <link rel="icon" href="/img/favicon.ico" type="image/x-icon">
+  <link rel="apple-touch-icon" href="/img/apple-touch-icon.png">
+  
+  <!-- CSRF Protection -->
+  <meta name="csrf-token" content="{{ csrfToken }}">
+  
+  <!-- Stripe.js -->
+  <script src="https://js.stripe.com/v3/"></script>
+  
+  <!-- Preload Critical Assets -->
+  <link rel="preload" href="/css/main.css" as="style">
+  <link rel="preload" href="/js/app.js" as="script">
+  
+  <!-- CSS -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="stylesheet" href="/css/main.css">
+  
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  
+  <!-- Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-KLTQ612VGL"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-KLTQ612VGL', { 
+      transport_url: 'https://project-solidarity.com',
+      first_party_collection: true
+    });
+  </script>
+  
+  {% block head %}{% endblock %}
+</head>
+<body class="lang-{{ lang if lang else 'es' }} {% if user %}user-logged-in{% else %}user-anonymous{% endif %}">
+  <!-- Session Data Storage -->
+  <div id="session-data" 
+    data-user-id="{{ user.id if user else '' }}"
+    data-user-type="{{ user.type if user else 'anonymous' }}"
+    data-lang="{{ lang if lang else 'es' }}"
+    data-csrf-token="{{ csrfToken }}"
+    data-stripe-key="{{ env.STRIPE_PUBLISHABLE_KEY if env.STRIPE_PUBLISHABLE_KEY else '' }}"
+    data-supabase-url="{{ env.SUPABASE_URL if env.SUPABASE_URL else '' }}"
+    data-supabase-key="{{ env.SUPABASE_ANON_KEY if env.SUPABASE_ANON_KEY else '' }}"
+    hidden
+  ></div>
+  
+  <!-- App Container -->
+  <div id="app-container">
+    {% include "partials/header.njk" %}
+    
+    <main class="main-content" role="main">
+      {% block content %}{% endblock %}
+    </main>
+    
+    {% include "partials/footer.njk" %}
+    
+    <!-- Loading Overlay -->
+    <div id="loading-overlay" class="loading-overlay">
+      <div class="loading-spinner"></div>
+    </div>
+    
+    <!-- Session Expired Modal -->
+    <div id="session-expired-modal" class="modal" style="display:none;">
+      <div class="modal-content">
+        <h3>Session Expired</h3>
+        <p>Your session has expired due to inactivity. Please log in again.</p>
+        <button id="session-relogin-btn" class="btn-primary">Return to Login</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Core Scripts -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="/js/lib/axios.min.js"></script>
+  
+  <!-- Session Management Script -->
+  <script>
+    // ✅ GLOBAL STATE MANAGEMENT
+    window.AppState = {
+      user: {{ user | dump | safe if user else null }},
+      session: {
+        id: '{{ sessionID if sessionID else '' }}',
+        lastActivity: new Date().toISOString(),
+        stripeStatus: null
+      },
+      config: {
+        supabaseUrl: '{{ env.SUPABASE_URL if env.SUPABASE_URL else '' }}',
+        supabaseKey: '{{ env.SUPABASE_ANON_KEY if env.SUPABASE_ANON_KEY else '' }}',
+        stripeKey: '{{ env.STRIPE_PUBLISHABLE_KEY if env.STRIPE_PUBLISHABLE_KEY else '' }}',
+        apiBaseUrl: '/api',
+        environment: '{{ env.NODE_ENV if env.NODE_ENV else "development" }}'
+      }
+    };
+
+    // ✅ INITIALIZE SUPABASE CLIENT
+    if (AppState.config.supabaseUrl && AppState.config.supabaseKey) {
+      window.supabase = supabase.createClient(
+        AppState.config.supabaseUrl, 
+        AppState.config.supabaseKey
+      );
+      console.log('✅ Supabase initialized');
+    }
+
+    // ✅ INITIALIZE STRIPE
+    if (AppState.config.stripeKey) {
+      window.stripe = Stripe(AppState.config.stripeKey);
+      console.log('✅ Stripe initialized');
+    }
+
+    // ✅ SESSION MANAGEMENT SYSTEM
+    class SessionManager {
+      constructor() {
+        this.keepAliveInterval = null;
+        this.inactivityTimeout = null;
+        this.maxInactivity = 30 * 60 * 1000; // 30 minutes
+        this.keepAliveFrequency = 5 * 60 * 1000; // 5 minutes
+        this.retryCount = 0;
+        this.maxRetries = 3;
+        
+        this.initEventListeners();
+        this.startSessionMonitoring();
+      }
+      
+      initEventListeners() {
+        // User activity detection
+        ['click', 'mousemove', 'keypress', 'scroll', 'touchstart'].forEach(event => {
+          document.addEventListener(event, this.resetInactivityTimer.bind(this), { passive: true });
+        });
+        
+        // Session expired button
+        document.getElementById('session-relogin-btn')?.addEventListener('click', () => {
+          window.location.href = '/login?return=' + encodeURIComponent(window.location.pathname);
+        });
+      }
+      
+      startSessionMonitoring() {
+        if (!AppState.user) return;
+        
+        // Start keep-alive pings
+        this.startKeepAlive();
+        
+        // Start inactivity timer
+        this.resetInactivityTimer();
+        
+        console.log('🔒 Session monitoring started');
+      }
+      
+      startKeepAlive() {
+        if this.keepAliveInterval) clearInterval(this.keepAliveInterval);
+        
+        this.keepAliveInterval = setInterval(() => {
+          this.sendKeepAlive();
+        }, this.keepAliveFrequency);
+        
+        // Initial ping
+        this.sendKeepAlive();
+      }
+      
+      async sendKeepAlive() {
+        try {
+          const response = await fetch('/api/session/keep-alive', {
+            method: 'POST',
+            credentials: 'include',
+            headers: {
+              'Content-Type': 'application/json',
+              'X-CSRF-Token': AppState.session.csrfToken || ''
+            },
+            body: JSON.stringify({
+              currentPath: window.location.pathname,
+              lastActivity: AppState.session.lastActivity
+            })
+          });
+          
+          if (response.ok) {
+            const data = await response.json();
+            this.retryCount = 0;
+            
+            // Update session data
+            if (data.stripeStatus) {
+              AppState.session.stripeStatus = data.stripeStatus;
+              this.dispatchEvent('stripeStatusUpdate', data.stripeStatus);
+            }
+            
+            AppState.session.lastActivity = data.lastActivity || new Date().toISOString();
+            
+          } else {
+            this.handleSessionError();
+          }
+        } catch (error) {
+          console.error('Keep-alive error:', error);
+          this.handleSessionError();
+        }
+      }
+      
+      resetInactivityTimer() {
+        if (this.inactivityTimeout) clearTimeout(this.inactivityTimeout);
+        
+        this.inactivityTimeout = setTimeout(() => {
+          this.handleInactiveSession();
+        }, this.maxInactivity);
+        
+        AppState.session.lastActivity = new Date().toISOString();
+      }
+      
+      handleInactiveSession() {
+        console.log('🕒 Session inactive, checking status...');
+        this.sendKeepAlive(); // Force immediate check before expiring
+      }
+      
+      handleSessionError() {
+        this.retryCount++;
+        
+        if (this.retryCount >= this.maxRetries) {
+          this.expireSession();
+        } else {
+          console.warn(`Session check failed (${this.retryCount}/${this.maxRetries})`);
+        }
+      }
+      
+      expireSession() {
+        console.log('🔐 Session expired');
+        clearInterval(this.keepAliveInterval);
+        clearTimeout(this.inactivityTimeout);
+        
+        // Show session expired modal
+        document.getElementById('session-expired-modal').style.display = 'block';
+        
+        // Dispatch event
+        this.dispatchEvent('sessionExpired');
+        
+        // Clear local state
+        AppState.user = null;
+        AppState.session = { id: null, lastActivity: null };
+        
+        // Reload protected routes
+        if (this.isProtectedRoute()) {
+          window.location.href = '/login?reason=session_expired';
+        }
+      }
+      
+      isProtectedRoute() {
+        const protectedRoutes = [
+          '/profile', '/messages', '/causes/create', 
+          '/volunteering/create', '/tasks/create'
+        ];
+        return protectedRoutes.some(route => window.location.pathname.startsWith(route));
+      }
+      
+      dispatchEvent(eventName, detail = null) {
+        document.dispatchEvent(new CustomEvent(eventName, { detail }));
+      }
+    }
+
+    // ✅ STRIPE INTEGRATION HANDLER
+    class StripeIntegration {
+      static async verifyStripeStatus() {
+        if (!AppState.user) return { connected: false };
+        
+        try {
+          const response = await fetch('/api/stripe/status', {
+            method: 'GET',
+            credentials: 'include',
+            headers: {
+              'Content-Type': 'application/json'
+            }
+          });
+          
+          if (response.ok) {
+            const data = await response.json();
+            AppState.session.stripeStatus = data;
+            return data;
+          }
+          return { connected: false };
+        } catch (error) {
+          console.error('Stripe status check failed:', error);
+          return { connected: false };
+        }
+      }
+      
+      static async createAccountLink(accountId) {
+        try {
+          const response = await fetch('/api/stripe/create-account-link', {
+            method: 'POST',
+            credentials: 'include',
+            headers: {
+              'Content-Type': 'application/json',
+              'X-CSRF-Token': AppState.session.csrfToken || ''
+            },
+            body: JSON.stringify({ accountId })
+          });
+          
+          if (response.ok) {
+            return await response.json();
+          }
+          throw new Error('Failed to create account link');
+        } catch (error) {
+          console.error('Error creating Stripe account link:', error);
+          throw error;
+        }
+      }
+      
+      static async handleStripeCallback() {
+        const urlParams = new URLSearchParams(window.location.search);
+        const stripeStatus = urlParams.get('stripe');
+        const userId = urlParams.get('user_id');
+        
+        if (stripeStatus === 'success' && userId) {
+          try {
+            // Verify backend session
+            const sessionResponse = await fetch('/me', { credentials: 'include' });
+            
+            if (!sessionResponse.ok) {
+              // Attempt to restore session if needed
+              await this.restoreSession(userId);
+            }
+            
+            // Verify Stripe status
+            const stripeStatus = await this.verifyStripeStatus();
+            
+            // Clean URL
+            window.history.replaceState({}, '', window.location.pathname);
+            
+            // Show success message if needed
+            if (window.location.pathname.includes('/causes')) {
+              this.dispatchEvent('stripeOnboardingComplete', stripeStatus);
+            }
+            
+          } catch (error) {
+            console.error('Stripe callback processing failed:', error);
+          }
+        }
+      }
+      
+      static async restoreSession(userId) {
+        try {
+          const response = await fetch('/api/restore-session', {
+            method: 'POST',
+            credentials: 'include',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ user_id: userId })
+          });
+          
+          if (response.ok) {
+            const data = await response.json();
+            AppState.user = data.user;
+            AppState.session.id = data.sessionId;
+            return true;
+          }
+          return false;
+        } catch (error) {
+          console.error('Session restoration failed:', error);
+          return false;
+        }
+      }
+      
+      static dispatchEvent(eventName, detail = null) {
+        document.dispatchEvent(new CustomEvent(eventName, { detail }));
+      }
+    }
+
+    // ✅ USER SESSION HANDLER
+    class UserSession {
+      static async checkSession() {
+        try {
+          const response = await fetch('/me', {
+            method: 'GET',
+            credentials: 'include',
+            headers: {
+              'Accept': 'application/json'
+            }
+          });
+          
+          if (response.ok) {
+            const data = await response.json();
+            this.handleValidSession(data);
+            return true;
+          }
+          
+          // Check for Supabase session if regular session fails
+          return await this.checkSupabaseSession();
+          
+        } catch (error) {
+          console.error('Session check failed:', error);
+          return false;
+        }
+      }
+      
+      static async checkSupabaseSession() {
+        if (!window.supabase?.auth) return false;
+        
+        try {
+          const { data: { session }, error } = await supabase.auth.getSession();
+          
+          if (error || !session?.access_token) {
+            return false;
+          }
+          
+          // Attempt to restore session using Supabase token
+          const restored = await this.restoreSessionWithSupabase(session.access_token);
+          return restored;
+          
+        } catch (error) {
+          console.error('Supabase session check failed:', error);
+          return false;
+        }
+      }
+      
+      static async restoreSessionWithSupabase(token) {
+        try {
+          const response = await fetch('/login-supabase', {
+            method: 'POST',
+            credentials: 'include',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ token })
+          });
+          
+          if (response.ok) {
+            const data = await response.json();
+            this.handleValidSession(data);
+            return true;
+          }
+          return false;
+        } catch (error) {
+          console.error('Session restoration failed:', error);
+          return false;
+        }
+      }
+      
+      static handleValidSession(sessionData) {
+        if (sessionData.logged && sessionData.user) {
+          AppState.user = sessionData.user;
+          AppState.session = {
+            id: sessionData.session?.id || '',
+            lastActivity: sessionData.session?.lastActivity || new Date().toISOString(),
+            stripeStatus: sessionData.session?.stripeStatus || null
+          };
+          
+          // Dispatch session restored event
+          document.dispatchEvent(new CustomEvent('sessionRestored', {
+            detail: sessionData
+          }));
+          
+          console.log('✅ Valid session detected for user:', sessionData.user.username);
+          return true;
+        }
+        return false;
+      }
+      
+      static clearSession() {
+        AppState.user = null;
+        AppState.session = { id: null, lastActivity: null, stripeStatus: null };
+        
+        // Dispatch logout event
+        document.dispatchEvent(new CustomEvent('userLoggedOut'));
+        
+        // Clear Supabase session if exists
+        if (window.supabase?.auth) {
+          supabase.auth.signOut();
+        }
+        
+        console.log('🧹 Session cleared');
+      }
+    }
+
+    // ✅ INITIALIZE APPLICATION
+    document.addEventListener('DOMContentLoaded', async () => {
+      // Initialize session manager
+      window.sessionManager = new SessionManager();
+      
+      // Check initial session state
+      const hasValidSession = await UserSession.checkSession();
+      
+      // Handle Stripe callback if needed
+      await StripeIntegration.handleStripeCallback();
+      
+      // Initialize UI based on session state
+      if (hasValidSession) {
+        document.body.classList.add('user-logged-in');
+        document.body.classList.remove('user-anonymous');
+        
+        // Verify Stripe status for relevant pages
+        if (window.location.pathname.includes('/causes')) {
+          await StripeIntegration.verifyStripeStatus();
+        }
+      } else {
+        document.body.classList.add('user-anonymous');
+        document.body.classList.remove('user-logged-in');
+      }
+      
+      // ✅ INICIALIZAR SINCRONIZADOR DESPUÉS DEL SESSION MANAGER
+      if (window.sessionManager) {
+        setTimeout(() => {
+          window.sessionSynchronizer = new SessionSynchronizer();
+          console.log('🔄 Session synchronizer initialized');
+        }, 1000);
+      }
+      
+      // Hide loading overlay
+      document.getElementById('loading-overlay').style.display = 'none';
+    });
+
+    // ✅ CLEANUP AL SALIR
+    window.addEventListener('beforeunload', () => {
+      if (window.sessionSynchronizer) {
+        window.sessionSynchronizer.destroy();
+      }
+    });
+
+    // Expose new classes to window for debugging
+    window.SessionSynchronizer = SessionSynchronizer;
+  </script>
+  
+  <!-- Component Scripts -->
+  <script src="/js/components/navbar.js"></script>
+  <script src="/js/components/auth.js"></script>
+  <script src="/js/components/notifications.js"></script>
+  
+  <!-- App Script -->
+  <script src="/js/app.js" defer></script>
+  
+  {% block scripts %}{% endblock %}
+</body>
+</html>

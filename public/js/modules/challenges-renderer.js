@@ -625,7 +625,7 @@ const ChallengesRenderer = {
     // Llenar contenido del modal
     document.getElementById('challengeModalBody').innerHTML = `
       <h1 style="font-size:2rem; font-weight:800; color:var(--primary); margin-bottom:2rem; text-align:center;">${challenge.title}</h1>
-      <div style="display:flex; gap:2rem; margin-bottom:2rem;">
+      <div class="challenge-modal-main" style="display:flex; gap:2rem; margin-bottom:2rem;">
         <div style="flex:1; min-width:320px; height:300px; border-radius:12px; overflow:hidden; position:relative;">
           <img src="${challenge.photo_url || '/img/challenge-default.jpg'}" 
                alt="Imagen del desafío ${challenge.title}"
@@ -680,6 +680,22 @@ const ChallengesRenderer = {
         </h3>
         <p style="line-height:1.7; color:#4b5563;">
           ${challenge.description || 'No hay descripción disponible para este desafío.'}
+        </p>
+      </div>
+      <div class="content-section" style="margin-bottom:2rem;">
+        <h3 class="content-title" style="font-size:1.15rem; font-weight:600; color:var(--primary); margin-bottom:0.7rem; display:flex; align-items:center; gap:0.7rem;">
+          <i class="fas fa-check-circle"></i> Fuentes de verificación
+        </h3>
+        <p class="content-text" style="color:#6b7280; font-size:1.05rem; margin:0;">
+          ${challenge.verification_sources ? challenge.verification_sources : '—'}
+        </p>
+      </div>
+      <div class="content-section" style="margin-bottom:2rem;">
+        <h3 class="content-title" style="font-size:1.15rem; font-weight:600; color:var(--primary); margin-bottom:0.7rem; display:flex; align-items:center; gap:0.7rem;">
+          <i class="fas fa-gift"></i> Recompensa
+        </h3>
+        <p class="content-text" style="color:#6b7280; font-size:1.05rem; margin:0;">
+          ${challenge.reward ? challenge.reward : '—'}
         </p>
       </div>
       ${participantsHtml}

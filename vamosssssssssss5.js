@@ -1,24 +1,5 @@
 require('dotenv').config();
 
-// ✅ VERIFICACIÓN DE CONFIGURACIÓN CRÍTICA
-console.log('🔧 Verificando configuración...');
-const requiredEnvVars = [
-  'SUPABASE_URL', 'SUPABASE_ANON_KEY', 'STRIPE_SECRET_KEY', 
-  'STRIPE_PUBLISHABLE_KEY', 'SESSION_SECRET', 'DOMAIN'
-];
-
-const missingVars = requiredEnvVars.filter(varName => !process.env[varName]);
-if (missingVars.length > 0) {
-  console.error('❌ Variables de entorno faltantes:', missingVars);
-  process.exit(1);
-}
-
-console.log('✅ Configuración verificada:');
-console.log('- NODE_ENV:', process.env.NODE_ENV);
-console.log('- DOMAIN:', process.env.DOMAIN);
-console.log('- FRONTEND_URL:', process.env.FRONTEND_URL);
-console.log('- COOKIE_DOMAIN:', process.env.COOKIE_DOMAIN);
-
 // ✅ CONFIGURACIÓN DE PRODUCCIÓN
 if (process.env.NODE_ENV === 'production') {
   const fs = require('fs');
@@ -76,36 +57,38 @@ app.use(express.json({ limit: '10mb' }));
 app.use(cookieParser());
 app.use(bodyParser.urlencoded({ extended: true, limit: '10mb' }));
 
-// ✅ 2. CONFIGURACIÓN DE CONFIANZA DE PROXY (CORREGIDA)
+// ✅ 2. CONFIGURACIÓN DE CONFIANZA DE PROXY
 const isLocalhost = process.env.NODE_ENV !== 'production';
 const frontendUrl = isLocalhost ? 'http://localhost:3000' : 'https://www.project-solidarity.com';
 
 if (!isLocalhost) {
-  app.set('trust proxy', 1); // ✅ Esto está correcto para producción
+  app.set('trust proxy', 1);
 }
 
-// ✅ 3. CONFIGURACIÓN CORS (CORREGIDA)
+// ✅ 3. CONFIGURACIÓN CORS
+const allowedOrigins = [
+  'https://project-solidarity.com',
+  'https://www.project-solidarity.com',
+  'http://localhost:3000'
+];
+
 app.use(cors({
-  origin: [
-    'http://localhost:3000', // para desarrollo
-    'https://project-solidarity.com', // ✅ sin www
-    'https://www.project-solidarity.com' // ✅ con www
-  ],
+  origin: ['http://localhost:3000', 'https://project-solidarity.com'],
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS']
 }));
 
-// ✅ 4. CONFIGURACIÓN DE SESIÓN (CORREGIDA PARA PRODUCCIÓN)
+// ✅ 4. CONFIGURACIÓN DE SESIÓN (SOLO MEMORIA)
 app.use(session({
   secret: process.env.SESSION_SECRET || 'fallback-secret-change-in-production',
   resave: false,
   saveUninitialized: false,
+  // NO configures ningún store aquí - usa MemoryStore por defecto
   cookie: {
-    secure: process.env.NODE_ENV === 'production', // ✅ true en producción
+    secure: false, // false para localhost sin HTTPS
     httpOnly: true,
     maxAge: 1000 * 60 * 60 * 24,
-    sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax', // ✅ 'none' en producción
-    domain: process.env.NODE_ENV === 'production' ? '.project-solidarity.com' : undefined // ✅ dominio en producción
+    sameSite: 'lax' // lax para localhost
   }
 }));
 
@@ -181,12 +164,9 @@ app.use('/api/', createRateLimit(1 * 60 * 1000, 100, 'Demasiadas peticiones API'
 // Middleware para servir archivos estáticos
 app.use(express.static(path.join(__dirname, 'public')));
 
-// ✅ 9. CONFIGURACIÓN DE MULTER (VERIFICAR UPLOADS)
+// ✅ 9. CONFIGURACIÓN DE MULTER
 const uploadDir = path.join(__dirname, 'public', 'uploads');
-if (!fs.existsSync(uploadDir)) {
-  fs.mkdirSync(uploadDir, { recursive: true });
-  console.log('📁 Created uploads directory:', uploadDir);
-}
+if (!fs.existsSync(uploadDir)) fs.mkdirSync(uploadDir, { recursive: true });
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => cb(null, uploadDir),
@@ -235,8 +215,7 @@ app.use((req, res, next) => {
   res.locals.env = {
     SUPABASE_URL: process.env.SUPABASE_URL,
     SUPABASE_ANON_KEY: process.env.SUPABASE_ANON_KEY,
-    NODE_ENV: process.env.NODE_ENV,
-    DOMAIN: process.env.DOMAIN // ✅ Agregar esto
+    NODE_ENV: process.env.NODE_ENV
   };
   next();
 });
@@ -400,7 +379,7 @@ app.post('/api/session/regenerate', (req, res) => {
 app.post('/login-supabase', async (req, res) => {
   try {
     console.log('🔐 Login attempt with token:', !!req.body.token);
-
+    
     const { token } = req.body;
     if (!token) return res.status(400).json({ error: 'Token required' });
 
@@ -411,29 +390,16 @@ app.post('/login-supabase', async (req, res) => {
       return res.status(401).json({ error: 'Invalid token' });
     }
 
-    // Consulta perfil en Supabase
-    const { data: profile } = await supabase
-      .from('profiles')
-      .select('id, username, email, photo_url, first_name, user_type')
-      .eq('id', user.id)
-      .single();
-
-    if (!profile) {
-      return res.status(404).json({ error: 'Perfil no encontrado' });
-    }
-
-    // Guarda usuario en sesión con datos completos
+    // Guarda usuario en sesión
     req.session.user = {
-      id: profile.id,
-      name: profile.first_name || user.user_metadata?.full_name || user.email.split('@')[0],
-      username: profile.username,
-      email: profile.email,
-      photo_url: profile.photo_url || '',
-      type: profile.user_type || 'user'
+      id: user.id,
+      email: user.email,
+      name: user.user_metadata?.full_name || user.email.split('@')[0],
+      username: user.email.split('@')[0]
     };
 
     console.log('✅ User saved to session:', req.session.user.id);
-
+    
     res.json({ ok: true, user: req.session.user });
   } catch (error) {
     console.error('❌ Login error:', error);
@@ -713,9 +679,8 @@ const renderView = (view, title = '') => (req, res) => {
     user: req.session.user,
     env: {
       SUPABASE_URL: process.env.SUPABASE_URL,
-      SUPABASE_ANON_KEY: process.env.SUPABASE_ANON_KEY,
-      NODE_ENV: process.env.NODE_ENV,
-      DOMAIN: process.env.DOMAIN // ✅ Agregar esto
+      SUPABASE_ANON_KEY: process.env.SUPABASE_ANON_KEY, // <-- CORREGIDO
+      NODE_ENV: process.env.NODE_ENV
     }
   });
 };
@@ -918,15 +883,10 @@ app.post('/create-account-link', authenticateUser, async (req, res) => {
       return res.status(403).json({ error: 'No autorizado' });
     }
 
-    // CORREGIDO: Construir URLs completas
-    const baseUrl = process.env.DOMAIN || 'http://localhost:3000';
-    const refreshUrl = `${baseUrl}/causes?stripe_error=refresh&user_id=${userId}`;
-    const returnUrl = `${baseUrl}/stripe-callback?user_id=${userId}`;
-
     const accountLink = await stripe.accountLinks.create({
       account: accountId,
-      refresh_url: refreshUrl,
-      return_url: returnUrl,
+      refresh_url: `${frontendUrl}/causes?stripe_error=refresh&user_id=${userId}`,
+      return_url: `${frontendUrl}/stripe-callback?user_id=${userId}`,
       type: 'account_onboarding'
     });
 
@@ -939,291 +899,207 @@ app.post('/create-account-link', authenticateUser, async (req, res) => {
 
 app.get('/api/stripe/status', async (req, res) => {
   try {
-    const { userId } = req.query;
+    const userId = req.query.userId;
     
     if (!userId) {
-      return res.status(400).json({ error: 'userId requerido' });
+      return res.json({ 
+        hasAccount: false,
+        isActive: false,
+        requiresAction: false
+      });
     }
 
-    // Buscar cuenta Stripe del usuario
-    const { data: stripeAccount, error } = await supabase
+    const { data: account, error } = await supabase
       .from('stripe_accounts')
-      .select('*')
+      .select('stripe_account_id, status, charges_enabled')
       .eq('user_id', userId)
       .single();
 
-    if (error && error.code !== 'PGRST116') {
-      console.error('Error consultando Stripe account:', error);
-      return res.status(500).json({ error: 'Error consultando cuenta' });
-    }
-
-    if (!stripeAccount) {
-      return res.json({
+    if (error || !account) {
+      return res.json({ 
+        hasAccount: false,
         isActive: false,
-        accountData: null,
-        message: 'No tiene cuenta Stripe'
+        requiresAction: false
       });
     }
 
-    // Verificar estado en Stripe
-    try {
-      const account = await stripe.accounts.retrieve(stripeAccount.stripe_account_id);
-      
-      const isActive = account.details_submitted && 
-                      account.charges_enabled && 
-                      account.payouts_enabled;
-
-      // Actualizar estado en base de datos si cambió
-      if (isActive !== stripeAccount.is_active) {
-        await supabase
-          .from('stripe_accounts')
-          .update({ 
-            is_active: isActive,
-            updated_at: new Date().toISOString()
-          })
-          .eq('id', stripeAccount.id);
-      }
-
-      res.json({
-        isActive,
-        accountData: {
-          id: account.id,
-          email: account.email,
-          country: account.country,
-          charges_enabled: account.charges_enabled,
-          payouts_enabled: account.payouts_enabled,
-          details_submitted: account.details_submitted
-        },
-        message: isActive ? 'Cuenta activa' : 'Cuenta pendiente de configuración'
-      });
-
-    } catch (stripeError) {
-      console.error('Error consultando Stripe:', stripeError);
-      res.json({
-        isActive: false,
-        accountData: stripeAccount,
-        message: 'Error verificando estado en Stripe'
-      });
-    }
-
+    const stripeAccount = await stripe.accounts.retrieve(account.stripe_account_id);
+    res.json({
+      hasAccount: true,
+      isActive: stripeAccount.charges_enabled && stripeAccount.details_submitted,
+      requiresAction: !stripeAccount.charges_enabled,
+      stripeAccountId: account.stripe_account_id,
+      status: stripeAccount.charges_enabled ? 'active' : 'pending'
+    });
   } catch (error) {
-    console.error('Error en /api/stripe/status:', error);
-    res.status(500).json({ error: 'Error interno del servidor' });
+    res.status(500).json({ error: 'Error checking Stripe status' });
   }
 });
 
-app.post('/api/stripe/create-account', async (req, res) => {
+app.post('/api/causes/create-donation', authenticateUser, async (req, res) => {
   try {
-    const { email, userId, causeData } = req.body;
-    
-    if (!email || !userId) {
-      return res.status(400).json({ error: 'Email y userId requeridos' });
+    const { amount, causeId } = req.body;
+    if (!amount || !causeId) return res.status(400).json({ error: 'Faltan datos' });
+
+    const { data: cause, error: causeError } = await supabase
+      .from('causes')
+      .select('id, title, stripe_account_id, stripe_enabled')
+      .eq('id', causeId)
+      .single();
+
+    if (causeError || !cause || !cause.stripe_enabled || !cause.stripe_account_id) {
+      return res.status(400).json({ error: 'Causa no habilitada para donaciones' });
     }
 
-    // Verificar si ya tiene cuenta
-    const { data: existingAccount } = await supabase
+    const session = await stripe.checkout.sessions.create({
+      payment_method_types: ['card'],
+      line_items: [{
+        price_data: {
+          currency: 'eur',
+          product_data: { name: cause.title },
+          unit_amount: Math.round(amount * 100),
+        },
+        quantity: 1,
+      }],
+      mode: 'payment',
+      success_url: `${frontendUrl}/causes/${causeId}?donation=success`,
+      cancel_url: `${frontendUrl}/causes/${causeId}?donation=cancel`,
+      payment_intent_data: { application_fee_amount: 0 },
+      metadata: { causeId, donorId: req.session.user.id },
+      stripeAccount: cause.stripe_account_id
+    });
+
+    res.json({ sessionId: session.id });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+app.get('/api/stripe/my-status', authenticateUser, async (req, res) => {
+  try {
+    const userId = req.session.user.id;
+    const { data: accountRow } = await supabase
       .from('stripe_accounts')
-      .select('*')
+      .select('stripe_account_id, status')
       .eq('user_id', userId)
       .single();
 
-    let stripeAccountId;
+    if (!accountRow) return res.json({ hasAccount: false, status: 'none' });
 
-    if (existingAccount && existingAccount.stripe_account_id) {
-      stripeAccountId = existingAccount.stripe_account_id;
-      console.log('✅ Usando cuenta Stripe existente:', stripeAccountId);
-    } else {
-      // Crear nueva cuenta en Stripe
-      const account = await stripe.accounts.create({
-        type: 'express',
-        email: email,
-        metadata: {
-          user_id: userId,
-          source: 'solidarity_causes'
-        }
-      });
+    const account = await stripe.accounts.retrieve(accountRow.stripe_account_id);
+    res.json({
+      hasAccount: true,
+      status: account.charges_enabled ? 'active' : 'pending',
+      detailsSubmitted: account.details_submitted
+    });
+  } catch (error) {
+    res.status(500).json({ error: 'Error verificando estado de Stripe' });
+  }
+});
 
-      stripeAccountId = account.id;
-      console.log('✅ Nueva cuenta Stripe creada:', stripeAccountId);
+app.get('/reauth-stripe', authenticateUser, async (req, res) => {
+  try {
+    const userId = req.session.user.id;
+    if (!accountRow) return res.redirect('/causes/create?error=no_stripe_account');
 
-      // Guardar en base de datos
-      if (existingAccount) {
-        await supabase
-          .from('stripe_accounts')
-          .update({
-            stripe_account_id: stripeAccountId,
-            updated_at: new Date().toISOString()
-          })
-          .eq('id', existingAccount.id);
-      } else {
-        await supabase
-          .from('stripe_accounts')
-          .insert([{
-            user_id: userId,
-            stripe_account_id: stripeAccountId,
-            email: email,
-            is_active: false,
-            created_at: new Date().toISOString(),
-            updated_at: new Date().toISOString()
-          }]);
-      }
-    }
-
-    // CORREGIDO: Construir URLs completas con protocolo
-    const baseUrl = process.env.DOMAIN || 'http://localhost:3000';
-    const refreshUrl = `${baseUrl}/causes?stripe=refresh`;
-    const returnUrl = `${baseUrl}/causes?stripe=success`;
-
-    console.log('🔗 URLs de redirección:', { refreshUrl, returnUrl });
-
-    // Crear enlace de onboarding
     const accountLink = await stripe.accountLinks.create({
-      account: stripeAccountId,
-      refresh_url: refreshUrl,
-      return_url: returnUrl,
+      account: accountRow.stripe_account_id,
+      refresh_url: `${frontendUrl}/reauth-stripe`,
+      return_url: `${frontendUrl}/stripe-callback?user_id=${userId}`,
       type: 'account_onboarding',
     });
 
-    res.json({
-      success: true,
-      returnUrl: accountLink.url,
-      accountId: stripeAccountId
-    });
-
+    res.redirect(accountLink.url);
   } catch (error) {
-    console.error('❌ Error creando cuenta Stripe:', error);
-    res.status(500).json({ 
-      error: 'Error creando cuenta Stripe',
-      details: process.env.NODE_ENV === 'development' ? error.message : undefined
-    });
+    res.redirect('/causes/create?error=reauth_failed');
   }
 });
 
-// Endpoint para crear causa
-app.post('/api/causes/create', upload.single('photo'), async (req, res) => {
+app.get('/api/stripe/dashboard-link', authenticateUser, async (req, res) => {
   try {
-    console.log('📝 Creando nueva causa...', req.body);
-    
-    // Verificar sesión
-    if (!req.session.user) {
-      return res.status(401).json({ error: 'Usuario no autenticado' });
-    }
-
-    const {
-      title, short_description, description, goal, beneficiaries,
-      city, country, points, contact_email, phone_number,
-      how_to_donate, mobile_wallet, bank_account, lat, lng,
-      user_id, stripe_account_id
-    } = req.body;
-
-    // Validaciones básicas
-    if (!title || !description || !goal || !beneficiaries || !city || !country) {
-      return res.status(400).json({ error: 'Faltan campos obligatorios' });
-    }
-
-    // Procesar imagen si se subió
-    let imageUrl = null;
-    if (req.file) {
-      // Aquí puedes subir a Cloudinary, S3, etc.
-      // Por ahora, guardamos la ruta local
-      imageUrl = `/uploads/${req.file.filename}`;
-    }
-
-    // Insertar en Supabase
-    const { data: causa, error } = await supabase
-      .from('causes')
-      .insert([{
-        title,
-        short_description,
-        description,
-        goal: parseFloat(goal),
-        beneficiaries: parseInt(beneficiaries),
-        city,
-        country,
-        points: parseInt(points) || 50,
-        contact_email: contact_email || req.session.user.email,
-        phone_number,
-        how_to_donate,
-        mobile_wallet,
-        bank_account,
-        latitude: lat ? parseFloat(lat) : null,
-        longitude: lng ? parseFloat(lng) : null,
-        user_id,
-        stripe_account_id: stripe_account_id || null,
-        image_url: imageUrl,
-        status: 'active',
-        created_at: new Date().toISOString(),
-        updated_at: new Date().toISOString()
-      }])
-      .select()
+    const userId = req.session.user.id;
+    const { data: accountRow } = await supabase
+      .from('stripe_accounts')
+      .select('stripe_account_id')
+      .eq('user_id', userId)
       .single();
 
-    if (error) {
-      console.error('❌ Error insertando causa:', error);
-      return res.status(500).json({ error: 'Error guardando causa en base de datos' });
-    }
+    if (!accountRow) return res.status(404).json({ error: 'No Stripe account' });
 
-    console.log('✅ Causa creada exitosamente:', causa.id);
-
-    // Actualizar puntos del usuario (opcional)
-    try {
-      const { error: pointsError } = await supabase
-        .from('users')
-        .update({ 
-          points: supabase.raw('points + ?', [10]) // 10 puntos por crear causa
-        })
-        .eq('id', user_id);
-      
-      if (pointsError) {
-        console.warn('⚠️ Error actualizando puntos:', pointsError);
-      }
-    } catch (pointsErr) {
-      console.warn('⚠️ Error en actualización de puntos:', pointsErr);
-    }
-
-    res.json({
-      success: true,
-      cause: causa,
-      message: 'Causa creada exitosamente'
-    });
-
+    const loginLink = await stripe.accounts.createLoginLink(accountRow.stripe_account_id);
+    res.json({ url: loginLink.url });
   } catch (error) {
-    console.error('❌ Error en /api/causes/create:', error);
-    res.status(500).json({ error: 'Error interno del servidor' });
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// --- RUTAS DE CAUSAS ---
+app.post('/save-cause-draft', authenticateUser, async (req, res) => {
+  try {
+    const { draftData, stripeAccountId, stripeEnabled = false } = req.body;
+    const userId = req.session.user.id;
+
+    if (!draftData || !userId) {
+      return res.status(400).json({ error: 'Datos incompletos' });
+    }
+
+    const { data: existingDraft } = await supabase
+      .from('cause_drafts')
+      .select('id')
+      .eq('user_id', userId)
+      .single();
+
+    let result;
+    if (existingDraft) {
+      const { data, error } = await supabase
+        .from('cause_drafts')
+        .update({
+          draft_data: draftData,
+          stripe_account_id: stripeAccountId,
+          stripe_enabled: stripeEnabled,
+          updated_at: new Date()
+        })
+        .eq('id', existingDraft.id)
+        .select()
+        .single();
+
+      if (error) throw error;
+      result = data;
+    } else {
+      const { data, error } = await supabase
+        .from('cause_drafts')
+        .insert([{
+          user_id: userId,
+          draft_data: draftData,
+          stripe_account_id: stripeAccountId,
+          stripe_enabled: stripeEnabled
+        }])
+        .select()
+        .single();
+
+      if (error) throw error;
+      result = data;
+    }
+
+    res.json({ draftId: result.id });
+  } catch (error) {
+    res.status(500).json({ error: 'Error guardando borrador' });
   }
 });
 
 app.get('/api/causes', async (req, res) => {
   try {
-    const page = parseInt(req.query.page) || 1;
-    const limit = parseInt(req.query.limit) || 12;
-    const offset = (page - 1) * limit;
-    const category = req.query.category;
-    const search = req.query.search;
+    // Si usas Supabase en backend:
+    const { data: causes, error } = await supabase
+      .from('causes')
+      .select('*')
+      .eq('status', 'active')
+      .order('created_at', { ascending: false });
 
-    let query = supabase.from('causes').select('*', { count: 'exact' });
-
-    if (category && category !== 'all') {
-      query = query.eq('category', category);
-    }
-    if (search && search.trim() !== '') {
-      query = query.ilike('title', `%${search}%`);
-    }
-
-    query = query.order('created_at', { ascending: false }).range(offset, offset + limit - 1);
-
-    const { data, count, error } = await query;
-
-    if (error) {
-      return res.status(500).json({ error: error.message });
-    }
-
-    res.json({
-      data,
-      total: count
-    });
+    if (error) return res.status(500).json({ error: error.message });
+    res.json(causes);
   } catch (err) {
-    res.status(500).json({ error: 'Error interno del servidor' });
+    res.status(500).json({ error: err.message });
   }
 });
 
@@ -1344,24 +1220,8 @@ app.use((req, res) => {
 });
 
 // Iniciar servidor
-const server = app.listen(PORT, () => {
-  console.log(`🚀 Servidor iniciado en puerto ${PORT}`);
-  console.log(`🌍 Entorno: ${process.env.NODE_ENV}`);
-  console.log(`🔗 URL: ${process.env.DOMAIN || `http://localhost:${PORT}`}`);
-  
-  if (process.env.NODE_ENV === 'production') {
-    console.log('✅ Configuración de producción activa');
-    console.log('🔒 Cookies seguras habilitadas');
-    console.log('🌐 CORS configurado para project-solidarity.com');
-  }
-});
-
-// Manejo graceful de cierre
-process.on('SIGTERM', () => {
-  console.log('📡 SIGTERM recibido, cerrando servidor...');
-  server.close(() => {
-    console.log('✅ Servidor cerrado correctamente');
-  });
+app.listen(PORT, () => {
+  console.log(`🚀 Servidor iniciado en http://localhost:${PORT}`);
 });
 
 // Añadir después de las rutas de Stripe existentes:
