@@ -458,25 +458,19 @@ app.post('/logout', (req, res) => {
 app.get('/stripe-callback', async (req, res) => {
   try {
     const { user_id } = req.query;
-    console.log('🔄 Stripe callback para usuario:', user_id);
-
+    
     if (!user_id) {
-      console.error('❌ No user_id en callback');
       return res.redirect('/causes?stripe_error=missing_user_id');
     }
 
-    // Restaurar sesión si no existe
     if (!req.session.user) {
-      console.log('🔄 Restaurando sesión para user_id:', user_id);
-      
       const { data: user, error: userError } = await supabase
         .from('profiles')
-        .select('id, username, email, photo_url, first_name, user_type')
+        .select('id, username, email, photo_url, first_name')
         .eq('id', user_id)
         .single();
 
       if (userError || !user) {
-        console.error('❌ Error obteniendo perfil:', userError);
         return res.redirect('/login?error=user_not_found');
       }
 
@@ -491,7 +485,7 @@ app.get('/stripe-callback', async (req, res) => {
           photo_url: user.photo_url || '',
           username: user.username,
           email: user.email,
-          type: user.user_type || 'user'
+          type: 'user'
         };
         req.session.lastActivity = new Date();
 
@@ -499,55 +493,37 @@ app.get('/stripe-callback', async (req, res) => {
           if (saveErr) {
             return res.redirect('/login?error=session_save_error');
           }
-          processStripeCallback();
+          completeStripeProcess();
         });
       });
     } else {
-      processStripeCallback();
+      completeStripeProcess();
     }
 
-    async function processStripeCallback() {
+    async function completeStripeProcess() {
       try {
-        console.log('🔄 Procesando callback Stripe...');
-
-        // Obtener cuenta Stripe del usuario
-        const { data: stripeAccount, error: accountError } = await supabase
+        const { data: stripeAccount } = await supabase
           .from('stripe_accounts')
-          .select('stripe_account_id')
-          .eq('user_id', user_id)
+          .select('stripe_account_id, charges_enabled')
+          .eq('user_id', req.session.user.id)
           .single();
 
-        if (accountError || !stripeAccount?.stripe_account_id) {
-          console.error('❌ No se encontró cuenta Stripe:', accountError);
+        if (!stripeAccount?.stripe_account_id) {
           return res.redirect('/causes?stripe_error=no_account');
         }
 
-        // Verificar estado en Stripe API
         const account = await stripe.accounts.retrieve(stripeAccount.stripe_account_id);
-        console.log('📊 Estado de cuenta Stripe:', {
-          charges_enabled: account.charges_enabled,
-          details_submitted: account.details_submitted
-        });
-
-        // Actualizar estado en base de datos
-        const { error: updateError } = await supabase
+        
+        await supabase
           .from('stripe_accounts')
           .update({
             charges_enabled: account.charges_enabled,
             details_submitted: account.details_submitted,
             status: account.charges_enabled ? 'active' : 'pending',
-            last_verified: new Date().toISOString(),
-            updated_at: new Date().toISOString()
+            last_verified: new Date()
           })
-          .eq('user_id', user_id);
+          .eq('user_id', req.session.user.id);
 
-        if (updateError) {
-          console.error('❌ Error actualizando estado:', updateError);
-        } else {
-          console.log('✅ Estado actualizado en base de datos');
-        }
-
-        // Guardar en sesión
         req.session.stripeStatus = {
           connected: account.charges_enabled,
           onboardingComplete: account.details_submitted,
@@ -555,23 +531,16 @@ app.get('/stripe-callback', async (req, res) => {
         };
 
         req.session.save((saveErr) => {
-          if (saveErr) {
-            console.error('❌ Error guardando sesión:', saveErr);
-          }
-
-          // Redirigir con parámetros de éxito
-          console.log('✅ Redirigiendo a página de éxito');
-          res.redirect(`/causes?stripe=success&user_id=${user_id}&account_status=${account.charges_enabled ? 'active' : 'pending'}`);
+          res.clearCookie('stripe_return_url');
+          res.redirect(`/causes?stripe=success&user_id=${req.session.user.id}`);
         });
 
       } catch (error) {
-        console.error('❌ Error procesando callback:', error);
         res.redirect('/causes?stripe_error=processing_error');
       }
     }
 
   } catch (error) {
-    console.error('❌ Error en callback Stripe:', error);
     res.redirect('/causes?stripe_error=callback_failed');
   }
 });
@@ -970,8 +939,6 @@ app.get('/api/stripe/status', async (req, res) => {
       return res.status(400).json({ error: 'userId requerido' });
     }
 
-    console.log('🔍 Verificando estado Stripe para usuario:', userId);
-
     // Buscar cuenta Stripe del usuario
     const { data: stripeAccount, error } = await supabase
       .from('stripe_accounts')
@@ -979,15 +946,12 @@ app.get('/api/stripe/status', async (req, res) => {
       .eq('user_id', userId)
       .single();
 
-    console.log('📊 Resultado de consulta:', { stripeAccount, error });
-
     if (error && error.code !== 'PGRST116') {
       console.error('Error consultando Stripe account:', error);
       return res.status(500).json({ error: 'Error consultando cuenta' });
     }
 
     if (!stripeAccount) {
-      console.log('❌ No se encontró cuenta Stripe para usuario:', userId);
       return res.json({
         isActive: false,
         accountData: null,
@@ -995,9 +959,7 @@ app.get('/api/stripe/status', async (req, res) => {
       });
     }
 
-    console.log('✅ Cuenta encontrada:', stripeAccount.stripe_account_id);
-
-    // Verificar estado en Stripe si la cuenta existe
+    // Verificar estado en Stripe
     try {
       const account = await stripe.accounts.retrieve(stripeAccount.stripe_account_id);
       
@@ -1005,26 +967,15 @@ app.get('/api/stripe/status', async (req, res) => {
                       account.charges_enabled && 
                       account.payouts_enabled;
 
-      console.log('📊 Estado desde Stripe API:', {
-        details_submitted: account.details_submitted,
-        charges_enabled: account.charges_enabled,
-        payouts_enabled: account.payouts_enabled,
-        isActive
-      });
-
       // Actualizar estado en base de datos si cambió
       if (isActive !== stripeAccount.is_active) {
         await supabase
           .from('stripe_accounts')
           .update({ 
             is_active: isActive,
-            charges_enabled: account.charges_enabled,
-            details_submitted: account.details_submitted,
             updated_at: new Date().toISOString()
           })
           .eq('id', stripeAccount.id);
-        
-        console.log('✅ Estado actualizado en base de datos');
       }
 
       res.json({
@@ -1041,7 +992,7 @@ app.get('/api/stripe/status', async (req, res) => {
       });
 
     } catch (stripeError) {
-      console.error('Error consultando Stripe API:', stripeError);
+      console.error('Error consultando Stripe:', stripeError);
       res.json({
         isActive: false,
         accountData: stripeAccount,
@@ -1062,8 +1013,6 @@ app.post('/api/stripe/create-account', async (req, res) => {
     if (!email || !userId) {
       return res.status(400).json({ error: 'Email y userId requeridos' });
     }
-
-    console.log('🔄 Procesando cuenta Stripe para:', { email, userId });
 
     // Verificar si ya tiene cuenta
     const { data: existingAccount } = await supabase
@@ -1091,49 +1040,33 @@ app.post('/api/stripe/create-account', async (req, res) => {
       stripeAccountId = account.id;
       console.log('✅ Nueva cuenta Stripe creada:', stripeAccountId);
 
-      // ✅ CORREGIDO: Guardar en base de datos INMEDIATAMENTE
-      const insertData = {
-        user_id: userId,
-        stripe_account_id: stripeAccountId,
-        email: email,
-        is_active: false,
-        charges_enabled: false,
-        details_submitted: false,
-        status: 'pending',
-        created_at: new Date().toISOString(),
-        updated_at: new Date().toISOString()
-      };
-
-      console.log('💾 Insertando en stripe_accounts:', insertData);
-
+      // Guardar en base de datos
       if (existingAccount) {
-        const { error: updateError } = await supabase
+        await supabase
           .from('stripe_accounts')
-          .update(insertData)
+          .update({
+            stripe_account_id: stripeAccountId,
+            updated_at: new Date().toISOString()
+          })
           .eq('id', existingAccount.id);
-        
-        if (updateError) {
-          console.error('❌ Error actualizando cuenta:', updateError);
-          throw new Error('Error actualizando cuenta en base de datos');
-        }
       } else {
-        const { error: insertError } = await supabase
+        await supabase
           .from('stripe_accounts')
-          .insert([insertData]);
-        
-        if (insertError) {
-          console.error('❌ Error insertando cuenta:', insertError);
-          throw new Error('Error guardando cuenta en base de datos');
-        }
+          .insert([{
+            user_id: userId,
+            stripe_account_id: stripeAccountId,
+            email: email,
+            is_active: false,
+            created_at: new Date().toISOString(),
+            updated_at: new Date().toISOString()
+          }]);
       }
-
-      console.log('✅ Cuenta guardada en base de datos');
     }
 
-    // ✅ CORREGIDO: URLs con user_id para el callback
+    // CORREGIDO: Construir URLs completas con protocolo
     const baseUrl = process.env.DOMAIN || 'http://localhost:3000';
-    const refreshUrl = `${baseUrl}/causes?stripe=refresh&user_id=${userId}`;
-    const returnUrl = `${baseUrl}/stripe-callback?user_id=${userId}`;
+    const refreshUrl = `${baseUrl}/causes?stripe=refresh`;
+    const returnUrl = `${baseUrl}/causes?stripe=success`;
 
     console.log('🔗 URLs de redirección:', { refreshUrl, returnUrl });
 
@@ -1163,60 +1096,94 @@ app.post('/api/stripe/create-account', async (req, res) => {
 // Endpoint para crear causa
 app.post('/api/causes/create', upload.single('photo'), async (req, res) => {
   try {
-    let photo_url = null;
-    if (req.file) {
-      photo_url = `/uploads/${req.file.filename}`;
-    } else if (req.body.photo_url) {
-      photo_url = req.body.photo_url;
+    console.log('📝 Creando nueva causa...', req.body);
+    
+    // Verificar sesión
+    if (!req.session.user) {
+      return res.status(401).json({ error: 'Usuario no autenticado' });
     }
 
-    // Convierte cualquier valor vacío, nulo o no numérico a null
-    function parseNumber(val) {
-      if (val === '' || val === undefined || val === null) return null;
-      const num = Number(val);
-      return (isNaN(num) || val === '') ? null : num;
-    }
-
-    // Obtén todas las columnas válidas de la tabla causes
     const {
       title, short_description, description, goal, beneficiaries,
       city, country, points, contact_email, phone_number,
-      mobile_wallet, lat, lng, user_id, stripe_account_id
+      how_to_donate, mobile_wallet, bank_account, lat, lng,
+      user_id, stripe_account_id
     } = req.body;
 
-    const insertData = {
-      title,
-      short_description,
-      description,
-      goal: parseNumber(goal),
-      beneficiaries: parseNumber(beneficiaries),
-      points: parseNumber(points),
-      city,
-      country,
-      contact_email,
-      phone_number,
-      mobile_wallet,
-      lat: parseNumber(lat),
-      lng: parseNumber(lng),
-      user_id,
-      stripe_account_id,
-      photo_url
-    };
+    // Validaciones básicas
+    if (!title || !description || !goal || !beneficiaries || !city || !country) {
+      return res.status(400).json({ error: 'Faltan campos obligatorios' });
+    }
 
-    // Elimina cualquier campo numérico que sea null si tu tabla no permite null
-    Object.keys(insertData).forEach(key => {
-      if (insertData[key] === null) delete insertData[key];
+    // Procesar imagen si se subió
+    let imageUrl = null;
+    if (req.file) {
+      // Aquí puedes subir a Cloudinary, S3, etc.
+      // Por ahora, guardamos la ruta local
+      imageUrl = `/uploads/${req.file.filename}`;
+    }
+
+    // Insertar en Supabase
+    const { data: causa, error } = await supabase
+      .from('causes')
+      .insert([{
+        title,
+        short_description,
+        description,
+        goal: parseFloat(goal),
+        beneficiaries: parseInt(beneficiaries),
+        city,
+        country,
+        points: parseInt(points) || 50,
+        contact_email: contact_email || req.session.user.email,
+        phone_number,
+        how_to_donate,
+        mobile_wallet,
+        bank_account,
+        latitude: lat ? parseFloat(lat) : null,
+        longitude: lng ? parseFloat(lng) : null,
+        user_id,
+        stripe_account_id: stripe_account_id || null,
+        image_url: imageUrl,
+        status: 'active',
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString()
+      }])
+      .select()
+      .single();
+
+    if (error) {
+      console.error('❌ Error insertando causa:', error);
+      return res.status(500).json({ error: 'Error guardando causa en base de datos' });
+    }
+
+    console.log('✅ Causa creada exitosamente:', causa.id);
+
+    // Actualizar puntos del usuario (opcional)
+    try {
+      const { error: pointsError } = await supabase
+        .from('users')
+        .update({ 
+          points: supabase.raw('points + ?', [10]) // 10 puntos por crear causa
+        })
+        .eq('id', user_id);
+      
+      if (pointsError) {
+        console.warn('⚠️ Error actualizando puntos:', pointsError);
+      }
+    } catch (pointsErr) {
+      console.warn('⚠️ Error en actualización de puntos:', pointsErr);
+    }
+
+    res.json({
+      success: true,
+      cause: causa,
+      message: 'Causa creada exitosamente'
     });
 
-    const { data, error } = await supabase
-      .from('causes')
-      .insert([insertData]);
-
-    if (error) throw error;
-    res.json({ success: true, data });
-  } catch (err) {
-    console.error('❌ Error en /api/causes/create:', err);
-    res.status(500).json({ error: err.message });
+  } catch (error) {
+    console.error('❌ Error en /api/causes/create:', error);
+    res.status(500).json({ error: 'Error interno del servidor' });
   }
 });
 
@@ -1354,6 +1321,22 @@ app.use((err, req, res, next) => {
   res.status(500).json(response);
 });
 
+app.use((req, res) => {
+  if (req.path.startsWith('/api/')) {
+    return res.status(404).json({ 
+      error: 'Endpoint no encontrado',
+      code: 'NOT_FOUND',
+      path: req.path
+    });
+  }
+  
+  res.status(404).render('404', { 
+    lang: req.lang, 
+    user: req.session?.user,
+    requestedPath: req.path
+  });
+});
+
 // Iniciar servidor
 const server = app.listen(PORT, () => {
   console.log(`🚀 Servidor iniciado en puerto ${PORT}`);
@@ -1487,293 +1470,3 @@ app.use((req, res, next) => {
     console.error('❌ Error conectando a Supabase/PostgreSQL:', err.message);
   }
 })();
-
-// --- NUEVAS RUTAS DE STRIPE ---
-app.post('/api/stripe/create-checkout', async (req, res) => {
-  try {
-    console.log('[API] Recibido POST /api/stripe/create-checkout');
-    console.log('[API] Payload:', req.body);
-
-    const { causeId, amount, stripe_account_id } = req.body;
-
-    // Log búsqueda en Supabase
-    console.log('[API] Buscando causa en Supabase:', causeId);
-
-    const { data: cause, error } = await supabase
-      .from('causes')
-      .select('*')
-      .eq('id', causeId)
-      .single();
-
-    console.log('[API] Resultado Supabase:', cause);
-    if (error) console.error('[API] Error Supabase:', error);
-
-    if (!cause) {
-      console.error('[API] No se encontró la causa');
-      return res.status(404).json({ error: 'Causa no encontrada' });
-    }
-
-    console.log('[API] Columnas de la causa:', Object.keys(cause));
-    console.log('[API] Stripe enabled:', cause.stripe_enabled, 'Stripe account:', cause.stripe_account_id);
-
-    if (!cause.stripe_enabled || !cause.stripe_account_id) {
-      console.error('[API] Stripe no configurado en la causa');
-      return res.status(400).json({ error: 'Esta causa no tiene configurado Stripe para recibir donaciones' });
-    }
-
-    // Crear metadata para Stripe
-    const metadata = {
-      cause_id: causeId,
-      cause_title: cause.title.substring(0, 100), // Stripe limita
-      donor_name: req.body.donorName || 'Anónimo',
-      source: 'solidarity_platform'
-    };
-
-    if (req.body.donorEmail) metadata.donor_email = req.body.donorEmail;
-    if (req.body.message) metadata.message = req.body.message.substring(0, 400);
-    if (req.session.user?.id) metadata.user_id = req.session.user.id;
-
-    // Crear sesión de Stripe Checkout
-    const session = await stripe.checkout.sessions.create({
-      payment_method_types: ['card'],
-      line_items: [{
-        price_data: {
-          currency: 'eur',
-          product_data: { name: cause.title },
-          unit_amount: Math.round(amount * 100),
-        },
-        quantity: 1,
-      }],
-      mode: 'payment',
-      success_url: `${process.env.BASE_URL}/causes?donation=success&session_id={CHECKOUT_SESSION_ID}`,
-      cancel_url: `${process.env.BASE_URL}/causes?donation=cancel`,
-    }, {
-      stripeAccount: cause.stripe_account_id // <-- SOLO AQUÍ
-    });
-
-    console.log('✅ Sesión de Stripe creada exitosamente:', session.id);
-
-    res.json({ 
-      url: session.url,
-      sessionId: session.id 
-    });
-
-  } catch (error) {
-    console.error('❌ Error en create-checkout:', error);
-    
-    if (error.type === 'StripeInvalidRequestError') {
-      return res.status(400).json({ 
-        error: 'Error de configuración de Stripe',
-        details: error.message 
-      });
-    }
-
-    res.status(500).json({ 
-      error: 'Error interno del servidor',
-      details: process.env.NODE_ENV === 'development' ? error.message : undefined
-    });
-  }
-});
-
-// Agregar este endpoint para webhooks de Stripe
-
-app.post('/stripe-webhook', express.raw({type: 'application/json'}), async (req, res) => {
-  const sig = req.headers['stripe-signature'];
-  const endpointSecret = process.env.STRIPE_WEBHOOK_SECRET; // Agregar a tu .env
-
-  let event;
-
-  try {
-    event = stripe.webhooks.constructEvent(req.body, sig, endpointSecret);
-  } catch (err) {
-    console.error('❌ Webhook signature verification failed:', err.message);
-    return res.status(400).send(`Webhook Error: ${err.message}`);
-  }
-
-  // Manejar el evento
-  try {
-    switch (event.type) {
-      case 'checkout.session.completed':
-        await handleSuccessfulPayment(event.data.object);
-        break;
-      
-      case 'payment_intent.succeeded':
-        await handlePaymentConfirmed(event.data.object);
-        break;
-      
-      case 'payment_intent.payment_failed':
-        await handlePaymentFailed(event.data.object);
-        break;
-      
-      default:
-        console.log(`📝 Evento no manejado: ${event.type}`);
-    }
-
-    res.json({received: true});
-  } catch (error) {
-    console.error('❌ Error procesando webhook:', error);
-    res.status(500).json({error: 'Error procesando webhook'});
-  }
-});
-
-// Función para manejar pago exitoso
-async function handleSuccessfulPayment(session) {
-  try {
-    console.log('💰 Procesando donación exitosa:', session.id);
-
-    // Obtener detalles del PaymentIntent
-    const paymentIntent = await stripe.paymentIntents.retrieve(
-      session.payment_intent,
-      { stripeAccount: session.metadata.cause_id ? undefined : session.stripe_account }
-    );
-
-    // Guardar donación en Supabase
-    const donationData = {
-      id: session.id, // Usar el session ID como ID único
-      cause_id: session.metadata.cause_id,
-      amount: session.amount_total / 100, // Convertir de céntimos a euros
-      currency: session.currency.toLowerCase(),
-      donor_name: session.metadata.donor_name || 'Anónimo',
-      donor_email: session.metadata.donor_email || null,
-      message: session.metadata.message || null,
-      user_id: session.metadata.user_id || null,
-      stripe_session_id: session.id,
-      stripe_payment_intent_id: session.payment_intent,
-      payment_status: 'completed',
-      stripe_account_id: paymentIntent.on_behalf_of || null,
-      created_at: new Date().toISOString(),
-      updated_at: new Date().toISOString()
-    };
-
-    const { data: donation, error: insertError } = await supabase
-      .from('donations')
-      .insert([donationData]);
-
-    if (insertError) {
-      console.error('❌ Error guardando donación:', insertError);
-      throw insertError;
-    }
-
-    // Actualizar estadísticas de la causa
-    const { error: updateError } = await supabase
-      .rpc('update_cause_stats', {
-        cause_id: session.metadata.cause_id,
-        donation_amount: donationData.amount
-      });
-
-    if (updateError) {
-      console.error('❌ Error actualizando estadísticas:', updateError);
-    }
-
-    // Enviar notificación al creador de la causa (opcional)
-    await sendDonationNotification(donationData);
-
-    console.log('✅ Donación procesada correctamente:', donationData.id);
-
-  } catch (error) {
-    console.error('❌ Error procesando pago exitoso:', error);
-    throw error;
-  }
-}
-
-// Función para enviar notificación
-async function sendDonationNotification(donation) {
-  try {
-    // Obtener datos del creador de la causa
-    const { data: cause, error } = await supabase
-      .from('causes')
-      .select(`
-        title,
-        user_id,
-        profiles!causes_user_id_fkey(email, first_name)
-      `)
-      .eq('id', donation.cause_id)
-      .single();
-
-    if (error || !cause) {
-      console.log('⚠️ No se pudo obtener datos de la causa para notificación');
-      return;
-    }
-
-    // Aquí puedes integrar tu sistema de notificaciones
-    // Por ejemplo, enviar email, notificación push, etc.
-    console.log(`📧 Notificación: ${donation.donor_name} donó €${donation.amount} a "${cause.title}"`);
-
-    // Guardar notificación en base de datos
-    await supabase
-      .from('notifications')
-      .insert([{
-        user_id: cause.user_id,
-        type: 'donation_received',
-        title: 'Nueva donación recibida',
-        message: `${donation.donor_name} ha donado €${donation.amount} a tu causa "${cause.title}"`,
-        data: {
-          donation_id: donation.id,
-          cause_id: donation.cause_id,
-          amount: donation.amount,
-          donor_name: donation.donor_name
-        },
-        created_at: new Date().toISOString()
-      }]);
-
-  } catch (error) {
-    console.error('❌ Error enviando notificación:', error);
-  }
-}
-
-// Agregar este endpoint
-
-app.get('/api/donations/session/:sessionId', async (req, res) => {
-  try {
-    const { sessionId } = req.params;
-    
-    // Buscar donación por session ID
-    const { data: donation, error } = await supabase
-      .from('donations')
-      .select(`
-        *,
-        causes!donations_cause_id_fkey(title)
-      `)
-      .eq('stripe_session_id', sessionId)
-      .single();
-
-    if (error || !donation) {
-      return res.status(404).json({ error: 'Donación no encontrada' });
-    }
-
-    // Formatear respuesta
-    const response = {
-      id: donation.id,
-      cause_id: donation.cause_id,
-      cause_title: donation.causes?.title || 'Causa desconocida',
-      amount: donation.amount,
-      currency: donation.currency,
-      donor_name: donation.donor_name,
-      donor_email: donation.donor_email,
-      message: donation.message,
-      created_at: donation.created_at,
-      payment_status: donation.payment_status
-    };
-
-    res.json(response);
-  } catch (error) {
-    console.error('❌ Error obteniendo donación:', error);
-    res.status(500).json({ error: 'Error interno del servidor' });
-  }
-});
-
-app.use((req, res) => {
-  if (req.path.startsWith('/api/')) {
-    return res.status(404).json({ 
-      error: 'Endpoint no encontrado',
-      code: 'NOT_FOUND',
-      path: req.path
-    });
-  }
-  
-  res.status(404).render('404', { 
-    lang: req.lang, 
-    user: req.session?.user,
-    requestedPath: req.path
-  });
-});

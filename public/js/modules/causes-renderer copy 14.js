@@ -84,21 +84,20 @@ class CausesRenderer {
     const location = cause.city && cause.country ? `${cause.city}, ${cause.country}` : "";
     const isAdmin = ['founder','admin','coordinator'].includes(cause.userRole);
 
-    // Botón "Ver más" siempre visible
+    // ✅ SOLO 2 BOTONES: Ver más y Donar/Administrar
     const viewMoreBtn = `
       <button class="btn btn-primary view-more-btn" data-cause-id="${cause.id}">
-        <i class="fas fa-eye"></i> Ver más
+        Ver más
       </button>
     `;
 
-    // Botón "Donar" profesional con Stripe
     const actionBtn = isAdmin ? `
       <button class="btn btn-accent admin-activity-btn" data-activity-type="cause" data-activity-id="${cause.id}">
-        <i class="fas fa-cog"></i> Administrar
+        Administrar
       </button>
     ` : `
-      <button class="btn btn-accent donate-btn" data-cause-id="${cause.id}" data-stripe-enabled="${cause.stripe_enabled ? 'true' : 'false'}" data-stripe-account="${cause.stripe_account_id || ''}">
-        <i class="fas fa-donate"></i> Donar
+      <button class="btn btn-accent donate-btn" data-cause-id="${cause.id}" data-stripe-enabled="${cause.stripe_accounts?.[0]?.charges_enabled ? 'true' : 'false'}" data-stripe-account="${cause.stripe_accounts?.[0]?.stripe_account_id || ''}">
+        Donar
       </button>
     `;
 
@@ -144,215 +143,219 @@ class CausesRenderer {
    * Muestra el modal con EXACTO el template del código original
    */
   async showModal(causeId, activeTab = 'details') {
-    const cause = window.causes?.find(c => c.id == causeId);
-    if (!cause) {
-      console.error('❌ Causa no encontrada:', causeId);
-      return;
-    }
+  const cause = window.causes?.find(c => c.id == causeId);
+  if (!cause) {
+    console.error('❌ Causa no encontrada:', causeId);
+    return;
+  }
 
-    // ✅ Esperar a que Supabase esté listo
-    const supabase = await this.ensureSupabase();
-    if (!supabase) {
-      console.error('❌ Supabase no disponible');
-      return;
-    }
+  // Espera a que Supabase esté disponible
+  await this.ensureSupabase();
 
-    // Obtener donantes de Supabase
-    const { data: donors, error: donorsError } = await supabase
-      .from('causes_members')
-      .select('user_id, profiles(username, photo_url)')
-      .eq('cause_id', causeId)
-      .eq('role', 'donor')
-      .eq('status', 'active');
+  // Obtener donantes de Supabase usando this.supabase
+  const { data: donors, error: donorsError } = await this.supabase
+    .from('causes_members')
+    .select('user_id, profiles(username, photo_url)')
+    .eq('cause_id', causeId)
+    .eq('role', 'donor')
+    .eq('status', 'active');
 
-    let donorsHtml = '';
-    if (donorsError) {
-      donorsHtml = `<div style="color:#e53e3e;">Error al cargar los donantes.</div>`;
-    } else if (!donors || donors.length === 0) {
-      donorsHtml = `<div style="color:#6b7280;">Aún no hay donantes para esta causa.</div>`;
-    } else {
-      donorsHtml = `
-        <div style="display:flex; flex-wrap:wrap; gap:1rem; margin-top:1rem;">
-          ${donors.map(d => `
-            <div style="display:flex; align-items:center; gap:0.6rem; background:#f8fafc; border-radius:8px; padding:0.5rem 1rem;">
-              <img src="${d.profiles?.photo_url || '/img/avatar-default.png'}" alt="${d.profiles?.username}" style="width:32px; height:32px; border-radius:50%; object-fit:cover;">
-              <span style="font-weight:600; color:#4a6fa5;">${d.profiles?.username || 'Usuario'}</span>
-            </div>
-          `).join('')}
+  let donorsHtml = '';
+  if (donorsError) {
+    donorsHtml = `<div style="color:#e53e3e;">Error al cargar los donantes.</div>`;
+  } else if (!donors || donors.length === 0) {
+    donorsHtml = `<div style="color:#6b7280;">Aún no hay donantes para esta causa.</div>`;
+  } else {
+    donorsHtml = `
+      <div style="display:flex; flex-wrap:wrap; gap:1rem; margin-top:1rem;">
+        ${donors.map(d => `
+          <div style="display:flex; align-items:center; gap:0.6rem; background:#f8fafc; border-radius:8px; padding:0.5rem 1rem;">
+            <img src="${d.profiles?.photo_url || '/img/avatar-default.png'}" alt="${d.profiles?.username}" style="width:32px; height:32px; border-radius:50%; object-fit:cover;">
+            <span style="font-weight:600; color:#4a6fa5;">${d.profiles?.username || 'Usuario'}</span>
+          </div>
+        `).join('')}
+      </div>
+    `;
+  }
+
+  const progress = cause.goal ? Math.min(Math.round((cause.raised / cause.goal) * 100), 100) : 0;
+  const createdDate = new Date(cause.created_at).toLocaleDateString('es-ES', {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric'
+  });
+
+  // Obtener o crear el modal
+  const modal = this.getOrCreateModal();
+  const modalBody = modal.querySelector('#modalBody');
+
+  modalBody.innerHTML = `
+    <div class="modal-cause-container">
+      <h1 class="modal-cause-title" style="font-size:2rem; font-weight:800; color:var(--primary); margin-bottom:2rem; text-align:center;">${cause.title}</h1>
+      <div class="modal-cause-header" style="display:flex; gap:2rem; margin-bottom:2rem; flex-wrap:wrap;">
+        <div class="modal-cause-image-wrapper" style="flex:1; min-width:320px; height:280px; border-radius:12px; overflow:hidden; position:relative; box-shadow:0 4px 12px rgba(0,0,0,0.08);">
+          <img class="modal-cause-image" src="${cause.photo_url || '/img/causa-default.jpg'}" 
+               alt="Imagen de la causa ${cause.title}"
+               style="width:100%;height:100%;object-fit:cover;"
+               onerror="this.src='/img/causa-default.jpg'">
+          ${cause.urgent ? `<div class="modal-cause-badge urgent" style="position:absolute; top:1.5rem; right:1.5rem; background:var(--urgent); color:white; padding:0.5rem 1rem; border-radius:50px; font-size:0.9rem; font-weight:600; display:flex; align-items:center; gap:0.6rem; box-shadow:0 2px 8px rgba(0,0,0,0.1); z-index:2;"><i class="fas fa-exclamation-circle"></i> Urgente</div>` : ''}
         </div>
-      `;
-    }
-
-    const progress = cause.goal ? Math.min(Math.round((cause.raised / cause.goal) * 100), 100) : 0;
-    const createdDate = new Date(cause.created_at).toLocaleDateString('es-ES', {
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric'
-    });
-
-    const modal = this.getOrCreateModal();
-    const modalBody = modal.querySelector('#modalBody');
-
-    modalBody.innerHTML = `
-      <div class="modal-cause-container">
-        <h1 class="modal-cause-title">${cause.title}</h1>
-        
-        <div class="modal-tabs">
-          <button class="tab-btn ${activeTab === 'details' ? 'active' : ''}" data-tab="details">
-            <i class="fas fa-info-circle"></i> Detalles
-          </button>
-          <button class="tab-btn ${activeTab === 'donations' ? 'active' : ''}" data-tab="donations">
-            <i class="fas fa-donate"></i> Donaciones
-          </button>
-          <button class="tab-btn ${activeTab === 'participants' ? 'active' : ''}" data-tab="participants">
-            <i class="fas fa-users"></i> Participantes
-          </button>
-        </div>
-        
-        <div class="tab-content ${activeTab === 'details' ? 'active' : ''}" id="detailsTab">
-          <div class="modal-cause-header">
-            <div class="modal-cause-image-wrapper">
-              <img class="modal-cause-image" src="${cause.photo_url || '/img/causa-default.jpg'}" 
-                   alt="Imagen de la causa ${cause.title}"
-                   onerror="this.src='/img/causa-default.jpg'">
-              ${cause.urgent ? `
-              <div class="modal-cause-badge urgent">
-                <i class="fas fa-exclamation-circle"></i> Urgente
-              </div>` : ''}
+        <div class="modal-cause-info" style="flex:1.5; display:flex; flex-direction:column;">
+          <div class="modal-cause-progress-container" style="background:#f8fafc; padding:1.5rem; border-radius:12px; margin-bottom:1.5rem; border:1px solid #e5e7eb;">
+            <div class="progress-bar">
+              <div class="progress-fill" style="width: ${progress}%"></div>
             </div>
-            <div class="modal-cause-info">
-              <div class="modal-cause-progress-container">
-                <div class="progress-bar">
-                  <div class="progress-fill" style="width: ${progress}%"></div>
-                </div>
-                <div class="progress-info">
-                  <span>${progress}% completado</span>
-                  <span>${cause.raised || 0} € de ${cause.goal || 0} €</span>
-                </div>
-              </div>
-              <div class="modal-cause-meta-grid">
-                <div class="meta-item"><i class="fas fa-map-marker-alt"></i> ${cause.city || 'Sin ubicación'}${cause.country ? ', ' + cause.country : ''}</div>
-                <div class="meta-item"><i class="fas fa-users"></i> ${cause.donors || 0} donantes</div>
-                <div class="meta-item"><i class="fas fa-heart"></i> ${cause.beneficiaries || 0} beneficiarios</div>
-                <div class="meta-item"><i class="fas fa-calendar-alt"></i> ${createdDate}</div>
-              </div>
-              <div class="points-notice">
-                <i class="fas fa-star"></i> Cada euro donado recibirá <strong>${cause.points || 20} puntos</strong> de impacto
-              </div>
+            <div class="progress-info">
+              <span>${progress}% completado</span>
+              <span>${cause.raised || 0} € de ${cause.goal || 0} €</span>
             </div>
           </div>
-          
-          <div class="modal-cause-content">
-            <div class="content-section">
-              <h3 class="content-title"><i class="fas fa-align-left"></i> Resumen</h3>
-              <p class="content-text">${cause.short_description || 'No hay resumen disponible para esta causa.'}</p>
-            </div>
-            <div class="content-section">
-              <h3 class="content-title"><i class="fas fa-info-circle"></i> Descripción completa</h3>
-              <p class="content-text">${cause.description || 'No hay descripción detallada disponible para esta causa.'}</p>
-            </div>
-            
-            ${(cause.contact_email || cause.phone_number) ? `
-              <div class="content-section">
-                <h3 class="content-title"><i class="fas fa-address-book"></i> Información de contacto</h3>
-                <div style="background:#f8fafc; border-radius:12px; padding:1.5rem; border:1px solid #e5e7eb; text-align:left;">
-                  ${cause.contact_email ? `
-                    <div style="display:flex; align-items:center; gap:0.7rem; margin-bottom:${cause.phone_number ? '1rem' : '0'};">
-                      <i class="fas fa-envelope" style="color:var(--primary); font-size:1.1rem;"></i>
-                      <div>
-                        <span style="color:#6b7280; font-size:0.9rem; display:block;">Email de contacto:</span>
-                        <a href="mailto:${cause.contact_email}" style="color:var(--primary); font-weight:600; text-decoration:none; font-size:1rem;">
-                          ${cause.contact_email}
-                        </a>
-                      </div>
-                    </div>
-                  ` : ''}
-                  ${cause.phone_number ? `
-                    <div style="display:flex; align-items:center; gap:0.7rem;">
-                      <i class="fas fa-phone" style="color:var(--primary); font-size:1.1rem;"></i>
-                      <div>
-                        <span style="color:#6b7280; font-size:0.9rem; display:block;">Teléfono de contacto:</span>
-                        <a href="tel:${cause.phone_number}" style="color:var(--primary); font-weight:600; text-decoration:none; font-size:1rem;">
-                          ${cause.phone_number}
-                        </a>
-                      </div>
-                    </div>
-                  ` : ''}
-                </div>
-              </div>
-            ` : ''}
+          <div class="modal-cause-meta-grid" style="display:grid; grid-template-columns:1fr 1fr; gap:1.2rem; margin-bottom:1.5rem;">
+            <div class="meta-item"><i class="fas fa-map-marker-alt" style="color:var(--primary);"></i> ${cause.city || 'Sin ubicación'}${cause.country ? ', ' + cause.country : ''}</div>
+            <div class="meta-item"><i class="fas fa-users" style="color:var(--primary);"></i> ${cause.donors || 0} donantes</div>
+            <div class="meta-item"><i class="fas fa-heart" style="color:var(--primary);"></i> ${cause.beneficiaries || 0} beneficiarios</div>
+            <div class="meta-item"><i class="fas fa-calendar-alt" style="color:var(--primary);"></i> ${createdDate}</div>
+          </div>
+          <div class="points-notice" style="background:#f0f9ff; border-left:4px solid var(--accent); padding:1rem; border-radius:0 8px 8px 0; font-size:0.95rem; display:flex; align-items:center; gap:0.7rem;">
+            <i class="fas fa-star" style="color:var(--accent);"></i>
+            Cada euro donado recibirá <strong>${cause.points || 20} puntos</strong> de impacto
           </div>
         </div>
-        
-        <div class="tab-content ${activeTab === 'donations' ? 'active' : ''}" id="donationsTab">
+      </div>
+      <div class="modal-tabs">
+        <button class="tab-btn ${activeTab === 'details' ? 'active' : ''}" data-tab="details">
+          <i class="fas fa-info-circle"></i> Detalles
+        </button>
+        <button class="tab-btn ${activeTab === 'donations' ? 'active' : ''}" data-tab="donations">
+          <i class="fas fa-donate"></i> Donaciones
+        </button>
+        <button class="tab-btn ${activeTab === 'participants' ? 'active' : ''}" data-tab="participants">
+          <i class="fas fa-users"></i> Participantes
+        </button>
+      </div>
+      <div class="tab-content ${activeTab === 'details' ? 'active' : ''}" id="detailsTab">
+        <div class="modal-cause-content">
           <div class="content-section">
-            <h3 class="content-title"><i class="fas fa-donate"></i> Cómo donar</h3>
-            ${cause.stripe_enabled ? `
-              <div class="stripe-donation-section">
-                <p>Puedes donar de forma segura con tarjeta de crédito/débito:</p>
-                <button class="btn btn-primary" onclick="window.openDonationModal('${cause.id}')">
+            <h3 class="content-title"><i class="fas fa-align-left"></i> Resumen</h3>
+            <p class="content-text">${cause.short_description || 'No hay resumen disponible para esta causa.'}</p>
+          </div>
+          <div class="content-section">
+            <h3 class="content-title"><i class="fas fa-info-circle"></i> Descripción completa</h3>
+            <p class="content-text">${cause.description || 'No hay descripción detallada disponible para esta causa.'}</p>
+          </div>
+          ${(cause.contact_email || cause.phone_number) ? `
+            <div class="content-section">
+              <h3 class="content-title"><i class="fas fa-address-book"></i> Información de contacto</h3>
+              <div style="background:#f8fafc; border-radius:12px; padding:1.5rem; border:1px solid #e5e7eb; text-align:left;">
+                ${cause.contact_email ? `
+                  <div style="display:flex; align-items:center; gap:0.7rem; margin-bottom:${cause.phone_number ? '1rem' : '0'};">
+                    <i class="fas fa-envelope" style="color:var(--primary); font-size:1.1rem;"></i>
+                    <div>
+                      <span style="color:#6b7280; font-size:0.9rem; display:block;">Email de contacto:</span>
+                      <a href="mailto:${cause.contact_email}" style="color:var(--primary); font-weight:600; text-decoration:none; font-size:1rem;">
+                        ${cause.contact_email}
+                      </a>
+                    </div>
+                  </div>
+                ` : ''}
+                ${cause.phone_number ? `
+                  <div style="display:flex; align-items:center; gap:0.7rem;">
+                    <i class="fas fa-phone" style="color:var(--primary); font-size:1.1rem;"></i>
+                    <div>
+                      <span style="color:#6b7280; font-size:0.9rem; display:block;">Teléfono de contacto:</span>
+                      <a href="tel:${cause.phone_number}" style="color:var(--primary); font-weight:600; text-decoration:none; font-size:1rem;">
+                        ${cause.phone_number}
+                      </a>
+                    </div>
+                  </div>
+                ` : ''}
+              </div>
+            </div>
+          ` : ''}
+        </div>
+      </div>
+      <div class="tab-content ${activeTab === 'donations' ? 'active' : ''}" id="donationsTab">
+        <div class="content-section">
+          <h3 class="content-title"><i class="fas fa-donate"></i> Cómo donar</h3>
+          ${cause.stripe_accounts?.[0]?.charges_enabled ? `
+            <div class="stripe-donation-section">
+              <p>Puedes donar de forma segura con tarjeta de crédito/débito:</p>
+              <div class="donation-amount-selector" style="margin:1.5rem 0;">
+                <div class="amount-buttons" style="display:flex; gap:0.8rem; margin-bottom:1rem; flex-wrap:wrap;">
+                  <button class="amount-btn" data-amount="5">5€</button>
+                  <button class="amount-btn" data-amount="10">10€</button>
+                  <button class="amount-btn" data-amount="20">20€</button>
+                  <button class="amount-btn" data-amount="50">50€</button>
+                  <button class="amount-btn" data-amount="100">100€</button>
+                </div>
+                <div class="custom-amount" style="display:flex; gap:0.5rem; margin-bottom:1rem;">
+                  <input type="number" id="customAmount" placeholder="Otra cantidad" min="1" max="10000" style="flex:1; padding:0.7rem; border:1px solid #e5e7eb; border-radius:6px;">
+                  <span style="display:flex; align-items:center; color:#6b7280;">€</span>
+                </div>
+                <button id="donateCauseBtn" class="btn btn-primary" style="width:100%;" data-cause-id="${cause.id}">
                   <i class="fas fa-credit-card"></i> Donar con tarjeta
                 </button>
               </div>
-            ` : ''}
-            
-            ${cause.how_to_donate ? `
-              <div class="other-donation-methods">
-                <h4>Otros métodos de donación:</h4>
-                <div class="donation-method">${cause.how_to_donate}</div>
-              </div>
-            ` : `
-              <p>No hay métodos de donación especificados para esta causa.</p>
-            `}
-          </div>
-        </div>
-        
-        <div class="tab-content ${activeTab === 'participants' ? 'active' : ''}" id="participantsTab">
-          <div class="content-section">
-            <h3 class="content-title"><i class="fas fa-users"></i> Donantes</h3>
-            ${donorsHtml}
-          </div>
-        </div>
-        
-        <div class="cause-actions">
-          ${cause.stripe_enabled ? `
-            <button class="btn btn-primary" onclick="window.openDonationModal('${cause.id}')">
-              <i class="fas fa-donate"></i> Donar ahora
-            </button>
+            </div>
           ` : ''}
-          <button class="btn btn-accent" onclick="window.joinCause('${cause.id}')">
-            <i class="fas fa-hands-helping"></i> Participar
-          </button>
-          <button class="btn btn-outline" onclick="window.mostrarCompartir?.('${cause.id}')">
-            <i class="fas fa-share-alt"></i> Compartir
-          </button>
+          ${cause.how_to_donate ? `
+            <div class="other-donation-methods">
+              <h4>Métodos de donación:</h4>
+              <div class="donation-method">${cause.how_to_donate}</div>
+            </div>
+          ` : `
+            <p>No hay métodos de donación especificados para esta causa.</p>
+          `}
         </div>
-        <div class="share-section" id="shareSection" style="text-align:left;"></div>
       </div>
-    `;
+      <div class="tab-content ${activeTab === 'participants' ? 'active' : ''}" id="participantsTab">
+        <div class="content-section">
+          <h3 class="content-title"><i class="fas fa-users"></i> Donantes</h3>
+          ${donorsHtml}
+        </div>
+      </div>
+      <div class="cause-actions" style="display:flex; gap:0.8rem; margin-top:2rem;">
+        ${cause.stripe_enabled ? `
+          <button class="btn btn-primary" style="flex:1;" onclick="window.causesRenderer.openDonationQuickModal('${cause.id}')">
+            <i class="fas fa-donate"></i> Donar ahora
+          </button>
+        ` : ''}
+        <button class="btn btn-accent" style="flex:1;" onclick="window.joinCause('${cause.id}')">
+          <i class="fas fa-hands-helping"></i> Participar
+        </button>
+        <button class="btn btn-outline" style="flex:1;" onclick="window.causesRenderer.shareCause('${cause.id}')">
+          <i class="fas fa-share-alt"></i> Compartir
+        </button>
+      </div>
+      <div class="share-section" id="shareSection" style="text-align:left;"></div>
+    </div>
+  `;
 
-    // Añadir eventos a las pestañas
-    modal.querySelectorAll('.tab-btn').forEach(tab => {
-      tab.addEventListener('click', () => {
-        const tabName = tab.getAttribute('data-tab');
-        modal.querySelectorAll('.tab-content').forEach(content => {
-          content.classList.remove('active');
-        });
-        modal.querySelectorAll('.tab-btn').forEach(t => {
-          t.classList.remove('active');
-        });
-        tab.classList.add('active');
-        document.getElementById(`${tabName}Tab`).classList.add('active');
-      });
+  // Adjuntar eventos de pestañas
+  modal.querySelectorAll('.tab-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const tabName = btn.dataset.tab;
+      
+      // Actualizar pestañas activas
+      modal.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+      modal.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+      
+      btn.classList.add('active');
+      modal.querySelector(`#${tabName}Tab`).classList.add('active');
     });
+  });
 
-    modal.style.display = 'flex';
-    document.body.style.overflow = 'hidden';
+  // Adjuntar eventos de donación
+  this.attachDonationEvents(modal, cause);
 
-    if (window.location.pathname === '/causes' || window.location.pathname === '/causes/') {
-      window.history.pushState({}, '', `/causes/${causeId}`);
-    }
+  modal.style.display = 'flex';
+  document.body.style.overflow = 'hidden';
+
+  // Actualizar URL si estamos en la página de causas
+  if (window.location.pathname === '/causes' || window.location.pathname === '/causes/') {
+    window.history.pushState({}, '', `/causes/${causeId}`);
   }
+}
 
   /**
    * Obtiene o crea el modal reutilizable (EXACTO estructura original)
@@ -366,7 +369,7 @@ class CausesRenderer {
       modal.style.cssText = 'display:none; position:fixed; z-index:9999; left:0; top:0; width:100vw; height:100vh; background:rgba(0,0,0,0.35); align-items:center; justify-content:center;';
       
       modal.innerHTML = `
-        <div class="modal-content" style="background:#fff; border-radius:18px; max-width:800px; width:95vw; padding:2rem; box-shadow:0 8px 32px rgba(74,111,165,0.13); position:relative; max-height:90vh; overflow-y:auto;">
+        <div class="modal-content" style="background:#fff; border-radius:18px; max-width:900px; width:95vw; padding:2rem; box-shadow:0 8px 32px rgba(74,111,165,0.13); position:relative; max-height:90vh; overflow-y:auto;">
           <button id="closeModal" style="position:absolute; top:1.5rem; right:1.5rem; background:none; border:none; font-size:1.8rem; color:#6b7280; cursor:pointer; transition:color 0.2s;" onmouseover="this.style.color='#4a6fa5'" onmouseout="this.style.color='#6b7280'">&times;</button>
           <div id="modalBody" style="padding:0.5rem;">
             <!-- Contenido dinámico -->
@@ -418,42 +421,48 @@ class CausesRenderer {
    * Adjunta event listeners a las tarjetas
    */
   attachEventListeners(container) {
-    // Botones "Ver más"
+    // Botones "Ver más" - CORREGIDO
     container.querySelectorAll('.view-more-btn').forEach(btn => {
       btn.addEventListener('click', (e) => {
         e.preventDefault();
+        e.stopPropagation();
         const causeId = btn.getAttribute('data-cause-id');
-        this.showModal(causeId);
+        this.showModal(causeId);  // Usar el método correcto
       });
     });
 
-    // Botones "Donar" profesional con Stripe
+    // Botones "Donar" - CORREGIDO
     container.querySelectorAll('.donate-btn').forEach(btn => {
       btn.addEventListener('click', (e) => {
         e.preventDefault();
+        e.stopPropagation();
         const causeId = btn.getAttribute('data-cause-id');
         const stripeEnabled = btn.getAttribute('data-stripe-enabled') === 'true';
         const stripeAccount = btn.getAttribute('data-stripe-account');
-        const cause = window.causes?.find(c => c.id == causeId);
-
-        if (stripeEnabled && stripeAccount) {
-          // Modal Stripe profesional
-          showStripeDonationModal(cause);
+        
+        // Llamar a la función global de donación
+        if (typeof window.openDonationModal === 'function') {
+          window.openDonationModal(causeId);
         } else {
-          // Modal donación manual
+          // Fallback: abrir modal en pestaña donaciones
           this.showModal(causeId, 'donations');
         }
       });
     });
 
-    // Botones "Administrar"
+    // Botones "Administrar" - CORREGIDO
     container.querySelectorAll('.admin-activity-btn').forEach(btn => {
       btn.addEventListener('click', (e) => {
         e.preventDefault();
+        e.stopPropagation();
         const activityId = btn.getAttribute('data-activity-id');
         if (typeof window.openAdminModal === 'function') {
-          const cause = window.causes?.find(c => c.id == activityId);
+          const cause = this.causes?.find(c => c.id == activityId);
           if (cause) window.openAdminModal(cause);
+        } else {
+          console.log('Modal de administración no disponible');
+          // Fallback: abrir modal de detalles
+          this.showModal(activityId);
         }
       });
     });
@@ -517,10 +526,10 @@ class CausesRenderer {
     const style = document.createElement('style');
     style.id = 'causes-renderer-styles';
     style.textContent = `
-      /* ✅ ESTILOS EXACTOS extraídos de views/causes/index.njk */
+      /* ✅ RESTAURAR COLORES ORIGINALES */
       :root {
         --primary: #4a6fa5;
-        --primary-dark: #166088;
+        --primary-dark: #3a5a7a;  /* Cambiado de #166088 */
         --gray: #e2e8f0;
         --white: #fff;
         --accent: #4fc3a1;
@@ -998,6 +1007,46 @@ class CausesRenderer {
       }
       .modal-bg { display: none; }
       .modal-bg.active { display: flex; }
+
+      /* Estilos para botones de cantidad */
+      .amount-btn {
+        padding: 0.8rem 1.2rem;
+        border: 2px solid #e5e7eb;
+        background: white;
+        border-radius: 8px;
+        cursor: pointer;
+        font-weight: 600;
+        transition: all 0.2s;
+        flex: 1;
+        min-width: 60px;
+      }
+      
+      .amount-btn:hover {
+        border-color: var(--primary);
+        background: #f8fafc;
+      }
+      
+      .amount-btn.selected {
+        border-color: var(--primary);
+        background: var(--primary);
+        color: white;
+      }
+      
+      /* Estilos para notificaciones */
+      .notification {
+        animation: slideInRight 0.3s ease-out;
+      }
+      
+      @keyframes slideInRight {
+        from {
+          transform: translateX(100%);
+          opacity: 0;
+        }
+        to {
+          transform: translateX(0);
+          opacity: 1;
+        }
+      }
     `;
     document.head.appendChild(style);
   }
@@ -1193,14 +1242,14 @@ class CausesRenderer {
         <div style="display:flex; gap:0.8rem; margin-top:2rem;">
           ${cause.stripe_account_id ? `
             <button class="btn btn-primary" style="flex:1;" onclick="event.preventDefault(); event.stopPropagation(); window.causesRenderer.openDonationModal('${cause.id}', '${cause.stripe_account_id}');">
-              <i class="fas fa-heart"></i> Donar ahora
+              <i class="fas fa-donate"></i> Donar ahora
             </button>
           ` : `
             <button class="btn btn-accent" style="flex:1;" onclick="event.preventDefault(); event.stopPropagation(); alert('Gracias por tu interés. Contacta al creador para más formas de colaborar.');">
               <i class="fas fa-hands-helping"></i> Mostrar apoyo
             </button>
           `}
-          <button class="btn btn-accent" style="flex:1;" onclick="window.causesRenderer.shareCause('${cause.id}')">
+          <button class="btn btn-accent" style="flex:1;" onclick="window.mostrarCompartir('${cause.id}')">
             <i class="fas fa-share-alt"></i> Compartir
           </button>
         </div>
@@ -1222,26 +1271,174 @@ class CausesRenderer {
     }
   }
 
-  // Cerrar modal y limpiar URL (igual que tasks)
-  closeModal() {
-    const modal = document.getElementById('causeModal');
-    if (modal) {
-      modal.style.display = 'none';
-      document.body.style.overflow = '';
-      if (window.location.pathname.includes('/causes/') && window.location.pathname !== '/causes') {
-        window.history.pushState({}, '', '/causes');
-      }
+  /**
+   * Adjunta eventos de donación al modal
+   */
+  attachDonationEvents(modal, cause) {
+    let selectedAmount = 0;
+
+    // Botones de cantidad predefinida
+    modal.querySelectorAll('.amount-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        modal.querySelectorAll('.amount-btn').forEach(b => b.classList.remove('selected'));
+        btn.classList.add('selected');
+        selectedAmount = parseFloat(btn.dataset.amount);
+        modal.querySelector('#customAmount').value = '';
+      });
+    });
+
+    // Campo de cantidad personalizada
+    const customAmountInput = modal.querySelector('#customAmount');
+    if (customAmountInput) {
+      customAmountInput.addEventListener('input', (e) => {
+        selectedAmount = parseFloat(e.target.value) || 0;
+        modal.querySelectorAll('.amount-btn').forEach(b => b.classList.remove('selected'));
+      });
+    }
+
+    // Botón de donar principal
+    const donateBtn = modal.querySelector('#donateCauseBtn');
+    if (donateBtn) {
+      donateBtn.addEventListener('click', async () => {
+        const amount = selectedAmount || parseFloat(customAmountInput?.value) || 0;
+        
+        if (!amount || amount < 1 || amount > 10000) {
+          this.showNotification('Por favor, introduce una cantidad válida entre 1€ y 10.000€', 'error');
+          return;
+        }
+
+        await this.processDonation(cause.id, amount);
+      });
     }
   }
 
-  // Nueva función para compartir causa (usando renderCompartir)
+  /**
+   * Procesa una donación via Stripe
+   */
+  async processDonation(causeId, amount) {
+    try {
+      // Verificar sesión
+      const { data: { session } } = await this.supabase.auth.getSession();
+      if (!session) {
+        this.showNotification('Debes iniciar sesión para donar', 'error');
+        return;
+      }
+
+      this.showNotification('Procesando donación...', 'info');
+
+      // Crear sesión de checkout
+      const response = await fetch('/api/stripe/create-checkout', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+        body: JSON.stringify({
+          causeId,
+          amount,
+          currency: 'eur'
+        })
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'Error procesando la donación');
+      }
+
+      const { url } = await response.json();
+      
+      // Redirigir a Stripe Checkout
+      window.location.href = url;
+
+    } catch (error) {
+      console.error('Error en donación:', error);
+      this.showNotification(`Error: ${error.message}`, 'error');
+    }
+  }
+
+  /**
+   * Modal rápido de donación
+   */
+  openDonationQuickModal(causeId) {
+    const cause = window.causes?.find(c => c.id == causeId);
+    if (!cause) return;
+
+    const modal = document.createElement('div');
+    modal.className = 'modal-bg';
+    modal.style.display = 'flex';
+    modal.innerHTML = `
+      <div class="modal-content" style="max-width:420px;">
+        <button class="close-modal" onclick="this.closest('.modal-bg').remove(); document.body.style.overflow='';">&times;</button>
+        <div style="text-align:center;">
+          <i class="fas fa-heart" style="font-size:2.5rem;color:var(--accent);margin-bottom:1rem;"></i>
+          <h2 style="color:var(--primary);margin-bottom:0.7rem;">Donar a: ${cause.title}</h2>
+          <p style="color:#666;margin-bottom:1.5rem;">${cause.short_description || ''}</p>
+          
+          <div class="amount-buttons" style="display:flex; gap:0.5rem; margin-bottom:1rem; flex-wrap:wrap;">
+            <button class="amount-btn" data-amount="5">5€</button>
+            <button class="amount-btn" data-amount="10">10€</button>
+            <button class="amount-btn" data-amount="20">20€</button>
+            <button class="amount-btn" data-amount="50">50€</button>
+          </div>
+          
+          <input type="number" id="quickCustomAmount" min="1" step="0.01" placeholder="Otra cantidad (€)" style="width:100%;padding:0.7rem;font-size:1.1rem;border-radius:8px;border:1px solid #e5e7eb;margin-bottom:1.5rem;">
+          
+          <button id="quickDonateBtn" class="btn btn-primary" style="width:100%;font-size:1.1rem;" data-cause-id="${causeId}">
+            <i class="fas fa-credit-card"></i> Donar ahora
+          </button>
+          
+          <div style="margin-top:1rem;font-size:0.9rem;color:#888;">
+            <i class="fas fa-lock"></i> Pago seguro con Stripe
+          </div>
+        </div>
+      </div>
+    `;
+
+    document.body.appendChild(modal);
+    document.body.style.overflow = 'hidden';
+
+    let selectedAmount = 0;
+
+    // Eventos de cantidad
+    modal.querySelectorAll('.amount-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        modal.querySelectorAll('.amount-btn').forEach(b => b.classList.remove('selected'));
+        btn.classList.add('selected');
+        selectedAmount = parseFloat(btn.dataset.amount);
+        modal.querySelector('#quickCustomAmount').value = '';
+      });
+    });
+
+    modal.querySelector('#quickCustomAmount').addEventListener('input', (e) => {
+      selectedAmount = parseFloat(e.target.value) || 0;
+      modal.querySelectorAll('.amount-btn').forEach(b => b.classList.remove('selected'));
+    });
+
+    // Botón donar
+    modal.querySelector('#quickDonateBtn').addEventListener('click', async () => {
+      const amount = selectedAmount || parseFloat(modal.querySelector('#quickCustomAmount').value) || 0;
+      
+      if (!amount || amount < 1) {
+        this.showNotification('Introduce una cantidad válida', 'error');
+        return;
+      }
+
+      modal.remove();
+      document.body.style.overflow = '';
+      await this.processDonation(causeId, amount);
+    });
+  }
+
+  /**
+   * Compartir causa (igual que en tareas)
+   */
   shareCause(causeId) {
-    const cause = this.causes?.find(c => c.id == causeId);
+    const cause = window.causes?.find(c => c.id == causeId);
     if (!cause) {
       console.error('❌ No se encontró la causa con ID:', causeId);
       return;
     }
+    
     console.log('🔗 Compartiendo causa:', cause);
+    
     if (window.renderCompartir) {
       window.renderCompartir({
         title: cause.title,
@@ -1251,29 +1448,48 @@ class CausesRenderer {
         type: 'causa'
       }, 'shareSection');
       
-      // Forzar alineación izquierda después del render
-      setTimeout(() => {
-        const shareSection = document.getElementById('shareSection');
-        if (shareSection) {
-          const allElements = shareSection.querySelectorAll('*');
-          allElements.forEach(el => {
-            el.style.textAlign = 'left';
-          });
-        }
-      }, 100);
-      
+      // Scroll suave hacia la sección de compartir
       document.getElementById('shareSection').scrollIntoView({ 
         behavior: 'smooth', 
         block: 'center' 
       });
     } else {
+      // Fallback si no está compartir.js
       const link = `${window.location.origin}/causes/${cause.id}`;
       navigator.clipboard.writeText(link).then(() => {
-        this.showSuccess('¡Enlace copiado!');
+        this.showNotification('¡Enlace copiado al portapapeles!', 'success');
       }).catch(() => {
         prompt('Copia este enlace:', link);
       });
     }
+  }
+
+  /**
+   * Muestra notificaciones
+   */
+  showNotification(message, type = 'info', duration = 3000) {
+    const notification = document.createElement('div');
+    notification.className = `notification ${type}`;
+    notification.style.cssText = `
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      padding: 1rem 1.5rem;
+      border-radius: 8px;
+      color: white;
+      font-weight: 600;
+      z-index: 10001;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+      ${type === 'success' ? 'background: #10b981;' : ''}
+      ${type === 'error' ? 'background: #ef4444;' : ''}
+      ${type === 'info' ? 'background: #3b82f6;' : ''}
+    `;
+    notification.textContent = message;
+    document.body.appendChild(notification);
+    
+    setTimeout(() => {
+      notification.remove();
+    }, duration);
   }
 
   init() {
@@ -1347,118 +1563,58 @@ window.CausesRenderer = CausesRenderer;
 // Instancia global
 window.causesRenderer = new CausesRenderer();
 
-// Funciones de compatibilidad globales
-// Función global para abrir modal de donaciones - CORREGIDA
+// Funciones de compatibilidad globales - CORREGIR todas estas
 window.openDonationModal = async function(causeId) {
   console.log('🎯 openDonationModal llamada para causa:', causeId);
   
-  const cause = window.causes?.find(c => c.id == causeId);
+  // Buscar la causa
+  const cause = window.causes?.find(c => c.id == causeId) || 
+                window.causesRenderer?.causes?.find(c => c.id == causeId);
+  
   if (!cause) {
     console.error('❌ Causa no encontrada:', causeId);
     return;
   }
 
-  console.log('📊 Estado de la causa:', {
-    stripe_enabled: cause.stripe_enabled,
-    stripe_account_id: cause.stripe_account_id
-  });
-
-  // Verificar si tiene Stripe habilitado
+  // Si tiene Stripe, usar modal de donación
   if (cause.stripe_enabled && cause.stripe_account_id) {
-    console.log('💳 Abriendo modal Stripe para causa con Stripe activo');
-    
-    // Intentar abrir modal de Stripe
-    if (window.stripeDonationModal && typeof window.stripeDonationModal.open === 'function') {
-      window.stripeDonationModal.open(causeId);
-    } else if (window.StripeCheckout) {
-      // Fallback: crear checkout dinámico
-      createStripeCheckout(causeId, cause);
+    if (typeof showStripeDonationModal === 'function') {
+      showStripeDonationModal(cause);
     } else {
-      console.error('❌ Modal de donación Stripe no está disponible');
-      // Fallback: mostrar pestaña de donaciones
-      if (window.causesRenderer) {
-        window.causesRenderer.showModal(causeId, 'donations');
-      }
-    }
-  } else {
-    console.log('📝 Mostrando pestaña de donaciones (sin Stripe)');
-    // No tiene Stripe: mostrar información de donación manual
-    if (window.causesRenderer) {
+      // Fallback: pestaña donaciones
       window.causesRenderer.showModal(causeId, 'donations');
     }
+  } else {
+    // Sin Stripe: mostrar pestaña donaciones
+    window.causesRenderer.showModal(causeId, 'donations');
   }
 };
 
-// Función auxiliar para crear checkout de Stripe dinámico
-function createStripeCheckout(causeId, cause) {
-  console.log('💳 Creando checkout dinámico para causa:', causeId);
-  
-  // Crear modal básico de donación
-  const modal = document.createElement('div');
-  modal.className = 'modal-bg active';
-  modal.innerHTML = `
-    <div class="modal-content">
-      <button class="close-modal">&times;</button>
-      <h3><i class="fas fa-donate"></i> Donar a: ${cause.title}</h3>
-      <div style="margin: 2rem 0;">
-        <label>Cantidad a donar (€):</label>
-        <input type="number" id="donationAmount" min="1" step="0.01" value="20" style="width: 100%; padding: 0.5rem; margin: 0.5rem 0;">
-      </div>
-      <div style="display: flex; gap: 1rem;">
-        <button id="processDonation" class="btn btn-primary">
-          <i class="fas fa-credit-card"></i> Donar con Tarjeta
-        </button>
-        <button id="cancelDonation" class="btn btn-outline">Cancelar</button>
-      </div>
-    </div>
-  `;
-  
-  document.body.appendChild(modal);
-  document.body.style.overflow = 'hidden';
+// Función para unirse a causa
+window.joinCause = function(causeId) {
+  console.log('👥 Uniéndose a causa:', causeId);
+  const cause = window.causes?.find(c => c.id == causeId);
+  if (cause) {
+    alert(`¡Gracias por tu interés en "${cause.title}"! Contáctanos para saber cómo puedes colaborar.`);
+  }
+};
 
-  // Event listeners
-  modal.querySelector('.close-modal').onclick = () => {
-    modal.remove();
-    document.body.style.overflow = '';
-  };
-  
-  modal.querySelector('#cancelDonation').onclick = () => {
-    modal.remove();
-    document.body.style.overflow = '';
-  };
-  
-  modal.querySelector('#processDonation').onclick = async () => {
-    const amount = document.getElementById('donationAmount').value;
-    if (!amount || amount < 1) {
-      alert('Por favor ingresa una cantidad válida');
-      return;
-    }
-    
-    try {
-      // Llamar al backend para crear sesión de Stripe
-      const response = await fetch('/api/stripe/create-checkout', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        credentials: 'include',
-        body: JSON.stringify({
-          causeId,
-          amount: parseFloat(amount),
-          currency: 'eur'
-        })
+// Función mostrar compartir (compatible con renderCompartir)
+window.mostrarCompartir = function(causeId) {
+  if (window.causesRenderer && typeof window.causesRenderer.shareCause === 'function') {
+    window.causesRenderer.shareCause(causeId);
+  } else {
+    // Fallback básico
+    const link = `${window.location.origin}/causes/${causeId}`;
+    if (navigator.clipboard) {
+      navigator.clipboard.writeText(link).then(() => {
+        alert('¡Enlace copiado al portapapeles!');
       });
-      
-      if (response.ok) {
-        const { url } = await response.json();
-        window.location.href = url;
-      } else {
-        throw new Error('Error procesando donación');
-      }
-    } catch (error) {
-      console.error('❌ Error procesando donación:', error);
-      alert('Error procesando la donación. Inténtalo de nuevo.');
+    } else {
+      prompt('Copia este enlace:', link);
     }
-  };
-}
+  }
+};
 
 // Al final del archivo, asegurar inicialización correcta:
 
@@ -1545,4 +1701,127 @@ function showStripeDonationModal(cause) {
       alert('Error procesando donación. Inténtalo de nuevo.');
     }
   };
+}
+
+function showCauseDetails(causeId) {
+  const cause = window.causes?.find(c => c.id == causeId);
+  if (!cause) return;
+
+  const modal = document.getElementById('causeModal');
+  if (!modal) return;
+  const modalBody = modal.querySelector('#modalBody');
+  if (!modalBody) return;
+
+  modalBody.innerHTML = `
+    <div class="modal-cause-container">
+      <div class="modal-cause-header">
+        <div class="modal-cause-image-wrapper">
+          <img src="${cause.photo_url || '/img/default-cause.jpg'}" alt="${cause.title}">
+          ${cause.urgent ? '<div class="cause-badge urgent"><i class="fas fa-exclamation-circle"></i> Urgente</div>' : ''}
+        </div>
+        <div class="modal-cause-info">
+          <h2 class="modal-cause-title">${cause.title}</h2>
+          <div class="modal-cause-progress-container">
+            <div class="progress-bar">
+              <div class="progress-fill" style="width: ${(cause.raised / cause.goal * 100)}%"></div>
+            </div>
+            <div class="progress-info">
+              <span>${Math.round(cause.raised / cause.goal * 100)}% completado</span>
+              <span>${cause.raised}€ de ${cause.goal}€</span>
+            </div>
+          </div>
+          <div class="modal-cause-meta-grid">
+            <div class="meta-item"><i class="fas fa-map-marker-alt"></i> ${cause.city}, ${cause.country}</div>
+            <div class="meta-item"><i class="fas fa-users"></i> ${cause.beneficiaries} beneficiarios</div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-cause-content">
+        <div class="content-section">
+          <h3 class="content-title"><i class="fas fa-align-left"></i> Descripción</h3>
+          <p class="content-text">${cause.description}</p>
+        </div>
+        <div class="content-section">
+          <h3 class="content-title"><i class="fas fa-donate"></i> Cómo donar</h3>
+          ${cause.stripe_account_id ? `
+            <div class="stripe-donation-section">
+              <p>Puedes donar de forma segura con tarjeta:</p>
+              <button class="btn btn-primary" onclick="window.openStripeDonationModal('${cause.id}')">
+                <i class="fas fa-credit-card"></i> Donar con tarjeta
+              </button>
+            </div>
+          ` : ''}
+          ${cause.how_to_donate ? `
+            <div class="other-donation-methods">
+              <h4>Otros métodos de donación:</h4>
+              <p>${cause.how_to_donate}</p>
+            </div>
+          ` : ''}
+        </div>
+      </div>
+      <div class="modal-cause-actions">
+        ${cause.stripe_account_id ? `
+          <button class="btn btn-primary" onclick="window.openStripeDonationModal('${cause.id}')">
+            <i class="fas fa-donate"></i> Donar ahora
+          </button>
+        ` : ''}
+        <button class="btn btn-accent" onclick="window.mostrarCompartir('${cause.id}')">
+          <i class="fas fa-share-alt"></i> Compartir
+        </button>
+      </div>
+    </div>
+  `;
+  modal.style.display = 'flex';
+  document.body.style.overflow = 'hidden';
+}
+
+function closeCauseModal() {
+  const modal = document.getElementById('causeModal');
+  if (modal) {
+    modal.style.display = 'none';
+    document.body.style.overflow = '';
+  }
+}
+
+window.viewCauseDetails = function(causeId) {
+  if (window.causesRenderer && typeof window.causesRenderer.showCauseModal === 'function') {
+    window.causesRenderer.showCauseModal(causeId);
+  } else {
+    alert('No se puede mostrar los detalles de la causa.');
+  }
+};
+
+// ...puedes añadir al final del archivo JS de causas...
+
+const urlParams = new URLSearchParams(window.location.search);
+const donationStatus = urlParams.get('donation');
+const sessionId = urlParams.get('session_id');
+
+if (donationStatus === 'success' && sessionId) {
+  showDonationSuccess(sessionId);
+  window.history.replaceState({}, document.title, window.location.pathname);
+}
+
+async function showDonationSuccess(sessionId) {
+  try {
+    const response = await fetch(`/api/donations/session/${sessionId}`);
+    if (!response.ok) throw new Error('No se pudo verificar la donación');
+    const donation = await response.json();
+    const modal = document.createElement('div');
+    modal.className = 'modal-bg';
+    modal.innerHTML = `
+      <div class="modal-content">
+        <h3><i class="fas fa-check-circle"></i> ¡Donación exitosa!</h3>
+        <p>Gracias por tu donación de ${donation.amount}€ a "${donation.cause_title}".</p>
+        <p>Recibirás un correo de confirmación con los detalles.</p>
+        <button class="btn btn-primary" onclick="this.closest('.modal-bg').style.display='none'">
+          Aceptar
+        </button>
+      </div>
+       `;
+    document.body.appendChild(modal);
+  } catch (error) {
+    console.error('Error mostrando confirmación:', error);
+    alert('Gracias por tu donación. Recibirás un correo de confirmación.');
+  }
 }

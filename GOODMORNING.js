@@ -1488,49 +1488,69 @@ app.use((req, res, next) => {
   }
 })();
 
+// --- RUTAS DE DONACIONES ---
+const donationsRouter = require('./routes/api/donations');
+app.use('/api/donations', donationsRouter);
+
 // --- NUEVAS RUTAS DE STRIPE ---
 app.post('/api/stripe/create-checkout', async (req, res) => {
   try {
-    console.log('[API] Recibido POST /api/stripe/create-checkout');
-    console.log('[API] Payload:', req.body);
+    const { causeId, amount, currency, donorName, donorEmail, message } = req.body;
+    
+    // Validaciones básicas
+    if (!causeId || !amount || !currency) {
+      return res.status(400).json({ error: 'Datos incompletos' });
+    }
 
-    const { causeId, amount, stripe_account_id } = req.body;
+    if (amount < 1) {
+      return res.status(400).json({ error: 'La cantidad mínima es €1' });
+    }
 
-    // Log búsqueda en Supabase
-    console.log('[API] Buscando causa en Supabase:', causeId);
+    console.log('💳 Procesando checkout para causa:', causeId);
 
-    const { data: cause, error } = await supabase
+    // ✅ CORREGIDO: Buscar causa con JOIN a stripe_accounts
+    const { data: cause, error: causeError } = await supabase
       .from('causes')
-      .select('*')
+      .select(`
+        id, title, user_id,
+        stripe_accounts!left(stripe_account_id, charges_enabled, status)
+      `)
       .eq('id', causeId)
       .single();
 
-    console.log('[API] Resultado Supabase:', cause);
-    if (error) console.error('[API] Error Supabase:', error);
-
-    if (!cause) {
-      console.error('[API] No se encontró la causa');
+    if (causeError || !cause) {
+      console.error('❌ Causa no encontrada:', causeError);
       return res.status(404).json({ error: 'Causa no encontrada' });
     }
 
-    console.log('[API] Columnas de la causa:', Object.keys(cause));
-    console.log('[API] Stripe enabled:', cause.stripe_enabled, 'Stripe account:', cause.stripe_account_id);
-
-    if (!cause.stripe_enabled || !cause.stripe_account_id) {
-      console.error('[API] Stripe no configurado en la causa');
-      return res.status(400).json({ error: 'Esta causa no tiene configurado Stripe para recibir donaciones' });
+    // Verificar cuenta Stripe
+    const stripeAccount = cause.stripe_accounts?.[0];
+    if (!stripeAccount?.stripe_account_id) {
+      return res.status(400).json({ 
+        error: 'Esta causa no tiene configurado Stripe para recibir donaciones',
+        requiresSetup: true 
+      });
     }
+
+    if (!stripeAccount.charges_enabled) {
+      return res.status(400).json({ 
+        error: 'La cuenta de Stripe de esta causa está pendiente de activación',
+        accountStatus: stripeAccount.status 
+      });
+    }
+
+    console.log('✅ Cuenta Stripe válida:', stripeAccount.stripe_account_id);
 
     // Crear metadata para Stripe
     const metadata = {
       cause_id: causeId,
       cause_title: cause.title.substring(0, 100), // Stripe limita
-      donor_name: req.body.donorName || 'Anónimo',
+      donor_name: donorName || 'Anónimo',
       source: 'solidarity_platform'
     };
 
-    if (req.body.donorEmail) metadata.donor_email = req.body.donorEmail;
-    if (req.body.message) metadata.message = req.body.message.substring(0, 400);
+    if (donorEmail) metadata.donor_email = donorEmail;
+    if (message) metadata.message = message.substring(0, 400);
     if (req.session.user?.id) metadata.user_id = req.session.user.id;
 
     // Crear sesión de Stripe Checkout
@@ -1538,17 +1558,26 @@ app.post('/api/stripe/create-checkout', async (req, res) => {
       payment_method_types: ['card'],
       line_items: [{
         price_data: {
-          currency: 'eur',
-          product_data: { name: cause.title },
-          unit_amount: Math.round(amount * 100),
+          currency: currency.toLowerCase(),
+          product_data: {
+            name: `Donación: ${cause.title}`,
+            description: `Apoyo solidario de €${amount}`,
+          },
+          unit_amount: Math.round(amount * 100), // Convertir a céntimos
         },
         quantity: 1,
       }],
       mode: 'payment',
-      success_url: `${process.env.BASE_URL}/causes?donation=success&session_id={CHECKOUT_SESSION_ID}`,
-      cancel_url: `${process.env.BASE_URL}/causes?donation=cancel`,
-    }, {
-      stripeAccount: cause.stripe_account_id // <-- SOLO AQUÍ
+      success_url: `${process.env.DOMAIN}/causes?donation=success&session_id={CHECKOUT_SESSION_ID}`,
+      cancel_url: `${process.env.DOMAIN}/causes?donation=cancelled&cause_id=${causeId}`,
+      metadata: metadata,
+      payment_intent_data: {
+        metadata: metadata,
+        application_fee_amount: 0, // Sin comisión para la plataforma
+        description: `Donación para: ${cause.title}`,
+      },
+      customer_email: donorEmail || undefined,
+      stripe_account: stripeAccount.stripe_account_id, // ✅ Pago directo
     });
 
     console.log('✅ Sesión de Stripe creada exitosamente:', session.id);

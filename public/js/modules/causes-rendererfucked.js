@@ -97,7 +97,7 @@ class CausesRenderer {
         <i class="fas fa-cog"></i> Administrar
       </button>
     ` : `
-      <button class="btn btn-accent donate-btn" data-cause-id="${cause.id}" data-stripe-enabled="${cause.stripe_enabled ? 'true' : 'false'}" data-stripe-account="${cause.stripe_account_id || ''}">
+      <button class="btn btn-accent donate-btn" data-cause-id="${cause.id}" data-stripe-enabled="${cause.stripe_accounts?.[0]?.charges_enabled ? 'true' : 'false'}" data-stripe-account="${cause.stripe_accounts?.[0]?.stripe_account_id || ''}">
         <i class="fas fa-donate"></i> Donar
       </button>
     `;
@@ -287,7 +287,7 @@ class CausesRenderer {
         <div class="tab-content ${activeTab === 'donations' ? 'active' : ''}" id="donationsTab">
           <div class="content-section">
             <h3 class="content-title"><i class="fas fa-donate"></i> Cómo donar</h3>
-            ${cause.stripe_enabled ? `
+            ${cause.stripe_accounts?.[0]?.charges_enabled ? `
               <div class="stripe-donation-section">
                 <p>Puedes donar de forma segura con tarjeta de crédito/débito:</p>
                 <button class="btn btn-primary" onclick="window.openDonationModal('${cause.id}')">

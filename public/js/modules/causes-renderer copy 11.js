@@ -84,21 +84,20 @@ class CausesRenderer {
     const location = cause.city && cause.country ? `${cause.city}, ${cause.country}` : "";
     const isAdmin = ['founder','admin','coordinator'].includes(cause.userRole);
 
-    // Botón "Ver más" siempre visible
+    // ✅ SOLO 2 BOTONES: Ver más y Donar/Administrar
     const viewMoreBtn = `
       <button class="btn btn-primary view-more-btn" data-cause-id="${cause.id}">
-        <i class="fas fa-eye"></i> Ver más
+        Ver más
       </button>
     `;
 
-    // Botón "Donar" profesional con Stripe
     const actionBtn = isAdmin ? `
       <button class="btn btn-accent admin-activity-btn" data-activity-type="cause" data-activity-id="${cause.id}">
-        <i class="fas fa-cog"></i> Administrar
+        Administrar
       </button>
     ` : `
-      <button class="btn btn-accent donate-btn" data-cause-id="${cause.id}" data-stripe-enabled="${cause.stripe_enabled ? 'true' : 'false'}" data-stripe-account="${cause.stripe_account_id || ''}">
-        <i class="fas fa-donate"></i> Donar
+      <button class="btn btn-accent donate-btn" data-cause-id="${cause.id}" data-stripe-enabled="${cause.stripe_accounts?.[0]?.charges_enabled ? 'true' : 'false'}" data-stripe-account="${cause.stripe_accounts?.[0]?.stripe_account_id || ''}">
+        Donar
       </button>
     `;
 
@@ -287,7 +286,7 @@ class CausesRenderer {
         <div class="tab-content ${activeTab === 'donations' ? 'active' : ''}" id="donationsTab">
           <div class="content-section">
             <h3 class="content-title"><i class="fas fa-donate"></i> Cómo donar</h3>
-            ${cause.stripe_enabled ? `
+            ${cause.stripe_accounts?.[0]?.charges_enabled ? `
               <div class="stripe-donation-section">
                 <p>Puedes donar de forma segura con tarjeta de crédito/débito:</p>
                 <button class="btn btn-primary" onclick="window.openDonationModal('${cause.id}')">
@@ -418,42 +417,48 @@ class CausesRenderer {
    * Adjunta event listeners a las tarjetas
    */
   attachEventListeners(container) {
-    // Botones "Ver más"
+    // Botones "Ver más" - CORREGIDO
     container.querySelectorAll('.view-more-btn').forEach(btn => {
       btn.addEventListener('click', (e) => {
         e.preventDefault();
+        e.stopPropagation();
         const causeId = btn.getAttribute('data-cause-id');
-        this.showModal(causeId);
+        this.showModal(causeId);  // Usar el método correcto
       });
     });
 
-    // Botones "Donar" profesional con Stripe
+    // Botones "Donar" - CORREGIDO
     container.querySelectorAll('.donate-btn').forEach(btn => {
       btn.addEventListener('click', (e) => {
         e.preventDefault();
+        e.stopPropagation();
         const causeId = btn.getAttribute('data-cause-id');
         const stripeEnabled = btn.getAttribute('data-stripe-enabled') === 'true';
         const stripeAccount = btn.getAttribute('data-stripe-account');
-        const cause = window.causes?.find(c => c.id == causeId);
-
-        if (stripeEnabled && stripeAccount) {
-          // Modal Stripe profesional
-          showStripeDonationModal(cause);
+        
+        // Llamar a la función global de donación
+        if (typeof window.openDonationModal === 'function') {
+          window.openDonationModal(causeId);
         } else {
-          // Modal donación manual
+          // Fallback: abrir modal en pestaña donaciones
           this.showModal(causeId, 'donations');
         }
       });
     });
 
-    // Botones "Administrar"
+    // Botones "Administrar" - CORREGIDO
     container.querySelectorAll('.admin-activity-btn').forEach(btn => {
       btn.addEventListener('click', (e) => {
         e.preventDefault();
+        e.stopPropagation();
         const activityId = btn.getAttribute('data-activity-id');
         if (typeof window.openAdminModal === 'function') {
-          const cause = window.causes?.find(c => c.id == activityId);
+          const cause = this.causes?.find(c => c.id == activityId);
           if (cause) window.openAdminModal(cause);
+        } else {
+          console.log('Modal de administración no disponible');
+          // Fallback: abrir modal de detalles
+          this.showModal(activityId);
         }
       });
     });
@@ -517,10 +522,10 @@ class CausesRenderer {
     const style = document.createElement('style');
     style.id = 'causes-renderer-styles';
     style.textContent = `
-      /* ✅ ESTILOS EXACTOS extraídos de views/causes/index.njk */
+      /* ✅ RESTAURAR COLORES ORIGINALES */
       :root {
         --primary: #4a6fa5;
-        --primary-dark: #166088;
+        --primary-dark: #3a5a7a;  /* Cambiado de #166088 */
         --gray: #e2e8f0;
         --white: #fff;
         --accent: #4fc3a1;
@@ -1222,58 +1227,52 @@ class CausesRenderer {
     }
   }
 
-  // Cerrar modal y limpiar URL (igual que tasks)
-  closeModal() {
-    const modal = document.getElementById('causeModal');
-    if (modal) {
-      modal.style.display = 'none';
-      document.body.style.overflow = '';
-      if (window.location.pathname.includes('/causes/') && window.location.pathname !== '/causes') {
-        window.history.pushState({}, '', '/causes');
-      }
-    }
+  /**
+   * Muestra notificación de éxito
+   */
+  showSuccess(message) {
+    const notification = document.createElement('div');
+    notification.style.cssText = `
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      background: #10b981;
+      color: white;
+      padding: 1rem 1.5rem;
+      border-radius: 8px;
+      z-index: 10000;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    `;
+    notification.textContent = message;
+    document.body.appendChild(notification);
+    
+    setTimeout(() => {
+      notification.remove();
+    }, 3000);
   }
 
-  // Nueva función para compartir causa (usando renderCompartir)
-  shareCause(causeId) {
-    const cause = this.causes?.find(c => c.id == causeId);
-    if (!cause) {
-      console.error('❌ No se encontró la causa con ID:', causeId);
-      return;
-    }
-    console.log('🔗 Compartiendo causa:', cause);
-    if (window.renderCompartir) {
-      window.renderCompartir({
-        title: cause.title,
-        summary: cause.short_description || cause.description?.substring(0, 120) + '...',
-        photo_url: cause.photo_url || '/img/causa-default.jpg',
-        link: `${window.location.origin}/causes/${cause.id}`,
-        type: 'causa'
-      }, 'shareSection');
-      
-      // Forzar alineación izquierda después del render
-      setTimeout(() => {
-        const shareSection = document.getElementById('shareSection');
-        if (shareSection) {
-          const allElements = shareSection.querySelectorAll('*');
-          allElements.forEach(el => {
-            el.style.textAlign = 'left';
-          });
-        }
-      }, 100);
-      
-      document.getElementById('shareSection').scrollIntoView({ 
-        behavior: 'smooth', 
-        block: 'center' 
-      });
-    } else {
-      const link = `${window.location.origin}/causes/${cause.id}`;
-      navigator.clipboard.writeText(link).then(() => {
-        this.showSuccess('¡Enlace copiado!');
-      }).catch(() => {
-        prompt('Copia este enlace:', link);
-      });
-    }
+  /**
+   * Muestra notificación de error
+   */
+  showError(message) {
+    const notification = document.createElement('div');
+    notification.style.cssText = `
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      background: #ef4444;
+      color: white;
+      padding: 1rem 1.5rem;
+      border-radius: 8px;
+      z-index: 10000;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    `;
+    notification.textContent = message;
+    document.body.appendChild(notification);
+    
+    setTimeout(() => {
+      notification.remove();
+    }, 4000);
   }
 
   init() {
@@ -1347,118 +1346,58 @@ window.CausesRenderer = CausesRenderer;
 // Instancia global
 window.causesRenderer = new CausesRenderer();
 
-// Funciones de compatibilidad globales
-// Función global para abrir modal de donaciones - CORREGIDA
+// Funciones de compatibilidad globales - CORREGIR todas estas
 window.openDonationModal = async function(causeId) {
   console.log('🎯 openDonationModal llamada para causa:', causeId);
   
-  const cause = window.causes?.find(c => c.id == causeId);
+  // Buscar la causa
+  const cause = window.causes?.find(c => c.id == causeId) || 
+                window.causesRenderer?.causes?.find(c => c.id == causeId);
+  
   if (!cause) {
     console.error('❌ Causa no encontrada:', causeId);
     return;
   }
 
-  console.log('📊 Estado de la causa:', {
-    stripe_enabled: cause.stripe_enabled,
-    stripe_account_id: cause.stripe_account_id
-  });
-
-  // Verificar si tiene Stripe habilitado
+  // Si tiene Stripe, usar modal de donación
   if (cause.stripe_enabled && cause.stripe_account_id) {
-    console.log('💳 Abriendo modal Stripe para causa con Stripe activo');
-    
-    // Intentar abrir modal de Stripe
-    if (window.stripeDonationModal && typeof window.stripeDonationModal.open === 'function') {
-      window.stripeDonationModal.open(causeId);
-    } else if (window.StripeCheckout) {
-      // Fallback: crear checkout dinámico
-      createStripeCheckout(causeId, cause);
+    if (typeof showStripeDonationModal === 'function') {
+      showStripeDonationModal(cause);
     } else {
-      console.error('❌ Modal de donación Stripe no está disponible');
-      // Fallback: mostrar pestaña de donaciones
-      if (window.causesRenderer) {
-        window.causesRenderer.showModal(causeId, 'donations');
-      }
-    }
-  } else {
-    console.log('📝 Mostrando pestaña de donaciones (sin Stripe)');
-    // No tiene Stripe: mostrar información de donación manual
-    if (window.causesRenderer) {
+      // Fallback: pestaña donaciones
       window.causesRenderer.showModal(causeId, 'donations');
     }
+  } else {
+    // Sin Stripe: mostrar pestaña donaciones
+    window.causesRenderer.showModal(causeId, 'donations');
   }
 };
 
-// Función auxiliar para crear checkout de Stripe dinámico
-function createStripeCheckout(causeId, cause) {
-  console.log('💳 Creando checkout dinámico para causa:', causeId);
-  
-  // Crear modal básico de donación
-  const modal = document.createElement('div');
-  modal.className = 'modal-bg active';
-  modal.innerHTML = `
-    <div class="modal-content">
-      <button class="close-modal">&times;</button>
-      <h3><i class="fas fa-donate"></i> Donar a: ${cause.title}</h3>
-      <div style="margin: 2rem 0;">
-        <label>Cantidad a donar (€):</label>
-        <input type="number" id="donationAmount" min="1" step="0.01" value="20" style="width: 100%; padding: 0.5rem; margin: 0.5rem 0;">
-      </div>
-      <div style="display: flex; gap: 1rem;">
-        <button id="processDonation" class="btn btn-primary">
-          <i class="fas fa-credit-card"></i> Donar con Tarjeta
-        </button>
-        <button id="cancelDonation" class="btn btn-outline">Cancelar</button>
-      </div>
-    </div>
-  `;
-  
-  document.body.appendChild(modal);
-  document.body.style.overflow = 'hidden';
+// Función para unirse a causa
+window.joinCause = function(causeId) {
+  console.log('👥 Uniéndose a causa:', causeId);
+  const cause = window.causes?.find(c => c.id == causeId);
+  if (cause) {
+    alert(`¡Gracias por tu interés en "${cause.title}"! Contáctanos para saber cómo puedes colaborar.`);
+  }
+};
 
-  // Event listeners
-  modal.querySelector('.close-modal').onclick = () => {
-    modal.remove();
-    document.body.style.overflow = '';
-  };
-  
-  modal.querySelector('#cancelDonation').onclick = () => {
-    modal.remove();
-    document.body.style.overflow = '';
-  };
-  
-  modal.querySelector('#processDonation').onclick = async () => {
-    const amount = document.getElementById('donationAmount').value;
-    if (!amount || amount < 1) {
-      alert('Por favor ingresa una cantidad válida');
-      return;
-    }
-    
-    try {
-      // Llamar al backend para crear sesión de Stripe
-      const response = await fetch('/api/stripe/create-checkout', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        credentials: 'include',
-        body: JSON.stringify({
-          causeId,
-          amount: parseFloat(amount),
-          currency: 'eur'
-        })
+// Función mostrar compartir (compatible con renderCompartir)
+window.mostrarCompartir = function(causeId) {
+  if (window.causesRenderer && typeof window.causesRenderer.shareCause === 'function') {
+    window.causesRenderer.shareCause(causeId);
+  } else {
+    // Fallback básico
+    const link = `${window.location.origin}/causes/${causeId}`;
+    if (navigator.clipboard) {
+      navigator.clipboard.writeText(link).then(() => {
+        alert('¡Enlace copiado al portapapeles!');
       });
-      
-      if (response.ok) {
-        const { url } = await response.json();
-        window.location.href = url;
-      } else {
-        throw new Error('Error procesando donación');
-      }
-    } catch (error) {
-      console.error('❌ Error procesando donación:', error);
-      alert('Error procesando la donación. Inténtalo de nuevo.');
+    } else {
+      prompt('Copia este enlace:', link);
     }
-  };
-}
+  }
+};
 
 // Al final del archivo, asegurar inicialización correcta:
 
@@ -1546,3 +1485,86 @@ function showStripeDonationModal(cause) {
     }
   };
 }
+
+function showCauseDetails(causeId) {
+  const cause = window.causes?.find(c => c.id == causeId);
+  if (!cause) return;
+
+  const modal = document.getElementById('causeModal');
+  if (!modal) return;
+  const modalBody = modal.querySelector('#modalBody');
+  if (!modalBody) return;
+
+  modalBody.innerHTML = `
+    <div class="modal-cause-container">
+      <div class="modal-cause-header">
+        <div class="modal-cause-image-wrapper">
+          <img src="${cause.photo_url || '/img/default-cause.jpg'}" alt="${cause.title}">
+          ${cause.urgent ? '<div class="cause-badge urgent"><i class="fas fa-exclamation-circle"></i> Urgente</div>' : ''}
+        </div>
+        <div class="modal-cause-info">
+          <h2 class="modal-cause-title">${cause.title}</h2>
+          <div class="modal-cause-progress-container">
+            <div class="progress-bar">
+              <div class="progress-fill" style="width: ${(cause.raised / cause.goal * 100)}%"></div>
+            </div>
+            <div class="progress-info">
+              <span>${Math.round(cause.raised / cause.goal * 100)}% completado</span>
+              <span>${cause.raised}€ de ${cause.goal}€</span>
+            </div>
+          </div>
+          <div class="modal-cause-meta-grid">
+            <div class="meta-item"><i class="fas fa-map-marker-alt"></i> ${cause.city}, ${cause.country}</div>
+            <div class="meta-item"><i class="fas fa-users"></i> ${cause.beneficiaries} beneficiarios</div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-cause-content">
+        <div class="content-section">
+          <h3 class="content-title"><i class="fas fa-align-left"></i> Descripción</h3>
+          <p class="content-text">${cause.description}</p>
+        </div>
+        <div class="content-section">
+          <h3 class="content-title"><i class="fas fa-donate"></i> Cómo donar</h3>
+          ${cause.stripe_account_id ? `
+            <div class="stripe-donation-section">
+              <p>Puedes donar de forma segura con tarjeta:</p>
+              <button class="btn btn-primary" onclick="window.openStripeDonationModal('${cause.id}')">
+                <i class="fas fa-credit-card"></i> Donar con tarjeta
+              </button>
+            </div>
+          ` : ''}
+          ${cause.how_to_donate ? `
+            <div class="other-donation-methods">
+              <h4>Otros métodos de donación:</h4>
+              <p>${cause.how_to_donate}</p>
+            </div>
+          ` : ''}
+        </div>
+      </div>
+      <div class="modal-cause-actions">
+        ${cause.stripe_account_id ? `
+          <button class="btn btn-primary" onclick="window.openStripeDonationModal('${cause.id}')">
+            <i class="fas fa-donate"></i> Donar ahora
+          </button>
+        ` : ''}
+        <button class="btn btn-accent" onclick="window.mostrarCompartir('${cause.id}')">
+          <i class="fas fa-share-alt"></i> Compartir
+        </button>
+      </div>
+    </div>
+  `;
+  modal.style.display = 'flex';
+  document.body.style.overflow = 'hidden';
+}
+
+function closeCauseModal() {
+  const modal = document.getElementById('causeModal');
+  if (modal) {
+    modal.style.display = 'none';
+    document.body.style.overflow = '';
+  }
+}
+
+window.viewCauseDetails = showCauseDetails;
+window.closeCauseModal = closeCauseModal;

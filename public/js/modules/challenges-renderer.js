@@ -833,64 +833,84 @@ if (typeof module !== 'undefined' && module.exports) {
   module.exports = ChallengesRenderer;
 }
 
-function showSuccessModal() {
-  // Si ya existe el modal, solo muéstralo
-  let modal = document.getElementById('challengeSuccessModal');
-  if (!modal) {
-    modal = document.createElement('div');
-    modal.id = 'challengeSuccessModal';
-    modal.style.cssText = `
-      position:fixed; z-index:99999; left:0; top:0; width:100vw; height:100vh;
-      background:rgba(0,0,0,0.35); display:flex; align-items:center; justify-content:center;
-    `;
-    modal.innerHTML = `
-      <div style="background:#fff; border-radius:18px; max-width:420px; width:95vw; padding:2.5rem 1.5rem 2rem 1.5rem; box-shadow:0 8px 32px rgba(74,111,165,0.13); position:relative; text-align:center;">
-        <button id="closeChallengeSuccessModal" style="position:absolute; top:1.1rem; right:1.3rem; background:none; border:none; font-size:2rem; color:#aaa; cursor:pointer;">&times;</button>
-        <div style="font-size:3rem; color:var(--accent,#4fc3a1); margin-bottom:1rem;">
-          <i class="fas fa-bolt"></i>
-        </div>
-        <h2 style="color:var(--primary,#4a6fa5); font-weight:800; margin-bottom:0.7rem;">¡Reto aceptado!</h2>
-        <p style="color:#444; font-size:1.1rem; margin-bottom:1.5rem;">
-          ¡Enhorabuena por sumarte a este desafío solidario!<br>
-          ¿Por qué no creas tu propio reto y retas a tus amigos a participar?
-        </p>
-        <a href="#" id="openCreateChallengeModalBtn" class="btn btn-accent" style="margin-bottom:0.7rem;">
-          <i class="fas fa-plus"></i> Crear un reto
-        </a>
-        <br>
-        <button class="btn btn-outline" id="closeChallengeSuccessBtn" style="margin-top:0.7rem;">
-          Seguir explorando retos
-        </button>
-      </div>
-    `;
-    document.body.appendChild(modal);
+// ✅ CARGAR RETOS USANDO EL RENDERER (optimizado)
+async function loadChallengesFromSupabase(filter = "all", searchTerm = "") {
+  currentFilter = filter;
+  let query = supabase
+    .from('challenges')
+    .select('*')
+    .order('created_at', { ascending: false });
 
-    // Cerrar modal
-    modal.querySelector('#closeChallengeSuccessModal').onclick =
-    modal.querySelector('#closeChallengeSuccessBtn').onclick = function() {
-      modal.style.display = 'none';
-      document.body.style.overflow = '';
-    };
-
-    // Abrir modal de crear reto al hacer click en el botón
-    modal.querySelector('#openCreateChallengeModalBtn').onclick = function(e) {
-      e.preventDefault();
-      modal.style.display = 'none';
-      document.body.style.overflow = '';
-      // Abre el modal de crear reto si existe
-      const createModal = document.getElementById('createChallengeModal');
-      if (createModal) {
-        createModal.classList.add('active');
-        document.body.style.overflow = 'hidden';
-      } else {
-        // Si no existe, redirige como fallback
-        window.location.href = '/challenges/create';
-      }
-    };
+  // CORREGIDO: Filtrar por challenge_type, no category
+  if (filter !== "all") {
+    query = query.eq('challenge_type', filter);
   }
-  modal.style.display = 'flex';
-  document.body.style.overflow = 'hidden';
-}
+  if (searchTerm && searchTerm.trim() !== "") {
+    query = query.or(`title.ilike.%${searchTerm}%,description.ilike.%${searchTerm}%,city.ilike.%${searchTerm}%,country.ilike.%${searchTerm}%`);
+  }
 
-// Hazla global si la llamas desde fuera:
-window.showSuccessModal = showSuccessModal;
+  // Usar nombres distintos para los errores
+  const { data: challenges, error: challengesError } = await query;
+  const challengesList = document.getElementById('challengesList');
+
+  if (challengesError) {
+    challengesList.innerHTML = '<div style="color:#e53e3e;text-align:center;">Error al cargar los retos.</div>';
+    return;
+  }
+
+  // Declarar la variable si no existe arriba
+  let currentUserId;
+
+  // Usar nombres distintos para los errores
+  const { data: sessionData, error: sessionError } = await supabase.auth.getSession();
+  const session = sessionData?.session;
+  currentUserId = session?.user?.id || null;
+
+  // Obtener participaciones del usuario
+  let userChallengeIds = [];
+  if (currentUserId) {
+    const { data: memberships } = await supabase
+      .from('challenges_members')
+      .select('challenge_id')
+      .eq('user_id', currentUserId);
+    userChallengeIds = memberships ? memberships.map(m => m.challenge_id) : [];
+  }
+
+  // Cargar causas para mostrar vinculaciones
+  const { data: causes } = await supabase.from('causes').select('id, title, photo_url');
+  const causesMap = {};
+  if (causes) {
+    causes.forEach(c => causesMap[c.id] = c);
+  }
+
+  // CORREGIDO: Obtener número de participantes por reto
+  let participantsMap = {};
+  if (challenges && challenges.length > 0) {
+    const challengeIds = challenges.map(c => c.id);
+    const { data: members } = await supabase
+      .from('challenges_members')
+      .select('challenge_id')
+      .in('challenge_id', challengeIds)
+      .eq('status', 'active');
+    if (members) {
+      members.forEach(m => {
+        participantsMap[m.challenge_id] = (participantsMap[m.challenge_id] || 0) + 1;
+      });
+    }
+  }
+
+  // Procesar retos con información adicional
+  const challengesWithInfo = challenges ? challenges.map(challenge => ({
+    ...challenge,
+    participants: participantsMap[challenge.id] || 0, // <-- CORREGIDO
+    isParticipating: userChallengeIds.includes(challenge.id),
+    linkedCause: challenge.cause_id && causesMap[challenge.cause_id] ? causesMap[challenge.cause_id] : null
+  })) : [];
+
+  // Usar el renderer para mostrar los retos
+  if (window.challengesRenderer) {
+    window.challengesRenderer.renderGrid(challengesWithInfo, challengesList);
+  } else {
+    challengesList.innerHTML = '<div style="color:#e53e3e;text-align:center;">Error: Renderer no disponible.</div>';
+  }
+}

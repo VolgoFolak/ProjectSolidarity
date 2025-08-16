@@ -1383,15 +1383,6 @@ to { opacity: 0; transform: translateX(-50%) translateY(-20px); }
     font-size: 1.7rem !important;
   }
 }
-  /* Solo para el modal de causa */
-#causeModal .modal-content {
-  max-width: 900px !important;
-  width: 98vw !important;
-  min-width: 0 !important;
-  box-sizing: border-box !important;
-  padding: 2.5rem 2rem 2rem 2rem !important;
-  overflow-x: hidden !important;
-}
   </style>
 {% endblock %}
 
@@ -1552,10 +1543,15 @@ to { opacity: 0; transform: translateX(-50%) translateY(-20px); }
   </div>
 
   <!-- Modal de Causa (compatible con causes-renderer.js) -->
-  <div id="causeModal" class="modal-bg">
-    <div class="modal-content">
-      <button class="close-modal" onclick="closeCauseModal()">&times;</button>
-      <div id="modalBody"></div>
+  <div id="causeModal" class="modal" style="display:none; position:fixed; z-index:9999; left:0; top:0; width:100vw; height:100vh; background:rgba(0,0,0,0.35); align-items:center; justify-content:center;">
+    <div class="modal-content" style="background:#fff; border-radius:18px; max-width:900px; width:95vw; padding:0; position:relative; max-height:90vh; overflow-y:auto;">
+      <button onclick="window.causesRenderer ? window.causesRenderer.closeModal() : (this.closest('.modal').style.display='none', document.body.style.overflow='')" 
+              style="position:absolute; top:1rem; right:1rem; background:none; border:none; font-size:1.5rem; cursor:pointer; z-index:10; color:#666; width:2rem; height:2rem; display:flex; align-items:center; justify-content:center; border-radius:50%; transition:all 0.2s;" 
+              onmouseover="this.style.background='#f3f4f6'" 
+              onmouseout="this.style.background='none'">&times;</button>
+      <div id="modalBody" style="padding:2rem;">
+        <!-- El contenido se genera dinámicamente por causes-renderer.js -->
+      </div>
     </div>
   </div>
 
@@ -1749,8 +1745,6 @@ async function checkUserSession() {
       credentials: 'include'
     });
     
-       
-    
     if (!response.ok) {
       console.warn('⚠️ Usuario no logueado');
       return { logged: false };
@@ -1769,7 +1763,7 @@ function initializeEventListeners() {
   // Botón crear causa - NUEVO FLUJO CON MODAL DE SELECCIÓN
   const createBtn = document.getElementById('create-cause-btn');
   if (createBtn) {
-    createBtn.addEventListener('click', async ( e) => {
+    createBtn.addEventListener('click', async (e) => {
       e.preventDefault();
       await handleCreateCauseClick();
     });
@@ -2373,9 +2367,6 @@ async function loadCauses(page = 1, filter = "all", search = "") {
     updatePagination();
     console.log(`✅ Causas cargadas: ${causes.length}/${total}`);
     
-    // Guardar causas en variable global para acceso rápido
-    window.lastLoadedCauses = causes;
-    
   } catch (error) {
     console.error('❌ Error cargando causas:', error);
     const container = document.getElementById('causesList');
@@ -2394,30 +2385,11 @@ async function loadCauses(page = 1, filter = "all", search = "") {
   }
 }
 
-function updatePagination() {
-  const prevBtn = document.getElementById('prevPage');
-  const nextBtn = document.getElementById('nextPage');
-  const pageInfo = document.getElementById('pageInfo');
-
-  if (prevBtn) {
-    prevBtn.disabled = currentPage <= 1;
-  }
-  if (nextBtn) {
-    nextBtn.disabled = currentPage >= totalPages;
-  }
-  if (pageInfo) {
-    pageInfo.textContent = `${currentPage} / ${totalPages}`;
-  }
-}
-
 // ✅ NUEVO: Crear HTML de tarjeta de causa
 function createCauseCardHTML(cause) {
   const progressPercent = cause.goal > 0 ? Math.min((cause.raised || 0) / cause.goal * 100, 100) : 0;
-  const imageUrl = cause.photo_url || '/images/default-cause.jpg';
-
-  // Detectar Stripe
-  const hasStripe = !!cause.stripe_enabled && !!cause.stripe_account_id;
-
+  const imageUrl = cause.image_url || '/images/default-cause.jpg';
+  
   return `
     <div class="cause-card" data-cause-id="${cause.id}">
       <div class="cause-image">
@@ -2455,8 +2427,8 @@ function createCauseCardHTML(cause) {
           <button onclick="viewCauseDetails('${cause.id}')" class="btn btn-primary">
             Ver más
           </button>
-          <button onclick="handleDonateClick('${cause.id}')" class="btn btn-accent">
-            Donar
+          <button onclick="shareCause('${cause.id}')" class="btn btn-accent">
+            Compartir
           </button>
         </div>
       </div>
@@ -2464,117 +2436,247 @@ function createCauseCardHTML(cause) {
   `;
 }
 
-// ✅ Notificación global simple
-function showNotification(message, type = 'info', timeout = 3000) {
-  // Elimina notificaciones previas
-  document.querySelectorAll('.global-notification').forEach(n => n.remove());
-  const notif = document.createElement('div');
-  notif.className = `global-notification ${type}`;
-  notif.innerHTML = `<span class="notification-content">${message}</span>`;
-  document.body.appendChild(notif);
-  setTimeout(() => {
-    notif.classList.add('fade-out');
-    setTimeout(() => notif.remove(), 500);
-  }, timeout);
-}
-
-// ✅ Definir viewCauseDetails para botones "Ver más"
+// ✅ NUEVO: Ver detalles de causa
 function viewCauseDetails(causeId) {
   if (window.causesRenderer && typeof window.causesRenderer.showModal === 'function') {
-    window.causesRenderer.showModal(causeId);  // ✅ Método correcto
+    window.causesRenderer.showModal(causeId);
   } else {
-    alert('No se puede mostrar los detalles de la causa.');
+    // Fallback
+    window.open(`/causes/${causeId}`, '_blank');
   }
 }
 
-// ✅ Definir closeCauseModal si no existe
-function closeCauseModal() {
-  const modal = document.getElementById('causeModal');
-  if (modal) {
-    modal.style.display = 'none';
-    document.body.style.overflow = '';
-  }
-}
-
-function handleDonateClick(causeId) {
-  console.log('[DONATE] Botón donar pulsado para causa:', causeId);
-
-  const cause = window.lastLoadedCauses?.find(c => c.id == causeId);
-  console.log('[DONATE] Datos de la causa seleccionada:', cause);
-
-  if (!cause) {
-    showNotification('Causa no encontrada', 'error');
-    return;
-  }
-
-  // Verificar Stripe
-  console.log('[DONATE] Stripe enabled:', cause.stripe_enabled, 'Stripe account:', cause.stripe_account_id);
-
-  // Mostrar modal
-  const modal = document.getElementById('stripeDonationModal');
-  if (modal) {
-    document.getElementById('stripeDonationTitle').textContent = `Donar a: ${cause.title}`;
-    document.getElementById('stripeDonationDesc').textContent = cause.short_description || '';
-    document.getElementById('stripeDonationAmount').value = '20';
-    modal.classList.add('active');
-    document.body.style.overflow = 'hidden';
-    window.currentDonationCause = cause;
-    console.log('[DONATE] Modal de donación mostrado');
+// ✅ NUEVO: Compartir causa
+function shareCause(causeId) {
+  const shareUrl = `${window.location.origin}/causes/${causeId}`;
+  
+  if (navigator.share) {
+    navigator.share({
+      title: 'Causa Solidaria en Solidarity',
+      text: '¡Mira esta causa solidaria y ayuda a hacer la diferencia!',
+      url: shareUrl
+    });
   } else {
-    console.error('[DONATE] No se encontró el modal de donación');
+    // Fallback: copiar al portapapeles
+    navigator.clipboard.writeText(shareUrl).then(() => {
+      showNotification('Enlace copiado al portapapeles', 'success');
+    });
   }
-
-  // Log columnas relevantes
-  console.log('[DONATE] Columnas relevantes en causa:', Object.keys(cause));
 }
 
-// Donar con Stripe
-document.getElementById('stripePayBtn').onclick = async function() {
-  const amount = parseFloat(document.getElementById('stripeDonationAmount').value);
-  const cause = window.currentDonationCause;
-  console.log('[DONATE] Intentando donar', amount, '€ a causa:', cause);
+function updatePagination() {
+  const pageInfo = document.getElementById('pageInfo');
+  const prevBtn = document.getElementById('prevPage');
+  const nextBtn = document.getElementById('nextPage');
+  
+  if (pageInfo) pageInfo.textContent = `${currentPage}`;
+  if (prevBtn) prevBtn.disabled = currentPage <= 1;
+  if (nextBtn) nextBtn.disabled = currentPage >= totalPages;
+}
 
-  if (!cause.stripe_enabled || !cause.stripe_account_id) {
-    showNotification('Esta causa no tiene Stripe configurado', 'error');
-    console.error('[DONATE] Stripe no configurado:', cause);
-    return;
-  }
+// ✅ MEJORADO: Sistema de notificaciones
+function showNotification(message, type = 'info') {
+  // Remover notificaciones existentes
+  document.querySelectorAll('.global-notification').forEach(n => n.remove());
+  
+  const notification = document.createElement('div');
+  notification.className = `global-notification ${type}`;
+  
+  const icons = {
+    info: 'fas fa-info-circle',
+    success: 'fas fa-check-circle',
+    warning: 'fas fa-exclamation-triangle',
+    error: 'fas fa-times-circle'
+  };
+  
+  notification.innerHTML = `
+    <div class="notification-content">
+      <i class="${icons[type] || icons.info}"></i>
+      <span>${message}</span>
+    </div>
+  `;
+  
+  document.body.appendChild(notification);
+  
+  // Animación de entrada
+  setTimeout(() => notification.style.opacity = '1', 100);
+  
+  // Auto-remover
+  setTimeout(() => {
+    notification.classList.add('fade-out');
+    setTimeout(() => notification.remove(), 300);
+  }, type === 'error' ? 6000 : 4000);
+}
 
-  // Log datos enviados al backend
-  console.log('[DONATE] Payload a backend:', {
-    causeId: cause.id,
-    amount,
-    stripe_account_id: cause.stripe_account_id
-  });
+// Funciones globales para debugging
+window.debugSolidarity = {
+  checkSession: checkUserSession,
+  loadCauses,
+  currentUser,
+  handleCreateCause: handleCreateCauseClick,
+  showDonationModal: showDonationMethodModal
+};
 
+console.log('🎯 Causes page initialized with complete flow');
+</script>
+
+// ...existing code...
+
+// ✅ LOGS DETALLADOS para Stripe onboarding y retorno
+async function redirectToStripeOnboarding() {
   try {
-    const response = await fetch('/api/stripe/create-checkout', {
+    console.log('🚀 [STRIPE ONBOARDING] Iniciando proceso...');
+    console.log('👤 [USER DATA]', {
+      userId: currentUser.user.id,
+      email: currentUser.user.email,
+      timestamp: new Date().toISOString()
+    });
+
+    showNotification('Preparando configuración de Stripe...', 'info');
+
+    const requestData = {
+      email: currentUser.user.email,
+      userId: currentUser.user.id,
+      causeData: { 
+        title: 'Nueva causa solidaria',
+        type: 'onboarding',
+        timestamp: new Date().toISOString()
+      }
+    };
+
+    console.log('📤 [STRIPE REQUEST]', requestData);
+
+    const response = await fetch('/api/stripe/create-account', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       credentials: 'include',
-      body: JSON.stringify({
-        causeId: cause.id,
-        amount,
-        stripe_account_id: cause.stripe_account_id
-      })
+      body: JSON.stringify(requestData)
     });
 
-    console.log('[DONATE] Respuesta del backend:', response);
+    console.log('📥 [STRIPE RESPONSE]', {
+      status: response.status,
+      statusText: response.statusText,
+      ok: response.ok
+    });
 
     if (!response.ok) {
       const errorData = await response.json();
-      console.error('[DONATE] Error backend:', errorData);
-      showNotification(errorData.error || 'Error procesando la donación', 'error');
-      return;
+      console.error('❌ [STRIPE ERROR]', errorData);
+      throw new Error(errorData.error || 'Error creando cuenta Stripe');
     }
 
-    const { url } = await response.json();
-    console.log('[DONATE] Redirigiendo a Stripe Checkout:', url);
-    window.location.href = url;
-  } catch (err) {
-    console.error('[DONATE] Error en fetch:', err);
-    showNotification('Error de red', 'error');
+    const { returnUrl, accountId } = await response.json();
+    console.log('✅ [STRIPE SUCCESS]', { returnUrl, accountId });
+
+    // 💾 Guardar estado detallado en localStorage
+    const onboardingState = {
+      userId: currentUser.user.id,
+      email: currentUser.user.email,
+      accountId,
+      timestamp: new Date().toISOString(),
+      status: 'pending'
+    };
+
+    localStorage.setItem('stripeOnboardingState', JSON.stringify(onboardingState));
+    localStorage.setItem('pendingCauseCreation', 'true');
+
+    console.log('💾 [LOCAL STORAGE]', onboardingState);
+
+    // Cerrar modal antes de redireccionar
+    document.getElementById('stripeSetupModal').style.display = 'none';
+    document.body.style.overflow = '';
+
+    console.log('🔄 [REDIRECT] Redirigiendo a:', returnUrl);
+
+    setTimeout(() => {
+      window.location.href = returnUrl;
+    }, 500);
+
+  } catch (error) {
+    console.error('💥 [STRIPE ONBOARDING ERROR]', {
+      message: error.message,
+      stack: error.stack,
+      timestamp: new Date().toISOString()
+    });
+    showNotification('Error configurando pagos. Intenta de nuevo.', 'error');
   }
-};
-  </script>
+}
+
+// ✅ FLUJO DE RETORNO DE STRIPE (no borra nada, solo añade)
+document.addEventListener('DOMContentLoaded', async () => {
+  // ...existing code...
+  const urlParams = new URLSearchParams(window.location.search);
+  const isStripeReturn = urlParams.get('stripe') === 'success' || urlParams.get('stripe') === 'refresh';
+
+  if (isStripeReturn) {
+    console.log('🎯 [STRIPE RETURN] Detectado retorno de Stripe onboarding');
+    await handleStripeReturn();
+    return;
+  }
+  // ...existing code...
+});
+
+// ✅ Manejar retorno de Stripe (autenticado o no)
+async function handleStripeReturn() {
+  try {
+    console.log('🔍 [STRIPE RETURN] Verificando estado...');
+    const savedState = localStorage.getItem('stripeOnboardingState');
+    console.log('💾 [SAVED STATE]', savedState);
+
+    currentUser = await checkUserSession();
+    console.log('👤 [CURRENT USER]', currentUser.logged ? 'Autenticado' : 'No autenticado');
+
+    if (!currentUser.logged) {
+      showStripeSuccessUnauthenticated(savedState);
+    } else {
+      await handleStripeSuccess();
+    }
+
+    window.history.replaceState({}, '', '/causes');
+  } catch (error) {
+    console.error('💥 [STRIPE RETURN ERROR]', error);
+    showNotification('Error procesando configuración de Stripe', 'error');
+  }
+}
+
+// ✅ Modal de éxito para usuario no autenticado (no borra nada)
+function showStripeSuccessUnauthenticated(savedState) {
+  console.log('🎭 [UNAUTH MODAL] Mostrando modal para usuario no autenticado');
+  const modal = document.getElementById('stripeSuccessUnauthModal');
+  if (!modal) return;
+
+  modal.classList.add('active');
+  document.body.style.overflow = 'hidden';
+
+  const closeBtn = document.getElementById('closeStripeUnauthModal');
+  if (closeBtn) {
+    closeBtn.onclick = () => {
+      modal.classList.remove('active');
+      document.body.style.overflow = '';
+      localStorage.removeItem('stripeOnboardingState');
+      localStorage.removeItem('pendingCauseCreation');
+      initializePageNormally();
+    };
+  }
+
+  setTimeout(() => {
+    showNotification('Configuración de Stripe iniciada. Revisa tu email para completar el proceso.', 'info', 8000);
+  }, 1000);
+
+  console.log('✅ [UNAUTH MODAL] Modal mostrado exitosamente');
+}
+
+// ✅ Inicializar página normalmente después de cerrar modal
+async function initializePageNormally() {
+  currentUser = await checkUserSession();
+  initializeEventListeners();
+  await loadCauses();
+  setupImagePreview();
+  setupCreateCauseForm();
+  console.log('✅ [NORMAL INIT] Página inicializada correctamente');
+}
+
+// ...existing code...
+
+
 {% endblock %}

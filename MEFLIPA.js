@@ -1489,277 +1489,163 @@ app.use((req, res, next) => {
 })();
 
 // --- NUEVAS RUTAS DE STRIPE ---
-app.post('/api/stripe/create-checkout', async (req, res) => {
+// Mueve estas rutas aquí, justo antes del manejador de errores
+
+app.post('/api/stripe/donation-fast', async (req, res) => {
   try {
-    console.log('[API] Recibido POST /api/stripe/create-checkout');
-    console.log('[API] Payload:', req.body);
-
-    const { causeId, amount, stripe_account_id } = req.body;
-
-    // Log búsqueda en Supabase
-    console.log('[API] Buscando causa en Supabase:', causeId);
-
-    const { data: cause, error } = await supabase
-      .from('causes')
-      .select('*')
-      .eq('id', causeId)
-      .single();
-
-    console.log('[API] Resultado Supabase:', cause);
-    if (error) console.error('[API] Error Supabase:', error);
-
-    if (!cause) {
-      console.error('[API] No se encontró la causa');
-      return res.status(404).json({ error: 'Causa no encontrada' });
-    }
-
-    console.log('[API] Columnas de la causa:', Object.keys(cause));
-    console.log('[API] Stripe enabled:', cause.stripe_enabled, 'Stripe account:', cause.stripe_account_id);
-
-    if (!cause.stripe_enabled || !cause.stripe_account_id) {
-      console.error('[API] Stripe no configurado en la causa');
-      return res.status(400).json({ error: 'Esta causa no tiene configurado Stripe para recibir donaciones' });
-    }
-
-    // Crear metadata para Stripe
-    const metadata = {
-      cause_id: causeId,
-      cause_title: cause.title.substring(0, 100), // Stripe limita
-      donor_name: req.body.donorName || 'Anónimo',
-      source: 'solidarity_platform'
-    };
-
-    if (req.body.donorEmail) metadata.donor_email = req.body.donorEmail;
-    if (req.body.message) metadata.message = req.body.message.substring(0, 400);
-    if (req.session.user?.id) metadata.user_id = req.session.user.id;
-
-    // Crear sesión de Stripe Checkout
+    const { causeId, amount, currency = 'eur' } = req.body;
     const session = await stripe.checkout.sessions.create({
       payment_method_types: ['card'],
       line_items: [{
         price_data: {
-          currency: 'eur',
-          product_data: { name: cause.title },
+          currency,
+          product_data: { name: `Donación rápida` },
           unit_amount: Math.round(amount * 100),
         },
         quantity: 1,
       }],
       mode: 'payment',
-      success_url: `${process.env.BASE_URL}/causes?donation=success&session_id={CHECKOUT_SESSION_ID}`,
-      cancel_url: `${process.env.BASE_URL}/causes?donation=cancel`,
-    }, {
-      stripeAccount: cause.stripe_account_id // <-- SOLO AQUÍ
+      success_url: `${process.env.DOMAIN || 'http://localhost:3000'}/causes?donation=success`,
+      cancel_url: `${process.env.DOMAIN || 'http://localhost:3000'}/causes?donation=cancelled`,
+      metadata: { cause_id: causeId }
     });
-
-    console.log('✅ Sesión de Stripe creada exitosamente:', session.id);
-
-    res.json({ 
-      url: session.url,
-      sessionId: session.id 
-    });
-
+    res.json({ url: session.url });
   } catch (error) {
-    console.error('❌ Error en create-checkout:', error);
-    
-    if (error.type === 'StripeInvalidRequestError') {
-      return res.status(400).json({ 
-        error: 'Error de configuración de Stripe',
-        details: error.message 
-      });
-    }
-
-    res.status(500).json({ 
-      error: 'Error interno del servidor',
-      details: process.env.NODE_ENV === 'development' ? error.message : undefined
-    });
+    res.status(500).json({ error: 'Error procesando donación rápida', details: error.message });
   }
 });
 
-// Agregar este endpoint para webhooks de Stripe
-
-app.post('/stripe-webhook', express.raw({type: 'application/json'}), async (req, res) => {
-  const sig = req.headers['stripe-signature'];
-  const endpointSecret = process.env.STRIPE_WEBHOOK_SECRET; // Agregar a tu .env
-
-  let event;
-
+app.post('/api/stripe/donation-checkout', async (req, res) => {
   try {
-    event = stripe.webhooks.constructEvent(req.body, sig, endpointSecret);
-  } catch (err) {
-    console.error('❌ Webhook signature verification failed:', err.message);
-    return res.status(400).send(`Webhook Error: ${err.message}`);
-  }
-
-  // Manejar el evento
-  try {
-    switch (event.type) {
-      case 'checkout.session.completed':
-        await handleSuccessfulPayment(event.data.object);
-        break;
-      
-      case 'payment_intent.succeeded':
-        await handlePaymentConfirmed(event.data.object);
-        break;
-      
-      case 'payment_intent.payment_failed':
-        await handlePaymentFailed(event.data.object);
-        break;
-      
-      default:
-        console.log(`📝 Evento no manejado: ${event.type}`);
+    const { causeId, amount, currency = 'eur', donorName, donorEmail, message } = req.body;
+    if (!causeId || !amount) {
+      return res.status(400).json({ error: 'Datos incompletos' });
     }
-
-    res.json({received: true});
-  } catch (error) {
-    console.error('❌ Error procesando webhook:', error);
-    res.status(500).json({error: 'Error procesando webhook'});
-  }
-});
-
-// Función para manejar pago exitoso
-async function handleSuccessfulPayment(session) {
-  try {
-    console.log('💰 Procesando donación exitosa:', session.id);
-
-    // Obtener detalles del PaymentIntent
-    const paymentIntent = await stripe.paymentIntents.retrieve(
-      session.payment_intent,
-      { stripeAccount: session.metadata.cause_id ? undefined : session.stripe_account }
-    );
-
-    // Guardar donación en Supabase
-    const donationData = {
-      id: session.id, // Usar el session ID como ID único
-      cause_id: session.metadata.cause_id,
-      amount: session.amount_total / 100, // Convertir de céntimos a euros
-      currency: session.currency.toLowerCase(),
-      donor_name: session.metadata.donor_name || 'Anónimo',
-      donor_email: session.metadata.donor_email || null,
-      message: session.metadata.message || null,
-      user_id: session.metadata.user_id || null,
-      stripe_session_id: session.id,
-      stripe_payment_intent_id: session.payment_intent,
-      payment_status: 'completed',
-      stripe_account_id: paymentIntent.on_behalf_of || null,
-      created_at: new Date().toISOString(),
-      updated_at: new Date().toISOString()
-    };
-
-    const { data: donation, error: insertError } = await supabase
-      .from('donations')
-      .insert([donationData]);
-
-    if (insertError) {
-      console.error('❌ Error guardando donación:', insertError);
-      throw insertError;
+    if (amount < 1) {
+      return res.status(400).json({ error: 'La cantidad mínima es €1' });
     }
-
-    // Actualizar estadísticas de la causa
-    const { error: updateError } = await supabase
-      .rpc('update_cause_stats', {
-        cause_id: session.metadata.cause_id,
-        donation_amount: donationData.amount
-      });
-
-    if (updateError) {
-      console.error('❌ Error actualizando estadísticas:', updateError);
-    }
-
-    // Enviar notificación al creador de la causa (opcional)
-    await sendDonationNotification(donationData);
-
-    console.log('✅ Donación procesada correctamente:', donationData.id);
-
-  } catch (error) {
-    console.error('❌ Error procesando pago exitoso:', error);
-    throw error;
-  }
-}
-
-// Función para enviar notificación
-async function sendDonationNotification(donation) {
-  try {
-    // Obtener datos del creador de la causa
-    const { data: cause, error } = await supabase
+    const { data: cause, error: causeError } = await supabase
       .from('causes')
-      .select(`
-        title,
-        user_id,
-        profiles!causes_user_id_fkey(email, first_name)
-      `)
-      .eq('id', donation.cause_id)
+      .select('*')
+      .eq('id', causeId)
       .single();
-
-    if (error || !cause) {
-      console.log('⚠️ No se pudo obtener datos de la causa para notificación');
-      return;
+    if (causeError || !cause) {
+      return res.status(404).json({ error: 'Causa no encontrada' });
     }
-
-    // Aquí puedes integrar tu sistema de notificaciones
-    // Por ejemplo, enviar email, notificación push, etc.
-    console.log(`📧 Notificación: ${donation.donor_name} donó €${donation.amount} a "${cause.title}"`);
-
-    // Guardar notificación en base de datos
-    await supabase
-      .from('notifications')
-      .insert([{
-        user_id: cause.user_id,
-        type: 'donation_received',
-        title: 'Nueva donación recibida',
-        message: `${donation.donor_name} ha donado €${donation.amount} a tu causa "${cause.title}"`,
-        data: {
-          donation_id: donation.id,
-          cause_id: donation.cause_id,
-          amount: donation.amount,
-          donor_name: donation.donor_name
+    const session = await stripe.checkout.sessions.create({
+      payment_method_types: ['card'],
+      line_items: [{
+        price_data: {
+          currency: currency.toLowerCase(),
+          product_data: {
+            name: `Donación: ${cause.title}`,
+            description: `Apoyo solidario`,
+          },
+          unit_amount: Math.round(amount * 100),
         },
-        created_at: new Date().toISOString()
-      }]);
-
+        quantity: 1,
+      }],
+      mode: 'payment',
+      success_url: `${process.env.DOMAIN || 'http://localhost:3000'}/causes?donation=success&session_id={CHECKOUT_SESSION_ID}`,
+      cancel_url: `${process.env.DOMAIN || 'http://localhost:3000'}/causes?donation=cancelled&cause_id=${causeId}`,
+      metadata: {
+        cause_id: causeId,
+        cause_title: cause.title,
+        donor_name: donorName || 'Anónimo',
+        user_id: req.session.user?.id || 'anonymous'
+      }
+    });
+    res.json({ url: session.url, sessionId: session.id });
   } catch (error) {
-    console.error('❌ Error enviando notificación:', error);
+    res.status(500).json({ error: 'Error procesando donación', details: error.message });
   }
-}
+});
 
-// Agregar este endpoint
-
-app.get('/api/donations/session/:sessionId', async (req, res) => {
+app.post('/api/causes/create-donation', async (req, res) => {
   try {
-    const { sessionId } = req.params;
-    
-    // Buscar donación por session ID
-    const { data: donation, error } = await supabase
-      .from('donations')
-      .select(`
-        *,
-        causes!donations_cause_id_fkey(title)
-      `)
-      .eq('stripe_session_id', sessionId)
-      .single();
-
-    if (error || !donation) {
-      return res.status(404).json({ error: 'Donación no encontrada' });
+    const { causeId, amount, currency = 'eur', donorName, donorEmail, message } = req.body;
+    if (!causeId || !amount) {
+      return res.status(400).json({ error: 'Datos incompletos' });
     }
-
-    // Formatear respuesta
-    const response = {
-      id: donation.id,
-      cause_id: donation.cause_id,
-      cause_title: donation.causes?.title || 'Causa desconocida',
-      amount: donation.amount,
-      currency: donation.currency,
-      donor_name: donation.donor_name,
-      donor_email: donation.donor_email,
-      message: donation.message,
-      created_at: donation.created_at,
-      payment_status: donation.payment_status
-    };
-
-    res.json(response);
+    if (amount < 1) {
+      return res.status(400).json({ error: 'La cantidad mínima es €1' });
+    }
+    const { data: cause, error: causeError } = await supabase
+      .from('causes')
+      .select('*')
+      .eq('id', causeId)
+      .single();
+    if (causeError || !cause) {
+      return res.status(404).json({ error: 'Causa no encontrada' });
+    }
+    const session = await stripe.checkout.sessions.create({
+      payment_method_types: ['card'],
+      line_items: [{
+        price_data: {
+          currency: currency.toLowerCase(),
+          product_data: {
+            name: `Donación: ${cause.title}`,
+            description: `Apoyo solidario`,
+          },
+          unit_amount: Math.round(amount * 100),
+        },
+        quantity: 1,
+      }],
+      mode: 'payment',
+      success_url: `${process.env.DOMAIN || 'http://localhost:3000'}/causes?donation=success&session_id={CHECKOUT_SESSION_ID}`,
+      cancel_url: `${process.env.DOMAIN || 'http://localhost:3000'}/causes?donation=cancelled&cause_id=${causeId}`,
+      metadata: {
+        cause_id: causeId,
+        cause_title: cause.title,
+        donor_name: donorName || 'Anónimo',
+        user_id: req.session.user?.id || 'anonymous'
+      }
+    });
+    res.json({ url: session.url, sessionId: session.id });
   } catch (error) {
-    console.error('❌ Error obteniendo donación:', error);
-    res.status(500).json({ error: 'Error interno del servidor' });
+    res.status(500).json({ error: 'Error procesando donación', details: error.message });
   }
+});
+
+app.post('/api/test', (req, res) => {
+  res.json({ ok: true });
+});
+
+// --- MANEJO DE ERRORES (MANTENER AL FINAL) ---
+app.use((err, req, res, next) => {
+  console.error('❌ Error del servidor:', err.stack);
+  
+  if (res.headersSent) {
+    return next(err);
+  }
+  
+  if (err.code === 'EBADCSRFTOKEN') {
+    return res.status(403).json({ 
+      error: 'Token CSRF inválido',
+      code: 'INVALID_CSRF'
+    });
+  }
+
+  if (err.code === 'ECONNREFUSED' || err.code === 'ENOTFOUND') {
+    return res.status(503).json({ 
+      error: 'Servicio temporalmente no disponible',
+      code: 'SERVICE_UNAVAILABLE'
+    });
+  }
+
+  const response = {
+    error: 'Error interno del servidor',
+    code: 'INTERNAL_ERROR',
+    timestamp: new Date().toISOString(),
+    requestId: req.sessionID
+  };
+
+  if (process.env.NODE_ENV !== 'production') {
+    response.details = err.message;
+    response.stack = err.stack;
+  }
+
+  res.status(500).json(response);
 });
 
 app.use((req, res) => {
@@ -1770,7 +1656,6 @@ app.use((req, res) => {
       path: req.path
     });
   }
-  
   res.status(404).render('404', { 
     lang: req.lang, 
     user: req.session?.user,

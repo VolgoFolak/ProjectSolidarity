@@ -1551,6 +1551,31 @@ to { opacity: 0; transform: translateX(-50%) translateY(-20px); }
     </div>
   </div>
 
+  <!-- Modal profesional de donación Stripe -->
+  <div id="stripeDonationModal" class="modal-bg" style="display:none;">
+    <div class="modal-content" style="max-width:420px;">
+      <button class="close-modal" id="closeStripeDonationModal">&times;</button>
+      <div style="text-align:center;">
+        <i class="fab fa-stripe" style="font-size:2.5rem;color:#635bff;margin-bottom:1rem;"></i>
+        <h2 id="stripeDonationTitle" style="color:#635bff;margin-bottom:0.7rem;">Donar a la causa</h2>
+        <p id="stripeDonationDesc" style="color:#444;margin-bottom:1.2rem;"></p>
+        <div style="margin-bottom:1.2rem;">
+          <input type="number" id="stripeDonationAmount" min="1" step="0.01" value="20" style="width:100%;padding:0.7rem 1rem;font-size:1.1rem;border-radius:8px;border:1px solid #e5e7eb;" placeholder="Cantidad (€)">
+        </div>
+        <button id="stripePayBtn" class="btn btn-accent" style="width:100%;font-size:1.1rem;">
+          <i class="fas fa-credit-card"></i> Donar con tarjeta
+        </button>
+        <div style="margin-top:1.2rem;font-size:0.93rem;color:#888;">
+          Pago seguro gestionado por <strong>Stripe</strong>. Recibirás confirmación por email.<br>
+          <span id="stripeDonationExtra"></span>
+        </div>
+        <div style="margin-top:1.2rem;font-size:0.93rem;color:#888;">
+          <i class="fas fa-lock"></i> Tus datos están protegidos y el pago es 100% seguro.
+        </div>
+      </div>
+    </div>
+  </div>
+
   <!-- Modal de Causa (compatible con causes-renderer.js) -->
   <div id="causeModal" class="modal-bg">
     <div class="modal-content">

@@ -2630,3 +2630,81 @@
 [2025-08-08T22:58:06.929Z] 🔒 Cookies seguras habilitadas
 [2025-08-08T22:58:06.929Z] 🌐 CORS configurado para project-solidarity.com
 [2025-08-08T22:58:07.688Z] ✅ PostgreSQL/Supabase connection successful
+[2025-08-09T10:00:42.283Z] 🚀 Servidor iniciado en puerto 3000
+[2025-08-09T10:00:42.552Z] 🌍 Entorno: development
+[2025-08-09T10:00:42.553Z] 🔗 URL: http://localhost:3000
+[2025-08-09T10:00:42.554Z] ✅ Configuración de desarrollo activa
+[2025-08-09T10:00:42.558Z] 🔒 Cookies seguras deshabilitadas
+[2025-08-09T10:00:42.559Z] 🌐 CORS solo para localhost
+[2025-08-09T10:00:44.891Z] ✅ PostgreSQL/Supabase connection successful
+[2025-08-09T10:00:56.708Z] 📝 GET / - Session ID: SCtztEbJ4-V8kohMjC0de-pHpnICEsW7
+[2025-08-09T10:00:56.710Z] 🔍 Session User: No user
+[2025-08-09T10:01:00.231Z] 📝 GET /api/check-session - Session ID: crEgTPkwnPpGILtvbeUkZyq8rk4nEPHc
+[2025-08-09T10:01:00.241Z] 🔍 Session User: No user
+[2025-08-09T10:01:00.245Z] 🔍 Check session called: No user
+[2025-08-09T10:01:02.833Z] 📝 GET /takeaction - Session ID: pDzoe-GPhlXcOk1Cvwd9EqEtxsYVkqBT
+[2025-08-09T10:01:02.833Z] 🔍 Session User: No user
+[2025-08-09T10:01:03.973Z] 📝 GET /api/check-session - Session ID: zwpMVHtRaftzSYVkJKURpfpxxkCLlZUT
+[2025-08-09T10:01:03.973Z] 🔍 Session User: No user
+[2025-08-09T10:01:03.974Z] 🔍 Check session called: No user
+[2025-08-09T10:01:06.085Z] 📝 GET /causes - Session ID: IOvvSn5-3SLJ4t3c2onaTkBbNryrOEGB
+[2025-08-09T10:01:06.086Z] 🔍 Session User: No user
+[2025-08-09T10:01:06.758Z] 📝 GET /api/check-session - Session ID: LncUdD3rHY46AHetfMfw2bUL0zmsaSh0
+[2025-08-09T10:01:06.759Z] 🔍 Session User: No user
+[2025-08-09T10:01:06.759Z] 🔍 Check session called: No user
+[2025-08-09T10:01:07.282Z] 📝 GET /me - Session ID: klfBUhD1gpXwysF9p5p2PDM8BnSUc1LM
+[2025-08-09T10:01:07.289Z] 🔍 Session User: No user
+[2025-08-09T10:01:20.884Z] 📝 GET /.well-known/appspecific/com.chrome.devtools.json - Session ID: 88SZY2b9LCs79iDP9NoV6sJPpMtLdKKB
+[2025-08-09T10:01:20.932Z] 🔍 Session User: No user
+[2025-08-09T10:01:21.255Z] 📝 GET /js/lib/axios.min.js.map - Session ID: qPILAoIjP5stGxLUUiZUd4cEqynNycsW
+[2025-08-09T10:01:21.271Z] 🔍 Session User: No user
+[2025-08-09T10:02:03.032Z] 📝 GET /login - Session ID: 38z5dE2NIdh3vX1p_6_IXp7L0f-y8Qn-
+[2025-08-09T10:02:03.038Z] 🔍 Session User: No user
+[2025-08-09T10:02:03.481Z] 📝 GET /api/check-session - Session ID: TedhkE7KOmWP7kTBFpNZEIwirV_JnAVW
+[2025-08-09T10:02:03.482Z] 🔍 Session User: No user
+[2025-08-09T10:02:03.488Z] 🔍 Check session called: No user
+[2025-08-09T10:02:06.411Z] 📝 POST /login-supabase - Session ID: l1Z7GZ8fthsvcTpJ3E6Bhzthsp_eTQl_
+[2025-08-09T10:02:06.412Z] 🔍 Session User: No user
+[2025-08-09T10:02:06.415Z] 🔐 Login attempt with token: true
+[2025-08-09T10:02:08.571Z] ✅ User saved to session: d98c3559-215c-48e2-84a9-de811b86bf2f
+[2025-08-09T10:02:08.656Z] 📝 GET /profile - Session ID: l1Z7GZ8fthsvcTpJ3E6Bhzthsp_eTQl_
+[2025-08-09T10:02:08.657Z] 🔍 Session User: VolgoFolak
+[2025-08-09T10:02:09.348Z] 📝 GET /api/check-session - Session ID: l1Z7GZ8fthsvcTpJ3E6Bhzthsp_eTQl_
+[2025-08-09T10:02:09.351Z] 🔍 Session User: VolgoFolak
+[2025-08-09T10:02:09.352Z] 🔍 Check session called: User found
+[2025-08-09T10:02:09.924Z] 📝 POST /api/session/keep-alive - Session ID: l1Z7GZ8fthsvcTpJ3E6Bhzthsp_eTQl_
+[2025-08-09T10:02:09.941Z] 🔍 Session User: VolgoFolak
+[2025-08-09T10:02:14.388Z] 📝 GET /tasks - Session ID: l1Z7GZ8fthsvcTpJ3E6Bhzthsp_eTQl_
+[2025-08-09T10:02:14.389Z] 🔍 Session User: VolgoFolak
+[2025-08-09T10:02:14.579Z] 📝 GET /js/share-system.js - Session ID: l1Z7GZ8fthsvcTpJ3E6Bhzthsp_eTQl_
+[2025-08-09T10:02:14.582Z] 🔍 Session User: VolgoFolak
+[2025-08-09T10:02:14.698Z] 📝 GET /api/check-session - Session ID: l1Z7GZ8fthsvcTpJ3E6Bhzthsp_eTQl_
+[2025-08-09T10:02:14.715Z] 🔍 Session User: VolgoFolak
+[2025-08-09T10:02:14.716Z] 🔍 Check session called: User found
+[2025-08-09T10:02:15.517Z] 📝 POST /api/session/keep-alive - Session ID: l1Z7GZ8fthsvcTpJ3E6Bhzthsp_eTQl_
+[2025-08-09T10:02:15.544Z] 🔍 Session User: VolgoFolak
+[2025-08-09T10:07:16.369Z] 📝 POST /api/session/keep-alive - Session ID: l1Z7GZ8fthsvcTpJ3E6Bhzthsp_eTQl_
+[2025-08-09T10:07:16.385Z] 🔍 Session User: VolgoFolak
+[2025-08-09T10:07:38.181Z] 📝 GET /.well-known/appspecific/com.chrome.devtools.json - Session ID: l1Z7GZ8fthsvcTpJ3E6Bhzthsp_eTQl_
+[2025-08-09T10:07:38.190Z] 🔍 Session User: VolgoFolak
+[2025-08-09T10:07:38.616Z] 📝 GET /js/lib/axios.min.js.map - Session ID: l1Z7GZ8fthsvcTpJ3E6Bhzthsp_eTQl_
+[2025-08-09T10:07:38.623Z] 🔍 Session User: VolgoFolak
+[2025-08-09T10:07:44.068Z] 📝 GET /causes - Session ID: l1Z7GZ8fthsvcTpJ3E6Bhzthsp_eTQl_
+[2025-08-09T10:07:44.068Z] 🔍 Session User: VolgoFolak
+[2025-08-09T10:07:44.312Z] 📝 GET /.well-known/appspecific/com.chrome.devtools.json - Session ID: l1Z7GZ8fthsvcTpJ3E6Bhzthsp_eTQl_
+[2025-08-09T10:07:44.349Z] 🔍 Session User: VolgoFolak
+[2025-08-09T10:07:44.747Z] 📝 GET /js/lib/axios.min.js.map - Session ID: l1Z7GZ8fthsvcTpJ3E6Bhzthsp_eTQl_
+[2025-08-09T10:07:44.885Z] 🔍 Session User: VolgoFolak
+[2025-08-09T10:07:44.971Z] 📝 GET /api/check-session - Session ID: l1Z7GZ8fthsvcTpJ3E6Bhzthsp_eTQl_
+[2025-08-09T10:07:44.999Z] 🔍 Session User: VolgoFolak
+[2025-08-09T10:07:45.001Z] 🔍 Check session called: User found
+[2025-08-09T10:07:46.330Z] 📝 POST /api/session/keep-alive - Session ID: l1Z7GZ8fthsvcTpJ3E6Bhzthsp_eTQl_
+[2025-08-09T10:07:46.383Z] 🔍 Session User: VolgoFolak
+[2025-08-09T10:07:46.566Z] 📝 GET /me - Session ID: l1Z7GZ8fthsvcTpJ3E6Bhzthsp_eTQl_
+[2025-08-09T10:07:46.579Z] 🔍 Session User: VolgoFolak
+[2025-08-09T10:07:46.584Z] 📝 GET /api/stripe/status - Session ID: l1Z7GZ8fthsvcTpJ3E6Bhzthsp_eTQl_
+[2025-08-09T10:07:46.595Z] 🔍 Session User: VolgoFolak
+[2025-08-09T10:12:47.256Z] 📝 POST /api/session/keep-alive - Session ID: l1Z7GZ8fthsvcTpJ3E6Bhzthsp_eTQl_
+[2025-08-09T10:12:47.284Z] 🔍 Session User: VolgoFolak
+[2025-08-09T10:17:47.428Z] 📝 POST /api/session/keep-alive - Session ID: l1Z7GZ8fthsvcTpJ3E6Bhzthsp_eTQl_
+[2025-08-09T10:17:47.449Z] 🔍 Session User: VolgoFolak

@@ -1,0 +1,1503 @@
+/**
+ * Módulo para renderizar tarjetas y modales de causas
+ * Template basado EXACTO en views/causes/index.njk
+ */
+
+class CausesRenderer {
+  constructor() {
+    this.causes = [];
+    this.currentFilter = "all";
+    this.supabase = null;
+    this.initSupabase();
+  }
+
+  /**
+   * Inicializa la conexión con Supabase
+   */
+  async initSupabase() {
+    // Esperar a que Supabase esté disponible
+    if (window.supabase) {
+      this.supabase = window.supabase;
+      return;
+    }
+
+    // Si no está disponible, esperar al evento
+    return new Promise((resolve) => {
+      if (window.supabaseReady) {
+        this.supabase = window.supabase;
+        resolve();
+      } else {
+        document.addEventListener('supabaseReady', () => {
+          this.supabase = window.supabase;
+          resolve();
+        }, { once: true });
+      }
+    });
+  }
+
+  /**
+   * Verifica que Supabase esté listo
+   */
+  async ensureSupabase() {
+    if (!this.supabase) {
+      await this.initSupabase();
+    }
+    return this.supabase;
+  }
+
+  /**
+   * Renderiza una grilla de tarjetas de causas (EXACTO al código original)
+   */
+  renderGrid(causes, container, options = {}) {
+    this.causes = causes;
+    container.innerHTML = '';
+
+    if (!causes || causes.length === 0) {
+      container.innerHTML = '<div style="color:#6b7280;text-align:center;padding:2rem;grid-column:1/-1;">No se encontraron causas.</div>';
+      return;
+    }
+
+    // Aplicar estilos de grid si no existen
+    if (!container.classList.contains('causes-grid')) {
+      container.className = 'causes-grid';
+      this.injectGridStyles();
+    }
+
+    causes.forEach(cause => {
+      const card = this.createCauseCard(cause, options);
+      container.appendChild(card);
+    });
+
+    // Guardar causas globalmente para compatibilidad
+    window.causes = causes;
+
+    this.attachEventListeners(container);
+  }
+
+  /**
+   * Crea una tarjeta individual de causa (EXACTO al template original)
+   */
+  createCauseCard(cause, options = {}) {
+    const progress = cause.goal ? Math.min(Math.round((cause.raised / cause.goal) * 100), 100) : 0;
+    const urgentBadge = cause.urgent ? `<div class="cause-badge urgent"><i class="fas fa-exclamation-circle"></i> Urgente</div>` : "";
+    const pointsBadge = `<div class="cause-badge points"><i class="fas fa-star"></i> +${cause.points || 0} pts</div>`;
+    const location = cause.city && cause.country ? `${cause.city}, ${cause.country}` : "";
+    const isAdmin = ['founder','admin','coordinator'].includes(cause.userRole);
+
+    // ✅ SOLO 2 BOTONES: Ver más y Donar/Administrar
+    const viewMoreBtn = `
+      <button class="btn btn-primary view-more-btn" data-cause-id="${cause.id}">
+        Ver más
+      </button>
+    `;
+
+    const actionBtn = isAdmin ? `
+      <button class="btn btn-accent admin-activity-btn" data-activity-type="cause" data-activity-id="${cause.id}">
+        Administrar
+      </button>
+    ` : `
+      <button class="btn btn-accent donate-btn" data-cause-id="${cause.id}" data-stripe-enabled="${cause.stripe_accounts?.[0]?.charges_enabled ? 'true' : 'false'}" data-stripe-account="${cause.stripe_accounts?.[0]?.stripe_account_id || ''}">
+        Donar
+      </button>
+    `;
+
+    const card = document.createElement('div');
+    card.className = 'cause-card';
+    card.innerHTML = `
+      <div class="cause-image">
+        <img src="${cause.photo_url || '/img/causa-default.jpg'}" alt="${cause.title}" 
+             onerror="if (!this._defaulted) { this._defaulted = true; this.src='/img/causa-default.jpg'; }">
+        ${urgentBadge}
+        ${pointsBadge}
+      </div>
+      <div class="cause-content">
+        <h3>${cause.title}</h3>
+        <p>${cause.short_description || ''}</p>
+        <div class="cause-meta">
+          <div class="meta-item"><i class="fas fa-map-marker-alt"></i> ${location}</div>
+          <div class="meta-item"><i class="fas fa-users"></i> ${cause.donors || 0} donantes</div>
+          <div class="beneficiaries-count">
+            <i class="fas fa-heart"></i> Beneficia a ${cause.beneficiaries || 0} personas
+          </div>
+        </div>
+        <div class="cause-progress">
+          <div class="progress-bar">
+            <div class="progress-fill" style="width: ${progress}%"></div>
+          </div>
+          <div class="progress-info">
+            <span>${progress}% completado</span>
+            <span>${cause.raised || 0} € de ${cause.goal || 0} €</span>
+          </div>
+        </div>
+        <div class="cause-actions">
+          ${viewMoreBtn}
+          ${actionBtn}
+        </div>
+      </div>
+    `;
+
+    return card;
+  }
+
+  /**
+   * Muestra el modal con EXACTO el template del código original
+   */
+  async showModal(causeId, activeTab = 'details') {
+    const cause = window.causes?.find(c => c.id == causeId);
+    if (!cause) {
+      console.error('❌ Causa no encontrada:', causeId);
+      return;
+    }
+
+    // Espera a que Supabase esté disponible
+    await this.ensureSupabase();
+
+    // Obtener donantes de Supabase usando this.supabase
+    const { data: donors, error: donorsError } = await this.supabase
+      .from('causes_members')
+      .select('user_id, profiles(username, photo_url)')
+      .eq('cause_id', causeId)
+      .eq('role', 'donor')
+      .eq('status', 'active');
+
+    let donorsHtml = '';
+    if (donorsError) {
+      donorsHtml = `<div style="color:#e53e3e;">Error al cargar los donantes.</div>`;
+    } else if (!donors || donors.length === 0) {
+      donorsHtml = `<div style="color:#6b7280;">Aún no hay donantes para esta causa.</div>`;
+    } else {
+      donorsHtml = `
+        <div style="display:flex; flex-wrap:wrap; gap:1rem; margin-top:1rem;">
+          ${donors.map(d => `
+            <div style="display:flex; align-items:center; gap:0.6rem; background:#f8fafc; border-radius:8px; padding:0.5rem 1rem;">
+              <img src="${d.profiles?.photo_url || '/img/avatar-default.png'}" alt="${d.profiles?.username}" style="width:32px; height:32px; border-radius:50%; object-fit:cover;">
+              <span style="font-weight:600; color:#4a6fa5;">${d.profiles?.username || 'Usuario'}</span>
+            </div>
+          `).join('')}
+        </div>
+      `;
+    }
+
+    const progress = cause.goal ? Math.min(Math.round((cause.raised / cause.goal) * 100), 100) : 0;
+    const createdDate = new Date(cause.created_at).toLocaleDateString('es-ES', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric'
+    });
+
+    // Obtener o crear el modal
+    const modal = this.getOrCreateModal();
+    const modalBody = modal.querySelector('#modalBody');
+
+    modalBody.innerHTML = `
+      <div class="modal-cause-container">
+        <h1 class="modal-cause-title" style="font-size:2rem; font-weight:800; color:var(--primary); margin-bottom:2rem; text-align:center;">${cause.title}</h1>
+        <div class="modal-cause-header" style="display:flex; gap:2rem; margin-bottom:2rem; flex-wrap:wrap;">
+          <div class="modal-cause-image-wrapper" style="flex:1; min-width:320px; height:280px; border-radius:12px; overflow:hidden; position:relative; box-shadow:0 4px 12px rgba(0,0,0,0.08);">
+            <img class="modal-cause-image" src="${cause.photo_url || '/img/causa-default.jpg'}" 
+                 alt="Imagen de la causa ${cause.title}"
+                 style="width:100%;height:100%;object-fit:cover;"
+                 onerror="this.src='/img/causa-default.jpg'">
+            ${cause.urgent ? `<div class="modal-cause-badge urgent" style="position:absolute; top:1.5rem; right:1.5rem; background:var(--urgent); color:white; padding:0.5rem 1rem; border-radius:50px; font-size:0.9rem; font-weight:600; display:flex; align-items:center; gap:0.6rem; box-shadow:0 2px 8px rgba(0,0,0,0.1); z-index:2;"><i class="fas fa-exclamation-circle"></i> Urgente</div>` : ''}
+          </div>
+          <div class="modal-cause-info" style="flex:1.5; display:flex; flex-direction:column;">
+            <div class="modal-cause-progress-container" style="background:#f8fafc; padding:1.5rem; border-radius:12px; margin-bottom:1.5rem; border:1px solid #e5e7eb;">
+              <div class="progress-bar">
+                <div class="progress-fill" style="width: ${progress}%"></div>
+              </div>
+              <div class="progress-info">
+                <span>${progress}% completado</span>
+                <span>${cause.raised || 0} € de ${cause.goal || 0} €</span>
+              </div>
+            </div>
+            <div class="modal-cause-meta-grid" style="display:grid; grid-template-columns:1fr 1fr; gap:1.2rem; margin-bottom:1.5rem;">
+              <div class="meta-item"><i class="fas fa-map-marker-alt" style="color:var(--primary);"></i> ${cause.city || 'Sin ubicación'}${cause.country ? ', ' + cause.country : ''}</div>
+              <div class="meta-item"><i class="fas fa-users" style="color:var(--primary);"></i> ${cause.donors || 0} donantes</div>
+              <div class="meta-item"><i class="fas fa-heart" style="color:var(--primary);"></i> ${cause.beneficiaries || 0} beneficiarios</div>
+              <div class="meta-item"><i class="fas fa-calendar-alt" style="color:var(--primary);"></i> ${createdDate}</div>
+            </div>
+            <div class="points-notice" style="background:#f0f9ff; border-left:4px solid var(--accent); padding:1rem; border-radius:0 8px 8px 0; font-size:0.95rem; display:flex; align-items:center; gap:0.7rem;">
+              <i class="fas fa-star" style="color:var(--accent);"></i>
+              Cada euro donado recibirá <strong>${cause.points || 20} puntos</strong> de impacto
+            </div>
+          </div>
+        </div>
+        <div class="modal-tabs">
+          <button class="tab-btn ${activeTab === 'details' ? 'active' : ''}" data-tab="details">
+            <i class="fas fa-info-circle"></i> Detalles
+          </button>
+          <button class="tab-btn ${activeTab === 'donations' ? 'active' : ''}" data-tab="donations">
+            <i class="fas fa-donate"></i> Donaciones
+          </button>
+          <button class="tab-btn ${activeTab === 'participants' ? 'active' : ''}" data-tab="participants">
+            <i class="fas fa-users"></i> Participantes
+          </button>
+        </div>
+        <div class="tab-content ${activeTab === 'details' ? 'active' : ''}" id="detailsTab">
+          <div class="modal-cause-content">
+            <div class="content-section">
+              <h3 class="content-title"><i class="fas fa-align-left"></i> Resumen</h3>
+              <p class="content-text">${cause.short_description || 'No hay resumen disponible para esta causa.'}</p>
+            </div>
+            <div class="content-section">
+              <h3 class="content-title"><i class="fas fa-info-circle"></i> Descripción completa</h3>
+              <p class="content-text">${cause.description || 'No hay descripción detallada disponible para esta causa.'}</p>
+            </div>
+            ${(cause.contact_email || cause.phone_number) ? `
+              <div class="content-section">
+                <h3 class="content-title"><i class="fas fa-address-book"></i> Información de contacto</h3>
+                <div style="background:#f8fafc; border-radius:12px; padding:1.5rem; border:1px solid #e5e7eb; text-align:left;">
+                  ${cause.contact_email ? `
+                    <div style="display:flex; align-items:center; gap:0.7rem; margin-bottom:${cause.phone_number ? '1rem' : '0'};">
+                      <i class="fas fa-envelope" style="color:var(--primary); font-size:1.1rem;"></i>
+                      <div>
+                        <span style="color:#6b7280; font-size:0.9rem; display:block;">Email de contacto:</span>
+                        <a href="mailto:${cause.contact_email}" style="color:var(--primary); font-weight:600; text-decoration:none; font-size:1rem;">
+                          ${cause.contact_email}
+                        </a>
+                      </div>
+                    </div>
+                  ` : ''}
+                  ${cause.phone_number ? `
+                    <div style="display:flex; align-items:center; gap:0.7rem;">
+                      <i class="fas fa-phone" style="color:var(--primary); font-size:1.1rem;"></i>
+                      <div>
+                        <span style="color:#6b7280; font-size:0.9rem; display:block;">Teléfono de contacto:</span>
+                        <a href="tel:${cause.phone_number}" style="color:var(--primary); font-weight:600; text-decoration:none; font-size:1rem;">
+                          ${cause.phone_number}
+                        </a>
+                      </div>
+                    </div>
+                  ` : ''}
+                </div>
+              </div>
+            ` : ''}
+          </div>
+        </div>
+        <div class="tab-content ${activeTab === 'donations' ? 'active' : ''}" id="donationsTab">
+          <div class="content-section">
+            <h3 class="content-title"><i class="fas fa-donate"></i> Cómo donar</h3>
+            ${cause.stripe_accounts?.[0]?.charges_enabled ? `
+              <div class="stripe-donation-section">
+                <p>Puedes donar de forma segura con tarjeta de crédito/débito:</p>
+                <div class="donation-amount-selector" style="margin:1.5rem 0;">
+                  <div class="amount-buttons" style="display:flex; gap:0.8rem; margin-bottom:1rem; flex-wrap:wrap;">
+                    <button class="amount-btn" data-amount="5">5€</button>
+                    <button class="amount-btn" data-amount="10">10€</button>
+                    <button class="amount-btn" data-amount="20">20€</button>
+                    <button class="amount-btn" data-amount="50">50€</button>
+                    <button class="amount-btn" data-amount="100">100€</button>
+                  </div>
+                  <div class="custom-amount" style="display:flex; gap:0.5rem; margin-bottom:1rem;">
+                    <input type="number" id="customAmount" placeholder="Otra cantidad" min="1" max="10000" style="flex:1; padding:0.7rem; border:1px solid #e5e7eb; border-radius:6px;">
+                    <span style="display:flex; align-items:center; color:#6b7280;">€</span>
+                  </div>
+                  <button id="donateCauseBtn" class="btn btn-primary" style="width:100%;" data-cause-id="${cause.id}">
+                    <i class="fas fa-credit-card"></i> Donar con tarjeta
+                  </button>
+                </div>
+              </div>
+            ` : ''}
+            ${cause.how_to_donate ? `
+              <div class="other-donation-methods">
+                <h4>Métodos de donación:</h4>
+                <div class="donation-method">${cause.how_to_donate}</div>
+              </div>
+            ` : `
+              <p>No hay métodos de donación especificados para esta causa.</p>
+            `}
+          </div>
+        </div>
+        <div class="tab-content ${activeTab === 'participants' ? 'active' : ''}" id="participantsTab">
+          <div class="content-section">
+            <h3 class="content-title"><i class="fas fa-users"></i> Donantes</h3>
+            ${donorsHtml}
+          </div>
+        </div>
+        <div class="cause-actions" style="display:flex; gap:0.8rem; margin-top:2rem;">
+          <button class="btn btn-primary" style="flex:1;" onclick="window.causesRenderer.openDonationModal('${cause.id}')">
+            <i class="fas fa-donate"></i> Donar ahora
+          </button>
+          <button class="btn btn-accent" style="flex:1;" onclick="window.joinCause('${cause.id}')">
+            <i class="fas fa-hands-helping"></i> Participar
+          </button>
+          <button class="btn btn-outline" style="flex:1;" onclick="window.causesRenderer.shareCause('${cause.id}')">
+            <i class="fas fa-share-alt"></i> Compartir
+          </button>
+        </div>
+        <div class="share-section" id="shareSection" style="text-align:left;"></div>
+      </div>
+    `;
+
+    // Adjuntar eventos de pestañas
+    modal.querySelectorAll('.tab-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const tabName = btn.dataset.tab;
+        
+        // Actualizar pestañas activas
+        modal.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+        modal.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+        
+        btn.classList.add('active');
+        modal.querySelector(`#${tabName}Tab`).classList.add('active');
+      });
+    });
+
+    // Adjuntar eventos de donación
+    this.attachDonationEvents(modal, cause);
+
+    modal.style.display = 'flex';
+    document.body.style.overflow = 'hidden';
+
+    // Actualizar URL si estamos en la página de causas
+    if (window.location.pathname === '/causes' || window.location.pathname === '/causes/') {
+      window.history.pushState({}, '', `/causes/${causeId}`);
+    }
+  }
+
+  /**
+   * Obtiene o crea el modal reutilizable (EXACTO estructura original)
+   */
+  getOrCreateModal() {
+    let modal = document.getElementById('causeModal');
+    if (!modal) {
+      modal = document.createElement('div');
+      modal.id = 'causeModal';
+      modal.className = 'modal';
+      modal.style.cssText = 'display:none; position:fixed; z-index:9999; left:0; top:0; width:100vw; height:100vh; background:rgba(0,0,0,0.35); align-items:center; justify-content:center;';
+      
+      modal.innerHTML = `
+        <div class="modal-content" style="background:#fff; border-radius:18px; max-width:900px; width:95vw; padding:2rem; box-shadow:0 8px 32px rgba(74,111,165,0.13); position:relative; max-height:90vh; overflow-y:auto;">
+          <button id="closeModal" style="position:absolute; top:1.5rem; right:1.5rem; background:none; border:none; font-size:1.8rem; color:#6b7280; cursor:pointer; transition:color 0.2s;" onmouseover="this.style.color='#4a6fa5'" onmouseout="this.style.color='#6b7280'">&times;</button>
+          <div id="modalBody" style="padding:0.5rem;">
+            <!-- Contenido dinámico -->
+          </div>
+        </div>
+      `;
+      
+      document.body.appendChild(modal);
+      this.attachModalEvents(modal);
+    }
+    return modal;
+  }
+
+  /**
+   * Adjunta eventos al modal
+   */
+  attachModalEvents(modal) {
+    // Cerrar con botón X
+    const closeBtn = modal.querySelector('#closeModal');
+    if (closeBtn) {
+      closeBtn.onclick = () => this.closeModal();
+    }
+
+    // Cerrar al hacer click fuera del modal
+    modal.onclick = (e) => {
+      if (e.target === modal) {
+        this.closeModal();
+      }
+    };
+  }
+
+  /**
+   * Cierra el modal y limpia la URL
+   */
+  closeModal() {
+    const modal = document.getElementById('causeModal');
+    if (modal) {
+      modal.style.display = 'none';
+      document.body.style.overflow = '';
+      
+      // Limpiar URL si es necesario
+      if (window.location.pathname.includes('/causes/') && window.location.pathname !== '/causes') {
+        window.history.pushState({}, '', '/causes');
+      }
+    }
+  }
+
+  /**
+   * Modal profesional de donación con Stripe - CORREGIDO
+   */
+  openDonationModal(causeId) {
+    console.log('🎯 Abriendo modal de donación para causa:', causeId);
+    
+    const cause = window.causes?.find(c => c.id == causeId);
+    if (!cause) {
+      this.showNotification('Causa no encontrada', 'error');
+      return;
+    }
+
+    // Verificar si ya existe y eliminarlo
+    const existingModal = document.getElementById('stripeDonationModal');
+    if (existingModal) {
+      existingModal.remove();
+    }
+
+    // Crear modal con las clases correctas del CSS
+    const modal = document.createElement('div');
+    modal.id = 'stripeDonationModal';
+    modal.className = 'modal-bg';
+    modal.style.cssText = `
+      display: flex;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(0, 0, 0, 0.5);
+      z-index: 10000;
+      align-items: center;
+      justify-content: center;
+    `;
+    
+    modal.innerHTML = `
+      <div class="modal-content donation-modal">
+        <button class="close-modal" id="closeDonationModal">&times;</button>
+        
+        <!-- Header con logo de causa -->
+        <div class="donation-header">
+          <div class="donation-cause-image">
+            <img src="${cause.photo_url || '/img/causa-default.jpg'}" alt="${cause.title}">
+          </div>
+          <div class="donation-cause-info">
+            <h2>${cause.title}</h2>
+            <p>${cause.short_description || ''}</p>
+            <div class="cause-progress-mini">
+              <div class="progress-bar-mini">
+                <div class="progress-fill-mini" style="width: ${cause.goal ? Math.min((cause.raised || 0) / cause.goal * 100, 100) : 0}%"></div>
+              </div>
+              <span class="progress-text-mini">${cause.raised || 0}€ recaudados de ${cause.goal || 0}€</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Formulario de donación -->
+        <div class="donation-form">
+          <h3><i class="fas fa-heart"></i> Tu donación</h3>
+          
+          <!-- Botones de cantidad predefinida -->
+          <div class="amount-buttons">
+            <button class="amount-btn" data-amount="5">5€</button>
+            <button class="amount-btn" data-amount="10">10€</button>
+            <button class="amount-btn" data-amount="25">25€</button>
+            <button class="amount-btn" data-amount="50">50€</button>
+            <button class="amount-btn" data-amount="100">100€</button>
+          </div>
+          
+          <!-- Cantidad personalizada -->
+          <div class="custom-amount-section">
+            <label for="customAmount">Otra cantidad:</label>
+            <div class="amount-input-wrapper">
+              <input type="number" id="customAmount" min="1" max="10000" step="0.01" placeholder="0.00">
+              <span class="currency">€</span>
+            </div>
+          </div>
+
+          <!-- Información del donante (opcional) -->
+          <div class="donor-info-section">
+            <h4><i class="fas fa-user"></i> Información del donante (opcional)</h4>
+            <div class="form-row">
+              <input type="text" id="donorName" placeholder="Tu nombre" maxlength="100">
+              <input type="email" id="donorEmail" placeholder="Tu email (para recibo)" maxlength="150">
+            </div>
+            <textarea id="donorMessage" placeholder="Mensaje de apoyo (opcional)" maxlength="500" rows="3"></textarea>
+          </div>
+
+          <!-- Información de procesamiento -->
+          <div class="payment-info">
+            <div class="stripe-badge">
+              <i class="fab fa-stripe"></i>
+              <span>Procesado de forma segura por Stripe</span>
+            </div>
+            <div class="fee-info">
+              <i class="fas fa-info-circle"></i>
+              <span>Comisión de procesamiento: 2.9% + €0.30</span>
+            </div>
+          </div>
+
+          <!-- Botón de donación -->
+          <button id="proceedToDonationBtn" class="btn btn-donation" disabled>
+            <i class="fas fa-credit-card"></i>
+            <span>Proceder al pago seguro</span>
+          </button>
+        </div>
+
+        <!-- Footer con garantías -->
+        <div class="donation-footer">
+          <div class="security-badges">
+            <div class="security-item">
+              <i class="fas fa-shield-alt"></i>
+              <span>Pago seguro SSL</span>
+            </div>
+            <div class="security-item">
+              <i class="fas fa-lock"></i>
+              <span>Datos protegidos</span>
+            </div>
+            <div class="security-item">
+              <i class="fas fa-receipt"></i>
+              <span>Recibo automático</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    `;
+
+    document.body.appendChild(modal);
+    document.body.style.overflow = 'hidden';
+
+    // Configurar eventos del modal
+    this.setupDonationModalEvents(modal, cause);
+  }
+
+  /**
+   * Configurar eventos del modal de donación - CORREGIDO
+   */
+  setupDonationModalEvents(modal, cause) {
+    let selectedAmount = 0;
+
+    // Cerrar modal
+    const closeBtn = modal.querySelector('#closeDonationModal');
+    closeBtn.onclick = () => this.closeDonationModal();
+    
+    modal.onclick = (e) => {
+      if (e.target === modal) this.closeDonationModal();
+    };
+
+    // Botones de cantidad predefinida
+    const amountButtons = modal.querySelectorAll('.amount-btn');
+    amountButtons.forEach(btn => {
+      btn.addEventListener('click', () => {
+        // Remover selección anterior
+        amountButtons.forEach(b => b.classList.remove('selected'));
+        // Seleccionar actual
+        btn.classList.add('selected');
+        selectedAmount = parseFloat(btn.dataset.amount);
+        
+        // Limpiar cantidad personalizada
+        modal.querySelector('#customAmount').value = '';
+        
+        // Habilitar botón de donación
+        this.updateDonationButton(modal, selectedAmount);
+      });
+    });
+
+    // Cantidad personalizada
+    const customAmountInput = modal.querySelector('#customAmount');
+    customAmountInput.addEventListener('input', (e) => {
+      selectedAmount = parseFloat(e.target.value) || 0;
+      
+      // Remover selección de botones predefinidos
+      amountButtons.forEach(b => b.classList.remove('selected'));
+      
+      // Actualizar botón de donación
+      this.updateDonationButton(modal, selectedAmount);
+    });
+
+    // Botón de proceder al pago
+    const proceedBtn = modal.querySelector('#proceedToDonationBtn');
+    proceedBtn.addEventListener('click', async () => {
+      const amount = selectedAmount;
+      
+      if (!amount || amount < 1 || amount > 10000) {
+        this.showNotification('Por favor, introduce una cantidad válida entre €1 y €10,000', 'error');
+        return;
+      }
+
+      await this.processDonation(cause, amount, modal);
+    });
+  }
+
+  /**
+   * Actualizar estado del botón de donación
+   */
+  updateDonationButton(modal, amount) {
+    const btn = modal.querySelector('#proceedToDonationBtn');
+    const isValid = amount >= 1 && amount <= 10000;
+    
+    btn.disabled = !isValid;
+    
+    if (isValid) {
+      btn.innerHTML = `
+        <i class="fas fa-credit-card"></i>
+        <span>Donar ${amount.toFixed(2)}€ de forma segura</span>
+      `;
+      btn.classList.remove('disabled');
+    } else {
+      btn.innerHTML = `
+        <i class="fas fa-credit-card"></i>
+        <span>Introduce una cantidad válida</span>
+      `;
+      btn.classList.add('disabled');
+    }
+  }
+
+  /**
+   * Procesar donación con Stripe - NO REQUIERE LOGIN
+   */
+  async processDonation(cause, amount, modal) {
+    try {
+      const proceedBtn = modal.querySelector('#proceedToDonationBtn');
+      const originalText = proceedBtn.innerHTML;
+      
+      // Mostrar estado de carga
+      proceedBtn.disabled = true;
+      proceedBtn.innerHTML = `
+        <i class="fas fa-spinner fa-spin"></i>
+        <span>Procesando...</span>
+      `;
+
+      // Recopilar datos del formulario
+      const donorName = modal.querySelector('#donorName').value.trim();
+      const donorEmail = modal.querySelector('#donorEmail').value.trim();
+      const donorMessage = modal.querySelector('#donorMessage').value.trim();
+
+      // Validar email si se proporciona
+      if (donorEmail && !this.isValidEmail(donorEmail)) {
+        throw new Error('Por favor, introduce un email válido');
+      }
+
+      console.log('💳 Iniciando donación:', { causeId: cause.id, amount, donorName, donorEmail });
+
+      // Crear sesión de checkout SIN verificar login
+      const response = await fetch('/api/stripe/create-checkout', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+        body: JSON.stringify({
+          causeId: cause.id,
+          amount: amount,
+          currency: 'eur',
+          donorName: donorName || undefined,
+          donorEmail: donorEmail || undefined,
+          message: donorMessage || undefined
+        })
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.error || 'Error procesando la donación');
+      }
+
+      if (!data.url) {
+        throw new Error('No se recibió URL de pago de Stripe');
+      }
+
+      console.log('✅ Sesión de checkout creada, redirigiendo...');
+      
+      // Guardar datos de la donación en localStorage para el callback
+      localStorage.setItem('pendingDonation', JSON.stringify({
+        causeId: cause.id,
+        causeTitle: cause.title,
+        amount: amount,
+        timestamp: Date.now()
+      }));
+
+      // Redirigir a Stripe Checkout
+      window.location.href = data.url;
+
+    } catch (error) {
+      console.error('❌ Error procesando donación:', error);
+      
+      // Restaurar botón
+      const proceedBtn = modal.querySelector('#proceedToDonationBtn');
+      proceedBtn.disabled = false;
+      proceedBtn.innerHTML = `
+        <i class="fas fa-credit-card"></i>
+        <span>Donar ${amount.toFixed(2)}€ de forma segura</span>
+      `;
+      
+      // Mostrar error específico
+      let errorMessage = 'Error procesando la donación. Por favor, inténtalo de nuevo.';
+      
+      if (error.message.includes('NO_STRIPE_ACCOUNT')) {
+        errorMessage = 'Esta causa no tiene configurado el sistema de pagos.';
+      } else if (error.message.includes('STRIPE_NOT_ACTIVE')) {
+        errorMessage = 'El sistema de pagos de esta causa está pendiente de activación.';
+      } else if (error.message.includes('email')) {
+        errorMessage = error.message;
+      }
+      
+      this.showNotification(errorMessage, 'error');
+    }
+  }
+
+  /**
+   * Cerrar modal de donación
+   */
+  closeDonationModal() {
+    const modal = document.getElementById('stripeDonationModal');
+    if (modal) {
+      modal.remove();
+      document.body.style.overflow = '';
+    }
+  }
+
+  /**
+   * Validar email
+   */
+  isValidEmail(email) {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+  }
+
+  /**
+   * Adjunta event listeners a las tarjetas - CORREGIDO
+   */
+  attachEventListeners(container) {
+    // Botones "Ver más" - CORREGIDO
+    container.querySelectorAll('.view-more-btn').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        const causeId = btn.getAttribute('data-cause-id');
+        console.log('🔍 Ver más causa:', causeId);
+        this.showModal(causeId);  // Usar showModal, no showCauseModal
+      });
+    });
+
+    // Botones "Donar" - CORREGIDO - NO verificar login
+    container.querySelectorAll('.donate-btn').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        const causeId = btn.getAttribute('data-cause-id');
+        console.log('💰 Donar a causa:', causeId);
+        
+        // Llamar directamente al modal de donación
+        this.openDonationModal(causeId);
+      });
+    });
+
+// Botones "Administrar" - CORREGIDO
+    container.querySelectorAll('.admin-activity-btn').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        const activityId = btn.getAttribute('data-activity-id');
+        if (typeof window.openAdminModal === 'function') {
+          const cause = this.causes?.find(c => c.id == activityId);
+          if (cause) window.openAdminModal(cause);
+        } else {
+          console.log('Modal de administración no disponible');
+          // Fallback: abrir modal de detalles
+          this.showModal(activityId);
+        }
+      });
+    });
+  }
+
+  /**
+   * Adjunta eventos de donación al modal
+   */
+  attachDonationEvents(modal, cause) {
+    let selectedAmount = 0;
+
+    // Botones de cantidad predefinida
+    modal.querySelectorAll('.amount-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        modal.querySelectorAll('.amount-btn').forEach(b => b.classList.remove('selected'));
+        btn.classList.add('selected');
+        selectedAmount = parseFloat(btn.dataset.amount);
+        modal.querySelector('#customAmount').value = '';
+      });
+    });
+
+    // Campo de cantidad personalizada
+    const customAmountInput = modal.querySelector('#customAmount');
+    if (customAmountInput) {
+      customAmountInput.addEventListener('input', (e) => {
+        selectedAmount = parseFloat(e.target.value) || 0;
+        modal.querySelectorAll('.amount-btn').forEach(b => b.classList.remove('selected'));
+      });
+    }
+
+    // Botón de donar principal
+    const donateBtn = modal.querySelector('#donateCauseBtn');
+    if (donateBtn) {
+      donateBtn.addEventListener('click', async () => {
+        const amount = selectedAmount || parseFloat(customAmountInput?.value) || 0;
+        
+        if (!amount || amount < 1 || amount > 10000) {
+          this.showNotification('Por favor, introduce una cantidad válida entre 1€ y 10.000€', 'error');
+          return;
+        }
+
+        // NO verificar sesión - permitir donaciones anónimas
+        await this.processDonationFromModal(cause.id, amount);
+      });
+    }
+  }
+
+  /**
+   * Procesar donación desde modal interno
+   */
+  async processDonationFromModal(causeId, amount) {
+    try {
+      this.showNotification('Procesando donación...', 'info');
+
+      // Crear sesión de checkout
+      const response = await fetch('/api/stripe/create-checkout', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+        body: JSON.stringify({
+          causeId,
+          amount,
+          currency: 'eur'
+        })
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'Error procesando la donación');
+      }
+
+      const { url } = await response.json();
+      
+      // Redirigir a Stripe Checkout
+      window.location.href = url;
+
+    } catch (error) {
+      console.error('Error en donación:', error);
+      this.showNotification(`Error: ${error.message}`, 'error');
+    }
+  }
+
+  /**
+   * Compartir causa (igual que en tareas)
+   */
+  shareCause(causeId) {
+    const cause = window.causes?.find(c => c.id == causeId);
+    if (!cause) {
+      console.error('❌ No se encontró la causa con ID:', causeId);
+      return;
+    }
+    
+    console.log('🔗 Compartiendo causa:', cause);
+    
+    if (window.renderCompartir) {
+      window.renderCompartir({
+        title: cause.title,
+        summary: cause.short_description || cause.description?.substring(0, 120) + '...',
+        photo_url: cause.photo_url || '/img/causa-default.jpg',
+        link: `${window.location.origin}/causes/${cause.id}`,
+        type: 'causa'
+      }, 'shareSection');
+      
+      // Scroll suave hacia la sección de compartir
+      document.getElementById('shareSection').scrollIntoView({ 
+        behavior: 'smooth', 
+        block: 'center' 
+      });
+    } else {
+      // Fallback si no está compartir.js
+      const link = `${window.location.origin}/causes/${cause.id}`;
+      navigator.clipboard.writeText(link).then(() => {
+        this.showNotification('¡Enlace copiado al portapapeles!', 'success');
+      }).catch(() => {
+        prompt('Copia este enlace:', link);
+      });
+    }
+  }
+
+  /**
+   * Muestra notificaciones
+   */
+  showNotification(message, type = 'info', duration = 3000) {
+    const notification = document.createElement('div');
+    notification.className = `notification ${type}`;
+    notification.style.cssText = `
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      padding: 1rem 1.5rem;
+      border-radius: 8px;
+      color: white;
+      font-weight: 600;
+      z-index: 10001;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+      ${type === 'success' ? 'background: #10b981;' : ''}
+      ${type === 'error' ? 'background: #ef4444;' : ''}
+      ${type === 'info' ? 'background: #3b82f6;' : ''}
+    `;
+    notification.textContent = message;
+    document.body.appendChild(notification);
+    
+    setTimeout(() => {
+      notification.remove();
+    }, duration);
+  }
+
+  /**
+   * Inyecta estilos CSS necesarios (TODOS los estilos del archivo original)
+   */
+  injectGridStyles() {
+    if (document.getElementById('causes-renderer-styles')) return;
+    
+    const style = document.createElement('style');
+    style.id = 'causes-renderer-styles';
+    style.textContent = `
+      /* ✅ RESTAURAR COLORES ORIGINALES */
+      :root {
+        --primary: #4a6fa5;
+        --primary-dark: #3a5a7a;
+        --gray: #e2e8f0;
+        --white: #fff;
+        --accent: #4fc3a1;
+        --accent-dark: #3da58a;
+        --urgent: #e53e3e;
+      }
+
+      .causes-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+        gap: 2rem;
+      }
+
+      .cause-card {
+        background: white;
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        transition: all 0.3s ease;
+        border: 1px solid var(--gray);
+        display: flex;
+        flex-direction: column;
+      }
+
+      .cause-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+      }
+
+      .cause-image {
+        height: 180px;
+        overflow: hidden;
+        position: relative;
+      }
+
+      .cause-image img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.3s ease;
+      }
+
+      .cause-card:hover .cause-image img {
+        transform: scale(1.05);
+      }
+
+      .cause-badge {
+        position: absolute;
+        top: 1rem;
+        right: 1rem;
+        background: rgba(255, 255, 255, 0.9);
+        padding: 0.3rem 0.8rem;
+        border-radius: 50px;
+        font-size: 0.8rem;
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+      }
+
+      .cause-badge.urgent {
+        background: var(--urgent);
+        color: white;
+      }
+
+      .cause-badge.points {
+        background: var(--primary);
+        color: white;
+        left: 1rem;
+        right: auto;
+      }
+
+      .cause-content {
+        padding: 1.5rem;
+        display: flex;
+        flex-direction: column;
+        flex: 1;
+      }
+
+      .cause-content h3 {
+        font-size: 1.3rem;
+        margin-bottom: 0.8rem;
+        color: #2d3748;
+      }
+
+      .cause-content p {
+        color: #6b7280;
+        margin-bottom: 1.5rem;
+        font-size: 0.95rem;
+        line-height: 1.6;
+        flex-grow: 1;
+      }
+
+      .cause-meta {
+        display: flex;
+        gap: 1rem;
+        margin-bottom: 1.5rem;
+        font-size: 0.85rem;
+        flex-wrap: wrap;
+      }
+
+      .meta-item {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        color: #6b7280;
+      }
+
+      .meta-item i {
+        color: var(--primary);
+      }
+
+      .beneficiaries-count {
+        display: inline-flex;
+        align-items: center;
+        background: #f0f9ff;
+        color: var(--primary);
+        padding: 0.3rem 0.8rem;
+        border-radius: 50px;
+        font-size: 0.85rem;
+        font-weight: 600;
+      }
+
+      .beneficiaries-count i {
+        margin-right: 0.3rem;
+      }
+
+      .cause-progress {
+        margin-bottom: 1.5rem;
+      }
+
+      .progress-bar {
+        height: 8px;
+        background: var(--gray);
+        border-radius: 4px;
+        overflow: hidden;
+        margin-bottom: 0.5rem;
+      }
+
+      .progress-fill {
+        height: 100%;
+        background: var(--primary);
+        border-radius: 4px;
+      }
+
+      .progress-info {
+        display: flex;
+        justify-content: space-between;
+        font-size: 0.9rem;
+        color: #6b7280;
+      }
+
+      .cause-actions {
+        display: flex;
+        gap: 0.8rem;
+      }
+
+      .cause-actions .btn {
+        flex: 1;
+        text-align: center;
+        justify-content: center;
+      }
+
+      /* Estilos de botones básicos */
+      .btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.6rem 1.2rem;
+        border-radius: 8px;
+        font-weight: 600;
+        text-decoration: none;
+        border: none;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        font-size: 0.9rem;
+      }
+
+      .btn-primary {
+        background: var(--primary);
+        color: white;
+      }
+
+      .btn-primary:hover {
+        background: var(--primary-dark);
+        transform: translateY(-2px);
+      }
+
+      .btn-accent {
+        background: var(--accent);
+        color: white;
+      }
+
+      .btn-accent:hover {
+        background: var(--accent-dark);
+        transform: translateY(-2px);
+      }
+
+      .btn-outline {
+        background: transparent;
+        color: var(--primary);
+        border: 1px solid var(--primary);
+      }
+
+      .btn-outline:hover {
+        background: var(--primary);
+        color: white;
+        transform: translateY(-2px);
+      }
+
+      /* Modal de Causa - Estilos exactos */
+      .modal {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0,0,0,0.5);
+        z-index: 1000;
+        justify-content: center;
+        align-items: center;
+      }
+
+      .modal-content {
+        background: #fff;
+        padding: 2rem;
+        border-radius: 10px;
+        max-width: 500px;
+        width: 90%;
+        text-align: center;
+      }
+
+      .modal-cause-container {
+        font-family: 'Poppins', sans-serif;
+        color: #2d3748;
+      }
+
+      .modal-cause-header {
+        display: flex;
+        gap: 2rem;
+        margin-bottom: 2rem;
+      }
+
+      .modal-cause-image-wrapper {
+        flex: 1;
+        min-width: 300px;
+        height: 280px;
+        border-radius: 12px;
+        overflow: hidden;
+        position: relative;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+      }
+
+      .modal-cause-image {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.3s ease;
+      }
+
+      .modal-cause-badge {
+        position: absolute;
+        top: 1.5rem;
+        right: 1.5rem;
+        background: rgba(255,255,255,0.95);
+        padding: 0.5rem 1rem;
+        border-radius: 50px;
+        font-size: 0.9rem;
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        gap: 0.6rem;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        z-index: 2;
+      }
+
+      .modal-cause-badge.urgent {
+        background: var(--urgent);
+        color: white;
+      }
+
+      .modal-cause-info {
+        flex: 1.5;
+        display: flex;
+        flex-direction: column;
+      }
+
+      .modal-cause-title {
+        font-size: 1.8rem;
+        font-weight: 700;
+        color: var(--primary);
+        margin-bottom: 1rem;
+        line-height: 1.3;
+      }
+
+      .modal-cause-progress-container {
+        background: #f8fafc;
+        padding: 1.5rem;
+        border-radius: 12px;
+        margin-bottom: 1.5rem;
+        border: 1px solid #e5e7eb;
+      }
+
+      .modal-cause-meta-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+        gap: 1.2rem;
+        margin-bottom: 1.5rem;
+      }
+
+      .meta-icon {
+        color: var(--primary);
+        font-size: 1.1rem;
+        width: 1.5rem;
+        text-align: center;
+      }
+
+      .points-notice {
+        background: #f0f9ff;
+        border-left: 4px solid var(--accent);
+        padding: 1rem;
+        border-radius: 0 8px 8px 0;
+        margin: 1rem 0;
+        font-size: 0.95rem;
+        display: flex;
+        align-items: center;
+        gap: 0.7rem;
+      }
+
+      .modal-cause-content { 
+        margin-top: 1.5rem; 
+      }
+
+      .content-section { 
+        margin-bottom: 2rem; 
+      }
+
+      .content-title {
+        font-size: 1.3rem;
+        font-weight: 600;
+        color: var(--primary);
+        margin-bottom: 1rem;
+        display: flex;
+        align-items: center;
+        gap: 0.7rem;
+      }
+
+      .content-text {
+        line-height: 1.7;
+        color: #4b5563;
+        font-size: 1.05rem;
+      }
+
+      /* Estilos para pestañas del modal */
+      .modal-tabs {
+        display: flex;
+        gap: 0.5rem;
+        margin-bottom: 1.5rem;
+        border-bottom: 1px solid #e5e7eb;
+        padding-bottom: 0.5rem;
+      }
+
+      .tab-btn {
+        padding: 0.7rem 1.2rem;
+        border-radius: 6px;
+        background: none;
+        border: none;
+        cursor: pointer;
+        font-weight: 600;
+        color: #6b7280;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        transition: all 0.2s;
+      }
+
+      .tab-btn:hover {
+        background: #f8fafc;
+        color: var(--primary);
+      }
+
+      .tab-btn.active {
+        background: var(--primary);
+        color: white;
+      }
+
+      .tab-content {
+        display: none;
+      }
+
+      .tab-content.active {
+        display: block;
+      }
+
+      .stripe-donation-section {
+        background: #f8fafc;
+        border-radius: 12px;
+        padding: 1.5rem;
+        margin-bottom: 1.5rem;
+        border: 1px solid #e5e7eb;
+      }
+
+      .other-donation-methods {
+        background: #f0f9ff;
+        border-radius: 12px;
+        padding: 1.5rem;
+        margin-top: 1.5rem;
+        border-left: 4px solid var(--accent);
+      }
+
+      .donation-method {
+        white-space: pre-line;
+        line-height: 1.6;
+      }
+
+      /* Responsive */
+      @media (max-width: 768px) {
+        .causes-grid {
+          grid-template-columns: 1fr;
+        }
+        
+        .cause-actions {
+          flex-direction: column;
+        }
+        
+        .modal-cause-header { 
+          flex-direction: column; 
+        }
+      }
+
+      @media (max-width: 900px) {
+        .causes-grid {
+          padding: 1.2rem 0.5rem;
+        }
+      }
+
+      /* Estilos para botones de cantidad */
+      .amount-btn {
+        padding: 0.8rem 1.2rem;
+        border: 2px solid #e5e7eb;
+        background: white;
+        border-radius: 8px;
+        cursor: pointer;
+        font-weight: 600;
+        transition: all 0.2s;
+        flex: 1;
+        min-width: 60px;
+      }
+      
+      .amount-btn:hover {
+        border-color: var(--primary);
+        background: #f8fafc;
+      }
+      
+      .amount-btn.selected {
+        border-color: var(--primary);
+        background: var(--primary);
+        color: white;
+      }
+      
+      /* Estilos para notificaciones */
+      .notification {
+        animation: slideInRight 0.3s ease-out;
+      }
+      
+      @keyframes slideInRight {
+        from {
+          transform: translateX(100%);
+          opacity: 0;
+        }
+        to {
+          transform: translateX(0);
+          opacity: 1;
+        }
+      }
+
+      /* Clase para el modal background */
+      .modal-bg {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        background: rgba(0, 0, 0, 0.5);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 10000;
+      }
+
+      .close-modal {
+        position: absolute;
+        top: 1rem;
+        right: 1rem;
+        background: none;
+        border: none;
+        font-size: 1.5rem;
+        color: #6b7280;
+        cursor: pointer;
+        z-index: 1;
+      }
+
+      .close-modal:hover {
+        color: #374151;
+      }
+    `;
+    document.head.appendChild(style);
+  }
+}
+
+// Hacer disponible globalmente
+window.CausesRenderer = CausesRenderer;
+
+// Instancia global
+window.causesRenderer = new CausesRenderer();
+
+// Funciones de compatibilidad globales - CORREGIDAS
+window.openDonationModal = function(causeId) {
+  console.log('🎯 openDonationModal global llamada para causa:', causeId);
+  
+  if (window.causesRenderer && typeof window.causesRenderer.openDonationModal === 'function') {
+    window.causesRenderer.openDonationModal(causeId);
+  } else {
+    console.error('❌ CausesRenderer no disponible');
+  }
+};
+
+// Función global para unirse a causa
+window.joinCause = function(causeId) {
+  console.log('👥 Uniéndose a causa:', causeId);
+  const cause = window.causes?.find(c => c.id == causeId);
+  if (cause) {
+    if (window.causesRenderer) {
+      window.causesRenderer.showNotification(`¡Gracias por tu interés en "${cause.title}"!`, 'success');
+    } else {
+      alert(`¡Gracias por tu interés en "${cause.title}"! Contáctanos para saber cómo puedes colaborar.`);
+    }
+  }
+};
+
+// Función global para compartir
+window.mostrarCompartir = function(causeId) {
+  if (window.causesRenderer && typeof window.causesRenderer.shareCause === 'function') {
+    window.causesRenderer.shareCause(causeId);
+  }
+};
+
+// Esperar a que Supabase esté listo antes de inicializar
+document.addEventListener('DOMContentLoaded', () => {
+  if (window.supabaseReady) {
+    console.log('✅ Inicializando causes renderer con Supabase listo');
+  } else {
+    document.addEventListener('supabaseReady', () => {
+      console.log('✅ Supabase ready, causes renderer disponible');
+    }, { once: true });
+  }
+});    

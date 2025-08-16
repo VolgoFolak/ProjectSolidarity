@@ -5,7 +5,6 @@
 {% block head %}
   {{ super() }}
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/choices.js/public/assets/styles/choices.min.css">
   <style>
     :root {
       --primary: #4a6fa5;
@@ -15,9 +14,8 @@
       --accent: #4fc3a1;
       --accent-dark: #3da58a;
       --urgent: #e53e3e;
-      --gold: #eab308;
-      --bronze: #cd7f32;
-      --radius: 12px;
+      --challenge: #f59e0b;
+      --challenge-dark: #d97706;
     }
     html, body {
       max-width: 100vw;
@@ -122,25 +120,111 @@
         max-width: 100vw !important;
         box-sizing: border-box;
       }
-      .challenges-header h1 { font-size: 1.25rem; }
-      .challenges-header { flex-direction: column; align-items: flex-start; gap: 0.7rem; }
-      .tabs { flex-direction: column; gap: 0.2rem; }
-      .tab { padding: 0.6rem 0.7rem; font-size: 0.97rem; }
-      .challenges-intro { padding: 1.1rem; }
-      .challenges-intro h2 { font-size: 1.1rem; }
-      .challenges-intro p { font-size: 0.97rem; }
-      .challenges-search { flex-direction: column; gap: 0.5rem; width: 100%; }
-      .challenges-search input { font-size: 0.97rem; width: 100%; height: 40px; }
-      .challenges-grid { grid-template-columns: 1fr; gap: 1rem; }
-      .challenge-card { border-radius: 9px; }
-      .challenge-image { height: 120px; }
-      .challenge-content { padding: 0.7rem; }
-      .challenge-content h3 { font-size: 1.05rem; }
-      .challenge-content p { font-size: 0.93rem; }
-      .challenge-meta { gap: 0.5rem; font-size: 0.82rem; }
-      .beneficiaries-count { font-size: 0.82rem; }
-      .challenge-actions { flex-direction: column; gap: 0.5rem; }
-      .btn, .btn-accent, .btn-primary, .btn-outline { font-size: 0.97rem; padding: 0.6rem 0.7rem; }
+      .challenges-header {
+        flex-direction: column !important;
+        align-items: center !important;
+        gap: 0.7rem !important;
+        margin-bottom: 1.2rem !important;
+      }
+      .challenges-header h1 {
+        font-size: 1.45rem !important; /* Más grande que tasks, igual que volunteering */
+        text-align: center !important;
+        width: 100%;
+        margin: 0 auto 0.5rem auto !important;
+        font-weight: 800 !important;
+        letter-spacing: -0.5px;
+      }
+      .challenges-actions {
+        width: 100%;
+        display: flex;
+        justify-content: center !important;
+      }
+      .challenges-actions .btn {
+        font-size: 1.07rem !important;
+        padding: 0.7rem 0 !important;
+        margin: 0 auto !important;
+        display: block !important;
+        width: 90vw !important;
+        max-width: 350px !important;
+        min-width: 180px !important;
+        border-radius: 9px !important;
+        text-align: center !important;
+      }
+      .challenges-intro {
+        padding: 1rem !important;
+        margin-bottom: 1.5rem !important;
+        border-radius: 10px !important;
+      }
+      .challenges-intro-content {
+        margin-top: 1.2rem !important;
+      }
+      .challenges-intro h2 {
+        font-size: 1.2rem !important;
+        gap: 0.5rem !important;
+        font-weight: 700 !important;
+        margin-bottom: 0.7rem !important;
+        text-align: center !important;
+        line-height: 1.25 !important;
+        letter-spacing: -0.5px;
+      }
+      .challenges-intro h2 i {
+        font-size: 1.1em !important;
+      }
+      .challenges-intro p {
+        font-size: 0.97rem !important;
+        text-align: center !important;
+      }
+      .challenges-search {
+        margin-bottom: 1.2rem !important;
+        width: 100% !important;
+        max-width: 100vw !important;
+        flex-direction: column !important;
+        gap: 0.5rem !important;
+      }
+      .challenges-search input {
+        font-size: 0.97rem !important;
+        padding: 0.5rem 0.7rem !important;
+        height: 40px !important;
+        width: 100% !important;
+      }
+      .tabs {
+        display: none !important;
+      }
+      .challenges-grid {
+        grid-template-columns: 1fr !important;
+        gap: 1.2rem !important;
+      }
+      .challenge-card {
+        border-radius: 9px !important;
+        min-width: 0 !important;
+      }
+      .challenge-image {
+        height: 170px !important;
+      }
+      .challenge-content {
+        padding: 0.7rem !important;
+      }
+      .challenge-content h3 {
+        font-size: 1.05rem !important;
+      }
+      .challenge-content p {
+        font-size: 0.93rem !important;
+      }
+      .challenge-meta {
+        gap: 0.5rem !important;
+        font-size: 0.82rem !important;
+      }
+      .beneficiaries-count {
+        font-size: 0.82rem !important;
+      }
+      .challenge-actions {
+        flex-direction: column !important;
+        gap: 0.5rem !important;
+      }
+      .btn, .btn-accent, .btn-primary, .btn-outline {
+        font-size: 0.97rem !important;
+        padding: 0.6rem 0.7rem !important;
+      }
       .modal-content {
         max-width: 99vw !important;
         width: 99vw !important;
@@ -156,25 +240,23 @@
         right: 0.9rem !important;
         font-size: 1.7rem !important;
       }
-      .create-task-title { font-size: 1.1rem; }
-      .form-inline-group { flex-direction: column; gap: 0.5rem; }
-      .preview-img { max-width: 100%; height: auto; }
-      .points-info { font-size: 0.93rem; padding: 0.7rem; }
-      .after-create { padding: 1rem 0.5rem; }
-      .content-title { font-size: 1.05rem; }
-      .content-text { font-size: 0.97rem; }
-      .modal-cause-actions { flex-direction: column; gap: 0.7rem; }
-      .action-btn { min-width: 0; font-size: 0.97rem; padding: 0.7rem; }
-      .share-section { padding-top: 1rem; margin-top: 1rem; }
-      .share-title { font-size: 1.05rem; }
-      .share-content { padding: 1rem; }
-      .share-btn { font-size: 0.97rem; padding: 0.7rem 1rem; }
-      .draft-recovery-notification { padding: 1rem; max-width: 98vw; right: 0.5rem; }
-      /* Hamburger menu: oculto en móvil si no lo usas */
+      .create-task-title { font-size: 1.1rem !important; }
+      .form-inline-group { flex-direction: column !important; gap: 0.5rem !important; }
+      .preview-img { max-width: 100% !important; height: auto !important; }
+      .points-info { font-size: 0.93rem !important; padding: 0.7rem !important; }
+      .after-create { padding: 1rem 0.5rem !important; }
+      .content-title { font-size: 1.05rem !important; }
+      .content-text { font-size: 0.97rem !important; }
+      .modal-cause-actions { flex-direction: column !important; gap: 0.7rem !important; }
+      .action-btn { min-width: 0 !important; font-size: 0.97rem !important; padding: 0.7rem !important; }
+      .share-section { padding-top: 1rem !important; margin-top: 1rem !important; }
+      .share-title { font-size: 1.05rem !important; }
+      .share-content { padding: 1rem !important; }
+      .share-btn { font-size: 0.97rem !important; padding: 0.7rem 1rem !important; }
+      .draft-recovery-notification { padding: 1rem !important; max-width: 98vw !important; right: 0.5rem !important; }
       .navbar .hamburger {
         display: none !important;
       }
-      /* Menú inferior fijo: ocupa todo el ancho y sin scroll lateral */
       .bottom-nav, .mobile-bottom-nav {
         position: fixed !important;
         left: 0 !important;
@@ -201,7 +283,115 @@
         max-width: 100vw;
         word-break: break-word;
       }
+      #createChallengeModal .modal-content,
+  #challengeModal .modal-content,
+  .modal-content {
+    margin-top: 100px !important;
+    margin-bottom: 90px !important;
+    margin-left: 2vw !important;
+    margin-right: 2vw !important;
+    width: 96vw !important;
+    max-width: 96vw !important;
+    min-width: 0 !important;
+    border-radius: 14px !important;
+    box-sizing: border-box !important;
+    left: 0 !important;
+    right: 0 !important;
+    max-height: calc(100vh - 190px) !important;
+    overflow-y: auto !important;
+    padding-left: 5vw !important;
+    padding-right: 5vw !important;
+  }
+  .btn, .btn-accent, .btn-primary, .btn-outline,
+  .challenge-actions .btn, .modal-cause-actions .action-btn, .modal-cause-actions .btn,
+  .after-create .btn, .modal-buttons .btn {
+    border-radius: 999px !important;
+    font-weight: 600 !important;
+    font-size: 1rem !important;
+    padding: 0.7rem 1.2rem !important;
+    width: 100% !important;
+    min-width: 0 !important;
+    max-width: 100vw !important;
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+    margin: 0.3rem 0 !important;
+    box-sizing: border-box !important;
+    gap: 0.7rem !important;
+  }
+  .challenge-actions .btn i,
+  .modal-cause-actions .action-btn i,
+  .modal-cause-actions .btn i,
+  .after-create .btn i,
+  .modal-buttons .btn i,
+  .btn i,
+  .btn-primary i,
+  .btn-accent i,
+  .btn-outline i {
+    display: inline-block !important;
+  }
+  #challengeModal .modal-header,
+  #challengeModal .modal-title {
+    text-align: center !important;
+    font-size: 1.1rem !important;
+    font-weight: 700 !important;
+    margin-bottom: 0.7rem !important;
+    word-break: break-word !important;
+  }
+  #challengeModal .modal-body {
+    padding: 0.7rem 0.2rem !important;
+    font-size: 0.97rem !important;
+  }
+  #challengeModal .modal-close,
+  #createChallengeModal .close-modal {
+    top: 0.7rem !important;
+    right: 0.9rem !important;
+    font-size: 1.7rem !important;
+  }
+  /* MODAL VER MÁS: imagen arriba, info debajo */
+  #challengeModal .challenge-modal-main {
+    flex-direction: column !important;
+    display: flex !important;
+    gap: 1.2rem !important;
+    align-items: stretch !important;
+    width: 100% !important;
+    margin-bottom: 1.2rem !important;
+  }
+  #challengeModal .challenge-modal-main > div {
+    width: 100% !important;
+    min-width: 0 !important;
+    max-width: 100% !important;
+  }
+  #challengeModal .challenge-modal-main img {
+    width: 100% !important;
+    max-width: 100vw !important;
+    height: auto !important;
+    display: block !important;
+    object-fit: cover !important;
+    margin: 0 auto !important;
+  }
+
+  /* Solo desktop: Modales más estrechos */
+  @media (min-width: 601px) {
+    #challengeModal .modal-content,
+    #createChallengeModal .modal-content,
+    .modal-content {
+      max-width: 60vw !important;
+      width: 60vw !important;
+      min-width: 320px !important;
+      margin-left: auto !important;
+      margin-right: auto !important;
+      border-radius: 14px !important;
+      box-sizing: border-box !important;
+      padding-left: 2rem !important;
+      padding-right: 2rem !important;
     }
+  }
+}
+html, body, {
+  overflow-x: hidden !important;
+  max-width: 100vw !important;
+}
     /* --- FIN MOBILE ONLY --- */
   </style>
 {% endblock %}
@@ -292,7 +482,17 @@
             Marcar como urgente
           </label>
         </div>
+        <div class="form-group">
+          <label for="verification_sources">Fuentes de verificación <span style="color:#888;font-size:0.95em;">(opcional, explica cómo se puede comprobar que el reto se ha realizado)</span></label>
+          <textarea id="verification_sources" name="verification_sources" placeholder="Ej: Enviar foto, vídeo, testimonio, enlace, etc."></textarea>
+        </div>
+        <div class="form-group">
+          <label for="reward">Recompensa <span style="color:#888;font-size:0.95em;">(opcional, ofrece una recompensa a quienes completen el reto)</span></label>
+          <input type="text" id="reward" name="reward" placeholder="Ej: Medalla, puntos extra, regalo, etc.">
+        </div>
         <input type="hidden" id="lat" name="lat">
+        <input type="hidden" id="lng" name="lng">
+        <button type="submit" class="btn btn-primary" style="margin-top:1rem;">
         <input type="hidden" id="lng" name="lng">
         <button type="submit" class="btn btn-primary" style="margin-top:1rem;">
           <i class="fas fa-paper-plane"></i> Crear Reto
@@ -347,83 +547,198 @@
 {% block scripts %}
 {{ super() }}
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="/js/modules/supabase-config.js"></script>
-<script src="/js/modules/share-system.js"></script>
 <script src="/js/modules/challenges-renderer.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/choices.js/public/assets/scripts/choices.min.js"></script>
 <script>
+// ✅ VARIABLES GLOBALES SIMPLIFICADAS
 let currentFilter = "all";
 let causeChoices = null;
 let opponentChoices = null;
-let causesMap = {};
 let currentUserId = null;
 
-document.addEventListener('DOMContentLoaded', async function() {
-  // ✅ DETECTAR URL y abrir modal automáticamente
-  setTimeout(() => {
-    const urlPath = window.location.pathname;
-    const challengeIdMatch = urlPath.match(/\/(challenges|reto)\/([^\/]+)$/);
-    if (challengeIdMatch) {
-      const challengeId = challengeIdMatch[2];
-      console.log('🎯 URL detectada para reto específico:', challengeId);
-      
-      // Esperar a que se carguen los retos
-      const waitForChallenges = () => {
-        if (window.challenges && window.challenges.length > 0) {
-          const challenge = window.challenges.find(c => c.id === challengeId);
-          if (challenge) {
-            console.log('✅ Reto encontrado, abriendo modal...');
-            // Usar el método del renderer
-            if (window.challengesRenderer) {
-              window.challengesRenderer.showChallengeModal(challengeId);
-            }
-          } else {
-            console.error('❌ Reto no encontrado, redirigiendo...');
-            window.location.href = '/challenges';
-          }
-        } else {
-          setTimeout(waitForChallenges, 1000);
-        }
-      };
-      
-      setTimeout(waitForChallenges, 2000);
+// ✅ FUNCIÓN DE CARGA MOVIDA FUERA DEL DOMContentLoaded
+async function loadChallengesFromSupabase(filter = "all", searchTerm = "") {
+  console.log('🔄 Cargando challenges con filtro:', filter, 'búsqueda:', searchTerm);
+  
+  // Verificar que supabase esté disponible
+  if (!window.supabase) {
+    console.error('❌ Supabase no está disponible');
+    return;
+  }
+
+  currentFilter = filter;
+  
+  try {
+    let query = supabase
+      .from('challenges')
+      .select(`
+        *,
+        linkedCause:causes(id, title, photo_url)
+      `)
+      .order('created_at', { ascending: false });
+
+    if (filter !== "all") {
+      query = query.eq('challenge_type', filter);
     }
-  }, 1000);
+    if (searchTerm && searchTerm.trim() !== "") {
+      query = query.or(`title.ilike.%${searchTerm}%,description.ilike.%${searchTerm}%,city.ilike.%${searchTerm}%,country.ilike.%${searchTerm}%`);
+    }
 
-  // Obtener usuario actual para lógica de botones
+    // Obtener participación del usuario
+    let joinedChallengeIds = [];
+    if (currentUserId) {
+      const { data: memberships } = await supabase
+        .from('challenges_members')
+        .select('challenge_id')
+        .eq('user_id', currentUserId)
+        .eq('status', 'active');
+      joinedChallengeIds = memberships ? memberships.map(m => m.challenge_id) : [];
+    }
+
+    const { data: challenges, error } = await query;
+    const challengesList = document.getElementById('challengesList');
+    
+    if (error) {
+      console.error('❌ Error cargando challenges:', error);
+      challengesList.innerHTML = '<div style="color:#e53e3e;text-align:center;">Error al cargar los retos.</div>';
+      return;
+    }
+
+    if (!challenges || challenges.length === 0) {
+      challengesList.innerHTML = '<div style="color:#6b7280;text-align:center;padding:2rem;grid-column:1/-1;">No se encontraron retos.</div>';
+      return;
+    }
+
+    console.log('✅ Challenges cargados:', challenges.length);
+
+    // Procesar linkedCause
+    challenges.forEach(challenge => {
+      challenge.isParticipating = joinedChallengeIds.includes(challenge.id);
+      if (challenge.linkedCause && Array.isArray(challenge.linkedCause) && challenge.linkedCause.length > 0) {
+        challenge.linkedCause = challenge.linkedCause[0];
+      }
+    });
+
+    // Guardar en variable global
+    window.challenges = challenges;
+
+    // Usar el renderer
+    if (window.challengesRenderer && window.challengesRenderer.renderGrid) {
+      console.log('🎯 Llamando a challengesRenderer.renderGrid...');
+      await window.challengesRenderer.renderGrid(challenges, challengesList);
+    } else {
+      console.error('❌ ChallengesRenderer no disponible o sin método renderGrid');
+      challengesList.innerHTML = '<div style="color:#e53e3e;text-align:center;">Error: Renderer no disponible.</div>';
+    }
+
+  } catch (error) {
+    console.error('❌ Error en loadChallengesFromSupabase:', error);
+    const challengesList = document.getElementById('challengesList');
+    challengesList.innerHTML = '<div style="color:#e53e3e;text-align:center;">Error al cargar los retos.</div>';
+  }
+}
+
+// ✅ FUNCIÓN GLOBAL PARA PARTICIPAR
+window.participateInChallenge = async function(challengeId, btn = null) {
+  console.log('👥 Intentando participar en challenge:', challengeId);
+  
   const { data: { session } } = await supabase.auth.getSession();
-  currentUserId = session?.user?.id || null;
+  if (!session?.user) {
+    document.getElementById('loginModal').classList.add('active');
+    return;
+  }
+  const userId = session.user.id;
 
-  // Abrir modal de crear reto
+  try {
+    const { error } = await supabase
+      .from('challenges_members')
+      .insert([{ challenge_id: challengeId, user_id: userId, role: 'member', status: 'active' }]);
+
+    if (error) {
+      if (error.code === '23505' || error.status === 409) {
+        alert('Ya estás participando en este reto.');
+      } else {
+        alert('Error al participar: ' + error.message);
+      }
+      return;
+    }
+
+    // Actualizar botón
+    if (btn) {
+      btn.textContent = "Participando";
+      btn.disabled = true;
+      btn.style.opacity = "0.7";
+      btn.style.cursor = "not-allowed";
+    }
+
+    alert('¡Has aceptado el reto!');
+    
+    // Recargar retos
+    loadChallengesFromSupabase(currentFilter);
+    
+  } catch (error) {
+    console.error('❌ Error al participar:', error);
+    alert('Error al participar en el reto');
+  }
+};
+
+// ✅ INICIALIZACIÓN CORRECTA
+document.addEventListener('DOMContentLoaded', async function() {
+  console.log('🚀 Iniciando aplicación de challenges...');
+
+  // Esperar a que Supabase esté listo
+  if (!window.supabase) {
+    console.log('⏳ Esperando a Supabase...');
+    await new Promise(resolve => {
+      if (window.supabaseReady) {
+        resolve();
+      } else {
+        document.addEventListener('supabaseReady', resolve, { once: true });
+      }
+    });
+  }
+
+  // Obtener usuario actual
+  try {
+    const { data: { session } } = await supabase.auth.getSession();
+    currentUserId = session?.user?.id || null;
+    console.log('👤 Usuario actual:', currentUserId ? 'Logueado' : 'Anónimo');
+  } catch (error) {
+    console.error('❌ Error obteniendo sesión:', error);
+  }
+
+  // Configurar eventos de UI
+  setupUIEvents();
+
+  // Cargar challenges inicial
+  console.log('📋 Cargando challenges iniciales...');
+  await loadChallengesFromSupabase();
+});
+
+function setupUIEvents() {
+  // Tabs
+  document.querySelectorAll('.tab').forEach(tab => {
+    tab.addEventListener('click', function() {
+      document.querySelector('.tab.active').classList.remove('active');
+      this.classList.add('active');
+      loadChallengesFromSupabase(this.getAttribute('data-filter'), document.getElementById('search-input').value);
+    });
+  });
+
+  // Búsqueda
+  document.getElementById('search-input').addEventListener('input', function() {
+    loadChallengesFromSupabase(currentFilter, this.value);
+  });
+
+  // Crear challenge
   document.getElementById('create-challenge-btn').onclick = async function(e) {
     e.preventDefault();
     const { data: { session } } = await supabase.auth.getSession();
     if (session?.user) {
-      await loadCausesForSelect();
-      await loadUsersForSelect();
-      document.getElementById('createChallengeModal').classList.add('active');
-      document.body.style.overflow = 'hidden';
+      // Implementar modal de crear challenge
+      alert('Modal de crear challenge próximamente');
     } else {
       document.getElementById('loginModal').classList.add('active');
-    }
-  };
-
-  // Cerrar modal de crear reto
-  document.getElementById('closeCreateChallengeModal').onclick = function() {
-    document.getElementById('createChallengeModal').classList.remove('active');
-    document.body.style.overflow = '';
-    document.getElementById('challengeForm').reset();
-    document.getElementById('previewImg').style.display = 'none';
-    document.getElementById('challengeForm').style.display = 'block';
-    document.getElementById('afterCreate').style.display = 'none';
-    document.getElementById('opponentGroup').style.display = 'none';
-  };
-  document.getElementById('createChallengeModal').onclick = function(e) {
-    if (e.target === this) {
-      this.classList.remove('active');
-      document.body.style.overflow = '';
-      document.getElementById('challengeForm').style.display = 'block';
-      document.getElementById('afterCreate').style.display = 'none';
     }
   };
 
@@ -434,289 +749,6 @@ document.addEventListener('DOMContentLoaded', async function() {
   document.getElementById('loginModal').onclick = function(e) {
     if (e.target === this) this.classList.remove('active');
   };
-
-  // Mostrar/ocultar campo de oponente según tipo de reto
-  document.getElementById('challenge_type').addEventListener('change', function() {
-    const opponentGroup = document.getElementById('opponentGroup');
-    opponentGroup.style.display = this.value === 'duel' ? 'block' : 'none';
-  });
-
-  // Vista previa de imagen
-  document.getElementById('photo').addEventListener('change', function(e) {
-    const file = e.target.files[0];
-    const preview = document.getElementById('previewImg');
-    if (file) {
-      const reader = new FileReader();
-      reader.onload = function(evt) {
-        preview.src = evt.target.result;
-        preview.style.display = 'block';
-      };
-      reader.readAsDataURL(file);
-    } else {
-      preview.src = '';
-      preview.style.display = 'none';
-    }
-  });
-
-  // Actualizar texto de puntos
-  document.getElementById('points').addEventListener('input', function() {
-    const val = this.value || 0;
-    document.getElementById('pointsText').innerHTML = `<i class="fas fa-star"></i> Completar este reto otorgará <strong>${val} puntos</strong> al ganador.`;
-  });
-
-  // Crear otro reto tras éxito
-  document.getElementById('createAnother').onclick = function(e) {
-    e.preventDefault();
-    document.getElementById('challengeForm').reset();
-    document.getElementById('previewImg').style.display = 'none';
-    document.getElementById('challengeForm').style.display = 'block';
-    document.getElementById('afterCreate').style.display = 'none';
-    document.getElementById('opponentGroup').style.display = 'none';
-  };
-
-  // Envío del formulario
-  document.getElementById('challengeForm').addEventListener('submit', async function(e) {
-    e.preventDefault();
-    const title = document.getElementById('title').value.trim();
-    const summary = document.getElementById('summary').value.trim();
-    const description = document.getElementById('description').value.trim();
-    const challenge_type = document.getElementById('challenge_type').value;
-    const opponent_id = document.getElementById('opponent-select').value || null;
-    const cause_id = document.getElementById('cause-select').value || null;
-    const city = document.getElementById('city').value.trim();
-    const country = document.getElementById('country').value.trim();
-    const points = parseInt(document.getElementById('points').value, 10);
-    const deadline = document.getElementById('deadline').value;
-    const is_urgent = document.getElementById('is_urgent').checked;
-    const photoFile = document.getElementById('photo').files[0];
-    let photo_url = null;
-
-    if (challenge_type === 'duel' && !opponent_id) {
-      alert('Debes seleccionar un oponente para un reto 1 VS 1 o cambiar a reto abierto');
-      return;
-    }
-
-    if (photoFile) {
-      const fileExt = photoFile.name.split('.').pop();
-      const fileName = `${Date.now()}-${Math.random().toString(36).substr(2, 9)}.${fileExt}`;
-      const filePath = `public/${fileName}`;
-      const { error: uploadError } = await supabase.storage
-        .from('challenges')
-        .upload(filePath, photoFile, { upsert: true });
-      if (uploadError) {
-        alert('Error subiendo la foto: ' + uploadError.message);
-        return;
-      }
-      const { data } = supabase.storage.from('challenges').getPublicUrl(filePath);
-      photo_url = data.publicUrl;
-    }
-
-    const { data: { session } } = await supabase.auth.getSession();
-    const user = session?.user;
-    if (!user) {
-      alert('Debes iniciar sesión para crear un reto.');
-      return;
-    }
-
-    const lat = document.getElementById('lat').value;
-    const lng = document.getElementById('lng').value;
-
-    const { data: newChallenge, error: challengeError } = await supabase
-      .from('challenges')
-      .insert([{ title, summary, description, challenge_type, creator_id: user.id, opponent_id, cause_id, city, country, points, deadline, is_urgent, photo_url, status: opponent_id ? 'pending' : 'active', lat: lat ? parseFloat(lat) : null, lng: lng ? parseFloat(lng) : null }])
-      .select()
-      .single();
-
-    if (!challengeError && newChallenge) {
-      await supabase
-        .from('challenge_members')
-        .insert([{ challenge_id: newChallenge.id, user_id: user.id, role: 'founder', status: 'active' }]);
-    }
-
-    document.getElementById('challengeForm').style.display = 'none';
-    document.getElementById('afterCreate').style.display = 'block';
-    loadChallengesFromSupabase();
-  });
-
-  // Tabs
-  document.querySelectorAll('.tab').forEach(tab => {
-    tab.addEventListener('click', function() {
-      document.querySelector('.tab.active').classList.remove('active');
-      this.classList.add('active');
-      loadChallengesFromSupabase(this.getAttribute('data-filter'));
-    });
-  });
-
-  // Búsqueda
-  document.getElementById('search-input').addEventListener('input', function() {
-    loadChallengesFromSupabase(currentFilter, this.value);
-  });
-
-  // Geocodificación automática al cambiar ciudad o país
-  document.getElementById('city').addEventListener('change', geocodeCityCountry);
-  document.getElementById('country').addEventListener('change', geocodeCityCountry);
-
-  // Cargar causas en el mapa
-  await loadCausesMap();
-  loadChallengesFromSupabase();
-}); 
-
-// Cargar causas en el select al abrir el modal de crear reto
-async function loadCausesForSelect() {
-  const select = document.getElementById('cause-select');
-  if (causeChoices) {
-    causeChoices.destroy();
-    causeChoices = null;
-  }
-  select.innerHTML = '<option value="">Selecciona una causa</option>';
-  const { data: causes, error } = await supabase.from('causes').select('id, title');
-  if (error) {
-    alert('Error cargando causas: ' + error.message);
-    return;
-  }
-  if (causes && causes.length > 0) {
-    causes.forEach(cause => {
-      const option = document.createElement('option');
-      option.value = cause.id;
-      option.textContent = cause.title;
-      select.appendChild(option);
-    });
-  }
-  causeChoices = new Choices(select, {
-    searchEnabled: true,
-    itemSelectText: '',
-    shouldSort: false,
-    placeholder: true,
-    placeholderValue: 'Selecciona una causa',
-    removeItemButton: true,
-    noResultsText: 'No se encontraron causas',
-  });
-}
-
-async function loadUsersForSelect() {
-  const select = document.getElementById('opponent-select');
-  if (opponentChoices) {
-    opponentChoices.destroy();
-    opponentChoices = null;
-  }
-  select.innerHTML = '<option value="">Selecciona un usuario</option>';
-  const { data: users, error } = await supabase
-    .from('profiles')
-    .select('id, first_name, last_name, username, photo_url');
-  if (error) {
-    alert('Error cargando usuarios: ' + error.message);
-    return;
-  }
-  if (users && users.length > 0) {
-    users.forEach(user => {
-      const option = document.createElement('option');
-      option.value = user.id;
-      option.textContent = (user.first_name && user.last_name)
-        ? `${user.first_name} ${user.last_name}`
-        : (user.username || 'Usuario');
-      select.appendChild(option);
-    });
-  }
-  opponentChoices = new Choices(select, {
-    searchEnabled: true,
-    itemSelectText: '',
-    shouldSort: false,
-    placeholder: true,
-    placeholderValue: 'Selecciona un usuario',
-    removeItemButton: true,
-    noResultsText: 'No se encontraron usuarios',
-  });
-}
-
-// Geocodificación automática al cambiar ciudad o país
-async function geocodeCityCountry() {
-  const city = document.getElementById('city').value.trim();
-  const country = document.getElementById('country').value.trim();
-  if (!city || !country) return;
-
-  const query = encodeURIComponent(`${city}, ${country}`);
-  const url = `https://nominatim.openstreetmap.org/search?q=${query}&format=json&limit=1`;
-
-  try {
-    const res = await fetch(url, { headers: { 'Accept-Language': 'es' } });
-    const data = await res.json();
-    if (data && data.length > 0) {
-      document.getElementById('lat').value = data[0].lat;
-      document.getElementById('lng').value = data[0].lon;
-    } else {
-      document.getElementById('lat').value = '';
-      document.getElementById('lng').value = '';
-    }
-  } catch (e) {
-    document.getElementById('lat').value = '';
-    document.getElementById('lng').value = '';
-  }
-}
-
-// Cargar causas en el mapa
-async function loadCausesMap() {
-  const { data: causes } = await supabase.from('causes').select('id, title, photo_url');
-  if (causes) {
-    causesMap = {}; // Reinicia el mapa para evitar residuos
-    causes.forEach(c => {
-      causesMap[c.id] = {
-        title: c.title,
-        photo_url: c.photo_url
-      };
-    });
-  }
-}
-
-// ✅ CARGAR RETOS USANDO EL RENDERER (optimizado)
-async function loadChallengesFromSupabase(filter = "all", searchTerm = "") {
-  // 1. Cargar retos desde Supabase
-  let query = supabase
-    .from('challenges')
-    .select('*, participants') // <-- asegúrate de traerlo
-    .order('created_at', { ascending: false });
-
-  // 2. Filtros (si tienes)
-  if (filter !== "all") {
-    query = query.eq('category', filter);
-  }
-  if (searchTerm && searchTerm.trim() !== "") {
-    query = query.or(`title.ilike.%${searchTerm}%,description.ilike.%${searchTerm}%,city.ilike.%${searchTerm}%,country.ilike.%${searchTerm}%`);
-  }
-
-  const { data: challenges, error } = await query;
-  const challengesList = document.getElementById('challengesList');
-
-  if (error) {
-    challengesList.innerHTML = '<div style="color:#e53e3e;text-align:center;">Error al cargar los desafíos.</div>';
-    return;
-  }
-
-  // 3. Obtener usuario actual
-  const { data: { session } } = await supabase.auth.getSession();
-  const userId = session?.user?.id;
-
-  // 4. Obtener participaciones del usuario
-  let userChallengeIds = [];
-  if (userId) {
-    const { data: memberships } = await supabase
-      .from('challenges_members') // <-- NOMBRE CORRECTO DE LA TABLA
-      .select('challenge_id')
-      .eq('user_id', userId);
-    userChallengeIds = memberships ? memberships.map(m => m.challenge_id) : [];
-  }
-
-  // 5. Añadir isParticipating a cada challenge
-  const challengesWithInfo = challenges ? challenges.map(challenge => ({
-    ...challenge,
-    isParticipating: userChallengeIds.includes(challenge.id)
-  })) : [];
-
-  // 6. Renderizar usando el renderer
-  if (window.challengesRenderer) {
-    window.challengesRenderer.renderGrid(challengesWithInfo, challengesList);
-  } else {
-    challengesList.innerHTML = '<div style="color:#e53e3e;text-align:center;">Error: Renderer no disponible.</div>';
-  }
 }
 </script>
 {% endblock %}

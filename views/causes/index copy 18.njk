@@ -1551,6 +1551,31 @@ to { opacity: 0; transform: translateX(-50%) translateY(-20px); }
     </div>
   </div>
 
+  <!-- Modal profesional de donación Stripe -->
+  <div id="stripeDonationModal" class="modal-bg" style="display:none;">
+    <div class="modal-content" style="max-width:420px;">
+      <button class="close-modal" id="closeStripeDonationModal">&times;</button>
+      <div style="text-align:center;">
+        <i class="fab fa-stripe" style="font-size:2.5rem;color:#635bff;margin-bottom:1rem;"></i>
+        <h2 id="stripeDonationTitle" style="color:#635bff;margin-bottom:0.7rem;">Donar a la causa</h2>
+        <p id="stripeDonationDesc" style="color:#444;margin-bottom:1.2rem;"></p>
+        <div style="margin-bottom:1.2rem;">
+          <input type="number" id="stripeDonationAmount" min="1" step="0.01" value="20" style="width:100%;padding:0.7rem 1rem;font-size:1.1rem;border-radius:8px;border:1px solid #e5e7eb;" placeholder="Cantidad (€)">
+        </div>
+        <button id="stripePayBtn" class="btn btn-accent" style="width:100%;font-size:1.1rem;">
+          <i class="fas fa-credit-card"></i> Donar con tarjeta
+        </button>
+        <div style="margin-top:1.2rem;font-size:0.93rem;color:#888;">
+          Pago seguro gestionado por <strong>Stripe</strong>. Recibirás confirmación por email.<br>
+          <span id="stripeDonationExtra"></span>
+        </div>
+        <div style="margin-top:1.2rem;font-size:0.93rem;color:#888;">
+          <i class="fas fa-lock"></i> Tus datos están protegidos y el pago es 100% seguro.
+        </div>
+      </div>
+    </div>
+  </div>
+
   <!-- Modal de Causa (compatible con causes-renderer.js) -->
   <div id="causeModal" class="modal-bg">
     <div class="modal-content">
@@ -2496,85 +2521,161 @@ function closeCauseModal() {
   }
 }
 
+// Actualizar la función handleDonateClick
 function handleDonateClick(causeId) {
-  console.log('[DONATE] Botón donar pulsado para causa:', causeId);
-
+  console.log('🎯 handleDonateClick para causa:', causeId);
+  
+  if (!currentUser || !currentUser.logged) {
+    showNotification('Debes iniciar sesión para donar', 'warning');
+    showLoginModal();
+    return;
+  }
+  
+  // Buscar la causa
   const cause = window.lastLoadedCauses?.find(c => c.id == causeId);
-  console.log('[DONATE] Datos de la causa seleccionada:', cause);
-
   if (!cause) {
     showNotification('Causa no encontrada', 'error');
     return;
   }
-
-  // Verificar Stripe
-  console.log('[DONATE] Stripe enabled:', cause.stripe_enabled, 'Stripe account:', cause.stripe_account_id);
-
-  // Mostrar modal
-  const modal = document.getElementById('stripeDonationModal');
-  if (modal) {
-    document.getElementById('stripeDonationTitle').textContent = `Donar a: ${cause.title}`;
-    document.getElementById('stripeDonationDesc').textContent = cause.short_description || '';
-    document.getElementById('stripeDonationAmount').value = '20';
-    modal.classList.add('active');
-    document.body.style.overflow = 'hidden';
-    window.currentDonationCause = cause;
-    console.log('[DONATE] Modal de donación mostrado');
-  } else {
-    console.error('[DONATE] No se encontró el modal de donación');
-  }
-
-  // Log columnas relevantes
-  console.log('[DONATE] Columnas relevantes en causa:', Object.keys(cause));
+  
+  // Abrir modal de donación simple
+  showSimpleDonationModal(cause);
 }
 
-// Donar con Stripe
-document.getElementById('stripePayBtn').onclick = async function() {
-  const amount = parseFloat(document.getElementById('stripeDonationAmount').value);
-  const cause = window.currentDonationCause;
-  console.log('[DONATE] Intentando donar', amount, '€ a causa:', cause);
-
-  if (!cause.stripe_enabled || !cause.stripe_account_id) {
-    showNotification('Esta causa no tiene Stripe configurado', 'error');
-    console.error('[DONATE] Stripe no configurado:', cause);
-    return;
-  }
-
-  // Log datos enviados al backend
-  console.log('[DONATE] Payload a backend:', {
-    causeId: cause.id,
-    amount,
-    stripe_account_id: cause.stripe_account_id
+// ✅ FUNCIÓN CORREGIDA para modal de donación simple
+function showSimpleDonationModal(cause) {
+  const modal = document.createElement('div');
+  modal.className = 'modal-bg';
+  modal.style.display = 'flex';
+  modal.innerHTML = `
+    <div class="modal-content" style="max-width: 400px;">
+      <button class="close-modal" onclick="this.closest('.modal-bg').remove()">&times;</button>
+      <h3><i class="fas fa-heart"></i> Donar a: ${cause.title}</h3>
+      <p style="color: #666; margin-bottom: 1.5rem;">${cause.short_description || 'Apoya esta causa solidaria'}</p>
+      
+      <div style="margin-bottom: 1.5rem;">
+        <label style="display: block; margin-bottom: 0.5rem; font-weight: 600;">Cantidad (€):</label>
+        <div style="display: flex; gap: 0.5rem; margin-bottom: 1rem;">
+          <button class="amount-btn" data-amount="5">5€</button>
+          <button class="amount-btn" data-amount="10">10€</button>
+          <button class="amount-btn" data-amount="25">25€</button>
+          <button class="amount-btn" data-amount="50">50€</button>
+        </div>
+        <input type="number" id="customAmount" min="1" step="0.01" placeholder="Cantidad personalizada" 
+               style="width: 100%; padding: 0.7rem; border: 1px solid #e5e7eb; border-radius: 8px;">
+      </div>
+      
+      <div style="margin-bottom: 1.5rem;">
+        <input type="text" id="donorName" placeholder="Tu nombre (opcional)" 
+               style="width: 100%; padding: 0.7rem; border: 1px solid #e5e7eb; border-radius: 8px; margin-bottom: 0.5rem;">
+        <input type="email" id="donorEmail" placeholder="Tu email (para recibo)" 
+               style="width: 100%; padding: 0.7rem; border: 1px solid #e5e7eb; border-radius: 8px;">
+      </div>
+      
+      <button id="processDonationBtn" class="btn btn-primary" style="width: 100%;" disabled>
+        <i class="fas fa-credit-card"></i> Selecciona una cantidad
+      </button>
+      
+      <div style="margin-top: 1rem; text-align: center; font-size: 0.9rem; color: #666;">
+        <i class="fas fa-lock"></i> Pago seguro procesado por Stripe
+      </div>
+    </div>
+  `;
+  
+  document.body.appendChild(modal);
+  document.body.style.overflow = 'hidden';
+  
+  let selectedAmount = 0;
+  
+  // Manejar botones de cantidad
+  modal.querySelectorAll('.amount-btn').forEach(btn => {
+    btn.onclick = () => {
+      modal.querySelectorAll('.amount-btn').forEach(b => b.classList.remove('selected'));
+      btn.classList.add('selected');
+      selectedAmount = parseFloat(btn.dataset.amount);
+      modal.querySelector('#customAmount').value = '';
+      updateDonationButton();
+    };
   });
-
-  try {
-    const response = await fetch('/api/stripe/create-checkout', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      credentials: 'include',
-      body: JSON.stringify({
-        causeId: cause.id,
-        amount,
-        stripe_account_id: cause.stripe_account_id
-      })
-    });
-
-    console.log('[DONATE] Respuesta del backend:', response);
-
-    if (!response.ok) {
-      const errorData = await response.json();
-      console.error('[DONATE] Error backend:', errorData);
-      showNotification(errorData.error || 'Error procesando la donación', 'error');
-      return;
+  
+  // Manejar cantidad personalizada
+  modal.querySelector('#customAmount').oninput = (e) => {
+    selectedAmount = parseFloat(e.target.value) || 0;
+    modal.querySelectorAll('.amount-btn').forEach(b => b.classList.remove('selected'));
+    updateDonationButton();
+  };
+  
+  function updateDonationButton() {
+    const btn = modal.querySelector('#processDonationBtn');
+    if (selectedAmount >= 1) {
+      btn.disabled = false;
+      btn.innerHTML = `<i class="fas fa-credit-card"></i> Donar ${selectedAmount.toFixed(2)}€`;
+    } else {
+      btn.disabled = true;
+      btn.innerHTML = `<i class="fas fa-credit-card"></i> Selecciona una cantidad`;
     }
-
-    const { url } = await response.json();
-    console.log('[DONATE] Redirigiendo a Stripe Checkout:', url);
-    window.location.href = url;
-  } catch (err) {
-    console.error('[DONATE] Error en fetch:', err);
-    showNotification('Error de red', 'error');
   }
-};
+  
+  // ✅ PROCESAR DONACIÓN CORREGIDO
+  modal.querySelector('#processDonationBtn').onclick = async () => {
+    if (selectedAmount < 1) return;
+    
+    const btn = modal.querySelector('#processDonationBtn');
+    btn.disabled = true;
+    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Procesando...';
+    
+    try {
+      console.log('💳 Enviando donación:', {
+        causeId: cause.id,
+        amount: selectedAmount,
+        currency: 'eur',
+        donorName: modal.querySelector('#donorName').value,
+        donorEmail: modal.querySelector('#donorEmail').value
+      });
+
+      // ✅ USAR EL ENDPOINT CORRECTO
+      const response = await fetch('/api/stripe/donation-checkout', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+        body: JSON.stringify({
+          causeId: cause.id,
+          amount: selectedAmount,
+          currency: 'eur',
+          donorName: modal.querySelector('#donorName').value,
+          donorEmail: modal.querySelector('#donorEmail').value
+        })
+      });
+
+      console.log('📡 Respuesta:', response.status, response.statusText);
+      
+      if (!response.ok) {
+        const error = await response.json();
+        console.error('❌ Error del servidor:', error);
+        throw new Error(error.error || 'Error procesando donación');
+      }
+      
+      const { url } = await response.json();
+      console.log('✅ URL de pago recibida:', url);
+      
+      // Guardar datos para después del pago
+      localStorage.setItem('pendingDonation', JSON.stringify({
+        causeId: cause.id,
+        causeTitle: cause.title,
+        amount: selectedAmount,
+        timestamp: Date.now()
+      }));
+      
+      // Redirigir a Stripe
+      window.location.href = url;
+      
+    } catch (error) {
+      console.error('❌ Error procesando donación:', error);
+      showNotification(`Error: ${error.message}`, 'error');
+      btn.disabled = false;
+      btn.innerHTML = `<i class="fas fa-credit-card"></i> Donar ${selectedAmount.toFixed(2)}€`;
+    }
+  };
+}
   </script>
 {% endblock %}

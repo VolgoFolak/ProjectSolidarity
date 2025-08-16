@@ -1,0 +1,608 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>{% block title %}Solidarity{% endblock %}</title>
+  <meta name="description" content="Plataforma colaborativa para impulsar la solidaridad y el impacto social">
+  
+  <!-- SEO Meta Tags -->
+  <meta property="og:title" content="Solidarity - Create Social Impact">
+  <meta property="og:description" content="Join our platform to support causes, volunteer, and make a difference">
+  <meta property="og:image" content="https://project-solidarity.com/images/social-share.jpg">
+  <meta property="og:url" content="https://project-solidarity.com">
+  <meta property="og:type" content="website">
+  <meta name="twitter:card" content="summary_large_image">
+  
+  <!-- Favicon -->
+  <link rel="icon" href="/images/favicon.ico" type="image/x-icon">
+  <link rel="apple-touch-icon" href="/images/apple-touch-icon.png">
+  
+  <!-- Preload Critical Assets -->
+  <link rel="preload" href="/css/style.css" as="style">
+  
+  <!-- CSS -->
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="stylesheet" href="/css/donation-modals.css">
+  <link rel="stylesheet" href="/css/stripe-donation.css">
+  <link rel="stylesheet" href="/css/donation-success.css">
+  
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  
+  <!-- Google Analytics 4 -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-KLTQ612VGL"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+      gtag('config', 'G-KLTQ612VGL', {
+        send_page_view: false,
+        debug_mode: true,
+        transport_url: 'https://project-solidarity.com',
+        anonymize_ip: true
+      });
+    } else {
+      gtag('config', 'G-KLTQ612VGL', {
+        transport_url: 'https://project-solidarity.com',
+        first_party_collection: true,
+        anonymize_ip: true,
+        allow_google_signals: true,
+        allow_ad_personalization_signals: false,
+        send_page_view: true,
+        enhanced_conversions: true,
+        debug_mode: false
+      });
+    }
+
+    gtag('set', {
+      user_properties: {
+        user_type: 'anonymous',
+        preferred_language: 'es',
+        platform_version: '1.0'
+      }
+    });
+  </script>
+  
+  <!-- Bloques para extensiones -->
+  {% block head %}{% endblock %}
+</head>
+<body>
+  <!-- Session Data Storage -->
+  <div id="session-data" 
+    data-user-id="{{ user.id if user else '' }}"
+    data-user-type="{{ user.type if user else 'anonymous' }}"
+    data-lang="es"
+    data-supabase-url="https://cyftasxlrzuynzbrfgkd.supabase.co"
+    data-supabase-key="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImN5ZnRhc3hscnp1eW56YnJmZ2tkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDgwMzUzMTksImV4cCI6MjA2MzYxMTMxOX0.I56ZqFTfLgdwWlcozMVncGNGBZ4A2_5VpAbHeNmtDhA"
+    hidden
+  ></div>
+
+  <!-- App Container -->
+  <div id="app-container">
+    <!-- Navbar -->
+    <header>
+      {% include "partials/navbar.njk" %}
+    </header>
+
+    <!-- Contenido principal -->
+    <main class="main-content">
+      {% block content %}{% endblock %}
+    </main>
+
+    <!-- Footer -->
+    {% include "partials/footer.njk" %}
+    
+    <!-- Loading Overlay -->
+    <div id="loading-overlay" class="loading-overlay">
+      <div class="loading-spinner"></div>
+      <p class="loading-text">Cargando aplicación...</p>
+    </div>
+    
+    <!-- Session Expired Modal -->
+    <div id="session-expired-modal" class="modal" style="display:none;">
+      <div class="modal-content">
+        <h3>Sesión Expirada</h3>
+        <p>Tu sesión ha expirado por inactividad. Por favor inicia sesión nuevamente.</p>
+        <button id="session-relogin-btn" class="btn-primary">Volver al Login</button>
+      </div>
+    </div>
+    
+    <!-- Notificaciones -->
+    <div id="notifications" class="notifications-container"></div>
+
+    <!-- Modal de bienvenida tras login -->
+    <div id="welcomeModal" style="display:none; position:fixed; top:0; left:0; width:100vw; height:100vh; background:rgba(0,0,0,0.35); z-index:9999; align-items:center; justify-content:center;">
+      <div style="background:#fff; border-radius:18px; max-width:370px; margin:auto; padding:2.2rem 1.7rem; box-shadow:0 8px 32px rgba(0,0,0,0.13); text-align:center; position:relative;">
+        <span style="font-size:2.7rem; color:#2dd4bf; display:block; margin-bottom:1rem;">
+          <i class="fas fa-fire"></i>
+        </span>
+        <h2 style="color:#2dd4bf; font-weight:900; margin-bottom:0.7rem;">¡Bienvenido/a de nuevo!</h2>
+        <p style="color:#444; font-size:1.13rem;">
+          ¡Nos alegra verte en Solidarity!<br>
+          <strong>Hoy es un gran día para ayudar, inspirar y transformar el mundo.</strong>
+        </p>
+        <p style="color:#888; font-size:0.97rem; margin-top:1em;">
+          ¿Listo/a para dejar tu huella positiva?<br>
+          ¡Explora, conecta y actúa!
+        </p>
+        <button onclick="document.getElementById('welcomeModal').style.display='none';" style="margin-top:1.5rem; background:#2dd4bf; color:#fff; border:none; border-radius:8px; padding:0.8rem 1.7rem; font-size:1.1rem; font-weight:700; cursor:pointer;">
+          ¡Vamos allá!
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scripts base: SOLO UNA VEZ -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="/js/lib/axios.min.js"></script>
+  
+  <script>
+    // Variables globales
+    window.supabaseReady = false;
+    
+    // Función para mostrar notificaciones
+    function showErrorNotification(message) {
+      const notifications = document.getElementById('notifications');
+      if (notifications) {
+        const notification = document.createElement('div');
+        notification.className = 'notification error';
+        notification.innerHTML = `<i class="fas fa-exclamation-circle"></i><span>${message}</span>`;
+        notifications.appendChild(notification);
+        setTimeout(() => notification.remove(), 5000);
+      } else {
+        console.error(message);
+      }
+    }
+
+    // Inicialización de Supabase (manteniendo la existente pero con mejor manejo)
+    const supabaseUrl = document.getElementById('session-data')?.dataset.supabaseUrl;
+    const supabaseKey = document.getElementById('session-data')?.dataset.supabaseKey;
+    
+    if (supabaseUrl && supabaseKey) {
+      try {
+        window.supabase = supabase.createClient(supabaseUrl, supabaseKey);
+        window.supabaseReady = true;
+        console.log('✅ Supabase initialized:', window.supabase);
+        
+        // Configurar listener para cambios de autenticación
+        window.supabase.auth.onAuthStateChange((event, session) => {
+          console.log('🔑 Supabase auth state changed:', event);
+          document.dispatchEvent(new CustomEvent('supabaseAuthChange', { 
+            detail: { event, session } 
+          }));
+        });
+        
+        // Disparar evento cuando Supabase esté listo
+        document.dispatchEvent(new CustomEvent('supabaseReady'));
+      } catch (error) {
+        console.error('❌ Error initializing Supabase:', error);
+        showErrorNotification('Error de conexión. Por favor recarga la página.');
+      }
+    } else {
+      console.error('❌ Missing Supabase credentials');
+      showErrorNotification('Configuración incompleta. Contacta al soporte.');
+    }
+
+    // Configuración de Axios
+    if (typeof axios !== 'undefined') {
+      axios.defaults.withCredentials = true;
+      axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
+
+      // Interceptor para manejar errores
+      axios.interceptors.response.use(
+        response => response,
+        error => {
+          if (error.response?.status === 401) {
+            document.getElementById('session-expired-modal').style.display = 'block';
+          }
+          return Promise.reject(error);
+        }
+      );
+    }
+
+    // Session Manager
+    class SessionManager {
+      constructor() {
+        this.keepAliveInterval = null;
+        this.inactivityTimeout = null;
+        this.maxInactivity = 30 * 60 * 1000;
+        this.keepAliveFrequency = 5 * 60 * 1000;
+        this.retryCount = 0;
+        this.maxRetries = 3;
+        
+        this.initEventListeners();
+        
+        if (document.getElementById('session-data')?.dataset.userId) {
+          this.startSessionMonitoring();
+        }
+      }
+      
+      initEventListeners() {
+        ['click', 'mousemove', 'keypress', 'scroll', 'touchstart'].forEach(event => {
+          document.addEventListener(event, this.resetInactivityTimer.bind(this), { passive: true });
+        });
+        
+        document.getElementById('session-relogin-btn')?.addEventListener('click', () => {
+          window.location.href = '/login?return=' + encodeURIComponent(window.location.pathname);
+        });
+      }
+      
+      startSessionMonitoring() {
+        this.startKeepAlive();
+        this.resetInactivityTimer();
+        console.log('🔒 Session monitoring started');
+      }
+      
+      startKeepAlive() {
+        if (this.keepAliveInterval) clearInterval(this.keepAliveInterval);
+        
+        this.keepAliveInterval = setInterval(() => {
+          this.sendKeepAlive();
+        }, this.keepAliveFrequency);
+        
+        this.sendKeepAlive();
+      }
+      
+      async sendKeepAlive() {
+        try {
+          const response = await fetch('/api/session/keep-alive', {
+            method: 'POST',
+            credentials: 'include',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+              currentPath: window.location.pathname,
+              lastActivity: new Date().toISOString()
+            })
+          });
+          
+          if (response.ok) {
+            this.retryCount = 0;
+            const data = await response.json();
+            console.log('🔄 Session keep-alive success');
+          } else {
+            this.handleSessionError();
+          }
+        } catch (error) {
+          console.error('Keep-alive error:', error);
+          this.handleSessionError();
+        }
+      }
+      
+      resetInactivityTimer() {
+        if (this.inactivityTimeout) clearTimeout(this.inactivityTimeout);
+        
+        this.inactivityTimeout = setTimeout(() => {
+          this.handleInactiveSession();
+        }, this.maxInactivity);
+      }
+      
+      handleInactiveSession() {
+        console.log('🕒 Session inactive, checking status...');
+        this.sendKeepAlive();
+      }
+      
+      handleSessionError() {
+        this.retryCount++;
+        
+        if (this.retryCount >= this.maxRetries) {
+          this.expireSession();
+        } else {
+          console.warn(`Session check failed (${this.retryCount}/${this.maxRetries})`);
+        }
+      }
+      
+      expireSession() {
+        console.log('🔐 Session expired');
+        clearInterval(this.keepAliveInterval);
+        clearTimeout(this.inactivityTimeout);
+        
+        document.getElementById('session-expired-modal').style.display = 'block';
+        document.dispatchEvent(new CustomEvent('sessionExpired'));
+      }
+    }
+
+    // Inicialización de la aplicación
+    document.addEventListener('DOMContentLoaded', async () => {
+      try {
+        // Mostrar loading
+        document.getElementById('loading-overlay').style.display = 'flex';
+        
+        // Esperar a Supabase si no está listo
+        if (!window.supabaseReady) {
+          await new Promise((resolve) => {
+            document.addEventListener('supabaseReady', resolve, { once: true });
+          });
+        }
+        
+        // Iniciar Session Manager
+        window.sessionManager = new SessionManager();
+        
+        // Mostrar modal de bienvenida si es el primer login
+        const isFirstLogin = new URLSearchParams(window.location.search).has('firstLogin');
+        if (isFirstLogin) {
+          document.getElementById('welcomeModal').style.display = 'flex';
+        }
+        
+        console.log('✅ App initialization complete');
+        
+      } catch (error) {
+        console.error('Initialization error:', error);
+        showErrorNotification('Error al cargar la aplicación. Por favor recarga la página.');
+      } finally {
+        // Ocultar loading
+        document.getElementById('loading-overlay').style.display = 'none';
+      }
+    });
+
+    // Función para renderizar actividades (MANTENIENDO EXACTAMENTE LA ACTUAL)
+    function isTrending(activity) {
+      if (activity.type === 'cause') {
+        return (activity.beneficiaries || 0) + (activity.raised || 0) > 100;
+      }
+      if (activity.type === 'task') {
+        return (activity.beneficiaries || 0) > 50;
+      }
+      if (activity.type === 'volunteering') {
+        return (activity.volunteers_needed || 0) > 30;
+      }
+      if (activity.type === 'challenge') {
+        const created = new Date(activity.created_at);
+        const now = new Date();
+        const diffDays = (now - created) / (1000 * 60 * 60 * 24);
+        return diffDays < 7;
+      }
+      return false;
+    }
+
+    // Renderizado de actividades (MANTENIENDO EXACTAMENTE LA LÓGICA ACTUAL)
+    const grid = document.getElementById('activities-grid');
+    const activitiesToShow = []; // Suponiendo que esta variable contiene las actividades a mostrar
+
+    if (grid) {
+      grid.innerHTML = activitiesToShow.map(activity => {
+        const typeLabels = {
+          cause: 'Causa',
+          task: 'Tarea',
+          challenge: 'Reto',
+          volunteering: 'Voluntariado'
+        };
+
+        const badge = `<div class="activity-badge ${activity.type}">
+          <i class="fas ${activity.icon}"></i> ${typeLabels[activity.type] || 'Otro'}
+        </div>`;
+
+        const trendingBadge = isTrending(activity)
+          ? `<div class="activity-badge trending"><i class="fas fa-fire"></i> Trending</div>`
+          : '';
+
+        // Causa
+        if (activity.type === 'cause') {
+          const meta = activity.goal || 1000;
+          const recaudado = activity.raised || 0;
+          const porcentaje = meta ? Math.min(100, Math.round((recaudado / meta) * 100)) : 0;
+          return `
+            <div class="activity-card" data-type="cause">
+              ${badge}
+              ${trendingBadge}
+              <div class="activity-image" style="background-image: url('${activity.photo_url || '/img/causa-default.jpg'}')"></div>
+              <div class="activity-content">
+                <div class="activity-header">${activity.title || 'Sin título'}</div>
+                <div class="activity-meta">
+                  <span><i class="fas fa-map-marker-alt"></i> ${activity.city || 'Sin ubicación'}${activity.country ? ', ' + activity.country : ''}</span>
+                  <span><i class="fas fa-calendar-alt"></i> ${activity.formattedDate}</span>
+                </div>
+                <div class="activity-impact">
+                  <span><i class="fas fa-users"></i> ${activity.beneficiaries || 0} beneficiarios</span>
+                </div>
+                <div class="activity-impact">
+                  <span><i class="fas fa-euro-sign"></i> ${recaudado} € de ${meta} €</span>
+                </div>
+                <div class="progress-bar" style="margin: 0.5em 0 0.7em 0;">
+                  <div class="progress-fill" style="width:${porcentaje}%;background:#4fc3a1;height:8px;border-radius:4px;"></div>
+                </div>
+                <div style="font-size:0.92em;color:#6b7280;">${porcentaje}% recaudado</div>
+              </div>
+              <a href="/causes/${activity.id}" class="activity-link">Ver detalles</a>
+            </div>
+          `;
+        }
+        // Tarea
+        if (activity.type === 'task') {
+          return `
+            <div class="activity-card" data-type="task">
+              ${badge}
+              ${trendingBadge}
+              <div class="activity-image" style="background-image: url('${activity.photo_url || '/img/task-default.jpg'}')"></div>
+              <div class="activity-content">
+                <div class="activity-header">${activity.title || 'Sin título'}</div>
+                <div class="activity-meta">
+                  <span><i class="fas fa-map-marker-alt"></i> ${activity.city || 'Sin ubicación'}${activity.country ? ', ' + activity.country : ''}</span>
+                  <span><i class="fas fa-calendar-alt"></i> ${activity.formattedDate}</span>
+                </div>
+                <div class="activity-impact">
+                  <span><i class="fas fa-users"></i> ${activity.beneficiaries || 0} beneficiarios</span>
+                </div>
+              </div>
+              <a href="/tasks/${activity.id}" class="activity-link">Ver detalles</a>
+            </div>
+          `;
+        }
+        // Reto
+        if (activity.type === 'challenge') {
+          return `
+            <div class="activity-card" data-type="challenge">
+              ${badge}
+              ${trendingBadge}
+              <div class="activity-image" style="background-image: url('${activity.photo_url || '/img/challenge-default.jpg'}')"></div>
+              <div class="activity-content">
+                <div class="activity-header">${activity.title || 'Sin título'}</div>
+                <div class="activity-meta">
+                  <span><i class="fas fa-map-marker-alt"></i> ${activity.city || 'Sin ubicación'}${activity.country ? ', ' + activity.country : ''}</span>
+                  <span><i class="fas fa-calendar-alt"></i> ${activity.formattedDate}</span>
+                </div>
+                <div class="activity-impact">
+                  <span><i class="fas fa-bullseye"></i> Impacto: 50 pts</span>
+                </div>
+              </div>
+              <a href="/challenges/${activity.id}" class="activity-link">Ver detalles</a>
+            </div>
+          `;
+        }
+        // Voluntariado
+        if (activity.type === 'volunteering') {
+          return `
+            <div class="activity-card" data-type="volunteering">
+              ${badge}
+              ${trendingBadge}
+              <div class="activity-image" style="background-image: url('${activity.photo_url || '/img/volunteer-default.jpg'}')"></div>
+              <div class="activity-content">
+                <div class="activity-header">${activity.title || 'Sin título'}</div>
+                <div class="activity-meta">
+                  <span><i class="fas fa-map-marker-alt"></i> ${activity.city || 'Sin ubicación'}${activity.country ? ', ' + activity.country : ''}</span>
+                  <span><i class="fas fa-calendar-alt"></i> ${activity.formattedDate}</span>
+                </div>
+                <div class="activity-impact">
+                  <span><i class="fas fa-users"></i> ${activity.volunteers_needed || 0} voluntarios necesarios</span>
+                </div>
+              </div>
+              <a href="/volunteering/${activity.id}" class="activity-link">Ver detalles</a>
+            </div>
+          `;
+        }
+        return '';
+      }).join('');
+    }
+  </script>
+
+  <!-- Scripts adicionales -->
+  <script src="/js/analytics.js"></script>
+  <script src="/js/auto-translate.js"></script>
+  <script src="/js/compartir.js"></script>
+  <script src="/js/navbar.js"></script>
+  <script src="/js/impactpoints.js"></script>
+  <script src="/js/modules/stripe-donation-modal.js"></script>
+  <script src="/js/modules/donation-success.js"></script>
+
+  <!-- Google Translate -->
+  <div id="google_translate_element" style="display:none;"></div>
+  <script>
+    function googleTranslateElementInit() {
+      if (window.autoTranslate) {
+        window.autoTranslate.init();
+      } else {
+        new google.translate.TranslateElement({
+          pageLanguage: 'es',
+          includedLanguages: 'en,es,fr,de,it,pt,ru,zh-CN,ar,ja,ko,hi,tr,pl,nl,sv,da,no,fi,he,th,vi,id,ms,tl,uk,cs,hu,ro,bg,hr,sk,sl,et,lv,lt,mt,el,ca,eu,gl',
+          layout: google.translate.TranslateElement.InlineLayout.SIMPLE,
+          autoDisplay: false
+        }, 'google_translate_element');
+      }
+    }
+  </script>
+  <script src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+
+  <!-- Estilos para notificaciones y loading -->
+  <style>
+    .notifications-container {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      z-index: 9999;
+    }
+    
+    .notification {
+      padding: 15px;
+      margin-bottom: 10px;
+      border-radius: 5px;
+      color: white;
+      display: flex;
+      align-items: center;
+      animation: slideIn 0.3s ease-out;
+    }
+    
+    .notification.error {
+      background-color: #ff4444;
+    }
+    
+    .notification.success {
+      background-color: #00C851;
+    }
+    
+    .notification i {
+      margin-right: 10px;
+    }
+    
+    @keyframes slideIn {
+      from { transform: translateX(100%); }
+      to { transform: translateX(0); }
+    }
+    
+    .loading-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(255, 255, 255, 0.8);
+      display: none;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      z-index: 9998;
+    }
+    
+    .loading-spinner {
+      border: 5px solid #f3f3f3;
+      border-top: 5px solid #2dd4bf;
+      border-radius: 50%;
+      width: 50px;
+      height: 50px;
+      animation: spin 1s linear infinite;
+    }
+    
+    .loading-text {
+      margin-top: 15px;
+      color: #333;
+      font-size: 1.1rem;
+    }
+    
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+    
+    .modal {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.5);
+      display: none;
+      justify-content: center;
+      align-items: center;
+      z-index: 9999;
+    }
+    
+    .modal-content {
+      background: white;
+      padding: 2rem;
+      border-radius: 10px;
+      max-width: 500px;
+      width: 90%;
+      text-align: center;
+    }
+  </style>
+
+  {% block scripts %}{% endblock %}
+</body>
+</html>

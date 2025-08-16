@@ -133,7 +133,7 @@ class CausesRenderer {
     return card;
   }
 
-     /**
+  /**
    * Muestra el modal de causa
    */
   async showModal(causeId, activeTab = 'details') {
@@ -201,7 +201,7 @@ class CausesRenderer {
                 <span>${cause.raised || 0} € de ${cause.goal || 0} €</span>
               </div>
             </div>
-            <div class="modal-cause-meta-grid" style="display:grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 1.2rem; margin-bottom: 1.5rem;">
+            <div class="modal-cause-meta-grid" style="display:grid; grid-template-columns:1fr 1fr; gap:1.2rem; margin-bottom:1.5rem;">
               <div class="meta-item"><i class="fas fa-map-marker-alt" style="color:var(--primary);"></i> ${cause.city || 'Sin ubicación'}${cause.country ? ', ' + cause.country : ''}</div>
               <div class="meta-item"><i class="fas fa-users" style="color:var(--primary);"></i> ${cause.donors || 0} donantes</div>
               <div class="meta-item"><i class="fas fa-heart" style="color:var(--primary);"></i> ${cause.beneficiaries || 0} beneficiarios</div>
@@ -213,44 +213,93 @@ class CausesRenderer {
             </div>
           </div>
         </div>
-        <div class="modal-cause-content">
-          <div class="content-section">
-            <h3 class="content-title"><i class="fas fa-align-left"></i> Resumen</h3>
-            <p class="content-text">${cause.short_description || 'No hay resumen disponible para esta causa.'}</p>
-          </div>
-          <div class="content-section">
-            <h3 class="content-title"><i class="fas fa-info-circle"></i> Descripción completa</h3>
-            <p class="content-text">${cause.description || 'No hay descripción detallada disponible para esta causa.'}</p>
-          </div>
-          ${(cause.contact_email || cause.phone_number) ? `
+        <div class="modal-tabs">
+          <button class="tab-btn ${activeTab === 'details' ? 'active' : ''}" data-tab="details">
+            <i class="fas fa-info-circle"></i> Detalles
+          </button>
+          <button class="tab-btn ${activeTab === 'donations' ? 'active' : ''}" data-tab="donations">
+            <i class="fas fa-donate"></i> Donaciones
+          </button>
+          <button class="tab-btn ${activeTab === 'participants' ? 'active' : ''}" data-tab="participants">
+            <i class="fas fa-users"></i> Participantes
+          </button>
+        </div>
+        <div class="tab-content ${activeTab === 'details' ? 'active' : ''}" id="detailsTab">
+          <div class="modal-cause-content">
             <div class="content-section">
-              <h3 class="content-title"><i class="fas fa-address-book"></i> Información de contacto</h3>
-              <div style="background:#f8fafc; border-radius:12px; padding:1.5rem; border:1px solid #e5e7eb; text-align:left;">
-                ${cause.contact_email ? `
-                  <div style="display:flex; align-items:center; gap:0.7rem; margin-bottom:${cause.phone_number ? '1rem' : '0'};">
-                    <i class="fas fa-envelope" style="color:var(--primary); font-size:1.1rem;"></i>
-                    <div>
-                      <span style="color:#6b7280; font-size:0.9rem; display:block;">Email de contacto:</span>
-                      <a href="mailto:${cause.contact_email}" style="color:var(--primary); font-weight:600; text-decoration:none; font-size:1rem;">
-                        ${cause.contact_email}
-                      </a>
-                    </div>
-                  </div>
-                ` : ''}
-                ${cause.phone_number ? `
-                  <div style="display:flex; align-items:center; gap:0.7rem;">
-                    <i class="fas fa-phone" style="color:var(--primary); font-size:1.1rem;"></i>
-                    <div>
-                      <span style="color:#6b7280; font-size:0.9rem; display:block;">Teléfono de contacto:</span>
-                      <a href="tel:${cause.phone_number}" style="color:var(--primary); font-weight:600; text-decoration:none; font-size:1rem;">
-                        ${cause.phone_number}
-                      </a>
-                    </div>
-                  </div>
-                ` : ''}
-              </div>
+              <h3 class="content-title"><i class="fas fa-align-left"></i> Resumen</h3>
+              <p class="content-text">${cause.short_description || 'No hay resumen disponible para esta causa.'}</p>
             </div>
-          ` : ''}
+            <div class="content-section">
+              <h3 class="content-title"><i class="fas fa-info-circle"></i> Descripción completa</h3>
+              <p class="content-text">${cause.description || 'No hay descripción detallada disponible para esta causa.'}</p>
+            </div>
+            ${(cause.contact_email || cause.phone_number) ? `
+              <div class="content-section">
+                <h3 class="content-title"><i class="fas fa-address-book"></i> Información de contacto</h3>
+                <div style="background:#f8fafc; border-radius:12px; padding:1.5rem; border:1px solid #e5e7eb; text-align:left;">
+                  ${cause.contact_email ? `
+                    <div style="display:flex; align-items:center; gap:0.7rem; margin-bottom:${cause.phone_number ? '1rem' : '0'};">
+                      <i class="fas fa-envelope" style="color:var(--primary); font-size:1.1rem;"></i>
+                      <div>
+                        <span style="color:#6b7280; font-size:0.9rem; display:block;">Email de contacto:</span>
+                        <a href="mailto:${cause.contact_email}" style="color:var(--primary); font-weight:600; text-decoration:none; font-size:1rem;">
+                          ${cause.contact_email}
+                        </a>
+                      </div>
+                    </div>
+                  ` : ''}
+                  ${cause.phone_number ? `
+                    <div style="display:flex; align-items:center; gap:0.7rem;">
+                      <i class="fas fa-phone" style="color:var(--primary); font-size:1.1rem;"></i>
+                      <div>
+                        <span style="color:#6b7280; font-size:0.9rem; display:block;">Teléfono de contacto:</span>
+                        <a href="tel:${cause.phone_number}" style="color:var(--primary); font-weight:600; text-decoration:none; font-size:1rem;">
+                          ${cause.phone_number}
+                        </a>
+                      </div>
+                    </div>
+                  ` : ''}
+                </div>
+              </div>
+            ` : ''}
+          </div>
+        </div>
+        <div class="tab-content ${activeTab === 'donations' ? 'active' : ''}" id="donationsTab">
+          <div class="content-section">
+            <h3 class="content-title"><i class="fas fa-donate"></i> Cómo donar</h3>
+            ${cause.stripe_accounts?.[0]?.charges_enabled ? `
+              <div class="stripe-donation-section">
+                <p>Puedes donar de forma segura con tarjeta de crédito/débito:</p>
+                <div class="donation-amount-selector" style="margin:1.5rem 0;">
+                  <div class="amount-buttons" style="display:flex; gap:0.8rem; margin-bottom:1rem; flex-wrap:wrap;">
+                    <button class="amount-btn" data-amount="5">5€</button>
+                    <button class="amount-btn" data-amount="10">10€</button>
+                    <button class="amount-btn" data-amount="20">20€</button>
+                    <button class="amount-btn" data-amount="50">50€</button>
+                    <button class="amount-btn" data-amount="100">100€</button>
+                  </div>
+                  <div class="custom-amount" style="display:flex; gap:0.5rem; margin-bottom:1rem;">
+                    <input type="number" id="customAmount" placeholder="Otra cantidad" min="1" max="10000" style="flex:1; padding:0.7rem; border:1px solid #e5e7eb; border-radius:6px;">
+                    <span style="display:flex; align-items:center; color:#6b7280;">€</span>
+                  </div>
+                  <button id="donateCauseBtn" class="btn btn-primary" style="width:100%;" data-cause-id="${cause.id}">
+                    <i class="fas fa-credit-card"></i> Donar con tarjeta
+                  </button>
+                </div>
+              </div>
+            ` : ''}
+            ${cause.how_to_donate ? `
+              <div class="other-donation-methods">
+                <h4>Métodos de donación:</h4>
+                <div class="donation-method">${cause.how_to_donate}</div>
+              </div>
+            ` : `
+              <p>No hay métodos de donación especificados para esta causa.</p>
+            `}
+          </div>
+        </div>
+        <div class="tab-content ${activeTab === 'participants' ? 'active' : ''}" id="participantsTab">
           <div class="content-section">
             <h3 class="content-title"><i class="fas fa-users"></i> Donantes</h3>
             ${donorsHtml}
@@ -273,6 +322,16 @@ class CausesRenderer {
       </div>
     `;
 
+    modal.querySelectorAll('.tab-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const tabName = btn.dataset.tab;
+        modal.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+        modal.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+        btn.classList.add('active');
+        modal.querySelector(`#${tabName}Tab`).classList.add('active');
+      });
+    });
+
     this.attachDonationEvents(modal, cause);
     modal.style.display = 'flex';
     document.body.style.overflow = 'hidden';
@@ -286,8 +345,6 @@ class CausesRenderer {
    * Modal profesional de donación con Stripe
    */
   openDonationModal(causeId) {
-    this.injectGridStyles(); // <-- Asegura que los estilos estén aplicados
-
     const cause = window.causes?.find(c => c.id == causeId);
     if (!cause) {
       this.showNotification('Causa no encontrada', 'error');
@@ -307,86 +364,90 @@ class CausesRenderer {
       left: 0;
       width: 100vw;
       height: 100vh;
-      background: rgba(0, 0, 0, 0.6);
+      background: rgba(0, 0, 0, 0.5);
       z-index: 10000;
       align-items: center;
       justify-content: center;
-      backdrop-filter: blur(5px);
-      font-family: 'Poppins', sans-serif;
     `;
     
     modal.innerHTML = `
-      <div class="modal-content donation-modal-pro">
-        <button class="close-modal-pro" id="closeDonationModal">
-          <i class="fas fa-times"></i>
-        </button>
+      <div class="modal-content donation-modal">
+        <button class="close-modal" id="closeDonationModal">&times;</button>
         
         <div class="donation-header">
-          <div class="donation-icon">
-            <i class="fas fa-heart"></i>
+          <div class="donation-cause-image">
+            <img src="${cause.photo_url || '/img/causa-default.jpg'}" alt="${cause.title}">
           </div>
-          <h2>${cause.title}</h2>
-          <p>${cause.short_description || 'Apoya esta causa solidaria'}</p>
-        </div>
-        
-        <div class="donation-form-pro">
-          <div class="amount-section">
-            <h3><i class="fas fa-euro-sign"></i> Selecciona cantidad</h3>
-            <div class="amount-grid">
-              <button class="amount-btn-pro" data-amount="5">5€</button>
-              <button class="amount-btn-pro" data-amount="10">10€</button>
-              <button class="amount-btn-pro" data-amount="25">25€</button>
-              <button class="amount-btn-pro" data-amount="50">50€</button>
-              <button class="amount-btn-pro" data-amount="100">100€</button>
-              <button class="amount-btn-pro custom-btn" id="customBtn">Otra cantidad</button>
-            </div>
-            
-            <div class="custom-amount-wrapper" id="customAmountWrapper" style="display:none;">
-              <label>Introduce tu cantidad:</label>
-              <div class="input-group-pro">
-                <span class="currency-symbol">€</span>
-                <input type="number" id="customAmount" min="1" max="10000" step="0.01" placeholder="25.00">
+          <div class="donation-cause-info">
+            <h2>${cause.title}</h2>
+            <p>${cause.short_description || ''}</p>
+            <div class="cause-progress-mini">
+              <div class="progress-bar-mini">
+                <div class="progress-fill-mini" style="width: ${cause.goal ? Math.min((cause.raised || 0) / cause.goal * 100, 100) : 0}%"></div>
               </div>
+              <span class="progress-text-mini">${cause.raised || 0}€ recaudados de ${cause.goal || 0}€</span>
             </div>
           </div>
+        </div>
+
+        <div class="donation-form">
+          <h3><i class="fas fa-heart"></i> Tu donación</h3>
           
-          <div class="impact-notice">
-            <i class="fas fa-star"></i>
-            <span>Ganarás <strong>${cause.points || 20} puntos</strong> de impacto por cada euro donado</span>
+          <div class="amount-buttons">
+            <button class="amount-btn" data-amount="5">5€</button>
+            <button class="amount-btn" data-amount="10">10€</button>
+            <button class="amount-btn" data-amount="25">25€</button>
+            <button class="amount-btn" data-amount="50">50€</button>
+            <button class="amount-btn" data-amount="100">100€</button>
           </div>
           
-          <button id="proceedToDonationBtn" class="btn-donate-pro" disabled>
-            <i class="fas fa-lock"></i>
-            <span>Selecciona una cantidad</span>
+          <div class="custom-amount-section">
+            <label for="customAmount">Otra cantidad:</label>
+            <div class="amount-input-wrapper">
+              <input type="number" id="customAmount" min="1" max="10000" step="0.01" placeholder="0.00">
+              <span class="currency">€</span>
+            </div>
+          </div>
+
+          <div class="donor-info-section">
+            <h4><i class="fas fa-user"></i> Información del donante (opcional)</h4>
+            <div class="form-row">
+              <input type="text" id="donorName" placeholder="Tu nombre" maxlength="100">
+              <input type="email" id="donorEmail" placeholder="Tu email (para recibo)" maxlength="150">
+            </div>
+            <textarea id="donorMessage" placeholder="Mensaje de apoyo (opcional)" maxlength="500" rows="3"></textarea>
+          </div>
+
+          <div class="payment-info">
+            <div class="stripe-badge">
+              <i class="fab fa-stripe"></i>
+              <span>Procesado de forma segura por Stripe</span>
+            </div>
+            <div class="fee-info">
+              <i class="fas fa-info-circle"></i>
+              <span>Comisión de procesamiento: 2.9% + €0.30</span>
+            </div>
+          </div>
+
+          <button id="proceedToDonationBtn" class="btn btn-donation" disabled>
+            <i class="fas fa-credit-card"></i>
+            <span>Proceder al pago seguro</span>
           </button>
         </div>
-        
-        <div class="donation-footer-pro">
+
+        <div class="donation-footer">
           <div class="security-badges">
-            <div class="stripe-badge-pro">
-              <i class="fab fa-stripe"></i>
-              <span>Powered by Stripe</span>
+            <div class="security-item">
+              <i class="fas fa-shield-alt"></i>
+              <span>Pago seguro SSL</span>
             </div>
-            <div class="security-items">
-              <div class="security-item">
-                <i class="fas fa-shield-alt"></i>
-                <span>Pago 100% seguro</span>
-              </div>
-              <div class="security-item">
-                <i class="fas fa-lock"></i>
-                <span>Datos protegidos</span>
-              </div>
+            <div class="security-item">
+              <i class="fas fa-lock"></i>
+              <span>Datos protegidos</span>
             </div>
-          </div>
-          <div class="payment-methods-pro">
-            <span>Métodos de pago aceptados:</span>
-            <div class="payment-icons">
-              <i class="fab fa-cc-visa"></i>
-              <i class="fab fa-cc-mastercard"></i>
-              <i class="fab fa-cc-amex"></i>
-              <i class="fab fa-paypal"></i>
-              <i class="fab fa-apple-pay"></i>
-              <i class="fab fa-google-pay"></i>
+            <div class="security-item">
+              <i class="fas fa-receipt"></i>
+              <span>Recibo automático</span>
             </div>
           </div>
         </div>
@@ -395,75 +456,124 @@ class CausesRenderer {
 
     document.body.appendChild(modal);
     document.body.style.overflow = 'hidden';
+    this.setupDonationModalEvents(modal, cause);
+  }
 
-    // Eventos
+  /**
+   * Configurar eventos del modal de donación
+   */
+  setupDonationModalEvents(modal, cause) {
     let selectedAmount = 0;
-    
-    // Cerrar modal
-    modal.querySelector('#closeDonationModal').onclick = () => this.closeDonationModal();
-    modal.onclick = (e) => { if (e.target === modal) this.closeDonationModal(); };
+    const closeBtn = modal.querySelector('#closeDonationModal');
+    closeBtn.onclick = () => this.closeDonationModal();
+    modal.onclick = (e) => {
+      if (e.target === modal) this.closeDonationModal();
+    };
 
-    // Botones de cantidad
-    const amountButtons = modal.querySelectorAll('.amount-btn-pro:not(.custom-btn)');
-    const customBtn = modal.querySelector('#customBtn');
-    const customWrapper = modal.querySelector('#customAmountWrapper');
-    const customInput = modal.querySelector('#customAmount');
-    
+    const amountButtons = modal.querySelectorAll('.amount-btn');
     amountButtons.forEach(btn => {
       btn.addEventListener('click', () => {
         amountButtons.forEach(b => b.classList.remove('selected'));
-        customBtn.classList.remove('selected');
         btn.classList.add('selected');
         selectedAmount = parseFloat(btn.dataset.amount);
-        customWrapper.style.display = 'none';
-        customInput.value = '';
-        updateBtn();
+        modal.querySelector('#customAmount').value = '';
+        this.updateDonationButton(modal, selectedAmount);
       });
     });
 
-    // Botón cantidad personalizada
-    customBtn.addEventListener('click', () => {
-      amountButtons.forEach(b => b.classList.remove('selected'));
-      customBtn.classList.add('selected');
-      customWrapper.style.display = 'block';
-      customInput.focus();
-      selectedAmount = 0;
-      updateBtn();
-    });
-
-    // Input cantidad personalizada
-    customInput.addEventListener('input', (e) => {
+    const customAmountInput = modal.querySelector('#customAmount');
+    customAmountInput.addEventListener('input', (e) => {
       selectedAmount = parseFloat(e.target.value) || 0;
-      updateBtn();
+      amountButtons.forEach(b => b.classList.remove('selected'));
+      this.updateDonationButton(modal, selectedAmount);
     });
 
-    // Botón donar
     const proceedBtn = modal.querySelector('#proceedToDonationBtn');
     proceedBtn.addEventListener('click', async () => {
-      if (!selectedAmount || selectedAmount < 1 || selectedAmount > 10000) {
-        this.showNotification('Introduce una cantidad válida entre 1€ y 10.000€', 'error');
+      const amount = selectedAmount;
+      if (!amount || amount < 1 || amount > 10000) {
+        this.showNotification('Por favor, introduce una cantidad válida entre €1 y €10,000', 'error');
         return;
       }
-      await this.processDonationFromModal(cause.id, selectedAmount);
-    });
 
-    function updateBtn() {
-      const isValid = selectedAmount >= 1 && selectedAmount <= 10000;
-      proceedBtn.disabled = !isValid;
+      await this.processDonation(cause, amount, modal);
+    });
+  }
+
+  /**
+   * Procesar donación con Stripe
+   */
+  async processDonation(cause, amount, modal) {
+    try {
+      const proceedBtn = modal.querySelector('#proceedToDonationBtn');
+      const originalText = proceedBtn.innerHTML;
       
-      if (isValid) {
-        proceedBtn.innerHTML = `
-          <i class="fas fa-credit-card"></i>
-          <span>Donar ${selectedAmount.toFixed(2)}€ de forma segura</span>
-        `;
-        proceedBtn.classList.remove('disabled');
-      } else {
-        proceedBtn.innerHTML = `
-          <i class="fas fa-lock"></i>
-          <span>Selecciona una cantidad</span>
-        `;
-        proceedBtn.classList.add('disabled');
+      proceedBtn.disabled = true;
+      proceedBtn.innerHTML = `
+        <i class="fas fa-spinner fa-spin"></i>
+        <span>Procesando...</span>
+      `;
+
+      const donorName = modal.querySelector('#donorName').value.trim();
+      const donorEmail = modal.querySelector('#donorEmail').value.trim();
+      const donorMessage = modal.querySelector('#donorMessage').value.trim();
+
+      if (donorEmail && !this.isValidEmail(donorEmail)) {
+        throw new Error('Por favor, introduce un email válido');
       }
+
+      const response = await fetch('/api/stripe/create-checkout', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+        body: JSON.stringify({
+          causeId: cause.id,
+          amount: amount,
+          currency: 'eur',
+          donorName: donorName || undefined,
+          donorEmail: donorEmail || undefined,
+          message: donorMessage || undefined
+        })
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.error || 'Error procesando la donación');
+      }
+
+      if (!data.url) {
+        throw new Error('No se recibió URL de pago de Stripe');
+      }
+      
+      localStorage.setItem('pendingDonation', JSON.stringify({
+        causeId: cause.id,
+        causeTitle: cause.title,
+        amount: amount,
+        timestamp: Date.now()
+      }));
+
+      window.location.href = data.url;
+
+    } catch (error) {
+      console.error('❌ Error procesando donación:', error);
+      const proceedBtn = modal.querySelector('#proceedToDonationBtn');
+      proceedBtn.disabled = false;
+      proceedBtn.innerHTML = `
+        <i class="fas fa-credit-card"></i>
+        <span>Donar ${selectedAmount.toFixed(2)}€ de forma segura</span>
+      `;
+      
+      let errorMessage = 'Error procesando la donación. Por favor, inténtalo de nuevo.';
+      if (error.message.includes('NO_STRIPE_ACCOUNT')) {
+        errorMessage = 'Esta causa no tiene configurado el sistema de pagos.';
+      } else if (error.message.includes('STRIPE_NOT_ACTIVE')) {
+        errorMessage = 'El sistema de pagos de esta causa está pendiente de activación.';
+      } else if (error.message.includes('email')) {
+        errorMessage = error.message;
+      }
+      
+      this.showNotification(errorMessage, 'error');
     }
   }
 
@@ -760,7 +870,6 @@ class CausesRenderer {
         gap: 2rem;
       }
 
-      /* ESTILOS EXISTENTES DE TARJETAS */
       .cause-card {
         background: white;
         border-radius: 12px;
@@ -890,7 +999,7 @@ class CausesRenderer {
 
       .progress-fill {
         height: 100%;
-        background: linear-gradient(90deg, var(--primary), var(--accent));
+        background: var(--primary);
         border-radius: 4px;
       }
 
@@ -909,376 +1018,565 @@ class CausesRenderer {
       .cause-actions .btn {
         flex: 1;
         text-align: center;
+        justify-content: center;
       }
 
-      /* NUEVOS ESTILOS PROFESIONALES PARA EL MODAL DE DONACIÓN */
-      .donation-modal-pro {
-        background: white;
-        border-radius: 20px;
-        max-width: 480px;
-        width: 95vw;
-        max-height: 90vh;
-        overflow-y: auto;
-        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
-        position: relative;
-        animation: modalSlideIn 0.3s ease-out;
-      }
-
-      @keyframes modalSlideIn {
-        from { transform: translateY(30px); opacity: 0; }
-        to { transform: translateY(0); opacity: 1; }
-      }
-
-      .close-modal-pro {
-        position: absolute;
-        top: 1rem;
-        right: 1rem;
-        background: #f8fafc;
+      .btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.6rem 1.2rem;
+        border-radius: 8px;
+        font-weight: 600;
+        text-decoration: none;
         border: none;
-        width: 40px;
-        height: 40px;
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
         cursor: pointer;
-        color: #6b7280;
-        transition: all 0.2s;
-        z-index: 1;
+        transition: all 0.2s ease;
+        font-size: 0.9rem;
       }
 
-      .close-modal-pro:hover {
-        background: #e2e8f0;
-        color: var(--primary);
-        transform: scale(1.05);
-      }
-
-      .donation-header {
-        text-align: center;
-        padding: 2rem 2rem 1rem;
-        background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
+      .btn-primary {
+        background: var(--primary);
         color: white;
-        border-radius: 20px 20px 0 0;
-        position: relative;
       }
 
-      .donation-icon {
-        width: 60px;
-        height: 60px;
-        background: rgba(255, 255, 255, 0.2);
-        border-radius: 50%;
+      .btn-primary:hover {
+        background: var(--primary-dark);
+        transform: translateY(-2px);
+      }
+
+      .btn-accent {
+        background: var(--accent);
+        color: white;
+      }
+
+      .btn-accent:hover {
+        background: var(--accent-dark);
+        transform: translateY(-2px);
+      }
+
+      .btn-outline {
+        background: transparent;
+        color: var(--primary);
+        border: 1px solid var(--primary);
+      }
+
+      .btn-outline:hover {
+        background: var(--primary);
+        color: white;
+        transform: translateY(-2px);
+      }
+
+      .modal {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0,0,0,0.5);
+        z-index: 1000;
+        justify-content: center;
+        align-items: center;
+      }
+
+      .modal-content {
+        background: #fff;
+        padding: 2rem;
+        border-radius: 10px;
+        max-width: 500px;
+        width: 90%;
+        text-align: center;
+      }
+
+      .modal-cause-container {
+        font-family: 'Poppins', sans-serif;
+        color: #2d3748;
+      }
+
+      .modal-cause-header {
+        display: flex;
+        gap: 2rem;
+        margin-bottom: 2rem;
+      }
+
+      .modal-cause-image-wrapper {
+        flex: 1;
+        min-width: 300px;
+        height: 280px;
+        border-radius: 12px;
+        overflow: hidden;
+        position: relative;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+      }
+
+      .modal-cause-image {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.3s ease;
+      }
+
+      .modal-cause-badge {
+        position: absolute;
+        top: 1.5rem;
+        right: 1.5rem;
+        background: rgba(255,255,255,0.95);
+        padding: 0.5rem 1rem;
+        border-radius: 50px;
+        font-size: 0.9rem;
+        font-weight: 600;
         display: flex;
         align-items: center;
-        justify-content: center;
-        margin: 0 auto 1rem;
-        backdrop-filter: blur(10px);
+        gap: 0.6rem;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        z-index: 2;
       }
 
-      .donation-icon i {
-        font-size: 1.8rem;
+      .modal-cause-badge.urgent {
+        background: var(--urgent);
         color: white;
       }
 
-      .donation-header h2 {
-        font-size: 1.6rem;
+      .modal-cause-info {
+        flex: 1.5;
+        display: flex;
+        flex-direction: column;
+      }
+
+      .modal-cause-title {
+        font-size: 1.8rem;
         font-weight: 700;
-        margin-bottom: 0.5rem;
-        text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-      }
-
-      .donation-header p {
-        font-size: 1rem;
-        opacity: 0.9;
-        margin-bottom: 0;
-        line-height: 1.5;
-      }
-
-      .donation-form-pro {
-        padding: 2rem;
-      }
-
-      .amount-section h3 {
         color: var(--primary);
-        font-size: 1.2rem;
-        font-weight: 700;
+        margin-bottom: 1rem;
+        line-height: 1.3;
+      }
+
+      .modal-cause-progress-container {
+        background: #f8fafc;
+        padding: 1.5rem;
+        border-radius: 12px;
         margin-bottom: 1.5rem;
+        border: 1px solid #e5e7eb;
+      }
+
+      .modal-cause-meta-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+        gap: 1.2rem;
+        margin-bottom: 1.5rem;
+      }
+
+      .meta-icon {
+        color: var(--primary);
+        font-size: 1.1rem;
+        width: 1.5rem;
+        text-align: center;
+      }
+
+      .points-notice {
+        background: #f0f9ff;
+        border-left: 4px solid var(--accent);
+        padding: 1rem;
+        border-radius: 0 8px 8px 0;
+        margin: 1rem 0;
+        font-size: 0.95rem;
+        display: flex;
+        align-items: center;
+        gap: 0.7rem;
+      }
+
+      .modal-cause-content { 
+        margin-top: 1.5rem; 
+      }
+
+      .content-section { 
+        margin-bottom: 2rem; 
+      }
+
+      .content-title {
+        font-size: 1.3rem;
+        font-weight: 600;
+        color: var(--primary);
+        margin-bottom: 1rem;
+        display: flex;
+        align-items: center;
+        gap: 0.7rem;
+      }
+
+      .content-text {
+        line-height: 1.7;
+        color: #4b5563;
+        font-size: 1.05rem;
+      }
+
+      .modal-tabs {
+        display: flex;
+        gap: 0.5rem;
+        margin-bottom: 1.5rem;
+        border-bottom: 1px solid #e5e7eb;
+        padding-bottom: 0.5rem;
+      }
+
+      .tab-btn {
+        padding: 0.7rem 1.2rem;
+        border-radius: 6px;
+        background: none;
+        border: none;
+        cursor: pointer;
+        font-weight: 600;
+        color: #6b7280;
         display: flex;
         align-items: center;
         gap: 0.5rem;
+        transition: all 0.2s;
       }
 
-      .amount-grid {
-        display: grid;
-        grid-template-columns: repeat(3, 1fr);
+      .tab-btn:hover {
+        background: #f8fafc;
+        color: var(--primary);
+      }
+
+      .tab-btn.active {
+        background: var(--primary);
+        color: white;
+      }
+
+      .tab-content {
+        display: none;
+      }
+
+      .tab-content.active {
+        display: block;
+      }
+
+      .stripe-donation-section {
+        background: #f8fafc;
+        border-radius: 12px;
+        padding: 1.5rem;
+        margin-bottom: 1.5rem;
+        border: 1px solid #e5e7eb;
+      }
+
+      .other-donation-methods {
+        background: #f0f9ff;
+        border-radius: 12px;
+        padding: 1.5rem;
+        margin-top: 1.5rem;
+        border-left: 4px solid var(--accent);
+      }
+
+      .donation-method {
+        white-space: pre-line;
+        line-height: 1.6;
+      }
+
+      @media (max-width: 768px) {
+        .causes-grid {
+          grid-template-columns: 1fr;
+        }
+        
+        .cause-actions {
+          flex-direction: column;
+        }
+        
+        .modal-cause-header { 
+          flex-direction: column; 
+        }
+      }
+
+      @media (max-width: 900px) {
+        .causes-grid {
+          padding: 1.2rem 0.5rem;
+        }
+      }
+
+      .amount-btn {
+        padding: 0.8rem 1.2rem;
+        border: 2px solid #e5e7eb;
+        background: white;
+        border-radius: 8px;
+        cursor: pointer;
+        font-weight: 600;
+        transition: all 0.2s;
+        flex: 1;
+        min-width: 60px;
+      }
+      
+      .amount-btn:hover {
+        border-color: var(--primary);
+        background: #f8fafc;
+      }
+      
+      .amount-btn.selected {
+        border-color: var(--primary);
+        background: var(--primary);
+        color: white;
+      }
+      
+      .notification {
+        animation: slideInRight 0.3s ease-out;
+      }
+      
+      @keyframes slideInRight {
+        from {
+          transform: translateX(100%);
+          opacity: 0;
+        }
+        to {
+          transform: translateX(0);
+          opacity: 1;
+        }
+      }
+
+      .modal-bg {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        background: rgba(0, 0, 0, 0.5);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 10000;
+      }
+
+      .close-modal {
+        position: absolute;
+        top: 1rem;
+        right: 1rem;
+        background: none;
+        border: none;
+        font-size: 1.5rem;
+        color: #6b7280;
+        cursor: pointer;
+        z-index: 1;
+      }
+
+      .close-modal:hover {
+        color: #374151;
+      }
+
+      /* Estilos específicos para el modal de donación */
+      .donation-modal {
+        max-width: 500px;
+        width: 95%;
+        background: white;
+        border-radius: 12px;
+        padding: 1.5rem;
+        position: relative;
+      }
+
+      .donation-header {
+        display: flex;
         gap: 1rem;
         margin-bottom: 1.5rem;
       }
 
-      .amount-btn-pro {
-        background: #f8fafc;
-        border: 2px solid #e2e8f0;
-        border-radius: 12px;
-        padding: 1rem;
-        font-size: 1.1rem;
-        font-weight: 700;
-        color: var(--primary);
-        cursor: pointer;
-        transition: all 0.2s;
-        position: relative;
+      .donation-cause-image {
+        width: 100px;
+        height: 100px;
+        border-radius: 8px;
         overflow: hidden;
       }
 
-      .amount-btn-pro::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: -100%;
+      .donation-cause-image img {
         width: 100%;
         height: 100%;
-        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
-        transition: left 0.5s;
+        object-fit: cover;
       }
 
-      .amount-btn-pro:hover::before {
-        left: 100%;
+      .donation-cause-info {
+        flex: 1;
+        text-align: left;
       }
 
-      .amount-btn-pro:hover {
-        border-color: var(--primary);
-        transform: translateY(-2px);
-        box-shadow: 0 8px 25px rgba(74, 111, 165, 0.15);
-      }
-
-      .amount-btn-pro.selected {
-        background: linear-gradient(135deg, var(--primary), var(--accent));
-        color: white;
-        border-color: var(--primary);
-        transform: translateY(-2px);
-        box-shadow: 0 8px 25px rgba(74, 111, 165, 0.3);
-      }
-
-      .amount-btn-pro.custom-btn {
-        background: #f0f9ff;
-        border-color: var(--accent);
-        color: var(--accent);
-      }
-
-      .amount-btn-pro.custom-btn.selected {
-        background: linear-gradient(135deg, var(--accent), var(--primary));
-      }
-
-      .custom-amount-wrapper {
-        margin-bottom: 1.5rem;
-        animation: slideDown 0.3s ease-out;
-      }
-
-      @keyframes slideDown {
-        from { opacity: 0; transform: translateY(-10px); }
-        to { opacity: 1; transform: translateY(0); }
-      }
-
-      .custom-amount-wrapper label {
-        display: block;
-        color: var(--primary);
-        font-weight: 600;
+      .donation-cause-info h2 {
+        font-size: 1.3rem;
         margin-bottom: 0.5rem;
-        font-size: 0.95rem;
-      }
-
-      .input-group-pro {
-        position: relative;
-        display: flex;
-        align-items: center;
-      }
-
-      .currency-symbol {
-        position: absolute;
-        left: 1rem;
-        color: var(--primary);
-        font-weight: 700;
-        font-size: 1.1rem;
-        z-index: 1;
-      }
-
-      .input-group-pro input {
-        width: 100%;
-        padding: 1rem 1rem 1rem 2.5rem;
-        border: 2px solid #e2e8f0;
-        border-radius: 12px;
-        font-size: 1.1rem;
-        font-weight: 600;
-        color: var(--primary);
-        transition: all 0.2s;
-      }
-
-      .input-group-pro input:focus {
-        outline: none;
-        border-color: var(--primary);
-        box-shadow: 0 0 0 3px rgba(74, 111, 165, 0.1);
-      }
-
-      .impact-notice {
-        background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
-        border: 1px solid #bfdbfe;
-        border-radius: 12px;
-        padding: 1rem;
-        margin-bottom: 2rem;
-        display: flex;
-        align-items: center;
-        gap: 0.75rem;
         color: var(--primary);
       }
 
-      .impact-notice i {
-        color: #f59e0b;
-        font-size: 1.1rem;
+      .donation-cause-info p {
+        font-size: 0.9rem;
+        color: #6b7280;
+        margin-bottom: 0.5rem;
       }
 
-      .btn-donate-pro {
-        width: 100%;
-        padding: 1.2rem 2rem;
-        background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
-        color: white;
-        border: none;
-        border-radius: 12px;
-        font-size: 1.1rem;
-        font-weight: 700;
-        cursor: pointer;
-        transition: all 0.3s;
-        position: relative;
+      .cause-progress-mini {
+        margin-top: 0.5rem;
+      }
+
+      .progress-bar-mini {
+        height: 6px;
+        background: #e5e7eb;
+        border-radius: 3px;
         overflow: hidden;
-        text-transform: uppercase;
-        letter-spacing: 0.5px;
+        margin-bottom: 0.3rem;
       }
 
-      .btn-donate-pro::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: -100%;
-        width: 100%;
+      .progress-fill-mini {
         height: 100%;
-        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
-        transition: left 0.5s;
+        background: var(--primary);
       }
 
-      .btn-donate-pro:hover::before {
-        left: 100%;
+      .progress-text-mini {
+        font-size: 0.8rem;
+        color: #6b7280;
       }
 
-      .btn-donate-pro:hover:not(.disabled) {
-        transform: translateY(-3px);
-        box-shadow: 0 15px 35px rgba(74, 111, 165, 0.4);
+      .donation-form {
+        margin-top: 1.5rem;
       }
 
-      .btn-donate-pro.disabled {
-        background: #e2e8f0;
-        color: #9ca3af;
-        cursor: not-allowed;
-        transform: none;
+      .donation-form h3 {
+        font-size: 1.1rem;
+        color: var(--primary);
+        margin-bottom: 1rem;
+        text-align: left;
       }
 
-      .donation-footer-pro {
-        padding: 1.5rem 2rem 2rem;
-        background: #f8fafc;
-        border-radius: 0 0 20px 20px;
-      }
-
-      .security-badges {
-        margin-bottom: 1.5rem;
-      }
-
-      .stripe-badge-pro {
+      .amount-buttons {
         display: flex;
-        align-items: center;
-        justify-content: center;
         gap: 0.5rem;
         margin-bottom: 1rem;
-        color: #635bff;
+        flex-wrap: wrap;
+      }
+
+      .custom-amount-section {
+        margin-bottom: 1.5rem;
+      }
+
+      .custom-amount-section label {
+        display: block;
+        margin-bottom: 0.5rem;
+        font-size: 0.9rem;
+        color: #6b7280;
+        text-align: left;
+      }
+
+      .amount-input-wrapper {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+      }
+
+      .amount-input-wrapper input {
+        flex: 1;
+        padding: 0.8rem;
+        border: 1px solid #e5e7eb;
+        border-radius: 6px;
+        font-size: 1rem;
+      }
+
+      .currency {
         font-weight: 600;
+      }
+
+      .donor-info-section {
+        margin-bottom: 1.5rem;
+      }
+
+      .donor-info-section h4 {
+        font-size: 1rem;
+        color: var(--primary);
+        margin-bottom: 0.8rem;
+        text-align: left;
+      }
+
+      .form-row {
+        display: flex;
+        gap: 0.5rem;
+        margin-bottom: 0.8rem;
+      }
+
+      .form-row input {
+        flex: 1;
+        padding: 0.8rem;
+        border: 1px solid #e5e7eb;
+        border-radius: 6px;
         font-size: 0.9rem;
       }
 
-      .stripe-badge-pro i {
-        font-size: 1.5rem;
+      textarea {
+        width: 100%;
+        padding: 0.8rem;
+        border: 1px solid #e5e7eb;
+        border-radius: 6px;
+        font-size: 0.9rem;
+        resize: vertical;
       }
 
-      .security-items {
+      .payment-info {
+        margin-bottom: 1.5rem;
+        font-size: 0.8rem;
+        color: #6b7280;
+      }
+
+      .stripe-badge {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        margin-bottom: 0.5rem;
+      }
+
+      .stripe-badge i {
+        color: #635bff;
+        font-size: 1.2rem;
+      }
+
+      .fee-info {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+      }
+
+      .btn-donation {
+        width: 100%;
+        padding: 1rem;
+        background: var(--primary);
+        color: white;
+        border: none;
+        border-radius: 8px;
+        font-weight: 600;
+        font-size: 1rem;
+        cursor: pointer;
+        transition: all 0.2s;
+      }
+
+      .btn-donation:hover {
+        background: var(--primary-dark);
+      }
+
+      .btn-donation.disabled {
+        background: #e5e7eb;
+        cursor: not-allowed;
+      }
+
+      .donation-footer {
+        margin-top: 1.5rem;
+        padding-top: 1rem;
+        border-top: 1px solid #e5e7eb;
+      }
+
+      .security-badges {
         display: flex;
         justify-content: center;
-        gap: 1.5rem;
+        gap: 1rem;
         flex-wrap: wrap;
       }
 
       .security-item {
         display: flex;
         align-items: center;
-        gap: 0.4rem;
+        gap: 0.3rem;
+        font-size: 0.8rem;
         color: #6b7280;
-        font-size: 0.85rem;
-        font-weight: 500;
       }
 
       .security-item i {
-        color: #10b981;
-        font-size: 0.9rem;
-      }
-
-      .payment-methods-pro {
-        text-align: center;
-        border-top: 1px solid #e2e8f0;
-        padding-top: 1.5rem;
-      }
-
-      .payment-methods-pro span {
-        display: block;
-        color: #6b7280;
-        font-size: 0.85rem;
-        font-weight: 500;
-        margin-bottom: 0.75rem;
-      }
-
-      .payment-icons {
-        display: flex;
-        justify-content: center;
-        gap: 1rem;
-        flex-wrap: wrap;
-      }
-
-      .payment-icons i {
-        font-size: 1.8rem;
-        color: #6b7280;
-        transition: all 0.2s;
-      }
-
-      .payment-icons i:hover {
         color: var(--primary);
-        transform: scale(1.1);
-      }
-
-      /* Responsive */
-      @media (max-width: 768px) {
-        .donation-modal-pro {
-          margin: 1rem;
-          width: calc(100vw - 2rem);
-        }
-        
-        .amount-grid {
-          grid-template-columns: repeat(2, 1fr);
-        }
-        
-        .security-items {
-          flex-direction: column;
-          gap: 0.5rem;
-        }
-        
-        .payment-icons {
-          gap: 0.75rem;
-        }
-        
-        .payment-icons i {
-          font-size: 1.5rem;
-        }
       }
     `;
     document.head.appendChild(style);

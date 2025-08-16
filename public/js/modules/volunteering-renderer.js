@@ -303,7 +303,7 @@ class VolunteeringRenderer {
     // Llenar contenido del modal
     modalBody.innerHTML = `
       <h1 style="font-size:2rem; font-weight:800; color:var(--primary); margin-bottom:2rem; text-align:left;">${volunteering.title}</h1>
-      <div class="volunteering-modal-main" style="display:flex; gap:2rem; margin-bottom:2rem; flex-wrap:wrap;">
+      <div style="display:flex; gap:2rem; margin-bottom:2rem; flex-wrap:wrap;">
         <div style="flex:1; min-width:320px; height:300px; border-radius:12px; overflow:hidden; position:relative;">
           <img src="${volunteering.photo_url || '/img/volunteering-default.jpg'}" 
                alt="Imagen del voluntariado ${volunteering.title}"
@@ -456,4 +456,83 @@ window.volunteeringRenderer = new VolunteeringRenderer();
 // Si es un módulo ES6, también exportar
 if (typeof module !== 'undefined' && module.exports) {
   module.exports = VolunteeringRenderer;
+}
+
+async function loadVolunteeringsFromSupabase(filter = "all", searchTerm = "") {
+  currentFilter = filter;
+  
+  let query = supabase
+    .from('volunteering')
+    .select(`
+      *,
+      linkedCause:causes!volunteering_cause_id_fkey(id, title, photo_url)
+    `)
+    .order('created_at', { ascending: false });
+
+  if (filter !== "all") {
+    query = query.eq('category', filter);
+  }
+  if (searchTerm && searchTerm.trim() !== "") {
+    query = query.or(`title.ilike.%${searchTerm}%,description.ilike.%${searchTerm}%,city.ilike.%${searchTerm}%,country.ilike.%${searchTerm}%`);
+  }
+
+  // Obtener participación del usuario
+  let joinedVolunteeringIds = [];
+  if (currentUserId) {
+    const { data: memberships } = await supabase
+      .from('volunteering_members')
+      .select('volunteering_id')
+      .eq('user_id', currentUserId)
+      .eq('status', 'active');
+    joinedVolunteeringIds = memberships ? memberships.map(m => m.volunteering_id) : [];
+  }
+
+  const { data: volunteerings, error } = await query;
+  const volunteeringsList = document.getElementById('volunteeringsList');
+  
+  if (error) {
+    volunteeringsList.innerHTML = '<div style="color:#e53e3e;text-align:center;">Error al cargar los voluntariados.</div>';
+    return;
+  }
+
+  if (!volunteerings || volunteerings.length === 0) {
+    volunteeringsList.innerHTML = '<div style="color:#6b7280;text-align:center;padding:2rem;grid-column:1/-1;">No se encontraron voluntariados.</div>';
+    return;
+  }
+
+  // Obtener el número de voluntarios activos por voluntariado
+  const volunteeringIds = volunteerings.map(v => v.id);
+  let volunteersMap = {};
+  if (volunteeringIds.length > 0) {
+    const { data: members } = await supabase
+      .from('volunteering_members')
+      .select('volunteering_id')
+      .in('volunteering_id', volunteeringIds)
+      .eq('status', 'active');
+    if (members) {
+      members.forEach(m => {
+        volunteersMap[m.volunteering_id] = (volunteersMap[m.volunteering_id] || 0) + 1;
+      });
+    }
+  }
+
+  // Procesar datos para el renderer
+  volunteerings.forEach(volunteering => {
+    volunteering.isParticipating = joinedVolunteeringIds.includes(volunteering.id);
+    volunteering.volunteers = volunteersMap[volunteering.id] || 0; // <-- CORREGIDO
+    if (volunteering.linkedCause && Array.isArray(volunteering.linkedCause)) {
+      volunteering.linkedCause = volunteering.linkedCause[0] || null;
+    }
+    if (!volunteering.photo_url) {
+      volunteering.photo_url = '/images/default-volunteering.jpg';
+    }
+  });
+
+  window.volunteerings = volunteerings;
+
+  if (window.volunteeringRenderer) {
+    window.volunteeringRenderer.renderGrid(volunteerings, volunteeringsList);
+  } else {
+    volunteeringsList.innerHTML = '<div style="color:#e53e3e;text-align:center;">Error cargando el sistema de visualización.</div>';
+  }
 }
