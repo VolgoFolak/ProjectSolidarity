@@ -1,0 +1,587 @@
+<!DOCTYPE html>
+<html lang="{{ lang if lang else 'es' }}" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>{% block title %}Solidarity{% endblock %}</title>
+  <meta name="description" content="Plataforma colaborativa para impulsar la solidaridad y el impacto social">
+  
+  <!-- SEO Meta Tags -->
+  <meta property="og:title" content="Solidarity - Create Social Impact">
+  <meta property="og:description" content="Join our platform to support causes, volunteer, and make a difference">
+  <meta property="og:image" content="https://project-solidarity.com/images/social-share.jpg">
+  <meta property="og:url" content="https://project-solidarity.com">
+  <meta property="og:type" content="website">
+  <meta name="twitter:card" content="summary_large_image">
+  
+  <!-- Favicon -->
+  <link rel="icon" href="/images/favicon.ico" type="image/x-icon">
+  <link rel="apple-touch-icon" href="/images/apple-touch-icon.png">
+  
+  <!-- CSRF Protection -->
+  <meta name="csrf-token" content="{{ csrfToken }}">
+  
+  <!-- Preload Critical Assets -->
+  <link rel="preload" href="/css/style.css" as="style">
+  <link rel="preload" href="/app.js" as="script">
+  <link rel="preload" href="/js/lib/axios.min.js" as="script">
+  
+  <!-- CSS -->
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  
+  <!-- Google Analytics 4 - Configuración Mejorada -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-KLTQ612VGL"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    // Configuración para desarrollo y producción
+    if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+      gtag('config', 'G-KLTQ612VGL', {
+        send_page_view: false,
+        debug_mode: true,
+        transport_url: 'https://project-solidarity.com',
+        anonymize_ip: true
+      });
+      console.log('🔧 Google Analytics en modo debug para localhost');
+    } else {
+      gtag('config', 'G-KLTQ612VGL', {
+        transport_url: 'https://project-solidarity.com',
+        first_party_collection: true,
+        anonymize_ip: true,
+        allow_google_signals: true,
+        allow_ad_personalization_signals: false,
+        send_page_view: true,
+        enhanced_conversions: true,
+        debug_mode: false
+      });
+    }
+
+    // Datos extendidos del usuario
+    gtag('set', {
+      user_properties: {
+        user_type: 'anonymous',
+        preferred_language: '{{ lang if lang else "es" }}',
+        platform_version: '1.0'
+      }
+    });
+  </script>
+  
+  {% block head %}{% endblock %}
+</head>
+<body class="lang-{{ lang if lang else 'es' }} {% if user %}user-logged-in{% else %}user-anonymous{% endif %} {{ bodyClass if bodyClass }}">
+  <!-- Session Data Storage -->
+  <div id="session-data" 
+    data-user-id="{{ user.id if user else '' }}"
+    data-user-type="{{ user.type if user else 'anonymous' }}"
+    data-lang="{{ lang if lang else 'es' }}"
+    data-csrf-token="{{ csrfToken }}"
+    data-stripe-key="{{ env.STRIPE_PUBLISHABLE_KEY if env.STRIPE_PUBLISHABLE_KEY else '' }}"
+    data-supabase-url="{{ env.SUPABASE_URL if env.SUPABASE_URL else '' }}"
+    data-supabase-key="{{ env.SUPABASE_ANON_KEY if env.SUPABASE_ANON_KEY else '' }}"
+    hidden
+  ></div>
+  
+  <!-- App Container -->
+  <div id="app-container">
+    <!-- Navbar -->
+    <header>
+      {% include "partials/navbar.njk" %}
+    </header>
+
+    <!-- Contenido principal -->
+    <main class="main-content" role="main">
+      {% block content %}{% endblock %}
+    </main>
+
+    <!-- Footer -->
+    {% include "partials/footer.njk" %}
+    
+    <!-- Loading Overlay -->
+    <div id="loading-overlay" class="loading-overlay">
+      <div class="loading-spinner"></div>
+      <p class="loading-text" data-i18n="loading.message">Cargando aplicación...</p>
+    </div>
+    
+    <!-- Session Expired Modal -->
+    <div id="session-expired-modal" class="modal" style="display:none;">
+      <div class="modal-content">
+        <h3 data-i18n="session.expired_title">Sesión Expirada</h3>
+        <p data-i18n="session.expired_message">Tu sesión ha expirado por inactividad. Por favor inicia sesión nuevamente.</p>
+        <button id="session-relogin-btn" class="btn-primary" data-i18n="session.return_login">Volver al Login</button>
+      </div>
+    </div>
+    
+    <!-- Notificaciones -->
+    <div id="notifications" class="notifications-container"></div>
+
+    <!-- Modal de bienvenida -->
+    <div id="welcomeModal" style="display:none; position:fixed; top:0; left:0; width:100vw; height:100vh; background:rgba(0,0,0,0.35); z-index:9999; align-items:center; justify-content:center;">
+      <div style="background:#fff; border-radius:18px; max-width:370px; margin:auto; padding:2.2rem 1.7rem; box-shadow:0 8px 32px rgba(0,0,0,0.13); text-align:center;">
+        <span style="font-size:2.7rem; color:#2dd4bf; display:block; margin-bottom:1rem;">
+          <i class="fas fa-fire"></i>
+        </span>
+        <h2 style="color:#2dd4bf; font-weight:900; margin-bottom:0.7rem;" data-i18n="welcome.title">¡Bienvenido/a de nuevo!</h2>
+        <p style="color:#444; font-size:1.13rem;" data-i18n="welcome.message">
+          ¡Nos alegra verte en Solidarity!<br>
+          <strong>Hoy es un gran día para ayudar, inspirar y transformar el mundo.</strong>
+        </p>
+        <p style="color:#888; font-size:0.97rem; margin-top:1em;" data-i18n="welcome.subtitle">
+          ¿Listo/a para dejar tu huella positiva?<br>
+          ¡Explora, conecta y actúa!
+        </p>
+        <button onclick="document.getElementById('welcomeModal').style.display='none';" 
+                style="margin-top:1.5rem; background:#2dd4bf; color:#fff; border:none; border-radius:8px; padding:0.8rem 1.7rem; font-size:1.1rem; font-weight:700; cursor:pointer;" 
+                data-i18n="welcome.button">
+          ¡Vamos allá!
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ✅ CORE SCRIPTS - ORDEN OPTIMIZADO -->
+  <!-- 1. Supabase primero -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script>
+    // Inicialización segura de Supabase
+    document.addEventListener('DOMContentLoaded', () => {
+      const supabaseUrl = document.getElementById('session-data').dataset.supabaseUrl;
+      const supabaseKey = document.getElementById('session-data').dataset.supabaseKey;
+      
+      if (supabaseUrl && supabaseKey) {
+        try {
+          window.supabase = supabase.createClient(supabaseUrl, supabaseKey);
+          console.log('✅ Supabase initialized:', window.supabase);
+          
+          // Configura listener para cambios de autenticación
+          window.supabase.auth.onAuthStateChange((event, session) => {
+            console.log('🔑 Supabase auth state changed:', event, session);
+            document.dispatchEvent(new CustomEvent('supabaseAuthChange', { 
+              detail: { event, session } 
+            }));
+          });
+          
+          // Dispara evento cuando Supabase esté listo
+          document.dispatchEvent(new CustomEvent('supabaseReady'));
+        } catch (error) {
+          console.error('❌ Error initializing Supabase:', error);
+          showErrorNotification('Error de conexión. Por favor recarga la página.');
+        }
+      } else {
+        console.error('❌ Missing Supabase credentials');
+        showErrorNotification('Configuración incompleta. Contacta al soporte.');
+      }
+    });
+
+    // Función para mostrar notificaciones de error
+    function showErrorNotification(message) {
+      const notifications = document.getElementById('notifications');
+      if (notifications) {
+        const notification = document.createElement('div');
+        notification.className = 'notification error';
+        notification.innerHTML = `
+          <i class="fas fa-exclamation-circle"></i>
+          <span>${message}</span>
+        `;
+        notifications.appendChild(notification);
+        setTimeout(() => notification.remove(), 5000);
+      } else {
+        alert(message);
+      }
+    }
+  </script>
+
+  <!-- 2. Axios para peticiones HTTP -->
+  <script src="/js/lib/axios.min.js"></script>
+  <script>
+    // Configuración de Axios
+    document.addEventListener('DOMContentLoaded', () => {
+      const csrfToken = document.getElementById('session-data').dataset.csrfToken;
+      
+      // Configurar encabezados por defecto de Axios
+      axios.defaults.headers.common['X-CSRF-Token'] = csrfToken;
+      axios.defaults.withCredentials = true;
+      
+      // Interceptor para manejar respuestas de error globalmente
+      axios.interceptors.response.use(
+        response => response,
+        error => {
+          if (error.response) {
+            // El servidor respondió con un código de estado fuera del rango de 2xx
+            console.error('Axios error response:', error.response);
+            
+            if (error.response.status === 401) {
+              // No autorizado - posible sesión expirada
+              document.getElementById('session-expired-modal').style.display = 'block';
+            } else {
+              // Otro tipo de error, mostrar notificación genérica
+              showErrorNotification('Error en la solicitud. Por favor intenta nuevamente.');
+            }
+          } else {
+            // El error no tiene respuesta (posiblemente un problema de red)
+            console.error('Axios error no response:', error);
+            showErrorNotification('Error de conexión. Por favor verifica tu conexión a Internet.');
+          }
+          
+          return Promise.reject(error);
+        }
+      );
+    });
+  </script>
+
+  <!-- 3. Sistema de traducciones -->
+  <script src="/js/i18n.js"></script>
+  <script>
+    document.addEventListener('i18nReady', () => {
+      translateElements();
+      
+      function translateElements() {
+        const elements = document.querySelectorAll('[data-i18n], [data-i18n-title]');
+        elements.forEach(el => {
+          const key = el.getAttribute('data-i18n') || el.getAttribute('data-i18n-title');
+          if (key && window.t) {
+            const translation = window.t(key);
+            if (el.hasAttribute('data-i18n-title')) {
+              el.setAttribute('title', translation);
+            } else {
+              el.textContent = translation;
+            }
+          }
+        });
+      }
+    });
+  </script>
+
+  <!-- 4. Session Manager -->
+  <script>
+    class SessionManager {
+      constructor() {
+        this.keepAliveInterval = null;
+        this.inactivityTimeout = null;
+        this.maxInactivity = 30 * 60 * 1000; // 30 minutos
+        this.keepAliveFrequency = 5 * 60 * 1000; // 5 minutos
+        this.retryCount = 0;
+        this.maxRetries = 3;
+        
+        this.initEventListeners();
+        
+        // Iniciar monitoreo si hay usuario
+        if (document.getElementById('session-data').dataset.userId) {
+          this.startSessionMonitoring();
+        }
+      }
+      
+      initEventListeners() {
+        // User activity detection
+        ['click', 'mousemove', 'keypress', 'scroll', 'touchstart'].forEach(event => {
+          document.addEventListener(event, this.resetInactivityTimer.bind(this), { passive: true });
+        });
+        
+        // Session expired button
+        document.getElementById('session-relogin-btn')?.addEventListener('click', () => {
+          window.location.href = '/login?return=' + encodeURIComponent(window.location.pathname);
+        });
+      }
+      
+      startSessionMonitoring() {
+        this.startKeepAlive();
+        this.resetInactivityTimer();
+        console.log('🔒 Session monitoring started');
+      }
+      
+      startKeepAlive() {
+        if (this.keepAliveInterval) clearInterval(this.keepAliveInterval);
+        
+        this.keepAliveInterval = setInterval(() => {
+          this.sendKeepAlive();
+        }, this.keepAliveFrequency);
+        
+        // Initial ping
+        this.sendKeepAlive();
+      }
+      
+      async sendKeepAlive() {
+        try {
+          const response = await fetch('/api/session/keep-alive', {
+            method: 'POST',
+            credentials: 'include',
+            headers: {
+              'Content-Type': 'application/json',
+              'X-CSRF-Token': document.getElementById('session-data').dataset.csrfToken || ''
+            },
+            body: JSON.stringify({
+              currentPath: window.location.pathname,
+              lastActivity: new Date().toISOString()
+            })
+          });
+          
+          if (response.ok) {
+            this.retryCount = 0;
+            const data = await response.json();
+            console.log('🔄 Session keep-alive success', data);
+          } else {
+            this.handleSessionError();
+          }
+        } catch (error) {
+          console.error('Keep-alive error:', error);
+          this.handleSessionError();
+        }
+      }
+      
+      resetInactivityTimer() {
+        if (this.inactivityTimeout) clearTimeout(this.inactivityTimeout);
+        
+        this.inactivityTimeout = setTimeout(() => {
+          this.handleInactiveSession();
+        }, this.maxInactivity);
+      }
+      
+      handleInactiveSession() {
+        console.log('🕒 Session inactive, checking status...');
+        this.sendKeepAlive();
+      }
+      
+      handleSessionError() {
+        this.retryCount++;
+        
+        if (this.retryCount >= this.maxRetries) {
+          this.expireSession();
+        } else {
+          console.warn(`Session check failed (${this.retryCount}/${this.maxRetries})`);
+        }
+      }
+      
+      expireSession() {
+        console.log('🔐 Session expired');
+        clearInterval(this.keepAliveInterval);
+        clearTimeout(this.inactivityTimeout);
+        
+        document.getElementById('session-expired-modal').style.display = 'block';
+        document.dispatchEvent(new CustomEvent('sessionExpired'));
+      }
+    }
+  </script>
+
+  <!-- 5. Stripe Integration -->
+  <script>
+    class StripeIntegration {
+      static async initialize() {
+        const stripeKey = document.getElementById('session-data').dataset.stripeKey;
+        if (stripeKey) {
+          window.stripe = Stripe(stripeKey);
+          console.log('✅ Stripe initialized');
+        } else {
+          console.warn('⚠️ Stripe key not found');
+        }
+      }
+      
+      static async verifyStripeStatus(userId) {
+        if (!userId) return { connected: false };
+        
+        try {
+          const response = await fetch('/api/stripe/status?userId=' + userId, {
+            credentials: 'include'
+          });
+          
+          if (response.ok) {
+            return await response.json();
+          }
+          return { connected: false };
+        } catch (error) {
+          console.error('Stripe status check failed:', error);
+          return { connected: false };
+        }
+      }
+    }
+  </script>
+
+  <!-- 6. Componentes móviles -->
+  <script src="/js/components/mobile-bottom-nav.js"></script>
+  <script src="/js/components/mobile-hamburger-menu.js"></script>
+  <script src="/js/components/mobile-header.js"></script>
+  <script src="/js/components/mobile-avatar.js"></script>
+
+  <solidarity-bottom-nav></solidarity-bottom-nav>
+  <solidarity-mobile-header>
+    <solidarity-hamburger-menu slot="hamburger"></solidarity-hamburger-menu>
+    <solidarity-mobile-avatar slot="avatar"></solidarity-mobile-avatar>
+  </solidarity-mobile-header>
+
+  <!-- 7. Inicialización de la aplicación -->
+  <script>
+    document.addEventListener('DOMContentLoaded', async () => {
+      try {
+        // Mostrar loading
+        document.getElementById('loading-overlay').style.display = 'flex';
+        
+        // 1. Esperar a que Supabase esté listo
+        await new Promise((resolve) => {
+          if (window.supabase) return resolve();
+          document.addEventListener('supabaseReady', resolve, { once: true });
+        });
+        
+        // 2. Inicializar Stripe si está configurado
+        if (document.getElementById('session-data').dataset.stripeKey) {
+          await StripeIntegration.initialize();
+        }
+        
+        // 3. Iniciar Session Manager
+        window.sessionManager = new SessionManager();
+        
+        // 4. Verificar sesión del usuario
+        const userId = document.getElementById('session-data').dataset.userId;
+        if (userId) {
+          // Verificar estado de Stripe si es relevante para la página
+          if (window.location.pathname.includes('/causes')) {
+            await StripeIntegration.verifyStripeStatus(userId);
+          }
+          
+          // Mostrar modal de bienvenida para primer login
+          const isFirstLogin = new URLSearchParams(window.location.search).has('firstLogin');
+          if (isFirstLogin) {
+            document.getElementById('welcomeModal').style.display = 'flex';
+          }
+        }
+        
+      } catch (error) {
+        console.error('Initialization error:', error);
+        showErrorNotification('Error al cargar la aplicación. Por favor recarga la página.');
+      } finally {
+        // Ocultar loading
+        document.getElementById('loading-overlay').style.display = 'none';
+      }
+    });
+  </script>
+
+  <!-- 8. Google Translate (solo funcionalidad) -->
+  <div id="google_translate_element" style="display:none;"></div>
+  <script type="text/javascript">
+    function googleTranslateElementInit() {
+      if (window.autoTranslate) {
+        window.autoTranslate.init();
+      } else {
+        new google.translate.TranslateElement({
+          pageLanguage: 'es',
+          includedLanguages: 'en,es,fr,de,it,pt,ru,zh-CN,ar,ja,ko,hi,tr,pl,nl,sv,da,no,fi,he,th,vi,id,ms,tl,uk,cs,hu,ro,bg,hr,sk,sl,et,lv,lt,mt,el,ca,eu,gl',
+          layout: google.translate.TranslateElement.InlineLayout.SIMPLE,
+          autoDisplay: false
+        }, 'google_translate_element');
+      }
+    }
+  </script>
+  <script src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+
+  <!-- 9. Analytics y otros scripts -->
+  <script src="/js/analytics.js"></script>
+  <script src="/js/auto-translate.js"></script>
+  <script src="/js/compartir.js"></script>
+  <script src="/js/navbar.js"></script>
+  <script src="/js/impactpoints.js"></script>
+
+  <!-- 10. App Script principal -->
+  <script src="/app.js" defer></script>
+
+  {% block scripts %}{% endblock %}
+
+  <!-- Estilos adicionales para notificaciones -->
+  <style>
+    .notifications-container {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      z-index: 9999;
+    }
+    
+    .notification {
+      padding: 15px;
+      margin-bottom: 10px;
+      border-radius: 5px;
+      color: white;
+      display: flex;
+      align-items: center;
+      animation: slideIn 0.3s ease-out;
+    }
+    
+    .notification.error {
+      background-color: #ff4444;
+    }
+    
+    .notification.success {
+      background-color: #00C851;
+    }
+    
+    .notification i {
+      margin-right: 10px;
+    }
+    
+    @keyframes slideIn {
+      from { transform: translateX(100%); }
+      to { transform: translateX(0); }
+    }
+    
+    .loading-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(255, 255, 255, 0.8);
+      display: none;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      z-index: 9998;
+    }
+    
+    .loading-spinner {
+      border: 5px solid #f3f3f3;
+      border-top: 5px solid #2dd4bf;
+      border-radius: 50%;
+      width: 50px;
+      height: 50px;
+      animation: spin 1s linear infinite;
+    }
+    
+    .loading-text {
+      margin-top: 15px;
+      color: #333;
+      font-size: 1.1rem;
+    }
+    
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+    
+    .modal {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.5);
+      display: none;
+      justify-content: center;
+      align-items: center;
+      z-index: 9999;
+    }
+    
+    .modal-content {
+      background: white;
+      padding: 2rem;
+      border-radius: 10px;
+      max-width: 500px;
+      width: 90%;
+      text-align: center;
+    }
+  </style>
+</body>
+</html>
