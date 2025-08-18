@@ -1533,6 +1533,10 @@ app.post('/api/stripe/create-checkout', async (req, res) => {
     if (req.body.message) metadata.message = req.body.message.substring(0, 400);
     if (req.session.user?.id) metadata.user_id = req.session.user.id;
 
+    // Calcula tu comisión (1.35%)
+    const platformFeePercent = 0.0135; // 1.35%
+    const applicationFeeAmount = Math.round(amount * platformFeePercent * 100); // en céntimos
+
     // Crear sesión de Stripe Checkout
     const session = await stripe.checkout.sessions.create({
       payment_method_types: ['card'],
@@ -1547,8 +1551,14 @@ app.post('/api/stripe/create-checkout', async (req, res) => {
       mode: 'payment',
       success_url: `${process.env.BASE_URL}/causes?donation=success&session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${process.env.BASE_URL}/causes?donation=cancel`,
+      payment_intent_data: {
+        application_fee_amount: applicationFeeAmount, // <-- Tu comisión aquí
+        transfer_data: {
+          destination: cause.stripe_account_id
+        }
+      }
     }, {
-      stripeAccount: cause.stripe_account_id // <-- SOLO AQUÍ
+      stripeAccount: cause.stripe_account_id
     });
 
     console.log('✅ Sesión de Stripe creada exitosamente:', session.id);
@@ -1777,3 +1787,14 @@ app.use((req, res) => {
     requestedPath: req.path
   });
 });
+
+// Importar rutas de puntos de impacto
+const impactPointsRoutes = require('./routes/impactPoints');
+app.use('/api/impact-points', impactPointsRoutes);
+
+// Importar controlador de compartidos
+const sharesController = require('./controllers/shares');
+
+// Rutas para compartidos
+app.post('/api/shares/register', sharesController.registerShare);
+app.get('/api/shares/user', sharesController.getUserShares);

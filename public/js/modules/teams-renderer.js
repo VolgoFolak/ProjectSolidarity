@@ -476,7 +476,17 @@ async function showTeamModal(teamId) {
 
   // Botón Compartir
   document.getElementById('shareTeamBtn').onclick = function() {
-    showShareOptionsTeam(team.id, team);
+    if (window.renderCompartir) {
+      window.renderCompartir({
+        title: team.name,
+        summary: team.summary || team.description?.substring(0, 120) + '...',
+        photo_url: team.photo_url || 'https://via.placeholder.com/350x180?text=Comunidad',
+        link: `${window.location.origin}/teams/${team.id}`,
+        type: 'equipo',
+        activityId: team.id
+      }, 'shareSectionTeam');
+      document.getElementById('shareSectionTeam').scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
   };
 }
 

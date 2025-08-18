@@ -316,7 +316,7 @@ const TasksRenderer = {
     // Llenar contenido del modal
     document.getElementById('taskModalBody').innerHTML = `
       <h1 style="font-size:2rem; font-weight:800; color:var(--primary); margin-bottom:2rem; text-align:left !important;">${task.title}</h1>
-      <div class="task-modal-main" style="display:flex; gap:2rem; margin-bottom:2rem;">
+      <div style="display:flex; gap:2rem; margin-bottom:2rem;">
         <div style="flex:1; min-width:320px; height:300px; border-radius:12px; overflow:hidden; position:relative;">
           <img src="${task.photo_url || '/img/task-default.jpg'}" 
                alt="Imagen de la tarea ${task.title}"
@@ -454,7 +454,8 @@ const TasksRenderer = {
         summary: task.summary || task.description?.substring(0, 120) + '...',
         photo_url: task.photo_url || '/img/task-default.jpg',
         link: `${window.location.origin}/tasks/${task.id}`,
-        type: 'tarea'
+        type: 'tarea',
+        activityId: task.id
       }, 'shareSection');
       
       // 🚀 FORZAR ALINEACIÓN IZQUIERDA DESPUÉS DEL RENDER 🚀

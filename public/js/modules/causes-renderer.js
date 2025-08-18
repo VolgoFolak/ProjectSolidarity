@@ -667,7 +667,7 @@ class CausesRenderer {
   }
 
   /**
-   * Compartir causa
+   * Compartir causa con puntos automáticos
    */
   shareCause(causeId) {
     const cause = window.causes?.find(c => c.id == causeId);
@@ -682,7 +682,8 @@ class CausesRenderer {
         summary: cause.short_description || cause.description?.substring(0, 120) + '...',
         photo_url: cause.photo_url || '/img/causa-default.jpg',
         link: `${window.location.origin}/causes/${cause.id}`,
-        type: 'causa'
+        type: 'causa',
+        activityId: cause.id  // ← Añadir ID para el sistema de puntos
       }, 'shareSection');
       
       document.getElementById('shareSection').scrollIntoView({ 

@@ -759,7 +759,8 @@ const ChallengesRenderer = {
         summary: challenge.summary || challenge.description?.substring(0, 120) + '...',
         photo_url: challenge.photo_url || '/img/challenge-default.jpg',
         link: `${window.location.origin}/challenges/${challenge.id}`,
-        type: 'desafío'
+        type: 'reto',
+        activityId: challenge.id
       }, 'shareSection');
       
       document.getElementById('shareSection').scrollIntoView({ 

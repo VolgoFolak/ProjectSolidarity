@@ -46,6 +46,11 @@
     const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImN5ZnRhc3hscnp1eW56YnJmZ2tkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDgwMzUzMTksImV4cCI6MjA2MzYxMTMxOX0.I56ZqFTfLgdwWlcozMVncGNGBZ4A2_5VpAbHeNmtDhA';
     const supabase = window.supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
   </script>
+
+  <!-- Cargar sistema de compartir ANTES que otros módulos -->
+  <script src="/js/compartir.js"></script>
+  
+  <!-- Otros scripts -->
   <script src="/js/navbar.js"></script>
   <script src="/js/impactpoints.js"></script>
   <!-- y cualquier otro script que use supabase -->
@@ -220,6 +225,5 @@
     }).join('');
   </script>
   <!-- Scripts antes del cierre del body -->
-  <script src="/js/compartir.js"></script>
 </body>
 </html>

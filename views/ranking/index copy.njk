@@ -507,41 +507,6 @@
         right: 12px !important;
       }
     }
-
-    /* --- ESTILOS GENERALES --- */
-    .btn-sm {
-      font-size: 0.85rem !important;
-      padding: 0.4rem 0.8rem !important;
-      border-radius: 6px !important;
-      border: none !important;
-      cursor: pointer;
-      transition: all 0.2s ease;
-      text-decoration: none;
-      display: inline-flex;
-      align-items: center;
-      gap: 0.3rem;
-    }
-
-    .btn-primary {
-      background: var(--primary, #4a6fa5) !important;
-      color: white !important;
-    }
-
-    .btn-primary:hover {
-      background: #3a5a95 !important;
-      transform: translateY(-1px);
-    }
-
-    /* Responsivo para móviles */
-    @media (max-width: 600px) {
-      .btn-sm {
-        font-size: 0.8rem !important;
-        padding: 0.3rem 0.6rem !important;
-      }
-      .btn-sm i {
-        font-size: 0.9rem !important;
-      }
-    }
   </style>
 {% endblock %}
 
@@ -633,8 +598,7 @@
         </table>
     </div>
     <!-- Your League Info -->
-    <!-- Progreso Personal del Usuario -->
-    <div class="league-info" style="max-width:420px;margin:2rem auto;">
+    <div class="league-info">
         <h3 class="progreso-title"><i class="fas fa-shield-alt"></i> Tu Progreso</h3>
         <div class="user-cell">
             <img id="user-photo" src="/img/avatar-default.jpg" class="user-avatar-xl">
@@ -786,12 +750,7 @@ function renderIndividualRanking(users, type = "historico", currentUserId = null
         </td>
         <td class="score">${points.toLocaleString()}</td>
         <td>-</td>
-        <td>
-          <button class="btn btn-sm btn-primary" onclick="window.location.href='/profile/${user.username || user.id}'" 
-                  style="background:var(--primary,#4a6fa5);color:white;border:none;padding:0.4rem 0.8rem;border-radius:6px;font-size:0.85rem;">
-            <i class="fas fa-user"></i> Ver Perfil
-          </button>
-        </td>
+        <td>${actions}</td>
       </tr>
     `;
   });
@@ -832,7 +791,7 @@ function renderUserLeague(user) {
   userPhoto.src = avatar;
   userName.textContent = name;
 
-  // Liga visual con puntos actuales
+  // Liga visual
   let leagueClass = league.name.toLowerCase();
   userLeague.textContent = `Liga ${league.name} | ${points} pts`;
   userLeague.className = `user-league-badge ${leagueClass}`;
@@ -842,11 +801,10 @@ function renderUserLeague(user) {
   const nextLeague = getLeagueByLevel(nextLeagueLevel);
   
   if (nextLeague && nextLeague.level > league.level) {
-    // Límites correctos de las ligas
     const currentMin = league.level === 1 ? 0 : 
                        league.level === 2 ? 1000 :
                        league.level === 3 ? 2000 :
-                       league.level === 4 ? 3000 : 5000;
+                       league.level === 4 ? 3000 : 4000;
     
     const nextMin = nextLeague.level === 2 ? 1000 : 
                    nextLeague.level === 3 ? 2000 :
@@ -855,14 +813,16 @@ function renderUserLeague(user) {
     
     const progress = Math.min(100, ((points - currentMin) / (nextMin - currentMin)) * 100);
     progressBar.style.width = `${Math.max(0, progress)}%`;
-    progressLabel.textContent = `${Math.round(progress)}%`;
+    progressLabel.textContent = '';
     
     const pointsNeeded = Math.max(0, nextMin - points);
-    userProgress.innerHTML = `Te faltan <strong>${pointsNeeded.toLocaleString()}</strong> puntos para ascender a Liga ${nextLeague.name}.<br><small>Puntos esta semana: <strong>${weeklyPoints.toLocaleString()}</strong></small>`;
+    userProgress.innerHTML = `Te faltan <strong>${pointsNeeded}</strong> puntos para ascender a Liga ${nextLeague.name}.
+      <br><small>Puntos semanales: <strong>${weeklyPoints}</strong></small>`;
   } else {
     progressBar.style.width = '100%';
-    progressLabel.textContent = '¡MÁXIMO!';
-    userProgress.innerHTML = `¡Estás en la liga más alta! Sigue ayudando para mantener tu posición.<br><small>Puntos esta semana: <strong>${weeklyPoints.toLocaleString()}</strong></small>`;
+    progressLabel.textContent = '';
+    userProgress.innerHTML = `¡Estás en la liga más alta! Sigue ayudando.
+      <br><small>Puntos semanales: <strong>${weeklyPoints}</strong></small>`;
   }
 }
 
@@ -873,7 +833,7 @@ async function fetchCurrentUser() {
 
   const { data: profile, error: profileError } = await supabase
     .from('profiles')
-    .select('id, username, photo_url, impact_points, weekly_points, actions_count')
+    .select('id, username, photo_url, impact_points, weekly_points, actions_count, current_league')
     .eq('id', user.id)
     .single();
 
@@ -955,7 +915,7 @@ function renderCommunitiesRanking(communities) {
             <div>
               <span>${name}</span>
               <div style="font-size:0.8rem;color:#666;">
-                ${members} miembros | ${beneficiaries} beneficiarios
+                ${members} miembros | ${beneficiarios} beneficiarios
               </div>
             </div>
           </div>
@@ -965,9 +925,8 @@ function renderCommunitiesRanking(communities) {
         </td>
         <td>${beneficiaries.toLocaleString()}</td>
         <td>
-          <button class="btn btn-sm btn-primary" onclick="window.location.href='/teams/${community.id}'" 
-                  style="background:var(--primary,#4a6fa5);color:white;border:none;padding:0.4rem 0.8rem;border-radius:6px;font-size:0.85rem;">
-            <i class="fas fa-users"></i> Ver Comunidad
+          <button class="btn btn-sm btn-outline" onclick="window.location.href='/teams/${community.id}'">
+            <i class="fas fa-eye"></i>
           </button>
         </td>
       </tr>
@@ -1060,7 +1019,7 @@ async function showLeague(leagueNumber) {
   if (selectedLeague) {
     selectedLeague.classList.add('active');
   }
-  const leagueLevel = leagueNumber;
+  const leagueLevel = leagueNumber; // El nivel de liga es el número de la liga
   const leagueName = selectedLeague.querySelector('h3').innerText;
   const leagueIcon = selectedLeague.querySelector('.league-icon').classList.value;
   const leagueColor = getComputedStyle(selectedLeague).getPropertyValue('border-color');
@@ -1070,12 +1029,27 @@ async function showLeague(leagueNumber) {
   const currentUserId = currentUser?.id;
   const { usersHistorico, usersDinamico } = await fetchRankingData();
   renderIndividualRanking(usersHistorico, "historico", currentUserId, leagueLevel);
-
-  // ACTUALIZAR PROGRESO PERSONAL SI HAY USUARIO
-  renderUserLeague(currentUser);
-
+  
+  // Actualizar información de la liga
+  const leagueInfo = document.querySelector('.league-info');
+  if (leagueInfo) {
+    leagueInfo.querySelector('h3').innerHTML = `<i class="${leagueIcon}"></i> ${leagueName}`;
+    leagueInfo.querySelector('p').innerHTML = `Liga ${leagueName} | ${leagueLevel} niveles`;
+    leagueInfo.style.borderColor = leagueColor;
+  }
+  
   // Scroll suave a la tabla
   document.getElementById('individual-table').scrollIntoView({ behavior: 'smooth' });
 }
+
+// Reemplazar la función de mostrar liga por defecto
+function showDefaultLeague() {
+  showLeague(1); // Mostrar siempre la liga 1 por defecto
+}
+
+// Llamar a la función de mostrar liga por defecto al cargar la página
+document.addEventListener('DOMContentLoaded', function() {
+  setTimeout(showDefaultLeague, 100);
+});
 </script>
 {% endblock %}

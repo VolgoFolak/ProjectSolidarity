@@ -612,7 +612,7 @@
           </div>
         `;
         
-        // 1. Obtener los datos básicos de los perfiles (elimina verified)
+        // Obtener perfiles con impact_points y current_league
         const { data: profiles, error } = await supabase
           .from('profiles')
           .select(`
@@ -624,6 +624,7 @@
             city,
             country,
             impact_points,
+            weekly_points,
             bio,
             created_at
           `)
@@ -631,7 +632,7 @@
           
         if (error) throw error;
         
-        // 2. Get additional data for each profile
+        // Obtener datos adicionales para cada perfil
         const memberData = [];
 
         for (const profile of profiles) {
@@ -663,8 +664,7 @@
             .select('id', { count: 'exact', head: true })
             .eq('user_id', profile.id);
 
-          // Si no tienes tabla shares, simplemente pon 0
-          const sharesCount = 0;
+          const sharesCount = 0; // Implementar cuando tengas la tabla
 
           memberData.push({
             ...profile,
@@ -694,6 +694,26 @@
           </div>
         `;
       }
+    }
+
+    // Añadir función para obtener liga (igual que en ranking)
+    function getLeague(points) {
+      if (points >= 5000) return { name: "Diamante", level: 5, icon: "fas fa-crown", color: "#00c3ff" };
+      if (points >= 3000) return { name: "Platino", level: 4, icon: "fas fa-gem", color: "#e5e7eb" };
+      if (points >= 2000) return { name: "Oro", level: 3, icon: "fas fa-award", color: "#ffd700" };
+      if (points >= 1000) return { name: "Plata", level: 2, icon: "fas fa-star", color: "#c0c0c0" };
+      return { name: "Bronce", level: 1, icon: "fas fa-seedling", color: "#cd7f32" };
+    }
+
+    function getLeagueByLevel(level) {
+      const leagues = [
+        { name: "Bronce", level: 1, icon: "fas fa-seedling", color: "#cd7f32" },
+        { name: "Plata", level: 2, icon: "fas fa-star", color: "#c0c0c0" },
+        { name: "Oro", level: 3, icon: "fas fa-award", color: "#ffd700" },
+        { name: "Platino", level: 4, icon: "fas fa-gem", color: "#e5e7eb" },
+        { name: "Diamante", level: 5, icon: "fas fa-crown", color: "#00c3ff" }
+      ];
+      return leagues.find(league => league.level === level) || leagues[0];
     }
 
     // Aplicar filtros y actualizar la vista
@@ -791,6 +811,11 @@
       card.style.marginBottom = '1.5rem';
       card.style.width = '100%';
 
+      // Obtener liga del miembro
+      const league = member.current_league 
+        ? getLeagueByLevel(member.current_league)
+        : getLeague(member.impact_points || 0);
+
       // País completo
       let countryDisplay = member.country;
       if (countryDisplay && countryDisplay.length === 2) {
@@ -804,6 +829,9 @@
           <div>
             <div class="member-name" style="font-size:1.1rem;font-weight:600;color:var(--primary-dark);">${member.first_name || ''} ${member.last_name || ''}</div>
             <div class="member-username" style="color:#6b7280;font-size:0.95rem;">@${member.username || 'usuario'}</div>
+            <div style="font-size:0.85rem;color:${league.color};font-weight:600;margin-top:0.2rem;">
+              <i class="${league.icon}"></i> Liga ${league.name}
+            </div>
             <div class="member-location" style="color:#6b7280;font-size:0.9rem;">
               <i class="fas fa-map-marker-alt"></i>
               ${member.city ? member.city + (countryDisplay ? ', ' : '') : ''} ${countryDisplay || 'Sin ubicación'}
@@ -814,6 +842,10 @@
           <div style="text-align:center;">
             <div style="font-weight:700;color:var(--primary);font-size:1.2rem;">${member.impact_points || 0}</div>
             <div style="font-size:0.85rem;color:#6b7280;">Impacto</div>
+          </div>
+          <div style="text-align:center;">
+            <div style="font-weight:700;color:var(--primary);font-size:1.2rem;">${member.weekly_points || 0}</div>
+            <div style="font-size:0.85rem;color:#6b7280;">Semanal</div>
           </div>
           <div style="text-align:center;">
             <div style="font-weight:700;color:var(--primary);font-size:1.2rem;">${member.volunteeringCount}</div>
@@ -830,14 +862,6 @@
           <div style="text-align:center;">
             <div style="font-weight:700;color:var(--primary);font-size:1.2rem;">${member.challengesCount}</div>
             <div style="font-size:0.85rem;color:#6b7280;">Retos</div>
-          </div>
-          <div style="text-align:center;">
-            <div style="font-weight:700;color:var(--primary);font-size:1.2rem;">${member.tasksCount}</div>
-            <div style="font-size:0.85rem;color:#6b7280;">Tareas</div>
-          </div>
-          <div style="text-align:center;">
-            <div style="font-weight:700;color:var(--primary);font-size:1.2rem;">${member.sharesCount}</div>
-            <div style="font-size:0.85rem;color:#6b7280;">Compartidos</div>
           </div>
         </div>
         <div style="display:flex;flex-direction:column;align-items:flex-end;gap:0.7rem;min-width:120px;">
