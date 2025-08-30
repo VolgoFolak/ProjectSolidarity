@@ -1798,3 +1798,6 @@ const sharesController = require('./controllers/shares');
 // Rutas para compartidos
 app.post('/api/shares/register', sharesController.registerShare);
 app.get('/api/shares/user', sharesController.getUserShares);
+
+// Rutas
+app.use('/profile', require('./routes/profiles'));

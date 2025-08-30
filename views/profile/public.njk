@@ -1,0 +1,377 @@
+<!-- filepath: c:\Users\gabi2\Desktop\Solidarity-web\views\profile\public.njk -->
+{% extends "layout.njk" %}
+
+{% block title %}{{ profile.first_name }} {{ profile.last_name }} - Solidarity{% endblock %}
+
+{% block head %}
+  {{ super() }}
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <!-- Usar los mismos estilos que profile/index.njk -->
+  <style>
+    /* Copiar todos los estilos de profile/index.njk aquí */
+    .profile-main-container {
+      max-width: 1100px;
+      margin: 2rem auto;
+      background: #fff;
+      border-radius: 18px;
+      box-shadow: 0 5px 24px rgba(76,163,161,0.08);
+      padding: 2.5rem 2rem;
+    }
+    
+    /* Estilos adicionales para perfil público */
+    .profile-actions {
+      display: flex;
+      gap: 1rem;
+      margin-top: 1.5rem;
+      flex-wrap: wrap;
+    }
+    
+    .contact-btn {
+      background: var(--accent, #4fc3a1);
+      color: white;
+      padding: 0.7rem 1.5rem;
+      border-radius: 8px;
+      text-decoration: none;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      transition: all 0.2s ease;
+    }
+    
+    .contact-btn:hover {
+      background: #3da58a;
+      transform: translateY(-2px);
+    }
+    
+    .share-profile-btn {
+      background: transparent;
+      color: var(--primary, #4a6fa5);
+      border: 2px solid var(--primary, #4a6fa5);
+      padding: 0.7rem 1.5rem;
+      border-radius: 8px;
+      text-decoration: none;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      transition: all 0.2s ease;
+    }
+    
+    .share-profile-btn:hover {
+      background: var(--primary, #4a6fa5);
+      color: white;
+      transform: translateY(-2px);
+    }
+    
+    .privacy-note {
+      background: #f0f9ff;
+      border: 1px solid #e0f2fe;
+      border-radius: 8px;
+      padding: 1rem;
+      margin-top: 1.5rem;
+      color: #0369a1;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    
+    /* Ocultar información privada si no es el propio perfil */
+    .private-info {
+      display: none;
+    }
+    
+    .own-profile .private-info {
+      display: block;
+    }
+    
+    /* Responsive */
+    @media (max-width: 600px) {
+      .profile-actions {
+        flex-direction: column;
+      }
+      
+      .contact-btn,
+      .share-profile-btn {
+        width: 100%;
+        justify-content: center;
+      }
+    }
+    
+    /* Copiar resto de estilos de profile/index.njk... */
+  </style>
+{% endblock %}
+
+{% block content %}
+<div class="profile-main-container {{ 'own-profile' if isOwnProfile }}">
+  <!-- Header con foto y datos básicos -->
+  <div class="profile-header">
+    <div class="profile-photo-wrapper">
+      <img class="profile-photo" src="{{ profile.photo_url or '/img/avatar-default.jpg' }}" alt="Foto de perfil">
+    </div>
+    <div class="profile-info">
+      <h2>{{ profile.first_name }} {{ profile.last_name }}</h2>
+      {% if profile.city or profile.country %}
+      <div class="profile-location">
+        <i class="fas fa-map-marker-alt"></i> 
+        {{ [profile.city, profile.country] | reject("undefined") | join(", ") }}
+      </div>
+      {% endif %}
+      {% if profile.bio %}
+      <div class="profile-bio">{{ profile.bio }}</div>
+      {% endif %}
+      
+      <!-- Acciones del perfil (solo si no es el propio perfil) -->
+      {% if not isOwnProfile %}
+      <div class="profile-actions">
+        <button class="contact-btn" onclick="openShareModal()">
+          <i class="fas fa-share-alt"></i> Compartir perfil
+        </button>
+        {% if user %}
+        <a href="/messages/new?to={{ profile.id }}" class="contact-btn">
+          <i class="fas fa-envelope"></i> Enviar mensaje
+        </a>
+        {% endif %}
+      </div>
+      {% endif %}
+      
+      {% if isOwnProfile %}
+      <div class="privacy-note">
+        <i class="fas fa-eye"></i>
+        <span>Estás viendo tu perfil público. Otros usuarios ven esta información.</span>
+      </div>
+      {% endif %}
+    </div>
+  </div>
+
+  <!-- Sección de estadísticas principales -->
+  <div class="stats-section">
+    <div class="stats-card">
+      <div class="stats-icon"><i class="fas fa-hands-helping"></i></div>
+      <div class="stats-content">
+        <div class="number">{{ stats.causes }}</div>
+        <div class="label">Causas</div>
+      </div>
+    </div>
+    <div class="stats-card highlight">
+      <div class="stats-icon"><i class="fas fa-users"></i></div>
+      <div class="stats-content">
+        <div class="number">{{ stats.impactedPeople }}</div>
+        <div class="label">Personas impactadas</div>
+      </div>
+    </div>
+    <div class="stats-card">
+      <div class="stats-icon"><i class="fas fa-tasks"></i></div>
+      <div class="stats-content">
+        <div class="number">{{ stats.tasks }}</div>
+        <div class="label">Tareas</div>
+      </div>
+    </div>
+    <div class="stats-card">
+      <div class="stats-icon"><i class="fas fa-bolt"></i></div>
+      <div class="stats-content">
+        <div class="number">{{ stats.challenges }}</div>
+        <div class="label">Retos</div>
+      </div>
+    </div>
+    <div class="stats-card">
+      <div class="stats-icon"><i class="fas fa-heart"></i></div>
+      <div class="stats-content">
+        <div class="number">{{ stats.volunteerings }}</div>
+        <div class="label">Voluntariados</div>
+      </div>
+    </div>
+    <div class="stats-card">
+      <div class="stats-icon"><i class="fas fa-users"></i></div>
+      <div class="stats-content">
+        <div class="number">{{ stats.teams }}</div>
+        <div class="label">Comunidades</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Barra de progreso de impacto -->
+  <div class="impact-score-section">
+    <div class="section-header">
+      <h3>Impacto social</h3>
+      <div class="impact-score-main">
+        <span class="score">{{ profile.impact_points or 0 }}</span>
+        <span class="score-label">Puntos</span>
+        <span class="impact-badge" id="impact-level-badge">
+          <!-- Se llenará con JS -->
+        </span>
+      </div>
+    </div>
+    <div class="impact-score-bar-bg">
+      <div class="impact-score-bar" id="impact-score-bar" style="width:0%"></div>
+    </div>
+    <div class="impact-level-info">
+      <span id="impact-level"><!-- Se llenará con JS --></span>
+      <span id="impact-score-details-text"><!-- Se llenará con JS --></span>
+    </div>
+  </div>
+
+  <!-- Mapa de impacto -->
+  <div class="map-section">
+    <div class="section-header">
+      <h3>Mapa de impacto</h3>
+    </div>
+    <div id="profile-map"></div>
+    <div class="map-legend">
+      <div class="legend-item"><span class="legend-color cause"></span> Causas</div>
+      <div class="legend-item"><span class="legend-color task"></span> Tareas</div>
+      <div class="legend-item"><span class="legend-color challenge"></span> Retos</div>
+      <div class="legend-item"><span class="legend-color volunteering"></span> Voluntariados</div>
+      <div class="legend-item"><span class="legend-color community"></span> Comunidades</div>
+    </div>
+  </div>
+
+  <!-- Actividades públicas -->
+  <div class="activities-section">
+    <div class="section-header">
+      <h3>Actividades</h3>
+    </div>
+    
+    <div class="activities-tabs-container">
+      <div class="activities-tabs">
+        <button class="activity-tab active" data-activity-filter="all">
+          <i class="fas fa-th-large"></i> Todas
+        </button>
+        <button class="activity-tab" data-activity-filter="causes">
+          <i class="fas fa-hands-helping"></i> Causas
+        </button>
+        <button class="activity-tab" data-activity-filter="tasks">
+          <i class="fas fa-tasks"></i> Tareas
+        </button>
+        <button class="activity-tab" data-activity-filter="challenges">
+          <i class="fas fa-bolt"></i> Retos
+        </button>
+        <button class="activity-tab" data-activity-filter="volunteering">
+          <i class="fas fa-heart"></i> Voluntariados
+        </button>
+      </div>
+    </div>
+    
+    <div class="activities-grid" id="activities-grid"></div>
+  </div>
+
+  <!-- Comunidades -->
+  <div class="communities-section">
+    <div class="section-header" style="margin-top:2.5em;">
+      <h3>Comunidades</h3>
+    </div>
+    <div class="teams-grid-classic" id="communities-list"></div>
+  </div>
+</div>
+
+<!-- Modal para compartir perfil -->
+<div id="share-modal" class="modal" style="display:none;">
+  <div class="modal-content" style="max-width:500px;">
+    <span class="close-modal" onclick="closeShareModal()" style="position:absolute;top:1rem;right:1rem;font-size:1.5rem;cursor:pointer;">&times;</span>
+    <div style="text-align:center;padding:1rem;">
+      <h3 style="color:var(--primary,#4a6fa5);margin-bottom:1rem;">
+        <i class="fas fa-share-alt"></i> Compartir perfil
+      </h3>
+      <p style="margin-bottom:1.5rem;">Comparte el perfil de {{ profile.first_name }} {{ profile.last_name }}</p>
+      
+      <div style="background:#f8fafc;padding:1rem;border-radius:8px;margin-bottom:1rem;">
+        <input type="text" id="profile-url" value="{{ 'http://' + headers.host + '/profile/' + (profile.username or profile.id) }}" 
+               readonly style="width:100%;padding:0.5rem;border:1px solid #ddd;border-radius:4px;background:white;">
+      </div>
+      
+      <div style="display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;">
+        <button onclick="copyProfileUrl()" style="background:var(--primary,#4a6fa5);color:white;border:none;padding:0.7rem 1rem;border-radius:6px;cursor:pointer;">
+          <i class="fas fa-copy"></i> Copiar enlace
+        </button>
+        <button onclick="shareWhatsApp()" style="background:#25D366;color:white;border:none;padding:0.7rem 1rem;border-radius:6px;cursor:pointer;">
+          <i class="fab fa-whatsapp"></i> WhatsApp
+        </button>
+        <button onclick="shareTwitter()" style="background:#1DA1F2;color:white;border:none;padding:0.7rem 1rem;border-radius:6px;cursor:pointer;">
+          <i class="fab fa-twitter"></i> Twitter
+        </button>
+        <button onclick="shareFacebook()" style="background:#1877F2;color:white;border:none;padding:0.7rem 1rem;border-radius:6px;cursor:pointer;">
+          <i class="fab fa-facebook-f"></i> Facebook
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+  {{ super() }}
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  
+  <!-- Pasar datos a JavaScript -->
+  <script>
+    window.profileData = {
+      profile: {{ profile | dump | safe }},
+      activities: {{ activities | dump | safe }},
+      stats: {{ stats | dump | safe }},
+      isOwnProfile: {{ isOwnProfile | dump | safe }}
+    };
+  </script>
+  
+  <!-- Reutilizar funciones del perfil personal -->
+  <script>
+    // Funciones para compartir
+    function openShareModal() {
+      document.getElementById('share-modal').style.display = 'flex';
+    }
+    
+    function closeShareModal() {
+      document.getElementById('share-modal').style.display = 'none';
+    }
+    
+    function copyProfileUrl() {
+      const urlInput = document.getElementById('profile-url');
+      urlInput.select();
+      document.execCommand('copy');
+      
+      // Mostrar feedback
+      const button = event.target;
+      const originalText = button.innerHTML;
+      button.innerHTML = '<i class="fas fa-check"></i> ¡Copiado!';
+      button.style.background = '#10b981';
+      
+      setTimeout(() => {
+        button.innerHTML = originalText;
+        button.style.background = 'var(--primary,#4a6fa5)';
+      }, 2000);
+    }
+    
+    function shareWhatsApp() {
+      const url = document.getElementById('profile-url').value;
+      const text = `Mira el perfil de ${window.profileData.profile.first_name} en Solidarity: ${url}`;
+      window.open(`https://wa.me/?text=${encodeURIComponent(text)}`);
+    }
+    
+    function shareTwitter() {
+      const url = document.getElementById('profile-url').value;
+      const text = `Mira el perfil de ${window.profileData.profile.first_name} en Solidarity`;
+      window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent(url)}`);
+    }
+    
+    function shareFacebook() {
+      const url = document.getElementById('profile-url').value;
+      window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`);
+    }
+    
+    // Inicializar mapa y actividades (reutilizar código del perfil personal)
+    document.addEventListener('DOMContentLoaded', function() {
+      // Aquí puedes reutilizar las funciones del perfil personal
+      // adaptándolas para usar window.profileData
+      
+      // Actualizar impacto visual
+      updateImpactScore(window.profileData.profile.impact_points || 0);
+      
+      // Renderizar actividades
+      renderPublicActivities();
+      
+      // Inicializar mapa
+      initPublicProfileMap();
+    });
+    
+    // Adaptar funciones existentes para perfil público...
+  </script>
+{% endblock %}

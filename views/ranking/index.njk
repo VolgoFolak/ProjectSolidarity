@@ -682,6 +682,110 @@
     </div>
   </div>
 </div>
+
+<!-- Modal Compartir Progreso -->
+<div id="share-progress-modal" class="modal" style="display:none;">
+  <div class="modal-content" style="max-width:520px;">
+    <span class="close-modal" id="close-share-progress" style="position:absolute;top:16px;right:22px;color:var(--primary,#4a6fa5);font-size:2.2rem;cursor:pointer;">&times;</span>
+    <div style="text-align:center;margin-bottom:1.5rem;">
+      <i class="fas fa-share-alt" style="color:var(--accent,#eab308);font-size:2.3rem;margin-bottom:0.5rem;"></i>
+      <h2 style="color:var(--primary,#4a6fa5);font-size:1.6rem;margin-bottom:0.8rem;font-weight:800;">Compartir Mi Progreso</h2>
+      <p style="color:#666;margin-bottom:1rem;">¡Comparte tu progreso solidario y motiva a otros a unirse!</p>
+    </div>
+    
+    <!-- Preview del contenido a compartir -->
+    <div id="share-preview" style="background:#f8fafc;border-radius:12px;padding:1.5rem;margin-bottom:1.5rem;border:2px solid #e2e8f0;">
+      <div style="display:flex;align-items:center;gap:1rem;margin-bottom:1rem;">
+        <img id="share-user-avatar" src="/img/avatar-default.jpg" style="width:60px;height:60px;border-radius:50%;object-fit:cover;border:3px solid var(--primary,#4a6fa5);">
+        <div>
+          <h3 id="share-user-name" style="margin:0;color:var(--primary,#4a6fa5);font-size:1.2rem;">Usuario</h3>
+          <div id="share-user-league" style="font-size:0.9rem;color:#666;margin-top:0.2rem;">Liga Bronce</div>
+        </div>
+      </div>
+      <div style="text-align:center;">
+        <div style="font-size:1.8rem;font-weight:800;color:var(--secondary,#3da58a);margin-bottom:0.5rem;" id="share-points">0 puntos</div>
+        <div style="color:#666;font-size:0.95rem;" id="share-message">¡Ayudando a construir un mundo mejor! 🌍✨</div>
+      </div>
+    </div>
+
+    <!-- Botones de compartir -->
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:0.8rem;">
+      <button class="share-btn" data-platform="whatsapp" style="background:#25D366;color:white;border:none;padding:0.8rem;border-radius:8px;display:flex;align-items:center;justify-content:center;gap:0.5rem;cursor:pointer;font-weight:600;">
+        <i class="fab fa-whatsapp"></i> WhatsApp
+      </button>
+      <button class="share-btn" data-platform="facebook" style="background:#1877F2;color:white;border:none;padding:0.8rem;border-radius:8px;display:flex;align-items:center;justify-content:center;gap:0.5rem;cursor:pointer;font-weight:600;">
+        <i class="fab fa-facebook-f"></i> Facebook
+      </button>
+      <button class="share-btn" data-platform="twitter" style="background:#1DA1F2;color:white;border:none;padding:0.8rem;border-radius:8px;display:flex;align-items:center;justify-content:center;gap:0.5rem;cursor:pointer;font-weight:600;">
+        <i class="fab fa-twitter"></i> Twitter
+      </button>
+      <button class="share-btn" data-platform="linkedin" style="background:#0A66C2;color:white;border:none;padding:0.8rem;border-radius:8px;display:flex;align-items:center;justify-content:center;gap:0.5rem;cursor:pointer;font-weight:600;">
+        <i class="fab fa-linkedin-in"></i> LinkedIn
+      </button>
+      <button class="share-btn" data-platform="copy" style="background:#6B7280;color:white;border:none;padding:0.8rem;border-radius:8px;display:flex;align-items:center;justify-content:center;gap:0.5rem;cursor:pointer;font-weight:600;">
+        <i class="fas fa-copy"></i> Copiar
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal Ver Perfil Detallado -->
+<div id="profile-detail-modal" class="modal" style="display:none;">
+  <div class="modal-content" style="max-width:600px;max-height:80vh;overflow-y:auto;">
+    <span class="close-modal" id="close-profile-detail" style="position:absolute;top:16px;right:22px;color:var(--primary,#4a6fa5);font-size:2.2rem;cursor:pointer;z-index:10;">&times;</span>
+    
+    <!-- Header del perfil -->
+    <div id="profile-header" style="text-align:center;margin-bottom:1.5rem;padding-top:1rem;">
+      <img id="profile-avatar" src="/img/avatar-default.jpg" style="width:100px;height:100px;border-radius:50%;object-fit:cover;border:4px solid var(--primary,#4a6fa5);margin-bottom:1rem;">
+      <h2 id="profile-name" style="color:var(--primary,#4a6fa5);margin-bottom:0.5rem;">Usuario</h2>
+      <div id="profile-league-badge" style="display:inline-block;padding:0.4rem 1rem;border-radius:20px;font-weight:600;margin-bottom:1rem;">Liga</div>
+      <div style="display:flex;justify-content:center;gap:2rem;margin-bottom:1rem;">
+        <div style="text-align:center;">
+          <div id="profile-points" style="font-size:1.5rem;font-weight:800;color:var(--secondary,#3da58a);">0</div>
+          <div style="font-size:0.9rem;color:#666;">Puntos Totales</div>
+        </div>
+        <div style="text-align:center;">
+          <div id="profile-weekly" style="font-size:1.5rem;font-weight:800;color:var(--accent,#eab308);">0</div>
+          <div style="font-size:0.9rem;color:#666;">Esta Semana</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Contenido del perfil detallado -->
+    <div id="profile-details-content" style="padding:0 1rem;">
+      <!-- Historial de Puntos -->
+      <div style="margin-bottom:1.5rem;">
+        <h3 style="color:var(--primary,#4a6fa5);font-size:1.3rem;margin-bottom:0.8rem;">Historial de Puntos</h3>
+        <div id="points-history" style="max-height:300px;overflow-y:auto;">
+          <!-- Carga inicial de historial vacío -->
+          <div style="text-align:center;color:#888;padding:1rem 0;">
+            <i class="fas fa-history" style="font-size:2rem;margin-bottom:0.5rem;"></i><br>
+            Historial de puntos vacío. ¡Sé el primero en sumar puntos y aparecer aquí!
+          </div>
+        </div>
+      </div>
+
+      <!-- Causas Apoyadas -->
+      <div style="margin-bottom:1.5rem;">
+        <h3 style="color:var(--primary,#4a6fa5);font-size:1.3rem;margin-bottom:0.8rem;">Causas Apoyadas</h3>
+        <div id="causes-supported" style="max-height:300px;overflow-y:auto;">
+          <!-- Carga inicial de causas vacía -->
+          <div style="text-align:center;color:#888;padding:1rem 0;">
+            <i class="fas fa-hands-helping" style="font-size:2rem;margin-bottom:0.5rem;"></i><br>
+            Aún no has apoyado ninguna causa. Explora y contribuye para que aparezca aquí.
+          </div>
+        </div>
+      </div>
+
+      <!-- Botón de cerrar sesión (solo para el usuario actual) -->
+      <div id="logout-button-container" style="text-align:center;margin-top:1.5rem;">
+        <button class="btn btn-primary" id="logout-button" style="width:100%;max-width:300px;">
+          <i class="fas fa-sign-out-alt"></i> Cerrar Sesión
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
 {% endblock %}
 
 {% block scripts %}
@@ -787,7 +891,7 @@ function renderIndividualRanking(users, type = "historico", currentUserId = null
         <td class="score">${points.toLocaleString()}</td>
         <td>-</td>
         <td>
-          <button class="btn btn-sm btn-primary" onclick="window.location.href='/profile/${user.username || user.id}'" 
+          <button class="btn btn-sm btn-primary" onclick="showUserProfile('${user.username || user.id}', '${user.username}', '${avatar}', ${user.impact_points || 0})"
                   style="background:var(--primary,#4a6fa5);color:white;border:none;padding:0.4rem 0.8rem;border-radius:6px;font-size:0.85rem;">
             <i class="fas fa-user"></i> Ver Perfil
           </button>
@@ -955,7 +1059,7 @@ function renderCommunitiesRanking(communities) {
             <div>
               <span>${name}</span>
               <div style="font-size:0.8rem;color:#666;">
-                ${members} miembros | ${beneficiaries} beneficiarios
+                ${members} miembros | ${beneficiarios} beneficiarios
               </div>
             </div>
           </div>
@@ -1050,6 +1154,168 @@ document.addEventListener('DOMContentLoaded', async function() {
       }
     });
   }
+
+  // Modal compartir progreso
+  const openShareBtn = document.querySelector('.btn-primary');
+  const closeShareBtn = document.getElementById('close-share-progress');
+  const shareModal = document.getElementById('share-progress-modal');
+  if (openShareBtn && closeShareBtn && shareModal) {
+    openShareBtn.addEventListener('click', function() {
+      // Llenar datos del usuario en el modal de compartir
+      const userName = document.getElementById('user-name').textContent;
+      const userPoints = document.getElementById('user-progress').textContent;
+      const userAvatar = document.getElementById('user-photo').src;
+      
+      document.getElementById('share-user-name').textContent = userName;
+      document.getElementById('share-points').textContent = userPoints;
+      document.getElementById('share-user-avatar').src = userAvatar;
+      
+      shareModal.classList.add('active');
+      shareModal.style.display = 'flex';
+    });
+    closeShareBtn.addEventListener('click', function() {
+      shareModal.classList.remove('active');
+      shareModal.style.display = 'none';
+    });
+    window.addEventListener('click', function(e) {
+      if (e.target === shareModal) {
+        shareModal.classList.remove('active');
+        shareModal.style.display = 'none';
+      }
+    });
+  }
+
+  // Modal perfil detallado (al hacer clic en "Ver Perfil" en la tabla)
+  document.getElementById('individual-table').addEventListener('click', async function(e) {
+    if (!e.target.closest('tr')) return;
+    const row = e.target.closest('tr');
+    const userId = row.getAttribute('data-user-id');
+    if (!userId) return;
+    
+    // Obtener datos del usuario
+    const { data: user, error } = await supabase
+      .from('profiles')
+      .select('id, username, photo_url, impact_points, weekly_points, actions_count, current_league, created_at')
+      .eq('id', userId)
+      .single();
+    
+    if (error || !user) {
+      console.error('Error cargando datos del usuario:', error.message);
+      return;
+    }
+    
+    // Llenar datos en el modal de perfil
+    document.getElementById('profile-avatar').src = user.photo_url || '/img/avatar-default.jpg';
+    document.getElementById('profile-name').textContent = user.username;
+    document.getElementById('profile-points').textContent = user.impact_points.toLocaleString();
+    document.getElementById('profile-weekly').textContent = user.weekly_points.toLocaleString();
+    
+    // Obtener y mostrar liga del usuario
+    const userLeague = getLeague(user.impact_points);
+    document.getElementById('profile-league-badge').textContent = `Liga ${userLeague.name}`;
+    document.getElementById('profile-league-badge').style.backgroundColor = userLeague.color;
+    
+    // Historial de puntos (últimos 30 días)
+    const { data: pointsHistory, error: historyError } = await supabase
+      .from('points_history')
+      .select('date, points')
+      .eq('user_id', userId)
+      .order('date', { ascending: false })
+      .limit(30);
+    
+    if (historyError) {
+      console.error('Error cargando historial de puntos:', historyError.message);
+      return;
+    }
+    
+    const pointsHistoryContainer = document.getElementById('points-history');
+    pointsHistoryContainer.innerHTML = '';
+    if (!pointsHistory || pointsHistory.length === 0) {
+      pointsHistoryContainer.innerHTML = `
+        <div style="text-align:center;color:#888;padding:1rem 0;">
+          <i class="fas fa-history" style="font-size:2rem;margin-bottom:0.5rem;"></i><br>
+          No hay historial de puntos disponible.
+        </div>
+      `;
+    } else {
+      pointsHistory.forEach(entry => {
+        const date = new Date(entry.date);
+        const options = { year: 'numeric', month: 'short', day: 'numeric' };
+        const formattedDate = date.toLocaleDateString('es-ES', options);
+        
+        pointsHistoryContainer.innerHTML += `
+          <div style="display:flex;justify-content:space-between;margin-bottom:0.8rem;">
+            <div style="color:#333;">${formattedDate}</div>
+            <div style="font-weight:600;color:${entry.points > 0 ? '#4CAF50' : '#e74c3c'};">
+              ${entry.points > 0 ? '+' : ''}${entry.points.toLocaleString()} pts
+            </div>
+          </div>
+        `;
+      });
+    }
+    
+    // Causas apoyadas (últimos 30 días)
+    const { data: causesSupported, error: causesError } = await supabase
+      .from('causes_supported')
+      .select('cause_id, created_at')
+      .eq('user_id', userId)
+      .order('created_at', { ascending: false })
+      .limit(30);
+    
+    if (causesError) {
+      console.error('Error cargando causas apoyadas:', causesError.message);
+      return;
+    }
+    
+    const causesSupportedContainer = document.getElementById('causes-supported');
+    causesSupportedContainer.innerHTML = '';
+    if (!causesSupported || causesSupported.length === 0) {
+      causesSupportedContainer.innerHTML = `
+        <div style="text-align:center;color:#888;padding:1rem 0;">
+          <i class="fas fa-hands-helping" style="font-size:2rem;margin-bottom:0.5rem;"></i><br>
+          No has apoyado ninguna causa aún.
+        </div>
+      `;
+    } else {
+      // Obtener detalles de las causas (batch request para optimizar)
+      const causeIds = causesSupported.map(cs => cs.cause_id);
+      const { data: causesDetails, error: detailsError } = await supabase
+        .from('causes')
+        .select('id, title, impact_points')
+        .in('id', causeIds);
+      
+      if (detailsError) {
+        console.error('Error cargando detalles de causas:', detailsError.message);
+        return;
+      }
+      
+      // Unir datos de causas apoyadas con detalles de causas
+      const supportedWithDetails = causesSupported.map(cs => {
+        const detail = causesDetails.find(cd => cd.id === cs.cause_id);
+        return {
+          ...cs,
+          title: detail?.title || 'Causa desconocida',
+          impact_points: detail?.impact_points || 0
+        };
+      });
+      
+      supportedWithDetails.forEach(cause => {
+        causesSupportedContainer.innerHTML += `
+          <div style="display:flex;justify-content:space-between;margin-bottom:0.8rem;">
+            <div style="color:#333;">${cause.title}</div>
+            <div style="font-weight:600;color:#4CAF50;">
+              +${cause.impact_points.toLocaleString()} pts
+            </div>
+          </div>
+        `;
+      });
+    }
+    
+    // Mostrar modal de perfil
+    const profileModal = document.getElementById('profile-detail-modal');
+    profileModal.classList.add('active');
+    profileModal.style.display = 'flex';
+  });
 });
 
 async function showLeague(leagueNumber) {
@@ -1077,5 +1343,55 @@ async function showLeague(leagueNumber) {
   // Scroll suave a la tabla
   document.getElementById('individual-table').scrollIntoView({ behavior: 'smooth' });
 }
+
+// Agregar al final del script de ranking.njk:
+
+function showUserProfile(identifier, username, avatar, points) {
+  // Crear modal elegante
+  const modal = document.createElement('div');
+  modal.style.cssText = `
+    position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+    background: rgba(0,0,0,0.5); display: flex; align-items: center; justify-content: center;
+    z-index: 10000; animation: fadeIn 0.3s ease;
+  `;
+  
+  modal.innerHTML = `
+    <div style="background: white; border-radius: 16px; padding: 2rem; max-width: 400px; text-align: center; box-shadow: 0 20px 40px rgba(0,0,0,0.15);">
+      <img src="${avatar}" style="width: 80px; height: 80px; border-radius: 50%; margin-bottom: 1rem; border: 3px solid #4a6fa5;">
+      <h3 style="color: #4a6fa5; margin-bottom: 0.5rem;">@${username}</h3>
+      <p style="color: #666; margin-bottom: 1.5rem;">${points.toLocaleString()} puntos de impacto</p>
+      <div style="display: flex; gap: 1rem; justify-content: center;">
+        <button onclick="window.location.href='/profile/' + (user.username || user.id)" 
+                style="background: #4a6fa5; color: white; border: none; padding: 0.7rem 1.5rem; border-radius: 8px; cursor: pointer; font-weight: 600;">
+          <i class="fas fa-user"></i> Ver perfil completo
+        </button>
+        <button onclick="this.closest('[style*=position]').remove()" 
+                style="background: #e2e8f0; color: #4a6fa5; border: none; padding: 0.7rem 1rem; border-radius: 8px; cursor: pointer;">
+          Cerrar
+        </button>
+      </div>
+    </div>
+  `;
+  
+  document.body.appendChild(modal);
+  
+  // Cerrar al hacer clic fuera
+  modal.addEventListener('click', (e) => {
+    if (e.target === modal) modal.remove();
+  });
+}
+
+// Agregar en ranking.njk para el botón compartir:
+document.querySelector('.btn.btn-primary').addEventListener('click', function() {
+  if (typeof openShareModal === 'function') {
+    openShareModal({
+      type: 'user_progress',
+      title: `Mi progreso en Solidarity`,
+      description: `¡Mira mi impacto social en Solidarity! ${currentUser?.impact_points || 0} puntos de impacto.`,
+      url: `${window.location.origin}/profile/${currentUser?.username || currentUser?.id}`,
+      image: currentUser?.photo_url || '/img/avatar-default.jpg'
+    });
+  }
+});
 </script>
 {% endblock %}
